@@ -1,0 +1,81 @@
+{
+  "jcr:primaryType": "sling:OrderedFolder",
+  "simple": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container"
+  },
+  "rewriteMapChildren": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container",
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured"
+      },
+      "item2": {
+        "jcr:primaryType": "nt:unstructured"
+      }
+    }
+  },
+  "rewriteCommonAttrs": {
+    "id": "id",
+    "rel": "rel",
+    "class": "class",
+    "title": "title",
+    "hidden": true,
+    "itemscope": "itemscope",
+    "itemtype": "itemtype",
+    "itemprop": "itemprop",
+    "granite:id": "granite-id",
+    "granite:hidden": false,
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container"
+  },
+  "rewriteCommonAttrsData": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container",
+    "data-attr-1": "attr-1-value",
+    "data-attr-2": "attr-2-value",
+    "granite:data": {
+      "jcr:primaryType": "nt:unstructured",
+      "attr-1": "granite-attr-1-value"
+    }
+  },
+  "rewriteRenderCondition": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container",
+    "rendercondition": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "granite/ui/components/foundation/renderconditions/and",
+      "condition1": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/renderconditions/simple",
+        "expression": true
+      },
+      "condition2": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/renderconditions/simple",
+        "expression": true
+      }
+    }
+  },
+  "mapProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container",
+    "map-property-1": "map-property-1",
+    "map-property-2": true,
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "map-property-3": "map-property-3"
+    }
+  },
+  "rewriteProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "granite/ui/components/foundation/container",
+    "rewrite-remove-prefix": "prefix-token",
+    "rewrite-remove-suffix": "token-suffix",
+    "rewrite-concat-tokens": "token1-separator-token2",
+    "rewrite-single-operand": "prefix-token",
+    "rewrite-boolean": true
+  }
+}

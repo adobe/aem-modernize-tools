@@ -1,0 +1,310 @@
+{
+  "jcr:primaryType": "sling:OrderedFolder",
+  "simple": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container"
+      }
+    }
+  },
+  "rewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container",
+        "items": {
+          "jcr:primaryType": "nt:unstructured",
+          "cq:rewriteOptional": true
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteOptional": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container"
+      }
+    }
+  },
+  "rewriteFinal": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteFinal": {
+        "cq:rewriteFinal": true,
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    }
+  },
+  "rewriteFinalOnReplacement": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "cq:rewriteFinal": true,
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteFinalOnReplacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    }
+  },
+  "rewriteRanking": {
+    "cq:rewriteRanking" : "3",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteRanking": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    }
+  },
+  "rewriteMapChildren": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteMapChildren": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "items": {
+          "cq:rewriteMapChildren": "./items",
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    }
+  },
+  "rewriteCommonAttrs": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "cq:rewriteCommonAttrs": true,
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteMapChildren": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container"
+      }
+    }
+  },
+  "rewriteCommonAttrsData": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "cq:rewriteCommonAttrs": true,
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteMapChildren": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container"
+      }
+    }
+  },
+  "rewriteRenderCondition": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "cq:rewriteRenderCondition": true,
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteRenderCondition": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/coral/foundation/container"
+      }
+    }
+  },
+  "mapProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "mapProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container",
+        "map-property-simple": "${./map-property-1}",
+        "map-property-nested": "${./items/map-property-3}",
+        "map-property-negation": "!${./map-property-2}",
+        "map-property-default": "${./map-property-unknown:default}",
+        "map-property-default-quoted": "${'./prefix:map-property-unknown':default}",
+        "map-property-multiple": ["${./map-property-unknown}", "${./map-property-1}"],
+        "map-property-multiple-default": ["${./map-property-unknown}", "${./map-property-unknown:default}"],
+        "map-property-multiple-negation": ["${./map-property-unknown}", "!${./map-property-2}"]
+      }
+    }
+  },
+  "rewriteProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "rewrite-remove-prefix": "${./rewrite-remove-prefix}",
+        "rewrite-remove-suffix": "${./rewrite-remove-suffix}",
+        "rewrite-concat-tokens": "${./rewrite-concat-tokens}",
+        "rewrite-single-operand": "${./rewrite-single-operand}",
+        "rewrite-boolean": "${./rewrite-boolean}",
+        "cq:rewriteProperties": {
+          "jcr:primaryType": "nt:unstructured",
+          "rewrite-remove-prefix": ["(?:prefix-)(.+)", "$1"],
+          "rewrite-remove-suffix": ["(.+)(?:-suffix)", "$1"],
+          "rewrite-concat-tokens": ["(.+)(?:-separator-)(.+)", "$1$2"],
+          "rewrite-single-operand": ["(?:prefix-)(.+)"],
+          "rewrite-boolean": ["(.+)", "edited-$1"]
+        }
+      }
+    }
+  },
+  "nested1": {
+    "jcr:primaryType": "sling:OrderedFolder",
+    "rule1": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured",
+        "pattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container"
+        }
+      },
+      "replacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "simple": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/coral/foundation/container"
+        }
+      }
+    },
+    "rule2": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured",
+        "pattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container"
+        }
+      },
+      "replacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "simple": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/coral/foundation/container"
+        }
+      }
+    },
+    "nested1level1": {
+      "jcr:primaryType": "sling:OrderedFolder",
+      "rule1": {
+        "jcr:primaryType": "nt:unstructured",
+        "patterns": {
+          "jcr:primaryType": "nt:unstructured",
+          "pattern": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "granite/ui/components/foundation/container"
+          }
+        },
+        "replacement": {
+          "jcr:primaryType": "nt:unstructured",
+          "simple": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "granite/ui/components/coral/foundation/container"
+          }
+        }
+      }
+    }
+  },
+  "nested2": {
+    "jcr:primaryType": "sling:OrderedFolder",
+    "rule1": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured",
+        "pattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container"
+        }
+      },
+      "replacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "simple": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/coral/foundation/container"
+        }
+      }
+    }
+  }
+}

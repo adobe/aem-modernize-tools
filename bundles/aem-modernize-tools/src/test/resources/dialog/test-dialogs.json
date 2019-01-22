@@ -1,0 +1,185 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "classic": {
+    "jcr:primaryType": "nt:unstructured",
+    "dialog": {
+      "jcr:primaryType": "cq:Dialog"
+    },
+    "design_dialog": {
+      "jcr:primaryType": "cq:Dialog"
+    }
+  },
+  "coral2": {
+    "jcr:primaryType": "nt:unstructured",
+    "cq:dialog": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "cq/gui/components/authoring/dialog",
+      "content": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container",
+        "layout": {
+          "jcr:primaryType": "nt:unstructured",
+          "type": "nav",
+          "sling:resourceType": "granite/ui/components/foundation/layouts/tabs"
+        },
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    },
+    "cq:design_dialog": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "cq/gui/components/authoring/dialog",
+      "content": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container",
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    }
+  },
+  "backupsnoreplacementdiscarded": {
+    "jcr:primaryType": "nt:unstructured",
+    "cq:dialog.coral2": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "cq/gui/components/authoring/dialog",
+      "content": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container",
+        "layout": {
+          "jcr:primaryType": "nt:unstructured",
+          "type": "nav",
+          "sling:resourceType": "granite/ui/components/foundation/layouts/tabs"
+        },
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    },
+    "cq:design_dialog.coral2": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "cq/gui/components/authoring/dialog",
+      "content": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container",
+        "items": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    }
+  },
+  "level1": {
+    "jcr:primaryType": "nt:unstructured",
+    "classicandcoral2": {
+      "jcr:primaryType": "nt:unstructured",
+      "dialog": {
+        "jcr:primaryType": "cq:Dialog"
+      },
+      "design_dialog": {
+        "jcr:primaryType": "cq:Dialog"
+      },
+      "cq:dialog": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "jcr:primaryType": "nt:unstructured",
+            "type": "nav",
+            "sling:resourceType": "granite/ui/components/foundation/layouts/tabs"
+          },
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      },
+      "cq:design_dialog": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      }
+    },
+    "converted": {
+      "jcr:primaryType": "nt:unstructured",
+      "dialog": {
+        "jcr:primaryType": "cq:Dialog"
+      },
+      "cq:dialog": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/coral/foundation/container",
+          "layout": {
+            "jcr:primaryType": "nt:unstructured",
+            "type": "nav",
+            "sling:resourceType": "granite/ui/components/foundation/layouts/tabs"
+          },
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      },
+      "cq:design_dialog.coral2": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      },
+      "cq:design_dialog": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/coral/foundation/container",
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      }
+    },
+    "coral2andbackup": {
+      "jcr:primaryType": "nt:unstructured",
+      "cq:dialog.coral2": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "jcr:primaryType": "nt:unstructured",
+            "type": "nav",
+            "sling:resourceType": "granite/ui/components/foundation/layouts/tabs"
+          },
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      },
+      "cq:dialog": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "content": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "items": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      }
+    }
+  }
+}
