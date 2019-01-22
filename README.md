@@ -1,7 +1,14 @@
 AEM Modernize Tools Suite
 ==========================
 
-The component conversion tool helps in converting legacy components to new(er) versions. The intent is to let customers update existing components to new HTL or Editable Templates, and migrate the content over to a new component.
+This suite of tools is intented to help modernize an AEM Code Base. 
+
+It consists of:
+
+* Template Conversion Tool (Static -> Editable)
+* Policy Conversion Tool (Design Configurations -> Policies)
+* Component Conversion Tool (Legacy -> Modern/Core)
+* Dialog Conversion Tool (Classic -> Touch Enabled UI)
 
 Install
 -------
