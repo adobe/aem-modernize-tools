@@ -22,9 +22,10 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 
 import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
-import com.adobe.aem.modernize.dialog.DialogRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
+import static com.adobe.aem.modernize.impl.RewriteUtils.hasPrimaryType;
 import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 
 /**
@@ -39,13 +40,11 @@ import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 })
 public class CqDialogRewriteRule extends AbstractDialogRewriteRule {
 
-    public boolean matches(Node root)
-            throws RepositoryException {
+    public boolean matches(Node root) throws RepositoryException {
         return hasPrimaryType(root, NT_DIALOG);
     }
 
-    public Node applyTo(Node root, Set<Node> finalNodes)
-            throws DialogRewriteException, RepositoryException {
+    public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
         // Granite UI dialog already exists at this location
         Node parent = root.getParent();
 
@@ -53,11 +52,11 @@ public class CqDialogRewriteRule extends AbstractDialogRewriteRule {
 
         if (isDesignDialog) {
             if (parent.hasNode(NN_CQ_DESIGN_DIALOG)) {
-                throw new DialogRewriteException("Could not rewrite dialog: " + NN_CQ_DESIGN_DIALOG + " node already exists");
+                throw new RewriteException("Could not rewrite dialog: " + NN_CQ_DESIGN_DIALOG + " node already exists");
             }
         } else {
             if (parent.hasNode(NN_CQ_DIALOG)) {
-                throw new DialogRewriteException("Could not rewrite dialog: " + NN_CQ_DIALOG + " node already exists");
+                throw new RewriteException("Could not rewrite dialog: " + NN_CQ_DIALOG + " node already exists");
             }
         }
 
@@ -65,7 +64,7 @@ public class CqDialogRewriteRule extends AbstractDialogRewriteRule {
         // get the items: in case of a tabbed dialog, these represent tabs, otherwise widgets
         Node dialogItems = getDialogItems(root);
         if (dialogItems == null) {
-            throw new DialogRewriteException("Unable to find the dialog items");
+            throw new RewriteException("Unable to find the dialog items");
         }
 
         // add cq:dialog or cq:design_dialog node

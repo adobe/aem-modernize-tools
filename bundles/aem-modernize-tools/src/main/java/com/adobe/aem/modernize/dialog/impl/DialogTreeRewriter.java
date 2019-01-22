@@ -21,7 +21,7 @@ import javax.jcr.Session;
 
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 
-import com.adobe.aem.modernize.dialog.DialogRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.dialog.DialogRewriteRule;
 import com.adobe.aem.modernize.dialog.DialogRewriteUtils;
 import com.adobe.aem.modernize.dialog.DialogType;
@@ -40,15 +40,14 @@ public class DialogTreeRewriter {
         this.rules = rules;
     }
 
-    private void check(Node root)
-            throws DialogRewriteException, RepositoryException {
+    private void check(Node root) throws RewriteException, RepositoryException {
         // if it's not a classic or coral 2 dialog, throw an exception
         DialogType type = DialogRewriteUtils.getDialogType(root);
 
         // verify that the node is a dialog and is convertible
         if (type == DialogType.UNKNOWN || type == DialogType.CORAL_3) {
             logger.debug("{} is not a Classic (cq:Dialog) or Coral 2 dialog", root.getPath());
-            throw new DialogRewriteException("Node is not a Classic (cq:Dialog) or Coral 2 dialog");
+            throw new RewriteException("Node is not a Classic (cq:Dialog) or Coral 2 dialog");
         }
 
         if (type == DialogType.CLASSIC) {
@@ -70,7 +69,7 @@ public class DialogTreeRewriter {
                 type = DialogRewriteUtils.getDialogType(conversion);
                 if (type == DialogType.CORAL_3) {
                     logger.debug("Dialog {} already has a Coral 3 counterpart", root.getPath());
-                    throw new DialogRewriteException("Coral 3 dialog already exists");
+                    throw new RewriteException("Coral 3 dialog already exists");
                 }
             }
         }
@@ -81,11 +80,10 @@ public class DialogTreeRewriter {
      *
      * @param root The root of the dialog be rewritten
      * @return the root node of the rewritten dialog tree, or null if it was removed
-     * @throws DialogRewriteException If the rewrite operation fails
+     * @throws RewriteException If the rewrite operation fails
      * @throws RepositoryException If there is a problem with the repository
      */
-    public Node rewrite(Node root)
-            throws DialogRewriteException, RepositoryException {
+    public Node rewrite(Node root) throws RewriteException, RepositoryException {
         logger.debug("Rewriting dialog tree rooted at {}", root.getPath());
         check(root);
 

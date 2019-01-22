@@ -26,7 +26,7 @@ import org.apache.sling.api.request.RequestParameter;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.commons.json.JSONObject;
 
-import com.adobe.aem.modernize.component.ComponentRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import org.slf4j.Logger;
@@ -89,7 +89,7 @@ public class ComponentConversionServlet extends SlingAllMethodsServlet {
                     Node result = rewriter.rewrite(session.getNode(path));
                     json.put(KEY_RESULT_PATH, result.getPath());
                     logger.debug("Successfully converted component {} to {}", path, result.getPath());
-                } catch (ComponentRewriteException e) {
+                } catch (RewriteException e) {
                     json.put(KEY_ERROR_MESSAGE, e.getMessage());
                     logger.warn("Converting component {} failed", path, e);
                 }

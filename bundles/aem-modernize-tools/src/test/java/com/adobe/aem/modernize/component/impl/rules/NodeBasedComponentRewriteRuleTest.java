@@ -27,7 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class NodeBasedRewriteRuleTest {
+public class NodeBasedComponentRewriteRuleTest {
 
     private final String RULES_PATH = "/libs/cq/modernize/component/rules";
     private final String ROOTS_PATH = "/libs/cq/modernize/component/content/roots";
@@ -53,7 +53,7 @@ public class NodeBasedRewriteRuleTest {
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         assertTrue(rule.matches(rootNode));
         Set<Node> finalNodes = new LinkedHashSet<>();
 
@@ -69,7 +69,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -81,7 +81,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -93,7 +93,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -105,7 +105,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -118,7 +118,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<Node>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -132,14 +132,14 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteOptional").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteOptional").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
 
         assertTrue(rule.matches(rootNode));
 
         // remove the cq:rewriteOptional property on the pattern items node and check it no longer matches
         Node itemsNode = ruleNode.getNode("patterns/pattern/items");
         itemsNode.getProperty("cq:rewriteOptional").remove();
-        rule = new NodeBasedRewriteRule(ruleNode);
+        rule = new NodeBasedComponentRewriteRule(ruleNode);
 
         assertFalse(rule.matches(rootNode));
     }
@@ -147,7 +147,7 @@ public class NodeBasedRewriteRuleTest {
     @Test
     public void testGetRanking() {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         assertEquals(Integer.MAX_VALUE, rule.getRanking());
     }
 
@@ -156,7 +156,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteRanking").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<Node>();
         rule.applyTo(rootNode, finalNodes);
 
@@ -164,7 +164,7 @@ public class NodeBasedRewriteRuleTest {
 
         // remove the cq:rewriteRanking property on the rule node and check against expected value
         ruleNode.getProperty("cq:rewriteRanking").remove();
-        rule = new NodeBasedRewriteRule(ruleNode);
+        rule = new NodeBasedComponentRewriteRule(ruleNode);
 
         assertEquals(Integer.MAX_VALUE, rule.getRanking());
     }
@@ -174,7 +174,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteMapChildren").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteMapChildren").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -199,7 +199,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteFinal").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<Node>();
 
         rule.applyTo(rootNode, finalNodes);
@@ -215,7 +215,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteFinalOnReplacement").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<Node>();
 
         rule.applyTo(rootNode, finalNodes);
@@ -232,7 +232,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<Node>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -261,15 +261,15 @@ public class NodeBasedRewriteRuleTest {
     public void testToString() {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
-        String expected = "NodeBasedRewriteRule[path=" + RULES_PATH + "/simple,ranking=" + Integer.MAX_VALUE + "]";
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
+        String expected = "NodeBasedComponentRewriteRule[path=" + RULES_PATH + "/simple,ranking=" + Integer.MAX_VALUE + "]";
         assertEquals(expected, rule.toString());
     }
 
     @Test
     public void testGetSlingResourceTypes() throws Exception {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedComponentRewriteRule rule = new NodeBasedComponentRewriteRule(ruleNode);
 
         Set<String> types = rule.getSlingResourceTypes();
 

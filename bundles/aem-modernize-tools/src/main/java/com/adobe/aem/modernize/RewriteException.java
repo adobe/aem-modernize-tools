@@ -9,18 +9,18 @@
  *  OF ANY KIND, either express or implied. See the License for the specific language
  *  governing permissions and limitations under the License.
  */
-package com.adobe.aem.modernize.component;
+package com.adobe.aem.modernize;
 
 /**
- * Exception thrown when something goes wrong while rewriting a component.
+ * Exception thrown when something goes wrong while rewriting a node.
  */
-public class ComponentRewriteException extends Exception {
+public class RewriteException extends Exception {
 
-    public ComponentRewriteException(String message) {
+    public RewriteException(String message) {
         super(message);
     }
 
-    public ComponentRewriteException(String message, Throwable cause) {
+    public RewriteException(String message, Throwable cause) {
         super(message, cause);
     }
 

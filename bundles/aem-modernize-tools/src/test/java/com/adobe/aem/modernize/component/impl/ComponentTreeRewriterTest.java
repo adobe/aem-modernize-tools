@@ -1,8 +1,6 @@
 package com.adobe.aem.modernize.component.impl;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
@@ -14,7 +12,6 @@ import org.apache.sling.testing.mock.sling.junit.SlingContext;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.component.impl.rules.NodeBasedRewriteRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

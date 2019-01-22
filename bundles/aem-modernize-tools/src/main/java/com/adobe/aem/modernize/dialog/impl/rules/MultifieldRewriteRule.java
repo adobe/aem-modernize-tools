@@ -19,8 +19,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
 import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
-import com.adobe.aem.modernize.dialog.DialogRewriteException;
 import com.day.cq.commons.jcr.JcrUtil;
+import static com.adobe.aem.modernize.impl.RewriteUtils.rename;
 import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 
 /**
@@ -40,8 +40,7 @@ public class MultifieldRewriteRule extends AbstractDialogRewriteRule {
         return hasXtype(root, XTYPE);
     }
 
-    public Node applyTo(Node root, Set<Node> finalNodes)
-            throws DialogRewriteException, RepositoryException {
+    public Node applyTo(Node root, Set<Node> finalNodes) throws RepositoryException {
         Node parent = root.getParent();
         String name = root.getName();
         rename(root);

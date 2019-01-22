@@ -19,10 +19,10 @@ import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import com.adobe.aem.modernize.component.ComponentRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.component.impl.rules.NodeBasedRewriteRule;
+import com.adobe.aem.modernize.component.impl.rules.NodeBasedComponentRewriteRule;
 import com.day.cq.commons.jcr.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     }
 
 
-    public List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws ComponentRewriteException {
+    public List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws RewriteException {
         final List<ComponentRewriteRule> rules = new LinkedList<>();
 
         // 1) rules provided as OSGi services
@@ -86,16 +86,16 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
                             Node nestedNode = nodeIterator.nextNode();
                             // don't include nested folders
                             if (!isFolder(nestedNode)) {
-                                rules.add(new NodeBasedRewriteRule(nestedNode));
+                                rules.add(new NodeBasedComponentRewriteRule(nestedNode));
                             }
                         }
                     } else {
                         // add rules directly at the rules search path
-                        rules.add(new NodeBasedRewriteRule(nextNode));
+                        rules.add(new NodeBasedComponentRewriteRule(nextNode));
                     }
                 }
             } catch (RepositoryException e) {
-                throw new ComponentRewriteException("Caught exception while collecting rewrite rules", e);
+                throw new RewriteException("Caught exception while collecting rewrite rules", e);
             }
         }
 
@@ -113,7 +113,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     }
 
     @Override
-    public Set<String> getSlingResourceTypes(ResourceResolver resolver) throws ComponentRewriteException {
+    public Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RewriteException {
         List<ComponentRewriteRule> rules = getRules(resolver);
 
         Set<String> types = new HashSet<>(rules.size());
@@ -123,7 +123,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
                 types.addAll(r.getSlingResourceTypes());
             }
         } catch (RepositoryException ex) {
-            throw new ComponentRewriteException("Error occurred while collecting sling resource types.");
+            throw new RewriteException("Error occurred while collecting sling resource types.");
         }
         return types;
     }

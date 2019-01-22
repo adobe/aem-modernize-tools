@@ -1,31 +1,16 @@
-/*
- *  (c) 2014 Adobe. All rights reserved.
- *  This file is licensed to you under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License. You may obtain a copy
- *  of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software distributed under
- *  the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- *  OF ANY KIND, either express or implied. See the License for the specific language
- *  governing permissions and limitations under the License.
- */
-package com.adobe.aem.modernize.component;
-
-import com.day.cq.commons.jcr.JcrUtil;
-import com.day.cq.wcm.api.NameConstants;
-import org.apache.sling.api.resource.ResourceResolver;
+package com.adobe.aem.modernize.impl;
 
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import java.util.Arrays;
+
+import com.day.cq.commons.jcr.JcrUtil;
 
 /**
- * Provides helper methods to be used by component rewrite rules.
+ * Provides helper methods to be used by rewrite rules.
  */
-public class ComponentRewriteUtils {
 
+public class RewriteUtils {
     /**
      * Checks if a node has a certain primary type.
      *

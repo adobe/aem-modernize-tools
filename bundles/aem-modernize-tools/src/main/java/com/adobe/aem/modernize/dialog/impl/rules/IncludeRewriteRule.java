@@ -23,10 +23,11 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.request.RequestPathInfo;
 
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
-import com.adobe.aem.modernize.dialog.DialogRewriteException;
 import com.day.cq.commons.PathInfo;
 import com.day.cq.commons.jcr.JcrUtil;
+import static com.adobe.aem.modernize.impl.RewriteUtils.hasPrimaryType;
 import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 
 /**
@@ -47,11 +48,10 @@ public class IncludeRewriteRule extends AbstractDialogRewriteRule {
         return hasXtype(root, XTYPE);
     }
 
-    public Node applyTo(Node root, Set<Node> finalNodes)
-            throws DialogRewriteException, RepositoryException {
+    public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
         // check if the 'path property exists
         if (!root.hasProperty("path")) {
-            throw new DialogRewriteException("Missing include path");
+            throw new RewriteException("Missing include path");
         }
 
         // get path to included node
@@ -61,7 +61,7 @@ public class IncludeRewriteRule extends AbstractDialogRewriteRule {
         // check if the path is valid
         Session session = root.getSession();
         if (!session.nodeExists(path)) {
-            throw new DialogRewriteException("Include path does not exist");
+            throw new RewriteException("Include path does not exist");
         }
 
         // remove original

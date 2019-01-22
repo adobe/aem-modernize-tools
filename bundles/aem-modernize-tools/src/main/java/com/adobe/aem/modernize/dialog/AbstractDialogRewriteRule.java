@@ -33,8 +33,7 @@ public abstract class AbstractDialogRewriteRule implements DialogRewriteRule {
     private int ranking = Integer.MAX_VALUE;
 
     @Activate
-    protected void activate(ComponentContext context)
-            throws RepositoryException {
+    protected void activate(ComponentContext context) throws RepositoryException {
         @SuppressWarnings("unchecked")
         Dictionary<String, Object> props = context.getProperties();
         // read service ranking property

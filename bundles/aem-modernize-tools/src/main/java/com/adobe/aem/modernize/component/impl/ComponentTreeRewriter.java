@@ -11,9 +11,8 @@
  */
 package com.adobe.aem.modernize.component.impl;
 
-import com.adobe.aem.modernize.component.ComponentRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
-import com.day.cq.commons.jcr.JcrUtil;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 
 import org.slf4j.Logger;
@@ -42,10 +41,10 @@ public class ComponentTreeRewriter {
      *
      * @param root The root of the component be rewritten
      * @return the root node of the rewritten component tree, or null if it was removed
-     * @throws ComponentRewriteException If the rewrite operation fails
+     * @throws RewriteException If the rewrite operation fails
      * @throws RepositoryException If there is a problem with the repository
      */
-    public Node rewrite(Node root) throws ComponentRewriteException, RepositoryException {
+    public Node rewrite(Node root) throws RewriteException, RepositoryException {
         String rootPath = root.getPath();
         logger.debug("Rewriting component's content tree rooted at {}", rootPath);
 

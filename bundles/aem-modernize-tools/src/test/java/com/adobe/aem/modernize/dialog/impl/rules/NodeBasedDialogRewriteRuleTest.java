@@ -27,7 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class NodeBasedRewriteRuleTest {
+public class NodeBasedDialogRewriteRuleTest {
 
     private final String RULES_PATH = "/libs/cq/dialogconversion/rules";
     private final String ROOTS_PATH = "/libs/cq/dialogconversion/content/roots";
@@ -51,14 +51,14 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteOptional").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
 
         assertTrue(rule.matches(rootNode));
 
         // remove the cq:rewriteOptional property on the pattern items node and check it no longer matches
         Node itemsNode = ruleNode.getNode("patterns/pattern/items");
         itemsNode.getProperty("cq:rewriteOptional").remove();
-        rule = new NodeBasedRewriteRule(ruleNode);
+        rule = new NodeBasedDialogRewriteRule(ruleNode);
 
         assertFalse(rule.matches(rootNode));
     }
@@ -68,7 +68,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteFinal").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
 
         rule.applyTo(rootNode, finalNodes);
@@ -84,7 +84,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteFinalOnReplacement").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
 
         rule.applyTo(rootNode, finalNodes);
@@ -101,7 +101,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteRanking").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         rule.applyTo(rootNode, finalNodes);
 
@@ -109,7 +109,7 @@ public class NodeBasedRewriteRuleTest {
 
         // remove the cq:rewriteRanking property on the rule node and check against expected value
         ruleNode.getProperty("cq:rewriteRanking").remove();
-        rule = new NodeBasedRewriteRule(ruleNode);
+        rule = new NodeBasedDialogRewriteRule(ruleNode);
 
         assertEquals(Integer.MAX_VALUE, rule.getRanking());
     }
@@ -119,7 +119,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteMapChildren").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteMapChildren").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -144,7 +144,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteCommonAttrs").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteCommonAttrs").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -167,7 +167,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteCommonAttrsData").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteCommonAttrsData").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -186,7 +186,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteRenderCondition").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteRenderCondition").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -198,7 +198,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -210,7 +210,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -222,7 +222,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -234,7 +234,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -247,7 +247,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/mapProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -261,7 +261,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/rewriteProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/rewriteProperties").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         Set<Node> finalNodes = new LinkedHashSet<>();
         Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
 
@@ -291,8 +291,8 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
-        String expected = "NodeBasedRewriteRule[path=" + RULES_PATH + "/simple,ranking=" + Integer.MAX_VALUE + "]";
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
+        String expected = "NodeBasedDialogRewriteRule[path=" + RULES_PATH + "/simple,ranking=" + Integer.MAX_VALUE + "]";
         assertEquals(expected, rule.toString());
     }
 
@@ -301,7 +301,7 @@ public class NodeBasedRewriteRuleTest {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
-        NodeBasedRewriteRule rule = new NodeBasedRewriteRule(ruleNode);
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         assertEquals(Integer.MAX_VALUE, rule.getRanking());
     }
 }

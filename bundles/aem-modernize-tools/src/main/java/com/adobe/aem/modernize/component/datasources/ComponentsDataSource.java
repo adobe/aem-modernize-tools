@@ -41,7 +41,7 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
-import com.adobe.aem.modernize.component.ComponentRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.granite.ui.components.ExpressionResolver;
 import com.adobe.granite.ui.components.ds.DataSource;
@@ -89,12 +89,12 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
             path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
             setDataSource(path, request, itemResourceType);
-        } catch (RepositoryException | ComponentRewriteException e) {
+        } catch (RepositoryException | RewriteException e) {
             log.warn("Unable to list components: {}", e.getMessage());
         }
     }
 
-    private void setDataSource(String path, SlingHttpServletRequest request, String itemResourceType) throws RepositoryException, ComponentRewriteException {
+    private void setDataSource(String path, SlingHttpServletRequest request, String itemResourceType) throws RepositoryException, RewriteException {
         List<Resource> resources = new ArrayList<>();
 
         if (StringUtils.isNotEmpty(path)) {
@@ -117,7 +117,7 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
         request.setAttribute(DataSource.class.getName(), ds);
     }
 
-    private void buildNodeMap(String searchPath, Map<String, Node> nodeMap, ResourceResolver resolver) throws RepositoryException, ComponentRewriteException {
+    private void buildNodeMap(String searchPath, Map<String, Node> nodeMap, ResourceResolver resolver) throws RepositoryException, RewriteException {
 
         Resource rootResource = resolver.getResource(searchPath);
 
@@ -172,7 +172,7 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
         }
     }
 
-    private Query createQuery(String path, ResourceResolver resourceResolver) throws ComponentRewriteException, RepositoryException {
+    private Query createQuery(String path, ResourceResolver resourceResolver) throws RewriteException, RepositoryException {
         String encodedPath = "/".equals(path) ? "" : ISO9075.encodePath(path);
         if (encodedPath.length() > 1 && encodedPath.endsWith("/")) {
             encodedPath = encodedPath.substring(0, encodedPath.length() - 1);

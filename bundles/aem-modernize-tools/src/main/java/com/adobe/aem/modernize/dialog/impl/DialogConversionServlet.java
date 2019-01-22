@@ -35,9 +35,9 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.commons.json.JSONObject;
 
-import com.adobe.aem.modernize.dialog.DialogRewriteException;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.dialog.DialogRewriteRule;
-import com.adobe.aem.modernize.dialog.impl.rules.NodeBasedRewriteRule;
+import com.adobe.aem.modernize.dialog.impl.rules.NodeBasedDialogRewriteRule;
 import com.day.cq.commons.jcr.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ public class DialogConversionServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response)
-            throws ServletException, IOException {
+throws ServletException, IOException {
         // validate 'paths' parameter
         RequestParameter[] paths = request.getRequestParameters(PARAM_PATHS);
         if (paths == null) {
@@ -123,7 +123,7 @@ public class DialogConversionServlet extends SlingAllMethodsServlet {
                     Node result = rewriter.rewrite(session.getNode(path));
                     json.put(KEY_RESULT_PATH, result.getPath());
                     logger.debug("Successfully converted dialog {} to {}", path, result.getPath());
-                } catch (DialogRewriteException e) {
+                } catch (RewriteException e) {
                     json.put(KEY_ERROR_MESSAGE, e.getMessage());
                     logger.warn("Converting dialog {} failed", path, e);
                 }
@@ -164,12 +164,12 @@ public class DialogConversionServlet extends SlingAllMethodsServlet {
                             Node nestedNode = nodeIterator.nextNode();
                             // don't include nested folders
                             if (!isFolder(nestedNode)) {
-                                rules.add(new NodeBasedRewriteRule(nestedNode));
+                                rules.add(new NodeBasedDialogRewriteRule(nestedNode));
                             }
                         }
                     } else {
                         // add rules directly at the rules search path
-                        rules.add(new NodeBasedRewriteRule(nextNode));
+                        rules.add(new NodeBasedDialogRewriteRule(nextNode));
                     }
                 }
             } catch (RepositoryException e) {
