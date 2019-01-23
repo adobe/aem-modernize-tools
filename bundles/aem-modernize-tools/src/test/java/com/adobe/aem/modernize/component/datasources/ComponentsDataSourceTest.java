@@ -134,10 +134,12 @@ public class ComponentsDataSourceTest {
         List<String> expectedComponentPaths = new ArrayList<>();
         expectedComponentPaths.addAll(Arrays.asList(
             COMPONENTS_ROOT + "/simple",
+            COMPONENTS_ROOT + "/copyChildren",
             COMPONENTS_ROOT + "/rewriteOptional",
             COMPONENTS_ROOT + "/mapProperties",
             COMPONENTS_ROOT + "/rewriteProperties",
             COMPONENTS_ROOT + "/rewriteMapChildren",
+            COMPONENTS_ROOT + "/copyChildrenOrder",
             COMPONENTS_ROOT + "/level1/simple",
             COMPONENTS_ROOT + "/level1/mapProperties",
             COMPONENTS_ROOT + "/level1/rewriteProperties",

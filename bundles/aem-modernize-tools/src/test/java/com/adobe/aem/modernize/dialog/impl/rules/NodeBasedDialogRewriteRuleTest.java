@@ -289,7 +289,6 @@ public class NodeBasedDialogRewriteRuleTest {
     @Test
     public void testToString() throws Exception {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
         NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         String expected = "NodeBasedDialogRewriteRule[path=" + RULES_PATH + "/simple,ranking=" + Integer.MAX_VALUE + "]";
@@ -299,7 +298,6 @@ public class NodeBasedDialogRewriteRuleTest {
     @Test
     public void testGetRanking() throws Exception {
         Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/simple").adaptTo(Node.class);
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/simple").adaptTo(Node.class);
 
         NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         assertEquals(Integer.MAX_VALUE, rule.getRanking());

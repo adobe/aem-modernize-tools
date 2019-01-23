@@ -25,6 +25,104 @@ import com.day.cq.commons.jcr.JcrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * An abstract rule that rewrites a tree based on a given node structure. The node structure
+ * has the following form:
+ *
+ * <pre>
+ * rule
+ *   - jcr:primaryType = nt:unstructured
+ *   - cq:rewriteRanking = 4
+ *   + patterns
+ *     - jcr:primaryType = nt:unstructured
+ *     + foo
+ *       - ...
+ *       + ...
+ *     + foo1
+ *       - ...
+ *       + ...
+ *   + replacement
+ *     + bar
+ *       - ...
+ *       + ...
+ * </pre>
+ *
+ * <p>This example defines a rule containing two patterns (the trees rooted at <code>foo</code> and <code>foo1</code>)
+ * and a replacement (the tree rooted at <code>bar</code>). The pattern and replacement trees are arbitrary trees
+ * containing nodes and properties. The rule matches a subtree if any of the defined patterns matches. In order for
+ * a pattern to match, the tree in question must contain the same nodes as the pattern (matching names, except for the
+ * root), and all properties defined in the pattern must match the properties on the tree. A node in a pattern
+ * can be marked as optional by setting <code>cq:rewriteOptional</code> to <code>true</code>, in which case it
+ * doesn't necessarily have to present for a tree to match.</p>
+ *
+ * <p>In the case of a match, the matched subtree (called original tree) will be substituted by the replacement. The
+ * replacement tree can define mapped properties that will inherit the value of a property in the original tree. They
+ * need to be of type <code>string</code> and have the following format: <code>${&lt;path&gt;}</code>. If the referenced
+ * property doesn't exist in the original tree, then the property is omitted. Alternatively, a default value can be
+ * specified for that case (only possible for <code>string</code> properties):
+ * <code>${&lt;path&gt;:&lt;default&gt;}</code>. Properties that contain ':' characters can be single quoted to avoid
+ * conflict with providing a default value. Boolean properties are negated if the expression is prefixed with
+ * <code>!</code>. Mapped properties can also be multivalued, in which case they will be assigned the value of the first
+ * property that exists in the original tree. The following example illustrates mapping properties:</p>
+ *
+ * <pre>
+ * rule
+ *   ...
+ *   + replacement
+ *     + bar
+ *       - prop = ${./some/prop}
+ *         // 'prop' will be assigned the value of 'some/prop' in the original tree
+ *       - negated = !${./some/boolean/prop}
+ *         // 'negated' will be assigned the negated value of 'some/boolean/prop' in the original tree
+ *       - default = ${./some/prop:default string value}
+ *         // 'default' will be assigned the value of 'some/prop' if it exists, else the string 'default string'
+ *       - multi = [${./some/prop1}, ${./some/prop2}]
+ *         // 'multi' will be assigned the value of 'some/prop1' if it exists, else the value of 'some/prop2'
+ * </pre>
+ * <p>
+ * The replacement tree supports following special properties:
+ *
+ * <ul>
+ * <li>
+ * <code>cq:copyChildren</code> boolean<br />
+ * Copies all children of the referenced node in the original tree to the node containing this property.
+ * The order will be preserved. If order needs to be updated or the node renamed, use the <code>cq:rewriteMapChildren</code>
+ * feature.
+ * </li>
+ * <li>
+ * <code>cq:rewriteMapChildren</code> (string)<br />
+ * Copies the children of the referenced node in the original tree to the node containing this property
+ * (e.g. <code>cq:rewriteMapChildren=./items</code> will copy the children of <code>./items</code> to the
+ * current node). Order can be specified with <code>cq:orderBefore</code> property on this node. The order will occur after all mapping is complete.
+ * </li>
+ * <li>
+ * <code>cq:rewriteFinal</code> (boolean)<br />
+ * Set this property on a node that is final and can be disregarded for the rest of the conversion as an
+ * optimization measure. When placed on the replacement node itself (i.e. on <code>rule/replacement</code>),
+ * the whole replacement tree is considered final.
+ * </li>
+ * </ul>
+ * <p>
+ * In addition, a special <code><cq:rewriteProperties></code> node can be added to a replacement node to define
+ * string rewrites for mapped properties in the result. The node is removed from the replacement.
+ * The properties of the <code><cq:rewriteProperties></code> node must
+ * be named the same as those which they are rewriting and accept a string array with two parameters:
+ * <p>
+ * - pattern: regexp to match against. e.g. "(?:coral-Icon--)(.+)"
+ * - replacement: provided to the matcher <code>replaceAll</code> function. e.g. "$1"
+ * <p>
+ * Example:
+ *
+ * <pre>
+ * rule
+ *   ...
+ *   + replacement
+ *     + bar
+ *       - icon = ${./icon}
+ *       + cq:rewriteProperties
+ *         - icon = [(?:coral-Icon--)(.+), $1]
+ * </pre>
+ */
 public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
 
     // pattern that matches the regex for mapped properties: ${<path>}
@@ -35,6 +133,8 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
     private static final String PROPERTY_OPTIONAL = "cq:rewriteOptional";
     private static final String PROPERTY_MAP_CHILDREN = "cq:rewriteMapChildren";
     private static final String PROPERTY_IS_FINAL = "cq:rewriteFinal";
+    private static final String PROPERTY_ORDER_BEFORE = "cq:orderBefore";
+    private static final String PROPERTY_COPY_CHILDREN = "cq:copyChildren";
 
     // special nodes
     private static final String NN_CQ_REWRITE_PROPERTIES = "cq:rewriteProperties";
@@ -150,6 +250,8 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
             treeIsFinal = replacement.getProperty(PROPERTY_IS_FINAL).getBoolean();
         }
 
+        // Set the flag if we need to copy all original children nodes to target.
+        boolean copyChildren = false;
         /**
          * Approach:
          * - we move (rename) the tree to be rewritten to a temporary name
@@ -169,6 +271,7 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
 
         // collect mappings: (node in original tree) -> (node in replacement tree)
         Map<String, String> mappings = new HashMap<>();
+        Map<String, String> mappingOrder = new HashMap<>();
         // traverse nodes of newly copied replacement tree
         TreeTraverser traverser = new TreeTraverser(copy);
         Iterator<Node> nodeIterator = traverser.iterator();
@@ -198,6 +301,14 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
                     property.remove();
                     continue;
                 }
+                // Add the mapping order
+                if (PROPERTY_ORDER_BEFORE.equals(property.getName())) {
+                    mappingOrder.put(node.getName(), property.getString());
+                    // remove order, as we don't want it to be part of the result
+                    property.remove();
+                    continue;
+                }
+
                 // add single node to final nodes
                 if (PROPERTY_IS_FINAL.equals(property.getName())) {
                     if (!treeIsFinal) {
@@ -206,6 +317,14 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
                     property.remove();
                     continue;
                 }
+
+                // Do we copy all of the children?
+                if (PROPERTY_COPY_CHILDREN.equals(property.getName())) {
+                    copyChildren = property.getBoolean();
+                    property.remove();
+                    continue;
+                }
+
                 // set value from original tree in case this is a mapped property
                 Property mappedProperty = mapProperty(root, property);
 
@@ -222,22 +341,47 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
             }
         }
 
-        // copy children from original tree to replacement tree according to the mappings found
-        Session session = root.getSession();
-        for (Map.Entry<String, String> mapping : mappings.entrySet()) {
-            if (!root.hasNode(mapping.getKey())) {
-                // the node specified in the mapping does not exist in the original tree
-                continue;
+        // copy children from original tree to replacement tree according to the mappings found, preserve order
+        if (copyChildren || !mappings.isEmpty()) {
+            Session session = root.getSession();
+            NodeIterator children = root.getNodes();
+            while (children.hasNext()) {
+                Node child = children.nextNode();
+
+                boolean foundMapping = false;
+                for (Map.Entry<String, String> mapping : mappings.entrySet()) {
+                    // Don't process an unmapped key
+                    if (!root.hasNode(mapping.getKey())) {
+                        continue;
+                    }
+
+                    // Don't process this node if it isn't the one in the sequence.
+                    Node mappedSource = root.getNode(mapping.getKey());
+                    if (!mappedSource.getPath().equals(child.getPath())) {
+                        continue;
+                    }
+                    foundMapping = true;
+                    Node destination = session.getNode(mapping.getValue());
+                    NodeIterator iterator = child.getNodes();
+                    // copy over the source's children to the destination
+                    while (iterator.hasNext()) {
+                        Node n = iterator.nextNode();
+                        JcrUtil.copy(n, destination, n.getName());
+                    }
+                }
+                if (copyChildren && !foundMapping) {
+                    // Just copy it over if we're copying everything
+                    JcrUtil.copy(child, copy, child.getName());
+                }
             }
-            Node source = root.getNode(mapping.getKey());
-            Node destination = session.getNode(mapping.getValue());
-            NodeIterator iterator = source.getNodes();
-            // copy over the source's children to the destination
-            while (iterator.hasNext()) {
-                Node child = iterator.nextNode();
-                JcrUtil.copy(child, destination, child.getName());
+
+            // now that everything is copied, reorder
+            for (Map.Entry<String, String> orderEntry : mappingOrder.entrySet()) {
+                copy.orderBefore(orderEntry.getKey(), orderEntry.getValue());
             }
         }
+
+        doAdditionalApplyTo(root, copy, replacement);
 
         // we add the complete subtree to the final nodes
         if (treeIsFinal) {
@@ -247,7 +391,6 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
                 finalNodes.add(nodeIterator.next());
             }
         }
-        doAdditionalApplyTo(root, copy, replacement);
 
         // remove original tree and return rewritten tree
         root.remove();

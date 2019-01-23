@@ -47,6 +47,8 @@ public class ComponentRewriteRuleServiceImplTest {
         expectedRulePaths.addAll(Arrays.asList(
                 RULES_PATH + "/rewriteRanking",
                 RULES_PATH + "/simple",
+                RULES_PATH + "/copyChildren",
+                RULES_PATH + "/copyChildrenOrder",
                 RULES_PATH + "/mapProperties",
                 RULES_PATH + "/rewriteOptional",
                 RULES_PATH + "/rewriteMapChildren",
