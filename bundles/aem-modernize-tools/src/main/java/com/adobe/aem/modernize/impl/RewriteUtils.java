@@ -11,6 +11,8 @@ import com.day.cq.commons.jcr.JcrUtil;
  */
 
 public class RewriteUtils {
+
+    public static final String RESPONSIVE_GRID_RES_TYPE = "wcm/foundation/components/responsivegrid";
     /**
      * Checks if a node has a certain primary type.
      *

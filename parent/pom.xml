@@ -254,21 +254,32 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <instructions>
-                            <Bundle-RequiredExecutionEnvironment>JavaSE-1.${aem.java.version}</Bundle-RequiredExecutionEnvironment>
-                        </instructions>
-                    </configuration>
+                    <extensions>true</extensions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>biz.aQute.bnd</groupId>
+                            <artifactId>bndlib</artifactId>
+                            <version>2.4.0</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
+                        <!-- Configure extra execution of 'manifest' in process-classes phase to make sure SCR metadata is generated before unit test runs -->
                         <execution>
-                            <id>baseline</id>
+                            <id>scr-metadata</id>
                             <goals>
                                 <goal>baseline</goal>
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <exportScr>true</exportScr>
+                        <instructions>
+                            <!-- Enable processing of OSGI DS component annotations -->
+                            <_dsannotations>*</_dsannotations>
+                            <!-- Enable processing of OSGI metatype annotations -->
+                            <_metatypeannotations>*</_metatypeannotations>
+                        </instructions>
+                    </configuration>
                 </plugin>
 
                 <!-- Apache Felix SCR Plugin -->
@@ -508,6 +519,13 @@
                 <version>2.1.8</version>
                 <scope>compile</scope>
             </dependency>
+            <dependency>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>org.apache.sling.commons.osgi</artifactId>
+                <version>2.4.0</version>
+                <scope>provided</scope>
+            </dependency>
+
 
             <!-- Servlet API -->
             <dependency>
@@ -636,19 +654,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
-            <!--<dependency>-->
-                <!--<groupId>io.wcm</groupId>-->
-                <!--<artifactId>io.wcm.testing.aem-mock</artifactId>-->
-                <!--<version>2.1.0</version>-->
-                <!--<scope>test</scope>-->
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>org.apache.commons</groupId>-->
-                        <!--<artifactId>commons-imaging</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
-            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
