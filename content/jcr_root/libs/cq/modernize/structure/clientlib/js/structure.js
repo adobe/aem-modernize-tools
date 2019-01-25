@@ -12,21 +12,21 @@
 $(document).ready(function () {
     'use strict';
 
-    var REMOTE_COMPONENT_CONVERSION_SERVICE_PATH = "/libs/cq/modernize/component";
+    var REMOTE_STRUCTURE_CONVERSION_SERVICE_PATH = "/libs/cq/modernize/structure";
 
     var ui = $(window).adaptTo("foundation-ui");
 
-    var componentRows;
+    var pageRows;
     var convertedRows = [];
     var structureConverterContainer = document.querySelector(".js-aem-StructureConverter-container");
     var searchPathField = document.querySelector(".js-aem-StructureConverter-searchPath");
     var infoText = document.querySelector(".js-aem-StructureConverter-infoText");
-    var showPagesButton = document.querySelector(".js-aem-StructureConverter-showComponents");
+    var showPagesButton = document.querySelector(".js-aem-StructureConverter-showPages");
     var backButton = document.querySelector(".js-aem-StructureConverter-back");
-    var convertPagesButton = document.querySelector(".js-aem-StructureConverter-convertComponents");
-    var pageSearch = document.querySelector(".js-aem-StructureConverter-componentSearch");
-    var convertedPages = document.querySelector(".js-aem-StructureConverter-convertedComponents");
-    var pageTable = document.querySelector(".js-aem-StructureConverter-components");
+    var convertPagesButton = document.querySelector(".js-aem-StructureConverter-convertPages");
+    var pageSearch = document.querySelector(".js-aem-StructureConverter-pageSearch");
+    var convertedPages = document.querySelector(".js-aem-StructureConverter-convertedPages");
+    var pageTable = document.querySelector(".js-aem-StructureConverter-pages");
 
     function updateRepositoryPathParameter () {
         if (!searchPathField) {
@@ -44,10 +44,10 @@ $(document).ready(function () {
     }
 
     function init () {
-        componentRows = pageTable.items.getAll();
+        pageRows = pageTable.items.getAll();
 
-        for (var i = 0, length = componentRows.length; i < length; i++) {
-            var row = componentRows[i];
+        for (var i = 0, length = pageRows.length; i < length; i++) {
+            var row = pageRows[i];
 
             if (row.hasAttribute("data-modernize-structure-converted")) {
                 convertedRows.push(row);
@@ -57,12 +57,12 @@ $(document).ready(function () {
         if (infoText) {
           infoText.textContent = "";
 
-          if (componentRows && componentRows.length > 0) {
-            if (componentRows.length === 1 && !componentRows[0].dataset["foundationCollectionItemId"]) {
+          if (pageRows && pageRows.length > 0) {
+            if (pageRows.length === 1 && !pageRows[0].dataset["foundationCollectionItemId"]) {
               // The empty row, hide the infoText
               infoText.setAttribute("hidden", true);
             } else {
-              infoText.textContent = Granite.I18n.get("Found {0} pages(s)", componentRows.length);
+              infoText.textContent = Granite.I18n.get("Found {0} pages(s)", pageRows.length);
             }
           }
         }
@@ -74,7 +74,7 @@ $(document).ready(function () {
             var selection = event && event.detail && event.detail.selection ? event.detail.selection : [];
             var count = selection.length;
 
-            // Deselect already converted components
+            // Deselect already converted structures
             for (var i = 0; i < selection.length; i++) {
                 var row = selection[i];
                 if (row.hasAttribute("data-modernize-structure-converted")) {
@@ -91,16 +91,16 @@ $(document).ready(function () {
             // get paths from table
             var paths = [];
 
-            var selectedComponentRows = pageTable.selectedItems;
-            for (var i = 0, length = selectedComponentRows.length; i < length; i++) {
-                var value = selectedComponentRows[i].dataset["foundationCollectionItemId"];
+            var selectedStructureRows = pageTable.selectedItems;
+            for (var i = 0, length = selectedStructureRows.length; i < length; i++) {
+                var value = selectedStructureRows[i].dataset["foundationCollectionItemId"];
 
                 if (value) {
                     paths.push(value);
                 }
             }
 
-            var url = REMOTE_COMPONENT_CONVERSION_SERVICE_PATH + "/content/convert.json";
+            var url = REMOTE_STRUCTURE_CONVERSION_SERVICE_PATH + "/content/convert.json";
             var data = {
                 paths : paths
             };
@@ -130,7 +130,7 @@ $(document).ready(function () {
                     var row = new Coral.Table.Row();
                     convertedPages.items.add(row);
 
-                    // Create a cell that will contain the path to the component
+                    // Create a cell that will contain the path to the structure
                     var pathCell = new Coral.Table.Cell();
                     pathCell.textContent = path;
 
@@ -169,8 +169,8 @@ $(document).ready(function () {
                 }
 
                 var type = "success";
-                var successes = Granite.I18n.get("Converted <strong>{0}</strong> component(s)", successCount, "");
-                var errors = Granite.I18n.get("Failed converting <strong>{0}</strong> component(s)", errorCount, "");
+                var successes = Granite.I18n.get("Converted <strong>{0}</strong> structure(s)", successCount, "");
+                var errors = Granite.I18n.get("Failed converting <strong>{0}</strong> structure(s)", errorCount, "");
                 var content = successes;
 
                 if (errorCount > 0 && successCount > 0) {

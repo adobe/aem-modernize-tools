@@ -207,7 +207,7 @@
           "controlType": "break",
           "sling:resourceType": "foundation/components/parsys/colctrl"
         },
-        "text_1":
+        "text_1": {
           "jcr:primaryType": "nt:unstructured",
           "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
           "sling:resourceType": "geodemo/components/content/text",

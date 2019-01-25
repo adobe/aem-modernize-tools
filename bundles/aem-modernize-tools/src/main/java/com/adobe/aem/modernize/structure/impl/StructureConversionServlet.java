@@ -89,7 +89,7 @@ public class StructureConversionServlet extends SlingAllMethodsServlet {
                     // rewrite the structure
                     Node result = rewriter.rewrite(session.getNode(path));
                     json.put(KEY_RESULT_PATH, result.getPath());
-                    logger.debug("Successfully converted structure {} to {}", path, result.getPath());
+                    logger.debug("Successfully convertexd structure {} to {}", path, result.getPath());
                 } catch (RewriteException e) {
                     json.put(KEY_ERROR_MESSAGE, e.getMessage());
                     logger.warn("Converting structure {} failed", path, e);
