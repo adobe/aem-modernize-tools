@@ -6,6 +6,15 @@
     <operations
       jcr:mixinTypes="[rep:AccessControllable]"
       jcr:primaryType="nt:unstructured">
+      <modernizestructure
+        jcr:mixinTypes="[rep:AccessControllable]"
+        jcr:primaryType="nt:unstructured"
+        jcr:title="Page Template/Structure Conversion"
+        sling:orderBefore="modernizecomponents"
+        href="/libs/cq/modernize/structure/content/console.html"
+        id="aem-tools-modernize-structure">
+        <rep:policy/>
+      </modernizestructure>
       <modernizecomponents
           jcr:mixinTypes="[rep:AccessControllable]"
           jcr:primaryType="nt:unstructured"
