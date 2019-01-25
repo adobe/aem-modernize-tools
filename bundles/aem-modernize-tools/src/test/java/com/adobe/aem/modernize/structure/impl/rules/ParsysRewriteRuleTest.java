@@ -1,5 +1,7 @@
 package com.adobe.aem.modernize.structure.impl.rules;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -9,13 +11,17 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.commons.testing.jcr.RepositoryUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit.SlingContext;
 
 import com.adobe.aem.modernize.impl.RewriteUtils;
+import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import static org.junit.Assert.*;
 
 public class ParsysRewriteRuleTest {
@@ -37,21 +43,21 @@ public class ParsysRewriteRuleTest {
 
     @Test
     public void testMatches() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/par").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content/par").adaptTo(Node.class);
         ParsysRewriteRule rule = new ParsysRewriteRule();
         assertTrue(rule.matches(rootNode));
     }
 
     @Test
     public void testDoesNotMatch() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content").adaptTo(Node.class);
         ParsysRewriteRule rule = new ParsysRewriteRule();
         assertFalse(rule.matches(rootNode));
     }
 
     @Test
     public void testApplyTo() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/par").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content/par").adaptTo(Node.class);
 
         ParsysRewriteRule rule = new ParsysRewriteRule();
         Node rewrittenNode = rule.applyTo(rootNode, new LinkedHashSet<>());
@@ -89,5 +95,27 @@ public class ParsysRewriteRuleTest {
         assertEquals("title", siblings.nextNode().getName());
         assertTrue(siblings.hasNext());
         assertEquals("header", siblings.nextNode().getName());
+        assertFalse(siblings.hasNext());
     }
+
+    @Test
+    public void testRanking() throws Exception {
+    // get bundle context
+        BundleContext bundleContext = MockOsgi.newBundleContext();
+
+        StructureRewriteRule rule = new ParsysRewriteRule();
+
+        // inject dependencies
+        MockOsgi.injectServices(rule, bundleContext);
+
+        Dictionary<String, Object> props = new Hashtable<>();
+        // activate service
+        MockOsgi.activate(rule, bundleContext, props);
+        bundleContext.registerService(StructureRewriteRule.class, rule, props);
+        ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
+        rule = bundleContext.<StructureRewriteRule>getService(ref);
+
+        assertEquals(2, rule.getRanking());
+    }
+
 }

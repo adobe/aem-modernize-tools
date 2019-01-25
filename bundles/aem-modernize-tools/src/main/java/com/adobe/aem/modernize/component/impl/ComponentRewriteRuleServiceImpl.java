@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 @Service
 public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleService {
 
-
     private Logger logger = LoggerFactory.getLogger(ComponentRewriteRuleServiceImpl.class);
     /**
      * Relative path to the node containing node-based component rewrite rules
@@ -60,8 +59,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         rules.remove(rule);
     }
 
-
-    public List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws RewriteException {
+    public List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws RepositoryException {
         final List<ComponentRewriteRule> rules = new LinkedList<>();
 
         // 1) rules provided as OSGi services
@@ -74,28 +72,24 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         // 2) node-based rules
         Resource resource = resolver.getResource(RULES_SEARCH_PATH);
         if (resource != null) {
-            try {
-                Node rulesContainer = resource.adaptTo(Node.class);
-                NodeIterator iterator = rulesContainer.getNodes();
-                while (iterator.hasNext()) {
-                    Node nextNode = iterator.nextNode();
-                    if (isFolder(nextNode)) {
-                        // add first level folder rules
-                        NodeIterator nodeIterator = nextNode.getNodes();
-                        while (nodeIterator.hasNext()) {
-                            Node nestedNode = nodeIterator.nextNode();
-                            // don't include nested folders
-                            if (!isFolder(nestedNode)) {
-                                rules.add(new NodeBasedComponentRewriteRule(nestedNode));
-                            }
+            Node rulesContainer = resource.adaptTo(Node.class);
+            NodeIterator iterator = rulesContainer.getNodes();
+            while (iterator.hasNext()) {
+                Node nextNode = iterator.nextNode();
+                if (isFolder(nextNode)) {
+                    // add first level folder rules
+                    NodeIterator nodeIterator = nextNode.getNodes();
+                    while (nodeIterator.hasNext()) {
+                        Node nestedNode = nodeIterator.nextNode();
+                        // don't include nested folders
+                        if (!isFolder(nestedNode)) {
+                            rules.add(new NodeBasedComponentRewriteRule(nestedNode));
                         }
-                    } else {
-                        // add rules directly at the rules search path
-                        rules.add(new NodeBasedComponentRewriteRule(nextNode));
                     }
+                } else {
+                    // add rules directly at the rules search path
+                    rules.add(new NodeBasedComponentRewriteRule(nextNode));
                 }
-            } catch (RepositoryException e) {
-                throw new RewriteException("Caught exception while collecting rewrite rules", e);
             }
         }
 
@@ -113,17 +107,13 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     }
 
     @Override
-    public Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RewriteException {
+    public Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException {
         List<ComponentRewriteRule> rules = getRules(resolver);
 
         Set<String> types = new HashSet<>(rules.size());
 
-        try {
-            for (ComponentRewriteRule r : rules) {
-                types.addAll(r.getSlingResourceTypes());
-            }
-        } catch (RepositoryException ex) {
-            throw new RewriteException("Error occurred while collecting sling resource types.");
+        for (ComponentRewriteRule r : rules) {
+            types.addAll(r.getSlingResourceTypes());
         }
         return types;
     }

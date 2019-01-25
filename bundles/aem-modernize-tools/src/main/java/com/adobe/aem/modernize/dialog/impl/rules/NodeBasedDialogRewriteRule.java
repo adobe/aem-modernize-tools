@@ -21,7 +21,7 @@ import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.dialog.DialogRewriteRule;
-import com.adobe.aem.modernize.impl.impl.AbstractNodeBasedRewriteRule;
+import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 
 /**

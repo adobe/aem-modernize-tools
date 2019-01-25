@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
         metatype = true,
         label="Column Control Rewrite Rule", description="Rewrites Column control components to responsive grid replacements.")
 @Properties({
-        @Property(name="service.ranking", intValue = 2)
+        @Property(name="service.ranking", intValue = 3)
 })
 public class ColumnControlRewriteRule implements StructureRewriteRule {
 
@@ -104,7 +104,8 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
         Node parent = root.getParent();
         NodeIterator siblings = parent.getNodes();
         while (siblings.hasNext()) {
-            if (siblings.nextNode().getName().equals(root.getName())) {
+            Node sibling = siblings.nextNode();
+            if (sibling.getName().equals(root.getName())) {
                 break;
             }
         }

@@ -1,4 +1,4 @@
-package com.adobe.aem.modernize.impl.impl;
+package com.adobe.aem.modernize.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;

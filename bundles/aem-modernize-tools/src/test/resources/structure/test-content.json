@@ -1,240 +1,249 @@
 {
   "matches": {
-    "jcr:createdBy": "admin",
-    "jcr:title": "Strategic Consulting",
-    "jcr:lastModifiedBy": "admin",
-    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
-    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "jcr:primaryType": "cq:PageContent",
-    "cq:designPath": "/etc/designs/geometrixx/en",
-    "cq:template": "/apps/geometrixx/templates/homepage",
-    "sling:resourceType": "geometrixx/components/homepage",
-    "par": {
-      "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "foundation/components/parsys",
-      "colctrl": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content" : {
+      "jcr:createdBy": "admin",
+      "jcr:title": "Strategic Consulting",
+      "jcr:lastModifiedBy": "admin",
+      "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+      "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+      "jcr:primaryType": "cq:PageContent",
+      "cq:designPath": "/etc/designs/geometrixx/en",
+      "cq:template": "/apps/geometrixx/templates/homepage",
+      "sling:resourceType": "geometrixx/components/homepage",
+      "par": {
         "jcr:primaryType": "nt:unstructured",
-        "jcr:createdBy": "admin",
-        "jcr:lastModifiedBy": "admin",
-        "layout": "2;cq-colctrl-lt0",
-        "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
-        "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
+        "sling:resourceType": "foundation/components/parsys",
+        "colctrl": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:createdBy": "admin",
+          "jcr:lastModifiedBy": "admin",
+          "layout": "2;cq-colctrl-lt0",
+          "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
+          "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Strategic Consulting",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "text_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_break": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_2": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Shape Technology",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "text_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_end": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "end",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        }
       },
-      "image": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_1": {
+      "title": {
         "jcr:primaryType": "nt:unstructured",
         "jcr:title": "Strategic Consulting",
         "sling:resourceType": "geodemo/components/content/title"
       },
-      "text_1": {
+      "header": {
         "jcr:primaryType": "nt:unstructured",
-        "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_break": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "break",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "image_0": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_2": {
-        "jcr:primaryType": "nt:unstructured",
-        "jcr:title": "Shape Technology",
-        "sling:resourceType": "geodemo/components/content/title"
-      },
-      "text_0": {
-        "jcr:primaryType": "nt:unstructured",
-        "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_end": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "end",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
+        "jcr:title": "trust our experience\r\nto manage your business",
+        "imageReference": "/content/dam/geometrixx/header.png",
+        "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
+        "sling:resourceType": "geometrixx/components/header"
       }
-    },
-    "title": {
-      "jcr:primaryType": "nt:unstructured",
-      "jcr:title": "Strategic Consulting",
-      "sling:resourceType": "geodemo/components/content/title"
-    },
-    "header": {
-      "jcr:primaryType": "nt:unstructured",
-      "jcr:title": "trust our experience\r\nto manage your business",
-      "imageReference": "/content/dam/geometrixx/header.png",
-      "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
-      "sling:resourceType": "geometrixx/components/header"
     }
   },
   "doesNotMatch": {
-    "jcr:createdBy": "admin",
-    "jcr:title": "Strategic Consulting",
-    "jcr:lastModifiedBy": "admin",
-    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
-    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "jcr:primaryType": "cq:PageContent",
-    "cq:template": "/apps/geometrixx/templates/products",
-    "sling:resourceType": "geometrixx/components/products",
-    "par": {
-      "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "foundation/components/parsys",
-      "colctrl": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:createdBy": "admin",
+      "jcr:title": "Strategic Consulting",
+      "jcr:lastModifiedBy": "admin",
+      "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+      "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+      "jcr:primaryType": "cq:PageContent",
+      "cq:template": "/apps/geometrixx/templates/products",
+      "sling:resourceType": "geometrixx/components/products",
+      "par": {
         "jcr:primaryType": "nt:unstructured",
-        "jcr:createdBy": "admin",
-        "jcr:lastModifiedBy": "admin",
-        "layout": "2;cq-colctrl-lt0",
-        "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
-        "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "image": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_1": {
-        "jcr:primaryType": "nt:unstructured",
-        "jcr:title": "Strategic Consulting",
-        "sling:resourceType": "geodemo/components/content/title"
-      },
-      "text_1": {
-        "jcr:primaryType": "nt:unstructured",
-        "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_break": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "break",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "image_0": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_2": {
-        "jcr:primaryType": "nt:unstructured",
-        "jcr:title": "Shape Technology",
-        "sling:resourceType": "geodemo/components/content/title"
-      },
-      "text_0": {
-        "jcr:primaryType": "nt:unstructured",
-        "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_break_1": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "break",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "image_3": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_3": {
-        "jcr:primaryType": "nt:unstructured",
-        "jcr:title": "Shape Technology",
-        "sling:resourceType": "geodemo/components/content/title"
-      },
-      "text_3": {
-        "jcr:primaryType": "nt:unstructured",
-        "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_end": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "end",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
+        "sling:resourceType": "foundation/components/parsys",
+        "colctrl": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:createdBy": "admin",
+          "jcr:lastModifiedBy": "admin",
+          "layout": "2;cq-colctrl-lt0",
+          "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
+          "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Strategic Consulting",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "text_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_break": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_2": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Shape Technology",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "text_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_break_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image_3": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_3": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Shape Technology",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "text_3": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_end": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "end",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        }
       }
     }
   },
   "fourColumns": {
-    "jcr:createdBy": "admin",
-    "jcr:title": "Strategic Consulting",
-    "jcr:lastModifiedBy": "admin",
-    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
-    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "jcr:primaryType": "cq:PageContent",
-    "cq:template": "/apps/geometrixx/templates/products",
-    "sling:resourceType": "geometrixx/components/products",
-    "par": {
-      "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "foundation/components/parsys",
-      "colctrl": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:createdBy": "admin",
+      "jcr:title": "Strategic Consulting",
+      "jcr:lastModifiedBy": "admin",
+      "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+      "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+      "jcr:primaryType": "cq:PageContent",
+      "cq:template": "/apps/geometrixx/templates/productpage",
+      "sling:resourceType": "geometrixx/components/products",
+      "par": {
         "jcr:primaryType": "nt:unstructured",
-        "jcr:createdBy": "admin",
-        "jcr:lastModifiedBy": "admin",
-        "layout": "2;cq-colctrl-lt0",
-        "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
-        "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "image": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_1": {
-        "jcr:primaryType": "nt:unstructured",
-        "jcr:title": "Strategic Consulting",
-        "sling:resourceType": "geodemo/components/content/title"
-      },
-      "col_break": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "break",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "text_1": {
-        "jcr:primaryType": "nt:unstructured",
-        "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_break1": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "break",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "image_0": {
-        "jcr:primaryType": "nt:unstructured",
-        "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
-        "sling:resourceType": "geodemo/components/content/image"
-      },
-      "title_2": {
-        "jcr:primaryType": "nt:unstructured",
-        "jcr:title": "Shape Technology",
-        "sling:resourceType": "geodemo/components/content/title"
-      },
-      "col_break2": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "break",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
-      },
-      "text_0": {
-        "jcr:primaryType": "nt:unstructured",
-        "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
-        "sling:resourceType": "geodemo/components/content/text",
-        "textIsRich": "true"
-      },
-      "col_end": {
-        "jcr:primaryType": "nt:unstructured",
-        "controlType": "end",
-        "sling:resourceType": "foundation/components/parsys/colctrl"
+        "sling:resourceType": "foundation/components/parsys",
+        "colctrl": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:createdBy": "admin",
+          "jcr:lastModifiedBy": "admin",
+          "layout": "2;cq-colctrl-lt0",
+          "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
+          "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Strategic Consulting",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "col_break": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "text_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_break1": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "sling:resourceType": "geodemo/components/content/image"
+        },
+        "title_2": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Shape Technology",
+          "sling:resourceType": "geodemo/components/content/title"
+        },
+        "col_break2": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "text_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
+          "sling:resourceType": "geodemo/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_end": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "end",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        }
       }
     }
   }

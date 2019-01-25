@@ -22,7 +22,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.servlet.ServletException;
@@ -41,7 +40,6 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
-import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.granite.ui.components.ExpressionResolver;
 import com.adobe.granite.ui.components.ds.DataSource;
@@ -89,15 +87,15 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
             path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
             setDataSource(path, request, itemResourceType);
-        } catch (RepositoryException | RewriteException e) {
+        } catch (RepositoryException e) {
             log.warn("Unable to list components: {}", e.getMessage());
         }
     }
 
-    private void setDataSource(String path, SlingHttpServletRequest request, String itemResourceType) throws RepositoryException, RewriteException {
+    private void setDataSource(String path, SlingHttpServletRequest request, String itemResourceType) throws RepositoryException {
         List<Resource> resources = new ArrayList<>();
 
-        if (StringUtils.isNotEmpty(path)) {
+        if (StringUtils.isNotBlank(path)) {
             ResourceResolver resourceResolver = request.getResourceResolver();
             TreeMap<String, Node> nodeMap = new TreeMap<>();
 
@@ -117,7 +115,7 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
         request.setAttribute(DataSource.class.getName(), ds);
     }
 
-    private void buildNodeMap(String searchPath, Map<String, Node> nodeMap, ResourceResolver resolver) throws RepositoryException, RewriteException {
+    private void buildNodeMap(String searchPath, Map<String, Node> nodeMap, ResourceResolver resolver) throws RepositoryException {
 
         Resource rootResource = resolver.getResource(searchPath);
 
@@ -172,7 +170,7 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
         }
     }
 
-    private Query createQuery(String path, ResourceResolver resourceResolver) throws RewriteException, RepositoryException {
+    private Query createQuery(String path, ResourceResolver resourceResolver) throws RepositoryException {
         String encodedPath = "/".equals(path) ? "" : ISO9075.encodePath(path);
         if (encodedPath.length() > 1 && encodedPath.endsWith("/")) {
             encodedPath = encodedPath.substring(0, encodedPath.length() - 1);

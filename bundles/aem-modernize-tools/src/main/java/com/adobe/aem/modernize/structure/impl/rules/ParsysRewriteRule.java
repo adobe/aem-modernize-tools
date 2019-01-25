@@ -17,7 +17,6 @@ import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.impl.RewriteUtils;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
 @Component
 @Service
 @Properties({
-        @Property(name="service.ranking", intValue = 1)
+        @Property(name="service.ranking", intValue = 2)
 })
 public class ParsysRewriteRule implements StructureRewriteRule {
 
@@ -59,25 +58,26 @@ public class ParsysRewriteRule implements StructureRewriteRule {
         String name = root.getName();
         Node parent = root.getParent();
 
-        Node orderBefore = null;
+        String orderBefore = null;
         // Find the order
         NodeIterator siblings = parent.getNodes();
         while (siblings.hasNext()) {
             Node sib = siblings.nextNode();
             if (sib.getName().equals(name)) {
-                orderBefore = siblings.hasNext() ? siblings.nextNode() : null;
+                orderBefore = siblings.hasNext() ? siblings.nextNode().getName() : null;
                 break;
             }
         }
         RewriteUtils.rename(root);
         Node grid = parent.addNode(name, root.getPrimaryNodeType().getName());
         grid.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, RewriteUtils.RESPONSIVE_GRID_RES_TYPE);
-        parent.orderBefore(name, orderBefore.getName());
+        parent.orderBefore(name, orderBefore);
         NodeIterator children = root.getNodes();
         while (children.hasNext()) {
             Node child = children.nextNode();
             JcrUtil.copy(child, grid, child.getName());
         }
+        root.remove();
         return grid;
     }
 

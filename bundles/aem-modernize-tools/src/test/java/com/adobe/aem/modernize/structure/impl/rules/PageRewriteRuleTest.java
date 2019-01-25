@@ -90,7 +90,7 @@ public class PageRewriteRuleTest {
 
     @Test
     public void testMatches() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule = bundleContext.<StructureRewriteRule>getService(ref);
@@ -100,7 +100,7 @@ public class PageRewriteRuleTest {
 
     @Test
     public void testDoesNotMatch() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/doesNotMatch").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/doesNotMatch/jcr:content").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule = bundleContext.<StructureRewriteRule>getService(ref);
@@ -111,7 +111,7 @@ public class PageRewriteRuleTest {
     @Test
     public void testApplyTo() throws Exception {
 
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule = bundleContext.<StructureRewriteRule>getService(ref);
@@ -132,6 +132,14 @@ public class PageRewriteRuleTest {
         assertTrue(children.hasNext());
         assertEquals("header", children.nextNode().getName());
         assertFalse(children.hasNext());
+    }
+
+    @Test
+    public void testRanking() throws Exception {
+
+        ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
+        StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
+        assertEquals(1, rule.getRanking());
     }
 
 }

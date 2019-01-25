@@ -31,12 +31,14 @@ public class ComponentRewriteRuleServiceImplTest {
     public void setUp() throws Exception {
         ResourceResolver resolver = context.resourceResolver();
         Session adminSession = resolver.adaptTo(Session.class);
-        RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
+        RepositoryUtil.registerNodeType(adminSession,
+                getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
 
         context.load().json("/component/test-rules.json", RULES_PATH);
 
         // register conversion service
-        componentRewriteRuleService = context.registerService(ComponentRewriteRuleService.class, new ComponentRewriteRuleServiceImpl());
+        componentRewriteRuleService = context.registerService(ComponentRewriteRuleService.class,
+                new ComponentRewriteRuleServiceImpl());
     }
 
     @Test

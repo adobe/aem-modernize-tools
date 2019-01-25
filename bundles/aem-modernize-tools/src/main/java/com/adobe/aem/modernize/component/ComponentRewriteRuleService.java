@@ -2,6 +2,8 @@ package com.adobe.aem.modernize.component;
 
 import java.util.Set;
 
+import javax.jcr.RepositoryException;
+
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -16,5 +18,5 @@ public interface ComponentRewriteRuleService extends RewriteRuleService<Componen
      * Lists all of the sling:resourceType properties identified by the patterns.
      * @return
      */
-    Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RewriteException;
+    Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException;
 }

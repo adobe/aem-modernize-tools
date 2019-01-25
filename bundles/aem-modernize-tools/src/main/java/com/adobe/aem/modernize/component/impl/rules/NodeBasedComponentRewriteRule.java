@@ -20,7 +20,7 @@ import javax.jcr.RepositoryException;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
-import com.adobe.aem.modernize.impl.impl.AbstractNodeBasedRewriteRule;
+import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
 
 /**
  * An rule that rewrites a tree based on a given node structure. The node structure follows all

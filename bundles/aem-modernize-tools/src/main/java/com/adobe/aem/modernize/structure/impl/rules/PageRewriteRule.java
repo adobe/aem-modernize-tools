@@ -19,6 +19,7 @@ import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.impl.RewriteUtils;
+import com.adobe.aem.modernize.structure.PageStructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
@@ -33,8 +34,9 @@ import org.slf4j.LoggerFactory;
  * Removes the <code>cq:designPath</code> property, as it is unnecessary on Editable Templates
  * Creates a root responsive layout component and moves all children nodes (e.g. components) to this container.
  */
-@Service
+@Service(value = { PageStructureRewriteRule.class, StructureRewriteRule.class })
 @Component(
+
         configurationFactory = true,
         policy = ConfigurationPolicy.REQUIRE,
         metatype = true,
@@ -42,7 +44,7 @@ import org.slf4j.LoggerFactory;
 @Properties({
         @org.apache.felix.scr.annotations.Property(name="service.ranking", intValue = 1)
 })
-public class PageRewriteRule implements StructureRewriteRule {
+public class PageRewriteRule implements PageStructureRewriteRule {
 
     private static final Logger logger = LoggerFactory.getLogger(PageRewriteRule.class);
 
@@ -123,6 +125,11 @@ public class PageRewriteRule implements StructureRewriteRule {
         if (StringUtils.isBlank(editableTemplate)) {
             throw new ConfigurationException(PROP_EDITABLE_TEMPLATE, "Editable template is required.");
         }
+    }
+
+    @Override
+    public String getStaticTemplate() {
+        return staticTemplate;
     }
 
     @Override

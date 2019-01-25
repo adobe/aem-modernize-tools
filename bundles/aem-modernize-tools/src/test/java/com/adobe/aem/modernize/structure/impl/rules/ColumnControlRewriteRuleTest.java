@@ -22,7 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
 import static org.junit.Assert.*;
 
 public class ColumnControlRewriteRuleTest {
@@ -128,7 +127,7 @@ public class ColumnControlRewriteRuleTest {
     @Test
     public void testMatches() throws Exception {
 
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/par/colctrl").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content/par/colctrl").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
@@ -139,19 +138,18 @@ public class ColumnControlRewriteRuleTest {
     @Test
     public void testNoMatchResourceType() throws Exception {
 
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/par").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
 
         assertFalse(rule.matches(rootNode));
     }
-
 
     @Test
     public void testNoMatchLayout() throws Exception {
 
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/par/col_break").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content/par/col_break").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
@@ -159,11 +157,10 @@ public class ColumnControlRewriteRuleTest {
         assertFalse(rule.matches(rootNode));
     }
 
-
     @Test
     public void testNoMatchWrongColumnCount() throws Exception {
 
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/doesNotMatch/par/colctrl").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/doesNotMatch/jcr:content/par/colctrl").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
@@ -174,7 +171,7 @@ public class ColumnControlRewriteRuleTest {
 
     @Test
     public void testApplyTo() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/par/colctrl").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/matches/jcr:content/par/colctrl").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
@@ -216,6 +213,8 @@ public class ColumnControlRewriteRuleTest {
         assertTrue(siblings.hasNext());
         Node sib = siblings.nextNode();
         assertTrue(sib.getName().contains("responsivegrid"));
+        assertEquals(RewriteUtils.RESPONSIVE_GRID_RES_TYPE,
+                sib.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString());
         children = sib.getNodes();
         assertTrue(children.hasNext());
         assertEquals("cq:responsive", children.nextNode().getName());
@@ -237,7 +236,10 @@ public class ColumnControlRewriteRuleTest {
         // Verify column end is no longer in the list of components
         siblings = parent.getNodes();
         while (siblings.hasNext()) {
-            assertFalse(StringUtils.equals("col_end", siblings.nextNode().getName()));
+            String nodeName = siblings.nextNode().getName();
+            assertFalse(StringUtils.equals("colctrl", nodeName));
+            assertFalse(nodeName.contains("col_break"));
+            assertFalse(StringUtils.equals("col_end", nodeName));
         }
     }
 
@@ -258,7 +260,7 @@ public class ColumnControlRewriteRuleTest {
         MockOsgi.activate(rule, bundleContext, props);
         bundleContext.registerService(StructureRewriteRule.class, rule, props);
 
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/fourColumns/par/colctrl").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/fourColumns/jcr:content/par/colctrl").adaptTo(Node.class);
 
         ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
         rule = bundleContext.<StructureRewriteRule>getService(ref);
@@ -350,6 +352,14 @@ public class ColumnControlRewriteRuleTest {
         while (siblings.hasNext()) {
             assertFalse(StringUtils.equals("col_end", siblings.nextNode().getName()));
         }
+    }
+
+    @Test
+    public void testRanking() throws Exception {
+
+        ServiceReference ref = bundleContext.getServiceReference(StructureRewriteRule.class.getName());
+        StructureRewriteRule rule  = bundleContext.<StructureRewriteRule>getService(ref);
+        assertEquals(3, rule.getRanking());
     }
 
 }

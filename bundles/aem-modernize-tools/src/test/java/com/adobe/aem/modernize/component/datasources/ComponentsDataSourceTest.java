@@ -113,7 +113,6 @@ public class ComponentsDataSourceTest {
         // prepare externalizer
         Whitebox.setInternalState(componentsDataSource, "externalizer", externalizer);
 
-
         // prepare rewrite rule service
         Whitebox.setInternalState(componentsDataSource, "componentRewriteRuleService", componentRewriteRuleService);
 
