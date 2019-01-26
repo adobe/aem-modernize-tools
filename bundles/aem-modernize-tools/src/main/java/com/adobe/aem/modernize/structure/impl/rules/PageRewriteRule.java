@@ -1,6 +1,10 @@
 package com.adobe.aem.modernize.structure.impl.rules;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -60,6 +64,19 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
     private String editableTemplate;
 
+    @org.apache.felix.scr.annotations.Property(label = "Component Order",
+            description = "Specify the order of the components in the new responsive grid. " +
+                    "Any found and unspecified are moved to the end in arbitrary order.")
+    private static final String PROP_ORDER_COMPONENTS = "order.components";
+
+    private String[] componentOrder;
+
+    @org.apache.felix.scr.annotations.Property(label = "Remove Components",
+            description = "Specify any components that may exist on the static page that can be removed.")
+    private static final String PROP_REMOVE_COMPONENTS = "remove.components";
+
+    private String[] componentsToRemove;
+
     private int ranking = Integer.MAX_VALUE;
 
     private static final String RESPONSIVE_GRID_NODE_NAME = "root";
@@ -76,6 +93,11 @@ public class PageRewriteRule implements PageStructureRewriteRule {
     @Override
     public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
 
+        List<String> order = Arrays.asList(componentOrder);
+        List<String> remove = Arrays.asList(componentsToRemove);
+
+        List<String> names = new ArrayList<>();
+
         // Remove Design Property.
         if (root.hasProperty(NameConstants.PN_DESIGN_PATH)) {
             root.getProperty(NameConstants.PN_DESIGN_PATH).remove();
@@ -85,19 +107,47 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         template.setValue(editableTemplate);
 
         Node responsiveGrid = root.addNode(RESPONSIVE_GRID_NODE_NAME, JcrConstants.NT_UNSTRUCTURED);
-        responsiveGrid.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, RewriteUtils.RESPONSIVE_GRID_RES_TYPE);
+        responsiveGrid.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY,
+                RewriteUtils.RESPONSIVE_GRID_RES_TYPE);
 
         NodeIterator children = root.getNodes();
         while (children.hasNext()) {
             Node child = children.nextNode();
+            if (remove.contains(child.getName())) {
+                child.remove();
+                continue;
+            }
             if (!RESPONSIVE_GRID_NODE_NAME.equals(child.getName())) {
                 // Copy the node to the new location, then remove it.
                 JcrUtil.copy(child, responsiveGrid, child.getName());
-
+                names.add(child.getName());
                 child.remove();
             }
-
         }
+
+        // Fix the order based on passed information.
+        Iterator<String> oit = order.iterator();
+        if (oit.hasNext()) {
+            String before = oit.next();
+
+            // Put the ordered nodes in first.
+            while (oit.hasNext()) {
+                String after = oit.next();
+                responsiveGrid.orderBefore(before, after);
+                names.remove(before);
+                before = after;
+            }
+            // Place the last one in the list correctly.
+            responsiveGrid.orderBefore(before, null);
+            names.remove(before);
+
+            // Move all unordered ones to the end, in original order.
+            Iterator<String> nit = names.iterator();
+            while (nit.hasNext()) {
+                responsiveGrid.orderBefore(nit.next(), null);
+            }
+        }
+
         return root;
     }
 
@@ -125,6 +175,10 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         if (StringUtils.isBlank(editableTemplate)) {
             throw new ConfigurationException(PROP_EDITABLE_TEMPLATE, "Editable template is required.");
         }
+
+        componentOrder = PropertiesUtil.toStringArray(props.get(PROP_ORDER_COMPONENTS), new String[] {});
+
+        componentsToRemove = PropertiesUtil.toStringArray(props.get(PROP_REMOVE_COMPONENTS), new String[] {});
     }
 
     @Override

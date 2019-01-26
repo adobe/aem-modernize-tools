@@ -66,6 +66,13 @@
           "sling:resourceType": "foundation/components/parsys/colctrl"
         }
       },
+      "toBeRemoved": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "trust our experience\r\nto manage your business",
+        "imageReference": "/content/dam/geometrixx/header.png",
+        "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
+        "sling:resourceType": "geometrixx/components/header"
+      },
       "title": {
         "jcr:primaryType": "nt:unstructured",
         "jcr:title": "Strategic Consulting",

@@ -26,6 +26,8 @@ public class PageRewriteRuleTest {
 
     private static final String STATIC_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
+    private static final String[] ORDER = { "header", "title" };
+    private static final String[] REMOVE = { "toBeRemoved" };
 
     @Rule
     public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
@@ -41,6 +43,7 @@ public class PageRewriteRuleTest {
 
         context.load().json("/structure/test-content.json", ROOTS_PATH);
 
+
         // get bundle context
         bundleContext = MockOsgi.newBundleContext();
 
@@ -52,6 +55,8 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("order.components", ORDER);
+        props.put("remove.components", REMOVE);
         // activate service
         MockOsgi.activate(rule, bundleContext, props);
         bundleContext.registerService(StructureRewriteRule.class, rule, props);
@@ -76,6 +81,31 @@ public class PageRewriteRuleTest {
         props.put("static.template", STATIC_TEMPLATE);
         MockOsgi.activate(rule, bundleContext, props);
     }
+
+    @Test
+    public void testActivateNoOrder() {
+        BundleContext bundleContext = MockOsgi.newBundleContext();
+        PageRewriteRule rule = new PageRewriteRule();
+        MockOsgi.injectServices(rule, bundleContext);
+        Dictionary<String, Object> props = new Hashtable<>();
+        props.put("static.template", STATIC_TEMPLATE);
+        props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("remove.components", REMOVE);
+        MockOsgi.activate(rule, bundleContext, props);
+    }
+
+    @Test
+    public void testActivateNoRemove() {
+        BundleContext bundleContext = MockOsgi.newBundleContext();
+        PageRewriteRule rule = new PageRewriteRule();
+        MockOsgi.injectServices(rule, bundleContext);
+        Dictionary<String, Object> props = new Hashtable<>();
+        props.put("static.template", STATIC_TEMPLATE);
+        props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("order.components", ORDER);
+        MockOsgi.activate(rule, bundleContext, props);
+    }
+
     @Test
     public void testActivate() {
         BundleContext bundleContext = MockOsgi.newBundleContext();
@@ -84,9 +114,10 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("order.components", ORDER);
+        props.put("remove.components", REMOVE);
         MockOsgi.activate(rule, bundleContext, props);
     }
-
 
     @Test
     public void testMatches() throws Exception {
@@ -126,11 +157,11 @@ public class PageRewriteRuleTest {
         assertEquals("wcm/foundation/components/responsivegrid", rootContainer.getProperty("sling:resourceType").getString());
         NodeIterator children = rootContainer.getNodes();
         assertTrue(children.hasNext());
-        assertEquals("par", children.nextNode().getName());
+        assertEquals("header", children.nextNode().getName());
         assertTrue(children.hasNext());
         assertEquals("title", children.nextNode().getName());
         assertTrue(children.hasNext());
-        assertEquals("header", children.nextNode().getName());
+        assertEquals("par", children.nextNode().getName());
         assertFalse(children.hasNext());
     }
 
