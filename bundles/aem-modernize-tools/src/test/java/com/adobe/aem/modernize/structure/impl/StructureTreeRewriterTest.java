@@ -32,6 +32,8 @@ public class StructureTreeRewriterTest {
 
     private static final String STATIC_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
+    private static final String[] ORDER = { "header", "title" };
+    private static final String[] REMOVE = { "toBeRemoved" };
 
     private static final String LAYOUT_VALUE = "2;cq-colctrl-lt0";
     private static final String[] COLUMN_WIDTHS = {"6", "6"};
@@ -58,6 +60,8 @@ public class StructureTreeRewriterTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("order.components", ORDER);
+        props.put("remove.components", REMOVE);
         MockOsgi.activate(rule, bundleContext, props);
         rules.add(rule);
 
@@ -90,6 +94,11 @@ public class StructureTreeRewriterTest {
         assertNotNull(rootContainer);
 
         NodeIterator rootContent = rootContainer.getNodes();
+        assertTrue(rootContent.hasNext());
+        assertEquals("header", rootContent.nextNode().getName());
+        assertTrue(rootContent.hasNext());
+        assertEquals("title", rootContent.nextNode().getName());
+
         assertTrue(rootContent.hasNext());
         Node replacedParsys = rootContent.nextNode();
         assertEquals("par", replacedParsys.getName());
@@ -143,11 +152,7 @@ public class StructureTreeRewriterTest {
         assertEquals("text_0", columnContent.nextNode().getName());
 
         assertFalse(columnContent.hasNext());
-
-        assertTrue(rootContent.hasNext());
-        assertEquals("title", rootContent.nextNode().getName());
-        assertTrue(rootContent.hasNext());
-        assertEquals("header", rootContent.nextNode().getName());
         assertFalse(rootContent.hasNext());
+
     }
 }

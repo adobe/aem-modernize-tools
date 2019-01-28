@@ -10,12 +10,12 @@
         jcr:mixinTypes="[rep:AccessControllable]"
         jcr:primaryType="nt:unstructured"
         jcr:title="Page Template/Structure Conversion"
-        sling:orderBefore="modernizecomponents"
+        sling:orderBefore="configuration"
         href="/libs/cq/modernize/structure/content/console.html"
         id="aem-tools-modernize-structure">
         <rep:policy/>
       </modernizestructure>
-      <modernizecomponents
+      <modernizecomponent
           jcr:mixinTypes="[rep:AccessControllable]"
           jcr:primaryType="nt:unstructured"
           jcr:title="Component Conversion"
@@ -23,7 +23,7 @@
           href="/libs/cq/modernize/component/content/console.html"
           id="aem-tools-modernize-component">
           <rep:policy/>
-      </modernizecomponents>
+      </modernizecomponent>
     </operations>
   </tools>
 </jcr:root>
