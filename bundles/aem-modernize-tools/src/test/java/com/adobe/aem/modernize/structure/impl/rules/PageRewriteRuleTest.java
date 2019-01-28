@@ -28,9 +28,16 @@ public class PageRewriteRuleTest {
     private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
     private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
 
-    private static final String[] ORDER = { "header", "title" };
+
+
+    private static final String[] ORDER = {
+            "responsivegrid",
+            "responsivegrid_12345",
+            "responsivegrid:header",
+            "responsivegrid:title"
+    };
     private static final String[] REMOVE = { "toBeRemoved" };
-    private static final String[] RENAME = { "par:responsivegrid" };
+    private static final String[] RENAME = { "par:responsivegrid/responsivegrid", "rightpar:responsivegrid_12345" };
 
     @Rule
     public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
@@ -193,12 +200,19 @@ public class PageRewriteRuleTest {
         assertEquals("wcm/foundation/components/responsivegrid", rootContainer.getProperty("sling:resourceType").getString());
         NodeIterator children = rootContainer.getNodes();
         assertTrue(children.hasNext());
-        assertEquals("header", children.nextNode().getName());
+        Node rg = children.nextNode();
+        assertEquals("responsivegrid", rg.getName());
         assertTrue(children.hasNext());
-        assertEquals("title", children.nextNode().getName());
-        assertTrue(children.hasNext());
-        assertEquals("responsivegrid", children.nextNode().getName());
+        assertEquals("responsivegrid_12345", children.nextNode().getName());
         assertFalse(children.hasNext());
+
+        NodeIterator rgChildren = rg.getNodes();
+        assertEquals("header", rgChildren.nextNode().getName());
+        assertTrue(rgChildren.hasNext());
+        assertEquals("title", rgChildren.nextNode().getName());
+        assertTrue(rgChildren.hasNext());
+        assertEquals("responsivegrid", rgChildren.nextNode().getName());
+        assertFalse(rgChildren.hasNext());
     }
 
     @Test

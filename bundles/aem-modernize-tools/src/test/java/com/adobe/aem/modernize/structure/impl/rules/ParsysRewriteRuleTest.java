@@ -97,6 +97,8 @@ public class ParsysRewriteRuleTest {
         assertEquals("title", siblings.nextNode().getName());
         assertTrue(siblings.hasNext());
         assertEquals("header", siblings.nextNode().getName());
+        assertTrue(siblings.hasNext());
+        assertEquals("rightpar", siblings.nextNode().getName());
         assertFalse(siblings.hasNext());
     }
 

@@ -34,7 +34,7 @@ public class StructureTreeRewriterTest {
     private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
     private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
     private static final String[] ORDER = { "header", "title" };
-    private static final String[] REMOVE = { "toBeRemoved" };
+    private static final String[] REMOVE = { "toBeRemoved", "rightpar" };
 
     private static final String LAYOUT_VALUE = "2;cq-colctrl-lt0";
     private static final String[] COLUMN_WIDTHS = {"6", "6"};
