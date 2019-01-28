@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -77,6 +78,14 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
     private String[] componentsToRemove;
 
+
+    @org.apache.felix.scr.annotations.Property(label = "Rename Components",
+            description = "Specify new name for components as they are moved into the root responsive grid.")
+    private static final String PROP_RENAME_COMPONENTS = "rename.components";
+
+    private Map<String, String> componentRenamed;
+
+
     private int ranking = Integer.MAX_VALUE;
 
     private static final String RESPONSIVE_GRID_NODE_NAME = "root";
@@ -119,8 +128,10 @@ public class PageRewriteRule implements PageStructureRewriteRule {
             }
             if (!RESPONSIVE_GRID_NODE_NAME.equals(child.getName())) {
                 // Copy the node to the new location, then remove it.
-                JcrUtil.copy(child, responsiveGrid, child.getName());
-                names.add(child.getName());
+                String name = componentRenamed.containsKey(child.getName()) ? componentRenamed.get(child.getName()) :
+                        child.getName();
+                JcrUtil.copy(child, responsiveGrid, name);
+                names.add(name);
                 child.remove();
             }
         }
@@ -179,6 +190,10 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         componentOrder = PropertiesUtil.toStringArray(props.get(PROP_ORDER_COMPONENTS), new String[] {});
 
         componentsToRemove = PropertiesUtil.toStringArray(props.get(PROP_REMOVE_COMPONENTS), new String[] {});
+
+        componentRenamed =RewriteUtils.toMap(
+                PropertiesUtil.toStringArray(props.get(PROP_RENAME_COMPONENTS), new String[] {}), ":"
+        );
     }
 
     @Override

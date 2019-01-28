@@ -28,6 +28,7 @@ public class PageRewriteRuleTest {
     private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
     private static final String[] ORDER = { "header", "title" };
     private static final String[] REMOVE = { "toBeRemoved" };
+    private static final String[] RENAME = { "par:responsivegrid" };
 
     @Rule
     public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
@@ -57,6 +58,7 @@ public class PageRewriteRuleTest {
         props.put("editable.template", EDITABLE_TEMPLATE);
         props.put("order.components", ORDER);
         props.put("remove.components", REMOVE);
+        props.put("rename.components", RENAME);
         // activate service
         MockOsgi.activate(rule, bundleContext, props);
         bundleContext.registerService(StructureRewriteRule.class, rule, props);
@@ -107,6 +109,19 @@ public class PageRewriteRuleTest {
     }
 
     @Test
+    public void testActivateNoRename() {
+        BundleContext bundleContext = MockOsgi.newBundleContext();
+        PageRewriteRule rule = new PageRewriteRule();
+        MockOsgi.injectServices(rule, bundleContext);
+        Dictionary<String, Object> props = new Hashtable<>();
+        props.put("static.template", STATIC_TEMPLATE);
+        props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("order.components", ORDER);
+        props.put("remove.components", REMOVE);
+        MockOsgi.activate(rule, bundleContext, props);
+    }
+
+    @Test
     public void testActivate() {
         BundleContext bundleContext = MockOsgi.newBundleContext();
         PageRewriteRule rule = new PageRewriteRule();
@@ -116,6 +131,7 @@ public class PageRewriteRuleTest {
         props.put("editable.template", EDITABLE_TEMPLATE);
         props.put("order.components", ORDER);
         props.put("remove.components", REMOVE);
+        props.put("rename.components", RENAME);
         MockOsgi.activate(rule, bundleContext, props);
     }
 
@@ -161,7 +177,7 @@ public class PageRewriteRuleTest {
         assertTrue(children.hasNext());
         assertEquals("title", children.nextNode().getName());
         assertTrue(children.hasNext());
-        assertEquals("par", children.nextNode().getName());
+        assertEquals("responsivegrid", children.nextNode().getName());
         assertFalse(children.hasNext());
     }
 
