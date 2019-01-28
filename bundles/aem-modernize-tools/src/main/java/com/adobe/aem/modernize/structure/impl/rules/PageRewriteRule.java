@@ -66,6 +66,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
     private String editableTemplate;
 
     @org.apache.felix.scr.annotations.Property(label = "Component Order",
+            cardinality = Integer.MAX_VALUE,
             description = "Specify the order of the components in the new responsive grid. " +
                     "Any found and unspecified are moved to the end in arbitrary order.")
     private static final String PROP_ORDER_COMPONENTS = "order.components";
@@ -73,6 +74,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
     private String[] componentOrder;
 
     @org.apache.felix.scr.annotations.Property(label = "Remove Components",
+            cardinality = Integer.MAX_VALUE,
             description = "Specify any components that may exist on the static page that can be removed.")
     private static final String PROP_REMOVE_COMPONENTS = "remove.components";
 
@@ -80,6 +82,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
 
     @org.apache.felix.scr.annotations.Property(label = "Rename Components",
+            cardinality = Integer.MAX_VALUE,
             description = "Specify new name for components as they are moved into the root responsive grid.")
     private static final String PROP_RENAME_COMPONENTS = "rename.components";
 

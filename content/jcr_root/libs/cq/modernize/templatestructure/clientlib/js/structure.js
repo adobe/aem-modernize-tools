@@ -12,7 +12,7 @@
 $(document).ready(function () {
     'use strict';
 
-    var REMOTE_STRUCTURE_CONVERSION_SERVICE_PATH = "/libs/cq/modernize/structure";
+    var REMOTE_STRUCTURE_CONVERSION_SERVICE_PATH = "/libs/cq/modernize/templatestructure";
 
     var ui = $(window).adaptTo("foundation-ui");
 
