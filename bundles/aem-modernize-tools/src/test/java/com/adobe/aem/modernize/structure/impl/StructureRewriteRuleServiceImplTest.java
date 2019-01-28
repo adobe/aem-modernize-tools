@@ -31,7 +31,8 @@ public class StructureRewriteRuleServiceImplTest {
 
     private static final String STATIC_HOME_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String STATIC_PRODUCT_TEMPLATE = "/apps/geometrixx/templates/productpage";
-    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
+    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
+    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
 
     private static final String LAYOUT_VALUE = "2;cq-colctrl-lt0";
     private static final String[] COLUMN_WIDTHS = {"6", "6"};
@@ -63,6 +64,7 @@ public class StructureRewriteRuleServiceImplTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_HOME_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         MockOsgi.activate(rule, bundleContext, props);
         context.registerService(PageStructureRewriteRule.class, (PageStructureRewriteRule) rule);
         rules.add(rule);
@@ -70,7 +72,8 @@ public class StructureRewriteRuleServiceImplTest {
         rule = new PageRewriteRule();
         props = new Hashtable<>();
         props.put("static.template", STATIC_PRODUCT_TEMPLATE);
-        props.put("editable.template", "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page/structure");
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
+        props.put("editable.template", "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page");
         MockOsgi.activate(rule, bundleContext, props);
         context.registerService(PageStructureRewriteRule.class, (PageStructureRewriteRule) rule);
         rules.add(rule);

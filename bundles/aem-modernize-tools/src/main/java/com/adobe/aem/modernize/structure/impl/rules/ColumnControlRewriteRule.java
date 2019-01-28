@@ -164,7 +164,6 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
         }
 
         String firstNodeName = null;
-        long offsetTotal = 0;
         for (int i = 0; i < widths.length; i++) {
 
             // Create the new first responsive grid.
@@ -178,8 +177,7 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
             Node gridConfig = grid.addNode(NameConstants.NN_RESPONSIVE_CONFIG, JcrConstants.NT_UNSTRUCTURED);
             Node defaultGridStructure = gridConfig.addNode(DEFAULT_LAYOUT_NAME, JcrConstants.NT_UNSTRUCTURED);
             defaultGridStructure.setProperty(PROP_WIDTH, widths[i]);
-            defaultGridStructure.setProperty(PROP_OFFSET, offsetTotal);
-            offsetTotal += widths[i];
+            defaultGridStructure.setProperty(PROP_OFFSET, 0);
             node.remove();
 
             // Move nodes to the grid.

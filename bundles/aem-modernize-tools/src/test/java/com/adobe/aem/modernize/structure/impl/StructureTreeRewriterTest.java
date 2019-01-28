@@ -31,7 +31,8 @@ public class StructureTreeRewriterTest {
     private final String ROOTS_PATH = "/libs/cq/modernize/component/content/roots";
 
     private static final String STATIC_TEMPLATE = "/apps/geometrixx/templates/homepage";
-    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
+    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
+    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
     private static final String[] ORDER = { "header", "title" };
     private static final String[] REMOVE = { "toBeRemoved" };
 
@@ -60,6 +61,7 @@ public class StructureTreeRewriterTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         props.put("order.components", ORDER);
         props.put("remove.components", REMOVE);
         MockOsgi.activate(rule, bundleContext, props);
@@ -90,6 +92,7 @@ public class StructureTreeRewriterTest {
 
         assertFalse(rewrittenNode.hasProperty("cq:designPath"));
         assertEquals(EDITABLE_TEMPLATE, rewrittenNode.getProperty("cq:template").getString());
+        assertEquals(SLING_RESOURCE_TYPE, rewrittenNode.getProperty("sling:resourceType").getString());
         Node rootContainer = rewrittenNode.getNode("root");
         assertNotNull(rootContainer);
 
@@ -142,7 +145,7 @@ public class StructureTreeRewriterTest {
         assertTrue(width.hasProperty("width"));
         assertEquals("6", width.getProperty("width").getString());
         assertTrue(width.hasProperty("offset"));
-        assertEquals("6", width.getProperty("offset").getString());
+        assertEquals("0", width.getProperty("offset").getString());
 
         assertTrue(columnContent.hasNext());
         assertEquals("image_0", columnContent.nextNode().getName());

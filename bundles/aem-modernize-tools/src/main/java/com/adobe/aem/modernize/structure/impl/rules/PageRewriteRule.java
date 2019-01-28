@@ -2,6 +2,7 @@ package com.adobe.aem.modernize.structure.impl.rules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -65,6 +67,14 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
     private String editableTemplate;
 
+    @org.apache.felix.scr.annotations.Property(label = "Sling Resource Type",
+            description = "The value to update the sling:resourceType with, this should be the same as the " +
+                    "new Editable Template.")
+    private static final String PROP_SLING_RESOURCE_TYPE = "sling.resourceType";
+
+    private String slingResourceType;
+
+
     @org.apache.felix.scr.annotations.Property(label = "Component Order",
             cardinality = Integer.MAX_VALUE,
             description = "Specify the order of the components in the new responsive grid. " +
@@ -88,7 +98,6 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
     private Map<String, String> componentRenamed;
 
-
     private int ranking = Integer.MAX_VALUE;
 
     private static final String RESPONSIVE_GRID_NODE_NAME = "root";
@@ -103,7 +112,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
     }
 
     @Override
-    public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
+    public Node applyTo(Node root, Set<Node> finalNodes) throws RepositoryException {
 
         List<String> order = Arrays.asList(componentOrder);
         List<String> remove = Arrays.asList(componentsToRemove);
@@ -117,6 +126,9 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
         Property template = root.getProperty(NameConstants.NN_TEMPLATE);
         template.setValue(editableTemplate);
+        Property resourceType = root.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY);
+        resourceType.setValue(slingResourceType);
+
 
         Node responsiveGrid = root.addNode(RESPONSIVE_GRID_NODE_NAME, JcrConstants.NT_UNSTRUCTURED);
         responsiveGrid.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY,
@@ -129,6 +141,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
                 child.remove();
                 continue;
             }
+            // Only copy root children first.
             if (!RESPONSIVE_GRID_NODE_NAME.equals(child.getName())) {
                 // Copy the node to the new location, then remove it.
                 String name = componentRenamed.containsKey(child.getName()) ? componentRenamed.get(child.getName()) :
@@ -138,28 +151,24 @@ public class PageRewriteRule implements PageStructureRewriteRule {
                 child.remove();
             }
         }
+        List<String> copy = new ArrayList<>(order);
+
+        Collections.reverse(copy);
 
         // Fix the order based on passed information.
-        Iterator<String> oit = order.iterator();
-        if (oit.hasNext()) {
+        // Place last->first, as orderBefore is always in this order.
+        Iterator<String> oit = copy.iterator();
+        String after = null;
+        while (oit.hasNext()) {
             String before = oit.next();
-
-            // Put the ordered nodes in first.
-            while (oit.hasNext()) {
-                String after = oit.next();
-                responsiveGrid.orderBefore(before, after);
-                names.remove(before);
-                before = after;
-            }
-            // Place the last one in the list correctly.
-            responsiveGrid.orderBefore(before, null);
+            responsiveGrid.orderBefore(before, after);
             names.remove(before);
-
-            // Move all unordered ones to the end, in original order.
-            Iterator<String> nit = names.iterator();
-            while (nit.hasNext()) {
-                responsiveGrid.orderBefore(nit.next(), null);
-            }
+            after = before;
+        }
+         // Move all unordered ones to the end, in original order.
+        Iterator<String> nit = names.iterator();
+        while (nit.hasNext()) {
+            responsiveGrid.orderBefore(nit.next(), null);
         }
 
         return root;
@@ -188,6 +197,11 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         editableTemplate = PropertiesUtil.toString(props.get(PROP_EDITABLE_TEMPLATE), null);
         if (StringUtils.isBlank(editableTemplate)) {
             throw new ConfigurationException(PROP_EDITABLE_TEMPLATE, "Editable template is required.");
+        }
+
+        slingResourceType = PropertiesUtil.toString(props.get(PROP_SLING_RESOURCE_TYPE), null);
+        if (StringUtils.isBlank(slingResourceType)) {
+            throw new ConfigurationException(PROP_SLING_RESOURCE_TYPE, "Sling Resource Type is required.");
         }
 
         componentOrder = PropertiesUtil.toStringArray(props.get(PROP_ORDER_COMPONENTS), new String[] {});

@@ -224,7 +224,7 @@ public class ColumnControlRewriteRuleTest {
         assertTrue(width.hasProperty("width"));
         assertEquals("6", width.getProperty("width").getString());
         assertTrue(width.hasProperty("offset"));
-        assertEquals("6", width.getProperty("offset").getString());
+        assertEquals("0", width.getProperty("offset").getString());
 
         assertTrue(children.hasNext());
         assertEquals("image_0", children.nextNode().getName());
@@ -309,7 +309,7 @@ public class ColumnControlRewriteRuleTest {
         assertTrue(width.hasProperty("width"));
         assertEquals("2", width.getProperty("width").getString());
         assertTrue(width.hasProperty("offset"));
-        assertEquals("4", width.getProperty("offset").getString());
+        assertEquals("0", width.getProperty("offset").getString());
         assertTrue(children.hasNext());
         assertEquals("text_1", children.nextNode().getName());
 
@@ -325,7 +325,7 @@ public class ColumnControlRewriteRuleTest {
         assertTrue(width.hasProperty("width"));
         assertEquals("4", width.getProperty("width").getString());
         assertTrue(width.hasProperty("offset"));
-        assertEquals("6", width.getProperty("offset").getString());
+        assertEquals("0", width.getProperty("offset").getString());
         assertTrue(children.hasNext());
         assertEquals("image_0", children.nextNode().getName());
         assertTrue(children.hasNext());
@@ -343,7 +343,7 @@ public class ColumnControlRewriteRuleTest {
         assertTrue(width.hasProperty("width"));
         assertEquals("2", width.getProperty("width").getString());
         assertTrue(width.hasProperty("offset"));
-        assertEquals("10", width.getProperty("offset").getString());
+        assertEquals("0", width.getProperty("offset").getString());
         assertTrue(children.hasNext());
         assertEquals("text_0", children.nextNode().getName());
 

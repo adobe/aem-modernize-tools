@@ -25,7 +25,9 @@ public class PageRewriteRuleTest {
     private final String ROOTS_PATH = "/libs/cq/modernize/templatestructure/content/roots";
 
     private static final String STATIC_TEMPLATE = "/apps/geometrixx/templates/homepage";
-    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
+    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
+    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
+
     private static final String[] ORDER = { "header", "title" };
     private static final String[] REMOVE = { "toBeRemoved" };
     private static final String[] RENAME = { "par:responsivegrid" };
@@ -56,6 +58,7 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         props.put("order.components", ORDER);
         props.put("remove.components", REMOVE);
         props.put("rename.components", RENAME);
@@ -84,6 +87,18 @@ public class PageRewriteRuleTest {
         MockOsgi.activate(rule, bundleContext, props);
     }
 
+
+    @Test(expected = RuntimeException.class)
+    public void testActivateNoSlingResourceType() {
+        BundleContext bundleContext = MockOsgi.newBundleContext();
+        PageRewriteRule rule = new PageRewriteRule();
+        MockOsgi.injectServices(rule, bundleContext);
+        Dictionary<String, Object> props = new Hashtable<>();
+        props.put("static.template", STATIC_TEMPLATE);
+        props.put("editable.template", EDITABLE_TEMPLATE);
+        MockOsgi.activate(rule, bundleContext, props);
+    }
+
     @Test
     public void testActivateNoOrder() {
         BundleContext bundleContext = MockOsgi.newBundleContext();
@@ -92,6 +107,7 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         props.put("remove.components", REMOVE);
         MockOsgi.activate(rule, bundleContext, props);
     }
@@ -104,6 +120,7 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         props.put("order.components", ORDER);
         MockOsgi.activate(rule, bundleContext, props);
     }
@@ -116,6 +133,7 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         props.put("order.components", ORDER);
         props.put("remove.components", REMOVE);
         MockOsgi.activate(rule, bundleContext, props);
@@ -129,6 +147,7 @@ public class PageRewriteRuleTest {
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_TEMPLATE);
         props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         props.put("order.components", ORDER);
         props.put("remove.components", REMOVE);
         props.put("rename.components", RENAME);
@@ -167,6 +186,7 @@ public class PageRewriteRuleTest {
 
         assertFalse(rewrittenNode.hasProperty("cq:designPath"));
         assertEquals(EDITABLE_TEMPLATE, rewrittenNode.getProperty("cq:template").getString());
+        assertEquals(SLING_RESOURCE_TYPE, rewrittenNode.getProperty("sling:resourceType").getString());
         Node rootContainer = rewrittenNode.getNode("root");
         assertNotNull(rootContainer);
         assertEquals("nt:unstructured", rootContainer.getPrimaryNodeType().getName());
