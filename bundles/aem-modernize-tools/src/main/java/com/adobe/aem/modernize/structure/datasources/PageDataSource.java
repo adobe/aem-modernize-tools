@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * Returns a list of components found on the given path
  */
 @SlingServlet(
-        resourceTypes = "cq/modernize/structure/datasource",
+        resourceTypes = "cq/modernize/templatestructure/datasource",
         methods = { "GET" })
 public final class PageDataSource extends SlingSafeMethodsServlet {
 

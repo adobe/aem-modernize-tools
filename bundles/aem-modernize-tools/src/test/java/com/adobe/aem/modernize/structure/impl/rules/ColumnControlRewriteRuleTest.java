@@ -25,7 +25,7 @@ import org.osgi.framework.ServiceReference;
 import static org.junit.Assert.*;
 
 public class ColumnControlRewriteRuleTest {
-    private final String ROOTS_PATH = "/libs/cq/modernize/structure/content/roots";
+    private final String ROOTS_PATH = "/libs/cq/modernize/templatestructure/content/roots";
 
     private static final String LAYOUT_VALUE = "2;cq-colctrl-lt0";
     private static final String[] COLUMN_WIDTHS = {"6", "6"};
@@ -42,7 +42,7 @@ public class ColumnControlRewriteRuleTest {
         RepositoryUtil.registerSlingNodeTypes(adminSession);
         RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
 
-        context.load().json("/structure/test-content.json", ROOTS_PATH);
+        context.load().json("/templatestructure/test-content.json", ROOTS_PATH);
 
         // get bundle context
         bundleContext = MockOsgi.newBundleContext();

@@ -56,7 +56,7 @@ import static org.junit.Assert.*;
 public class PageDataSourceTest {
 
     private static final String PAGE_ROOT = "/libs/cq/modernize/component/content";
-    private static final String ITEM_RESOURCE_TYPE = "cq/modernize/component/structure/item";
+    private static final String ITEM_RESOURCE_TYPE = "cq/modernize/component/templatestructure/item";
 
     private static final String STATIC_HOME_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String STATIC_PRODUCT_TEMPLATE = "/apps/geometrixx/templates/productpage";
@@ -105,7 +105,7 @@ public class PageDataSourceTest {
         Session adminSession = resolver.adaptTo(Session.class);
         RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
 
-        context.load().json("/structure/test-content.json", PAGE_ROOT);
+        context.load().json("/templatestructure/test-content.json", PAGE_ROOT);
 
         // register data source
         pageDataSource = context.registerService(PageDataSource.class, new PageDataSource());

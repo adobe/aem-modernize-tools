@@ -16,7 +16,7 @@
         "cq:copyChildren": true,
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page"
+        "sling:resourceType": "geodemo/components/templatestructure/page"
       }
     }
   },
@@ -35,7 +35,7 @@
       "mapProperties": {
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true,
         "map-property-simple": "${./map-property-1}",
         "map-property-nested": "${./par/map-property-3}",
@@ -67,7 +67,7 @@
       "rewriteOptional": {
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true
       }
     }
@@ -88,7 +88,7 @@
       "rewriteRanking": {
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true,
         "items": {
           "jcr:primaryType": "nt:unstructured"
@@ -111,7 +111,7 @@
       "rewriteMapChildren": {
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true,
         "items": {
           "cq:rewriteMapChildren": "./items",
@@ -137,7 +137,7 @@
         "cq:rewriteFinal": true,
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true,
         "items": {
           "jcr:primaryType": "nt:unstructured"
@@ -161,7 +161,7 @@
       "rewriteFinalOnReplacement": {
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true,
         "items": {
           "jcr:primaryType": "nt:unstructured"
@@ -184,7 +184,7 @@
       "rewriteProperties": {
         "jcr:primaryType": "cq:PageContent",
         "cq:template": "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page",
-        "sling:resourceType": "geodemo/components/structure/page",
+        "sling:resourceType": "geodemo/components/templatestructure/page",
         "cq:copyChildren": true,
         "rewrite-remove-prefix": "${./rewrite-remove-prefix}",
         "rewrite-remove-suffix": "${./rewrite-remove-suffix}",

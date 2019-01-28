@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 @SlingServlet(
         methods = "POST",
-        paths = "/libs/cq/modernize/structure/content/convert",
+        paths = "/libs/cq/modernize/templatestructure/content/convert",
         extensions = "json"
 )
 public class StructureConversionServlet extends SlingAllMethodsServlet {

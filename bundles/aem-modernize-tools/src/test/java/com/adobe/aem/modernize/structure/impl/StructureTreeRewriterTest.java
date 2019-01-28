@@ -52,7 +52,7 @@ public class StructureTreeRewriterTest {
         RepositoryUtil.registerSlingNodeTypes(adminSession);
         RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
 
-        context.load().json("/structure/test-content.json", ROOTS_PATH);
+        context.load().json("/templatestructure/test-content.json", ROOTS_PATH);
 
         bundleContext = MockOsgi.newBundleContext();
 

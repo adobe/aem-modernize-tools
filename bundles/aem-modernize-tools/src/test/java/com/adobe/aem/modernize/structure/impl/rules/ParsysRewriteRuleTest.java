@@ -25,7 +25,7 @@ import org.osgi.framework.ServiceReference;
 import static org.junit.Assert.*;
 
 public class ParsysRewriteRuleTest {
-    private final String ROOTS_PATH = "/libs/cq/modernize/structure/content/roots";
+    private final String ROOTS_PATH = "/libs/cq/modernize/templatestructure/content/roots";
 
     @Rule
     public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
@@ -38,7 +38,7 @@ public class ParsysRewriteRuleTest {
         RepositoryUtil.registerSlingNodeTypes(adminSession);
         RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
 
-        context.load().json("/structure/test-content.json", ROOTS_PATH);
+        context.load().json("/templatestructure/test-content.json", ROOTS_PATH);
     }
 
     @Test

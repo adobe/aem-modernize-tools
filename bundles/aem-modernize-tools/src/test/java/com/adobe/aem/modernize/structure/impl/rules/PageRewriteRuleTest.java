@@ -22,7 +22,7 @@ import org.osgi.framework.ServiceReference;
 import static org.junit.Assert.*;
 
 public class PageRewriteRuleTest {
-    private final String ROOTS_PATH = "/libs/cq/modernize/structure/content/roots";
+    private final String ROOTS_PATH = "/libs/cq/modernize/templatestructure/content/roots";
 
     private static final String STATIC_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page/structure";
@@ -42,7 +42,7 @@ public class PageRewriteRuleTest {
         RepositoryUtil.registerSlingNodeTypes(adminSession);
         RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
 
-        context.load().json("/structure/test-content.json", ROOTS_PATH);
+        context.load().json("/templatestructure/test-content.json", ROOTS_PATH);
 
 
         // get bundle context
