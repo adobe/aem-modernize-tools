@@ -45,7 +45,6 @@ public class ComponentTreeRewriterTest {
 
     @Test
     public void testRewriteMaintainsOrder() throws Exception {
-        Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/mapProperties").adaptTo(Node.class);
         Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/level1/mapProperties").adaptTo(Node.class);
 
         List<ComponentRewriteRule> rules = componentRewriteRuleService.getRules(context.resourceResolver());
