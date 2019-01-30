@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 
 public class DialogConversionServletTest {
 
-    private final String RULES_PATH = "/libs/cq/dialogconversion/rules";
+    private final String RULES_PATH = "/libs/cq/modernize/dialog/rules";
 
     private DialogConversionServlet dialogConversionServlet;
 

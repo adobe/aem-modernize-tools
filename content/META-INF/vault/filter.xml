@@ -7,4 +7,5 @@
         <include pattern="/apps/cq/core/content/nav/tools/sites/modernizedialog(/.*)?" />
     </filter>
     <filter root="/libs/cq/modernize"/>
+    <filter root="/apps/cq/modernize/dialog/rules"/>
 </workspaceFilter>

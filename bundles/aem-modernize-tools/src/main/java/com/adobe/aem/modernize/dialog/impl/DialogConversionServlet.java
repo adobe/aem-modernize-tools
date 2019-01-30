@@ -52,7 +52,7 @@ public class DialogConversionServlet extends SlingAllMethodsServlet {
     /**
      * Relative path to the node containing node-based dialog rewrite rules
      */
-    public static final String RULES_SEARCH_PATH = "cq/dialogconversion/rules";
+    public static final String RULES_SEARCH_PATH = "cq/modernize/dialog/rules";
 
     public static final String PARAM_PATHS = "paths";
     private static final String KEY_RESULT_PATH = "resultPath";
@@ -138,8 +138,7 @@ throws ServletException, IOException {
         }
     }
 
-    private List<DialogRewriteRule> getRules(ResourceResolver resolver)
-            throws ServletException {
+    private List<DialogRewriteRule> getRules(ResourceResolver resolver) throws ServletException {
         final List<DialogRewriteRule> rules = new LinkedList<DialogRewriteRule>();
 
         // 1) rules provided as OSGi services
