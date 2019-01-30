@@ -27,6 +27,13 @@
                 jcr:title="Component Conversion"
                 href="/libs/cq/modernize/component/content/console.html"
                 id="aem-tools-sites-modernize-component"/>
+            <modernizedialog
+              jcr:mixinTypes="[rep:AccessControllable]"
+              jcr:primaryType="nt:unstructured"
+              jcr:title="Dialog Conversion"
+              href="/libs/cq/modernize/dialog/content/console.html"
+              id="aem-tools-sites-modernize-dialog"/>
+
         </sites>
     </tools>
 </jcr:root>
