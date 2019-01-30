@@ -9,6 +9,7 @@ import javax.jcr.Session;
 import org.apache.commons.lang3.StringUtils;
 
 import com.day.cq.commons.jcr.JcrUtil;
+import com.day.text.ISO9075;
 
 /**
  * Provides helper methods to be used by rewrite rules.
@@ -71,5 +72,19 @@ public class RewriteUtils {
         }
 
         return map;
+    }
+
+    /**
+     * Encodes provided path
+     *
+     * @param path Path to encode
+     * @return encoded path
+     */
+    public static String encodePath(String path) {
+        String encodedPath = "/".equals(path) ? "" : ISO9075.encodePath(path);
+        if (encodedPath.length() > 1 && encodedPath.endsWith("/")) {
+            encodedPath = encodedPath.substring(0, encodedPath.length() - 1);
+        }
+        return encodedPath;
     }
 }

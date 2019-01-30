@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-  xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:rep="internal"
-  jcr:primaryType="nt:unstructured">
-  <tools jcr:primaryType="nt:unstructured">
-    <operations
-      jcr:mixinTypes="[rep:AccessControllable]"
-      jcr:primaryType="nt:unstructured">
-      <modernizestructure
-        jcr:mixinTypes="[rep:AccessControllable]"
-        jcr:primaryType="nt:unstructured"
-        jcr:title="Page Template/Structure Conversion"
-        sling:orderBefore="configuration"
-        href="/libs/cq/modernize/templatestructure/content/console.html"
-        id="aem-tools-modernize-structure">
-        <rep:policy/>
-      </modernizestructure>
-      <modernizecomponent
-          jcr:mixinTypes="[rep:AccessControllable]"
-          jcr:primaryType="nt:unstructured"
-          jcr:title="Component Conversion"
-          sling:orderBefore="configuration"
-          href="/libs/cq/modernize/component/content/console.html"
-          id="aem-tools-modernize-component">
-          <rep:policy/>
-      </modernizecomponent>
-    </operations>
-  </tools>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:rep="internal"
+    jcr:primaryType="nt:unstructured">
+    <tools jcr:primaryType="nt:unstructured">
+        <sites
+            jcr:mixinTypes="[rep:AccessControllable]"
+            jcr:primaryType="nt:unstructured">
+            <modernizestructure
+                jcr:mixinTypes="[rep:AccessControllable]"
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Page Template/Structure Conversion"
+                href="/libs/cq/modernize/structure/content/console.html"
+                id="aem-tools-sites-modernize-structure">
+                <rep:policy/>
+            </modernizestructure>
+            <modernizedesign
+                jcr:mixinTypes="[rep:AccessControllable]"
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Policies Importer"
+                href="/libs/cq/modernize/design/content/console.html"
+                id="aem-tools-sites-modernize-design">
+                <rep:policy/>
+            </modernizedesign>
+            <modernizecomponents
+                jcr:mixinTypes="[rep:AccessControllable]"
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Component Conversion"
+                href="/libs/cq/modernize/component/content/console.html"
+                id="aem-tools-sites-modernize-component"/>
+        </sites>
+    </tools>
 </jcr:root>
