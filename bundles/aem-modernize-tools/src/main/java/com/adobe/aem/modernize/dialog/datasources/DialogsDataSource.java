@@ -26,6 +26,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.servlet.ServletException;
 
+import com.adobe.aem.modernize.impl.RewriteUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -116,10 +117,7 @@ public final class DialogsDataSource extends SlingSafeMethodsServlet {
 
             // If the path does not point to a dialog node: we query for dialog nodes
             if (nodeMap.isEmpty()) {
-                String encodedPath = "/".equals(path) ? "" : ISO9075.encodePath(path);
-                if (encodedPath.length() > 1 && encodedPath.endsWith("/")) {
-                    encodedPath = encodedPath.substring(0, encodedPath.length() - 1);
-                }
+                String encodedPath = RewriteUtils.encodePath(path);
                 String classicStatement = "SELECT * FROM [" + NT_DIALOG + "] AS s WHERE ISDESCENDANTNODE(s, '" + encodedPath + "') " +
                         "AND NAME() IN ('" + NameConstants.NN_DIALOG + "', '" + NameConstants.NN_DESIGN_DIALOG + "')";
                 String coral2Statement = "SELECT parent.* FROM [nt:unstructured] AS parent INNER JOIN [nt:unstructured] " +

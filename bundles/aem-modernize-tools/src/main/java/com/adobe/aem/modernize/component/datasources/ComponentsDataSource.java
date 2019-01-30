@@ -26,6 +26,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.servlet.ServletException;
 
+import com.adobe.aem.modernize.impl.RewriteUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -171,10 +172,7 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
     }
 
     private Query createQuery(String path, ResourceResolver resourceResolver) throws RepositoryException {
-        String encodedPath = "/".equals(path) ? "" : ISO9075.encodePath(path);
-        if (encodedPath.length() > 1 && encodedPath.endsWith("/")) {
-            encodedPath = encodedPath.substring(0, encodedPath.length() - 1);
-        }
+        String encodedPath = RewriteUtils.encodePath(path);
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM [").append(JcrConstants.NT_UNSTRUCTURED).append("] AS res ");
