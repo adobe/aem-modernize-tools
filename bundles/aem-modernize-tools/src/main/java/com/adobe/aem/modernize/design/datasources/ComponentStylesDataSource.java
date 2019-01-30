@@ -73,11 +73,11 @@ public final class ComponentStylesDataSource extends SlingSafeMethodsServlet {
         Resource resource = request.getResource();
         ValueMap properties = resource.getValueMap();
         String designPath = properties.get("designPath", String.class);
+        designPath = PoliciesImportUtils.getDesignPath(expressionResolver.resolve(designPath, request.getLocale(), String.class, request));
         if (StringUtils.isEmpty(designPath)) {
             LOGGER.warn("Path unavailable");
             return;
         }
-        designPath = PoliciesImportUtils.getDesignPath(expressionResolver.resolve(designPath, request.getLocale(), String.class, request));
 
         List<Resource> result = new ArrayList<>();
         ResourceResolver resolver = request.getResourceResolver();

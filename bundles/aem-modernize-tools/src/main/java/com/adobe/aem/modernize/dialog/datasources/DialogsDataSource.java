@@ -78,13 +78,13 @@ public final class DialogsDataSource extends SlingSafeMethodsServlet {
             String itemResourceType = properties.get("itemResourceType", String.class);
 
             String path = properties.get("path", String.class);
+            path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
             if (StringUtils.isEmpty(path)) {
                 log.warn("Path unavailable");
                 return;
             }
 
-            path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
             setDataSource(resource, path, resolver, request, itemResourceType);
         } catch (RepositoryException e) {

@@ -67,13 +67,13 @@ public final class PageDataSource extends SlingSafeMethodsServlet {
             String itemResourceType = properties.get("itemResourceType", String.class);
 
             String path = properties.get("path", String.class);
+            path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
             if (StringUtils.isEmpty(path)) {
                 logger.warn("Path unavailable");
                 return;
             }
 
-            path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
             setDataSource(path, request, itemResourceType);
         } catch (RepositoryException e) {
