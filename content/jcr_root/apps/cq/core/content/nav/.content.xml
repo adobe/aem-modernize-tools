@@ -21,7 +21,7 @@
                 id="aem-tools-sites-modernize-design">
                 <rep:policy/>
             </modernizedesign>
-            <modernizecomponents
+            <modernizecomponent
                 jcr:mixinTypes="[rep:AccessControllable]"
                 jcr:primaryType="nt:unstructured"
                 jcr:title="Component Conversion"
