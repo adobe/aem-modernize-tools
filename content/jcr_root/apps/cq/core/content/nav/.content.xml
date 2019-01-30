@@ -24,6 +24,15 @@
           id="aem-tools-modernize-component">
           <rep:policy/>
       </modernizecomponent>
+      <modernizedialog
+        jcr:mixinTypes="[rep:AccessControllable]"
+        jcr:primaryType="nt:unstructured"
+        jcr:title="Dialog Conversion"
+        sling:orderBefore="configuration"
+        href="/libs/cq/modernize/dialog/content/console.html"
+        id="aem-tools-modernize-dialog">
+        <rep:policy />
+      </modernizedialog>
     </operations>
   </tools>
 </jcr:root>

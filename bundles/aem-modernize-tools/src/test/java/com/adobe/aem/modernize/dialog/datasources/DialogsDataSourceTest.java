@@ -51,7 +51,7 @@ import static org.junit.Assert.*;
 public class DialogsDataSourceTest {
 
     private static final String DIALOGS_ROOT = "/libs/cq/modernize/content/dialogs";
-    private static final String ITEM_RESOURCE_TYPE = "cq/dialogconversion/components/dialogs/item";
+    private static final String ITEM_RESOURCE_TYPE = "cq/modernize/dialog/content/item";
 
     private DialogsDataSource dialogsDataSource;
 

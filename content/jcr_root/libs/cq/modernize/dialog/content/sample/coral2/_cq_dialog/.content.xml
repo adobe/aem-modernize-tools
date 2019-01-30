@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="Coral 2 Sample Dialog"
+    sling:resourceType="cq/gui/components/authoring/dialog"
+    helpPath="https://www.adobe.com/go/aem6_2_docs_component_en">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/foundation/container">
+        <layout
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/foundation/layouts/tabs"
+            type="nav"/>
+        <items
+            jcr:primaryType="nt:unstructured"
+            sling:hideChildren="[column]">
+            <form
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Form"
+                sling:resourceType="granite/ui/components/foundation/section">
+                <layout
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/foundation/layouts/fixedcolumns"
+                    margin="{Boolean}false"/>
+                <items jcr:primaryType="nt:unstructured">
+                    <column
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container">
+                        <items jcr:primaryType="nt:unstructured">
+                            <actionfield
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/container">
+                                <layout
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/layouts/actionfield"/>
+                                <field
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                    fieldLabel="Actionfield field label"
+                                    fieldDescription="Actionfield field description"
+                                    name="./actionfield-name"
+                                    value="Actionfield value"
+                                    emptyText="Actionfield empty text"
+                                    maxlength="40"/>
+                                <action
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/submit"
+                                    text="Actionfield action"
+                                    variant="primary"/>
+                            </actionfield>
+                            <autocomplete
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/autocomplete"
+                                fieldLabel="Autocomplete label"
+                                fieldDescription="Autocomplete description"
+                                emptyText="Autocomplete empty text"
+                                icon="coral-Icon--search">
+                                <options
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/autocomplete/list"
+                                    src="/libs/cq/i18n/translator.i18npaths.html"/>
+                            </autocomplete>
+                            <checkbox
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                                fieldLabel="Checkbox label"
+                                fieldDescription="Checkbox description"
+                                name="./checkbox-name"
+                                checked="{Boolean}true"
+                                text="Checkbox text"/>
+                            <colorpicker
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/colorpicker"
+                                fieldLabel="Colorpicker label"
+                                fieldDescription="Colorpicker description"
+                                name="./colorpicker-name"
+                                value="rgb(65,120,205)"
+                                editType="{Boolean}true"/>
+                            <datepicker
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/datepicker"
+                                fieldLabel="Datepicker label"
+                                fieldDescription="Datepicker description"
+                                name="./datepicker-name"
+                                value="2017-04-05T14:41:20+01:00"
+                                type="datetime"
+                                displayedFormat="YYYY-MM-DD"
+                                displayTimezoneMessage="{Boolean}true"/>
+                            <decoratedtextfield
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/decoratedtextfield"
+                                fieldLabel="Decorated Textfield label"
+                                fieldDescription="Decorated Textfield description"
+                                name="./decoratedtextfield-name"
+                                value="Decorated Textfield value"
+                                emptyText="Decorated Textfield empty text"/>
+                            <fieldset
+                                jcr:primaryType="nt:unstructured"
+                                jcr:title="Fieldset legend"
+                                sling:resourceType="granite/ui/components/foundation/form/fieldset">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <hidden
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/hidden"
+                                        name="./hidden-name"
+                                        disabled="{Boolean}true"
+                                        value="hidden-value"/>
+                                    <numberfield
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/numberfield"
+                                        fieldLabel="Numberfield label"
+                                        fieldDescription="Numberfield description"
+                                        name="./numberfield-name"
+                                        value="7"
+                                        min="2"
+                                        max="9"
+                                        step="1"/>
+                                    <password
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/password"
+                                        fieldLabel="Password label"
+                                        fieldDescription="Password description"
+                                        name="./password-name"
+                                        emptyText="Password empty text"/>
+                                    <pathbrowser
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/pathbrowser"
+                                        fieldLabel="Pathbrowser label"
+                                        fieldDescription="Pathbrowser description"
+                                        name="./pathbrowser-name"
+                                        emptyText="Pathbrowser empty text"
+                                        pickerMultiselect="{Boolean}true"
+                                        predicate="nosystem"/>
+                                </items>
+                            </fieldset>
+                            <fileupload
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/fileupload"
+                                fieldLabel="Fileupload label"
+                                fieldDescription="Fileupload description"
+                                multiple="{Boolean}false"
+                                name="./fileupload-name.sftmp"
+                                emptyText="Fileupload empty text"
+                                text="Fileupload text"
+                                icon="coral-Icon--search"
+                                uploadUrl="will_be_replaced"
+                                sizeLimit="100000000"/>
+                            <multifield
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/multifield"
+                                fieldLabel="Multifield label"
+                                fieldDescription="Multifield description">
+                                <field
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                    name="./multifield-name"/>
+                            </multifield>
+                            <nestedcheckboxlist
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/nestedcheckboxlist">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <level1checkbox
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                                        fieldLabel="Nestedcheckboxlist level 1 checkbox label"
+                                        fieldDescription="Nestedcheckboxlist level 1 checkbox description"
+                                        text="Nestedcheckboxlist level 1 checkbox text">
+                                        <sublist
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/foundation/form/nestedcheckboxlist">
+                                            <items jcr:primaryType="nt:unstructured">
+                                                <level2checkbox1
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                                                    fieldLabel="Nestedcheckboxlist level 2 checkbox 1 label"
+                                                    fieldDescription="Nestedcheckboxlist level 2 checkbox 1 description"
+                                                    text="Nestedcheckboxlist level 2 checkbox 1 text"/>
+                                                <level2checkbox2
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                                                    fieldLabel="Nestedcheckboxlist level 2 checkbox 2 label"
+                                                    fieldDescription="Nestedcheckboxlist level 2 checkbox 2 description"
+                                                    text="Nestedcheckboxlist level 2 checkbox 2 text">
+                                                    <sublist
+                                                        jcr:primaryType="nt:unstructured"
+                                                        sling:resourceType="granite/ui/components/foundation/form/nestedcheckboxlist"
+                                                        disconnected="{Boolean}true">
+                                                        <items jcr:primaryType="nt:unstructured">
+                                                            <level3checkbox1
+                                                                jcr:primaryType="nt:unstructured"
+                                                                sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                                                                fieldLabel="Nestedcheckboxlist level 3 checkbox 1 label"
+                                                                fieldDescription="Nestedcheckboxlist level 3 checkbox 1 description"
+                                                                text="Nestedcheckboxlist level 3 checkbox 1 text"/>
+                                                            <level3checkbox2
+                                                                jcr:primaryType="nt:unstructured"
+                                                                sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                                                                fieldLabel="Nestedcheckboxlist level 3 checkbox 2 label"
+                                                                fieldDescription="Nestedcheckboxlist level 3 checkbox 2 description"
+                                                                text="Nestedcheckboxlist level 3 checkbox 2 text"/>
+                                                        </items>
+                                                    </sublist>
+                                                </level2checkbox2>
+                                            </items>
+                                        </sublist>
+                                    </level1checkbox>
+                                </items>
+                            </nestedcheckboxlist>
+                            <radio
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/radio"
+                                text="Radio text"/>
+                            <radiogroup
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/radiogroup"
+                                fieldLabel="RadioGroup label"
+                                fieldDescription="RadioGroup description"
+                                name="./radiogroup-name"
+                                vertical="{Boolean}true">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <option1
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/radio"
+                                        value="option1"
+                                        text="RadioGroup option 1"/>
+                                    <option2
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/radio"
+                                        value="option2"
+                                        text="RadioGroup option 2"/>
+                                    <option3
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/form/radio"
+                                        value="option3"
+                                        text="RadioGroup option 3"/>
+                                </items>
+                            </radiogroup>
+                            <reset
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/reset"
+                                text="Reset"
+                                variant="primary"/>
+                            <select
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/select"
+                                fieldLabel="Select label"
+                                fieldDescription="Select description"
+                                name="./select-name"
+                                emptyText="Select empty text">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <option1
+                                        jcr:primaryType="nt:unstructured"
+                                        text="Option 1"
+                                        value="option1"/>
+                                    <option2
+                                        jcr:primaryType="nt:unstructured"
+                                        text="Option 2"
+                                        value="option2"/>
+                                    <option3
+                                        jcr:primaryType="nt:unstructured"
+                                        text="Option 3"
+                                        value="option3"/>
+                                </items>
+                            </select>
+                            <submit
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/submit"
+                                text="Submit"
+                                variant="primary"/>
+                            <switch
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/switch"
+                                fieldLabel="Switch label"
+                                fieldDescription="Switch description"
+                                name="./switch-name"
+                                checked="{Boolean}true"/>
+                            <tags
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/autocomplete"
+                                fieldLabel="Tags label"
+                                fieldDescription="Tags description"
+                                multiple="{Boolean}true"
+                                name="./tags-name"
+                                emptyText="Tags empty text">
+                                <datasource
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="cq/gui/components/common/datasources/tags"/>
+                                <values
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/autocomplete/tags"/>
+                                <options
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/form/autocomplete/list"/>
+                            </tags>
+                            <textarea
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/textarea"
+                                fieldLabel="Textarea label"
+                                fieldDescription="Textarea description"
+                                name="./switch-textarea"
+                                value="Textarea value"
+                                emptyText="Textarea empty text"
+                                maxlength="80"/>
+                            <textfield
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                fieldLabel="Textfield label"
+                                fieldDescription="Textfield description"
+                                name="./textfield-name"
+                                value="Textfield value"
+                                emptyText="Textfield empty text"
+                                maxlength="40"/>
+                            <userpicker
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/userpicker"
+                                fieldLabel="Userpicker label"
+                                fieldDescription="Userpicker description"
+                                name="./userpicker-name"
+                                emptyText="Userpicker empty text"
+                                multiple="{Boolean}true"/>
+                        </items>
+                    </column>
+                </items>
+            </form>
+            <other
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Other"
+                sling:resourceType="granite/ui/components/foundation/section">
+                <layout
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/foundation/layouts/fixedcolumns"
+                    margin="{Boolean}false"/>
+                <items jcr:primaryType="nt:unstructured">
+                    <column
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container">
+                        <items jcr:primaryType="nt:unstructured">
+                            <well
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/well">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <button
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/button"
+                                        text="Button text"
+                                        icon="coral-Icon--checkCircle"
+                                        data-button-data-legacy="button-data-legacy"
+                                        id="button-id"
+                                        rel="button-rel"
+                                        class="button-class-1 button-class-2"
+                                        title="button-title"
+                                        hidden="{Boolean}false"
+                                        variant="primary">
+                                        <granite:data
+                                            jcr:primaryType="nt:unstructured"
+                                            button-data="button-data"/>
+                                        <granite:rendercondition
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/foundation/renderconditions/and">
+                                            <andCondition1
+                                                jcr:primaryType="nt:unstructured"
+                                                sling:resourceType="granite/ui/components/foundation/renderconditions/simple"
+                                                expression="{Boolean}true"/>
+                                            <andCondition2
+                                                jcr:primaryType="nt:unstructured"
+                                                sling:resourceType="granite/ui/components/foundation/renderconditions/simple"
+                                                expression="{Boolean}true"/>
+                                        </granite:rendercondition>
+                                    </button>
+                                    <button2
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/button"
+                                        text="This button shouldn't render">
+                                        <granite:rendercondition
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/foundation/renderconditions/or">
+                                            <orCondition1
+                                                jcr:primaryType="nt:unstructured"
+                                                sling:resourceType="granite/ui/components/foundation/renderconditions/simple"
+                                                expression="{Boolean}false"/>
+                                            <orCondition2
+                                                jcr:primaryType="nt:unstructured"
+                                                sling:resourceType="granite/ui/components/foundation/renderconditions/simple"
+                                                expression="{Boolean}false"/>
+                                        </granite:rendercondition>
+                                    </button2>
+                                    <heading
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/heading"
+                                        level="2"
+                                        text="Heading text"/>
+                                    <hyperlink
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/hyperlink"
+                                        href="https://www.adobe.com/go/aem6_2_docs_component_en"
+                                        text="Hyperlink text"
+                                        icon="coral-Icon--link"
+                                        iconSize="L"/>
+                                    <text
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/text"
+                                        text="Text"/>
+                                </items>
+                            </well>
+                            <collapsible
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/container"
+                                jcr:title="Collapsible title"
+                                subtitle="Collapsible subtitle">
+                                <layout
+                                    jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/foundation/layouts/collapsible"/>
+                                <items jcr:primaryType="nt:unstructured">
+                                    <item1
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/text"
+                                        text="Collapsible item 1"/>
+                                    <item2
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/text"
+                                        text="Collapsible item 2"/>
+                                    <item3
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/foundation/text"
+                                        text="Collapsible item 3"/>
+                                </items>
+                            </collapsible>
+                        </items>
+                    </column>
+                </items>
+            </other>
+        </items>
+    </content>
+</jcr:root>

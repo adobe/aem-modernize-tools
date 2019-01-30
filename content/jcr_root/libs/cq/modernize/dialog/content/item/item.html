@@ -1,0 +1,32 @@
+<!--
+/*
+ *  (c) 2017 Adobe. All rights reserved.
+ *  This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License. You may obtain a copy
+ *  of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under
+ *  the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ *  OF ANY KIND, either express or implied. See the License for the specific language
+ *  governing permissions and limitations under the License.
+ */
+-->
+<sly data-sly-test.converted="${properties.converted}"/>
+<tr is="coral-table-row"
+    class="${!converted ? 'foundation-collection-item' : ''}"
+    data-foundation-collection-item-id="${properties.dialogPath @ uri}"
+    data-sly-attribute.hidden="${converted ? converted : ''}"
+    data-sly-attribute.data-dialogconversion-dialog-converted="${converted ? converted : ''}">
+    <td is="coral-table-cell">
+        <coral-checkbox disabled="${converted}" coral-table-rowselect></coral-checkbox>
+    </td>
+    <td is="coral-table-cell">${properties.dialogPath @ uri}</td>
+    <td is="coral-table-cell">${properties.type}</td>
+    <td is="coral-table-cell">
+        <a href="${properties.href @ uri}" target="_blank" class="coral-Link">${'show' @ i18n}</a> / <a href="${properties.crxHref @ uri}" x-cq-linkchecker="skip" target="_blank" class="coral-Link">crxde</a>
+    </td>
+    <td data-sly-test="${converted}" is="coral-table-cell">
+        <a href="${properties.touchHref @ uri}" target="_blank" class="coral-Link">${'show' @ i18n}</a> / <a href="${properties.touchCrxHref @ uri}" x-cq-linkchecker="skip" target="_blank" class="coral-Link">crxde</a>
+    </td>
+    <td data-sly-test="${!converted}" is="coral-table-cell">-</td>
+</tr>

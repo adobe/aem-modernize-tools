@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <patterns jcr:primaryType="nt:unstructured">
+        <autocomplete/>
+    </patterns>
+    <replacement
+        jcr:primaryType="nt:unstructured"
+        cq:rewriteFinal="{Boolean}true"
+        cq:rewriteCommonAttrs="{Boolean}true"
+        cq:rewriteRenderCondition="{Boolean}true">
+        <autocomplete
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/form/autocomplete"
+            fieldLabel="${./fieldLabel}"
+            fieldDescription="${./fieldDescription}"
+            renderHidden="${./renderHidden}"
+            name="${./name}"
+            deleteHint="${./deleteHint}"
+            value="${./value}"
+            emptyText="${./emptyText}"
+            disabled="${./disabled}"
+            required="${./required}"
+            validation="${./validation}"
+            multiple="${./multiple}"
+            icon="${./icon}">
+            <cq:rewriteProperties
+                jcr:primaryType="nt:unstructured"
+                icon="[(?:coral-Icon--)(.+), $1]"/>
+            <datasource
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="${\'./datasource/sling:resourceType\'}"/>
+            <values
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="${\'./values/sling:resourceType\'}"/>
+            <options
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="${\'./options/sling:resourceType\'}"
+                src="${./options/src}"/>
+        </autocomplete>
+    </replacement>
+</jcr:root>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <patterns jcr:primaryType="nt:unstructured">
+        <multifield/>
+    </patterns>
+    <replacement
+        jcr:primaryType="nt:unstructured"
+        cq:rewriteCommonAttrs="{Boolean}true"
+        cq:rewriteRenderCondition="{Boolean}true">
+        <multifield
+            cq:rewriteMapChildren="./multifield"
+            cq:rewriteFinal="{Boolean}true"
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+            fieldLabel="${./fieldLabel}"
+            fieldDescription="${./fieldDescription}"
+            renderHidden="${./renderHidden}"
+            required="${./required}"
+            validation="${./validation}"
+            deleteHint="${./deleteHint}"
+            typeHint="${./typeHint}">
+            <field
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="${\'./field/sling:resourceType\'}"
+                name="${./field/name}"/>
+        </multifield>
+    </replacement>
+</jcr:root>

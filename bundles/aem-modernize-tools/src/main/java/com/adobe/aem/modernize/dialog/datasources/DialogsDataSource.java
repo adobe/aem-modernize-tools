@@ -54,7 +54,7 @@ import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
  * Returns a list of dialogs found on the given path
  */
 @SlingServlet(
-        resourceTypes = "cq/dialogconversion/components/dialogs/datasource",
+        resourceTypes = "cq/modernize/dialog/datasource",
         methods = { "GET" })
 public final class DialogsDataSource extends SlingSafeMethodsServlet {
 

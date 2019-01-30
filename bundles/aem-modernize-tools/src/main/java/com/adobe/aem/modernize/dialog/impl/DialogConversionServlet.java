@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 @SlingServlet(
         methods = "POST",
-        paths = "/libs/cq/dialogconversion/content/convert",
+        paths = "/libs/cq/modernize/dialog/content/convert",
         extensions = "json"
 )
 public class DialogConversionServlet extends SlingAllMethodsServlet {

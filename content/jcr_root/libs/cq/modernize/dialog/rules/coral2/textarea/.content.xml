@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <patterns jcr:primaryType="nt:unstructured">
+        <textarea/>
+    </patterns>
+    <replacement
+        jcr:primaryType="nt:unstructured"
+        cq:rewriteFinal="{Boolean}true"
+        cq:rewriteCommonAttrs="{Boolean}true"
+        cq:rewriteRenderCondition="{Boolean}true">
+        <textarea
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/form/textarea"
+            fieldLabel="${./fieldLabel}"
+            fieldDescription="${./fieldDescription}"
+            renderHidden="${./renderHidden}"
+            name="${./name}"
+            value="${./value}"
+            emptyText="${./emptyText}"
+            disabled="${./disabled}"
+            required="${./required}"
+            autocomplete="${./autocomplete}"
+            autofocus="${./autofocus}"
+            validation="${./validation}"
+            maxlength="${./maxLength}"
+            rows="${./rows}"
+            cols="${./cols}"/>
+    </replacement>
+</jcr:root>

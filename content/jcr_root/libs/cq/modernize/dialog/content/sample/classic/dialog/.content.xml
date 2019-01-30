@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Dialog"
+    helpPath="en/cq/current/wcm/default_components.html#List"
+    title="Classic Sample Dialog"
+    xtype="dialog">
+    <items jcr:primaryType="cq:WidgetCollection">
+        <tabs jcr:primaryType="cq:TabPanel">
+            <items jcr:primaryType="cq:WidgetCollection">
+                <input
+                    jcr:primaryType="cq:Widget"
+                    xtype="panel"
+                    title="Input">
+                    <items jcr:primaryType="cq:WidgetCollection">
+                        <textfield
+                            jcr:primaryType="cq:Widget"
+                            xtype="textfield"
+                            fieldLabel="Textfield label"
+                            fieldDescription="Textfield description"
+                            name="./textfield-name"/>
+                        <textarea
+                            jcr:primaryType="cq:Widget"
+                            xtype="textarea"
+                            fieldLabel="Textarea label"
+                            fieldDescription="Textarea description"
+                            name="./textarea-name"/>
+                        <hidden
+                            jcr:primaryType="cq:Widget"
+                            xtype="hidden"
+                            name="hidden-name"
+                            value="./hidden-value"/>
+                        <pathfield
+                            jcr:primaryType="cq:Widget"
+                            xtype="pathfield"
+                            fieldLabel="Pathfield label"
+                            fieldDescription="Pathfield description"
+                            name="./pathfield-name"
+                            rootPath="/apps"/>
+                        <colorfield
+                            jcr:primaryType="cq:Widget"
+                            xtype="colorfield"
+                            fieldLabel="Colorfield label"
+                            fieldDescription="Colorfield description"
+                            name="./colorfield-name"
+                            defaultValue="fff"/>
+                        <multifield
+                            jcr:primaryType="cq:Widget"
+                            xtype="multifield"
+                            fieldLabel="Multifield label"
+                            fieldDescription="Multifield description"
+                            name="./multifield-name"/>
+                            <fieldConfig
+                                jcr:primaryType="nt:unstructured"
+                                xtype="textfield"/>
+                        <numberfield
+                            jcr:primaryType="cq:Widget"
+                            xtype="numberfield"
+                            fieldLabel="Numberfield label"
+                            fieldDescription="Numberfield description"
+                            name="./numberfield-name"/>
+                        <datetime
+                            jcr:primaryType="cq:Widget"
+                            xtype="datetime"
+                            fieldLabel="Datetime label"
+                            fieldDescription="Datetime description"
+                            name="./datetime-name"/>
+                        <password
+                            jcr:primaryType="cq:Widget"
+                            xtype="password"
+                            fieldLabel="Password label"
+                            fieldDescription="Password description"
+                            name="./password-name"/>
+                        <sizefield
+                            jcr:primaryType="cq:Widget"
+                            xtype="sizefield"
+                            fieldLabel="Sizefield label"
+                            name="./sizefield-name"/>
+                    </items>
+                </input>
+                <selection
+                    jcr:primaryType="cq:Widget"
+                    xtype="panel"
+                    title="Selection">
+                    <items jcr:primaryType="cq:WidgetCollection">
+                        <select
+                            jcr:primaryType="cq:Widget"
+                            xtype="selection"
+                            type="select"
+                            fieldLabel="Select label"
+                            fieldDescription="Select description"
+                            name="./select-name">
+                            <options jcr:primaryType="cq:WidgetCollection">
+                                <option1
+                                    jcr:primaryType="nt:unstructured"
+                                    text="Select option 1"
+                                    value="select-option-1"/>
+                                <option2
+                                    jcr:primaryType="nt:unstructured"
+                                    text="Select option 2"
+                                    value="select-option-2"/>
+                                <option3
+                                    jcr:primaryType="nt:unstructured"
+                                    text="Select option 3"
+                                    value="select-option-3"/>
+                            </options>
+                        </select>
+                        <combobox
+                            jcr:primaryType="cq:Widget"
+                            xtype="selection"
+                            type="combobox"
+                            fieldLabel="Combobox label"
+                            fieldDescription="Combobox description"
+                            name="./ombobox-name">
+                            <options jcr:primaryType="cq:WidgetCollection">
+                                <option1
+                                    jcr:primaryType="nt:unstructured"
+                                    text="Combobox option 1"/>
+                                <option2
+                                    jcr:primaryType="nt:unstructured"
+                                    text="Combobox option 2"/>
+                                <option3
+                                    jcr:primaryType="nt:unstructured"
+                                    text="Combobox option 3"/>
+                            </options>
+                        </combobox>
+                        <tags
+                            jcr:primaryType="cq:Widget"
+                            xtype="tags"
+                            fieldLabel="Tags label"
+                            fieldDescription="Tags description"
+                            name="./tags-name"/>
+                        <checkbox
+                            jcr:primaryType="cq:Widget"
+                            xtype="selection"
+                            type="checkbox"
+                            fieldLabel="Checkbox label"
+                            fieldDescription="Checkbox description"
+                            name="./checkbox-name"/>
+                        <radiogroup
+                            jcr:primaryType="cq:Widget"
+                            xtype="radiogroup"
+                            fieldLabel="Radiogroup label"
+                            name="./radiogroup">
+                            <items jcr:primaryType="cq:WidgetCollection">
+                                <radio1
+                                    jcr:primaryType="cq:Widget"
+                                    xtype="radio"
+                                    fieldLabel="Radio 1 label"
+                                    name="./radiogroup"
+                                    value="radio-1-value"/>
+                                <radio2
+                                    jcr:primaryType="cq:Widget"
+                                    xtype="radio"
+                                    fieldLabel="Radio 2 label"
+                                    name="./radiogroup"
+                                    value="radio-2-value"/>
+                            </items>
+                        </radiogroup>
+                        <button
+                            jcr:primaryType="cq:Widget"
+                            xtype="button"
+                            text="Button"/>
+                    </items>
+                </selection>
+                <other
+                    jcr:primaryType="cq:Widget"
+                    xtype="panel"
+                    title="Other">
+                    <items jcr:primaryType="cq:WidgetCollection">
+                        <fieldset
+                            jcr:primaryType="cq:Widget"
+                            xtype="fieldset"
+                            title="Fieldset title">
+                            <items jcr:primaryType="cq:WidgetCollection">
+                                <textfield
+                                    jcr:primaryType="cq:Widget"
+                                    xtype="textfield"
+                                    fieldLabel="Textfield label (fieldset)"
+                                    fieldDescription="Textfield description (fieldset)"/>
+                            </items>
+                        </fieldset>
+                        <fileupload
+                            jcr:primaryType="cq:Widget"
+                            xtype="fileuploadfield"
+                            fieldLabel="Fileupload label"
+                            fieldDescription="Fileupload description"
+                            name="./fileupload-name"/>
+                    </items>
+                </other>
+            </items>
+        </tabs>
+    </items>
+</jcr:root>

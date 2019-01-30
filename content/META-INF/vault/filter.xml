@@ -2,5 +2,6 @@
 <workspaceFilter version="1.0">
     <filter root="/apps/cq/core/content/nav/tools/operations/modernizestructure"/>
     <filter root="/apps/cq/core/content/nav/tools/operations/modernizecomponent"/>
+    <filter root="/apps/cq/core/content/nav/tools/operations/modernizedialog" />
     <filter root="/libs/cq/modernize"/>
 </workspaceFilter>

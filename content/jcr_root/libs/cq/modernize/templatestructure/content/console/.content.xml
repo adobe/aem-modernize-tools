@@ -76,7 +76,7 @@
                             granite:rel="aem-modernize-structure-pages"
                             jcr:primaryType="nt:unstructured"
                             sling:resourceType="granite/ui/components/coral/foundation/table"
-                            itemResourceType="cq/modernize/templatestructure/item"
+                            itemResourceType="cq/modernize/templatestructure/content/item"
                             orderable="{Boolean}false"
                             path="${param.path}"
                             selectionMode="row">

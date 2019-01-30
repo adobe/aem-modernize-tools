@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured"
+    cq:rewriteRanking="3">
+    <patterns jcr:primaryType="nt:unstructured">
+        <container/>
+        <section/>
+    </patterns>
+    <replacement
+        jcr:primaryType="nt:unstructured"
+        cq:rewriteFinal="{Boolean}true"
+        cq:rewriteCommonAttrs="{Boolean}true"
+        cq:rewriteRenderCondition="{Boolean}true">
+        <accordion
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/accordion">
+            <items
+                jcr:primaryType="nt:unstructured">
+                <item1
+                    jcr:primaryType="nt:unstructured"
+                    jcr:title="${\'jcr:title\'}"
+                    sling:resourceType="granite/ui/components/coral/foundation/container">
+                    <items
+                        cq:rewriteMapChildren="./items"
+                        jcr:primaryType="nt:unstructured">
+                    </items>
+                </item1>
+            </items>
+        </accordion>
+    </replacement>
+</jcr:root>
