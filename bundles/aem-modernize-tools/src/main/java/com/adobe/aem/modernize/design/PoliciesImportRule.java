@@ -26,6 +26,8 @@ import java.util.Set;
  */
 public interface PoliciesImportRule extends RewriteRule {
 
+    String POLICY_RESOURCE_TYPE = "wcm/core/components/policy/policy";
+
     /**
      * Returns a set of all <code>sling:resourceType</code> values specified in the <i>pattern</i> properties.
      * @return

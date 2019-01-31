@@ -102,7 +102,8 @@ class PoliciesTreeImporter {
             // Now, update it based on the rule configuration:
 
             Node updated = matchedRule.applyTo(policy.adaptTo(Node.class), new HashSet<>());
-            updated.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, "wcm/core/components/policy/policy");
+            updated.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY,
+                    PoliciesImportRule.POLICY_RESOURCE_TYPE);
 
             updated.setProperty(PN_POLICY_RESOURCE_TYPE, resourceType);
             updated.setProperty(NameConstants.PN_TITLE, "Imported (" + style.getCell().getPath() + ")");
