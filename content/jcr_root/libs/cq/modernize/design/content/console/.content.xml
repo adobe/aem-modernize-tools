@@ -74,7 +74,7 @@
                                     granite:class="js-aem-PoliciesImporter-showProperties"
                                     jcr:primaryType="nt:unstructured"
                                     sling:resourceType="granite/ui/components/coral/foundation/button"
-                                    text="Show Properties"/>
+                                    text="Show Styles"/>
                             </primary>
                             <secondary jcr:primaryType="nt:unstructured">
                                 <text

@@ -9,7 +9,7 @@
                 jcr:mixinTypes="[rep:AccessControllable]"
                 jcr:primaryType="nt:unstructured"
                 jcr:title="Page Template/Structure Conversion"
-                href="/libs/cq/modernize/structure/content/console.html"
+                href="/libs/cq/modernize/templatestructure/content/console.html"
                 id="aem-tools-sites-modernize-structure">
                 <rep:policy/>
             </modernizestructure>

@@ -62,14 +62,17 @@ public class PoliciesImportServlet extends SlingAllMethodsServlet {
         RequestParameter[] paths = request.getRequestParameters(PARAM_PATHS);
         if (paths == null) {
             respondWrongParam(response, PARAM_PATHS);
+            return;
         }
         String designPath = request.getParameter(PARAM_DESIGN_PATH);
         if (StringUtils.isEmpty(designPath)) {
             respondWrongParam(response, PARAM_DESIGN_PATH);
+            return;
         }
         String targetPath = request.getParameter(PARAM_TARGET_PATH);
         if (StringUtils.isEmpty(targetPath)) {
             respondWrongParam(response, PARAM_TARGET_PATH);
+            return;
         }
 
         try {
@@ -82,7 +85,6 @@ public class PoliciesImportServlet extends SlingAllMethodsServlet {
             Designer designer = resolver.adaptTo(Designer.class);
             Design design = designer.getDesign(PoliciesImportUtils.getDesignPath(designPath));
 
-            ContentPolicyManager policyManager = resolver.adaptTo(ContentPolicyManager.class);
             PoliciesTreeImporter importer = new PoliciesTreeImporter(rules);
 
             targetPath = Text.makeCanonicalPath(targetPath + "/settings/wcm/policies");
@@ -97,6 +99,7 @@ public class PoliciesImportServlet extends SlingAllMethodsServlet {
 
                 // Verify that the path exists
                 Style style = design.getStyle(path);
+
                 if (style == null) {
                     json.put(KEY_ERROR_MESSAGE, "Invalid style");
                     LOGGER.debug("Style {} doesn't exist at {}", path, designPath);

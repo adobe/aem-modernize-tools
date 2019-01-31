@@ -12,23 +12,31 @@
 package com.adobe.aem.modernize.design.impl;
 
 import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.RewriteRule;
 import com.adobe.aem.modernize.design.PoliciesImportRule;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.designer.Style;
 import com.day.text.Text;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import static com.adobe.aem.modernize.design.impl.PoliciesImportUtils.PN_IMPORTED;
 
@@ -36,8 +44,6 @@ class PoliciesTreeImporter {
 
     private static Logger LOGGER = LoggerFactory.getLogger(PoliciesTreeImporter.class);
 
-    private static final String NT_INTERMEDIATE = "nt:unstructured";
-    private static final String PN_RESOURCE_TYPE = "sling:resourceType";
     private static final String PN_POLICY_RESOURCE_TYPE = "policyResourceType";
 
     // TODO: add support for rewrite rules
@@ -47,19 +53,38 @@ class PoliciesTreeImporter {
         this.rules = rules;
     }
 
-    String importStyleAsPolicy(ResourceResolver resolver, Style style, String targetPath) throws RewriteException {
+    String importStyleAsPolicy(ResourceResolver resolver, Style style, String targetPath) throws RewriteException, RepositoryException {
         LOGGER.debug("Importing style {} as a policy under {}", style.getPath(), targetPath);
 
         long tick = System.currentTimeMillis();
 
-        // Get resource type
-        String resourceType = style.get(PN_RESOURCE_TYPE, String.class);
-        if (StringUtils.isEmpty(resourceType)) {
-            throw new RewriteException("Unable to get resource type from style: " + style.getPath());
+        Node styleNode = resolver.getResource(style.getPath()).adaptTo(Node.class);
+        // Identify which rule applies.
+
+        PoliciesImportRule matchedRule = null;
+        for (PoliciesImportRule rule : rules) {
+            if (rule.matches(styleNode)) {
+                matchedRule = rule;
+                break;
+            }
         }
-        // TODO: do it right iterating over search path
-        if (resourceType.startsWith("/libs") || resourceType.startsWith("/apps")) {
-            resourceType = resourceType.substring(5);
+
+        if (matchedRule == null) {
+            throw new RewriteException("No matched rule for the specified style definition.");
+        }
+
+
+        // Get resource type
+        String resourceType = matchedRule.getReplacementSlingResourceType();
+        if (StringUtils.isEmpty(resourceType)) {
+            throw new RewriteException("Unable to get resource type from matched rule: " + matchedRule.toString());
+        }
+
+        for (String s : resolver.getSearchPath()) {
+            if (resourceType.startsWith(s)) {
+                resourceType = resourceType.replaceFirst(s, "");
+                break;
+            }
         }
 
         // Determine parent path for policy based on the resource type of the component style
@@ -67,15 +92,21 @@ class PoliciesTreeImporter {
 
         try {
             // Create intermediate structure if required
-            Resource parent = ResourceUtil.getOrCreateResource(resolver, parentPath, NT_INTERMEDIATE, NT_INTERMEDIATE, false);
+            Resource parent = ResourceUtil.getOrCreateResource(resolver, parentPath, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, false);
 
             // Create policy
             Map<String, Object> properties = new HashMap<>(style);
-            properties.put(PN_RESOURCE_TYPE, "wcm/core/components/policy/policy");
-            properties.put(PN_POLICY_RESOURCE_TYPE, resourceType);
-            properties.put(NameConstants.PN_TITLE, "Imported (" + style.getCell().getPath() + ")");
-            properties.put(NameConstants.PN_DESCRIPTION, "Imported from " + style.getPath());
             Resource policy = resolver.create(parent, ResourceUtil.createUniqueChildName(parent, "policy"), properties);
+
+
+            // Now, update it based on the rule configuration:
+
+            Node updated = matchedRule.applyTo(policy.adaptTo(Node.class), new HashSet<>());
+            updated.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, "wcm/core/components/policy/policy");
+
+            updated.setProperty(PN_POLICY_RESOURCE_TYPE, resourceType);
+            updated.setProperty(NameConstants.PN_TITLE, "Imported (" + style.getCell().getPath() + ")");
+            updated.setProperty(NameConstants.PN_DESCRIPTION, "Imported from " + style.getPath());
 
             // Mark previous style as "imported"
             Resource old = resolver.getResource(style.getPath());
@@ -88,7 +119,7 @@ class PoliciesTreeImporter {
 
             long tack = System.currentTimeMillis();
             LOGGER.debug("Imported style {} as {} in {} ms", style.getPath(), policy.getPath(), tack - tick);
-            return policy.getPath();
+            return updated.getPath();
 
         } catch (PersistenceException e) {
             resolver.revert();

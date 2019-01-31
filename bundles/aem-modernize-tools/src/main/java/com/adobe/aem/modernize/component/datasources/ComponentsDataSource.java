@@ -27,6 +27,8 @@ import javax.jcr.query.QueryManager;
 import javax.servlet.ServletException;
 
 import com.adobe.aem.modernize.impl.RewriteUtils;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -83,6 +85,12 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
 
             if (StringUtils.isEmpty(path)) {
                 log.warn("Path unavailable");
+                return;
+            }
+
+            if (CollectionUtils.isEmpty(
+                    componentRewriteRuleService.getSlingResourceTypes(request.getResourceResolver()))) {
+                // No rules.
                 return;
             }
 

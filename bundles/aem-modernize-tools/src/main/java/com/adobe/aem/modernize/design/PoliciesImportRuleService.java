@@ -9,4 +9,5 @@ import java.util.Set;
 
 public interface PoliciesImportRuleService extends RewriteRuleService<PoliciesImportRule> {
 
+    Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException;
 }

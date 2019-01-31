@@ -110,7 +110,7 @@ public class PoliciesImportRuleServiceImpl implements PoliciesImportRuleService 
         Set<String> types = new HashSet<>(rules.size());
 
         for (PoliciesImportRule r : rules) {
-            types.addAll(r.getSlingResourceTypes());
+            types.addAll(r.getPatternSlingResourceTypes());
         }
         return types;
     }

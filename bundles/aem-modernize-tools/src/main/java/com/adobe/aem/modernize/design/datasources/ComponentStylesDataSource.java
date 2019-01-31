@@ -22,6 +22,8 @@ import com.adobe.granite.ui.components.ds.ValueMapResource;
 import com.day.cq.commons.Externalizer;
 import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Designer;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -36,6 +38,7 @@ import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,23 +97,44 @@ public final class ComponentStylesDataSource extends SlingSafeMethodsServlet {
             return;
         }
 
-        String designContentResourcePath = design.getContentResource().getPath();
-        Iterator<Resource> it = resolver.findResources(generateQuery(designContentResourcePath), JCR_SQL2);
-        int index = 0;
-        while (it.hasNext()) {
-            result.add(buildResource(it.next(), request, designContentResourcePath, properties.get("itemResourceType", String.class), index++));
+
+        try {
+
+            if (CollectionUtils.isEmpty(policiesImportRuleService.getSlingResourceTypes(resolver))) {
+                // No rules.
+                return;
+            }
+
+            String designContentResourcePath = design.getContentResource().getPath();
+            Iterator<Resource> it = resolver.findResources(generateQuery(designContentResourcePath, resolver), JCR_SQL2);
+            int index = 0;
+            while (it.hasNext()) {
+                result.add(buildResource(it.next(), request, designContentResourcePath, properties.get("itemResourceType", String.class), index++));
+            }
+
+            DataSource ds = new SimpleDataSource(result.iterator());
+
+            request.setAttribute(DataSource.class.getName(), ds);
+        } catch (RepositoryException ex) {
+            LOGGER.warn("Unable to list Component designs: {}", ex.getMessage());
         }
-
-        DataSource ds = new SimpleDataSource(result.iterator());
-
-        request.setAttribute(DataSource.class.getName(), ds);
     }
 
-    private String generateQuery(String rootPath) {
+    private String generateQuery(String rootPath, ResourceResolver resourceResolver) throws RepositoryException {
+
+        String path = RewriteUtils.encodePath(rootPath);
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM [").append(JcrConstants.NT_UNSTRUCTURED).append("] AS design ");
-        sb.append("WHERE ISDESCENDANTNODE(design, '").append(RewriteUtils.encodePath(rootPath)).append("') ");
-        sb.append("AND design.[sling:resourceType] IS NOT NULL");
+        sb.append("WHERE ISDESCENDANTNODE(design, '").append(path).append("') ");
+        sb.append("AND design.[sling:resourceType] IN ( ");
+        Iterator<String> it = policiesImportRuleService.getSlingResourceTypes(resourceResolver).iterator();
+        while (it.hasNext()) {
+            sb.append("'").append(it.next()).append("'");
+            if (it.hasNext()) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
 
         return sb.toString();
     }

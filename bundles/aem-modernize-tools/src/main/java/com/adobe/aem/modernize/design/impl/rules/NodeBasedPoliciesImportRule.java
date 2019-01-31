@@ -11,16 +11,17 @@
  */
 package com.adobe.aem.modernize.design.impl.rules;
 
-import com.adobe.aem.modernize.component.ComponentRewriteRule;
-import com.adobe.aem.modernize.design.PoliciesImportRule;
-import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
-import org.apache.sling.jcr.resource.api.JcrResourceConstants;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
+
+import com.adobe.aem.modernize.design.PoliciesImportRule;
+import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
 
 /**
  * An rule that rewrites a tree based on a given node structure. The node structure follows all
@@ -38,7 +39,7 @@ public class NodeBasedPoliciesImportRule extends AbstractNodeBasedRewriteRule im
         return;
     }
 
-    public Set<String> getSlingResourceTypes() throws RepositoryException {
+    public Set<String> getPatternSlingResourceTypes() throws RepositoryException {
         Set<String> types = new HashSet<>();
 
         if (!getRuleNode().hasNode("patterns")) {
@@ -55,4 +56,16 @@ public class NodeBasedPoliciesImportRule extends AbstractNodeBasedRewriteRule im
         return types;
     }
 
+
+    public String getReplacementSlingResourceType() throws RepositoryException {
+        Node replacement = getRuleNode().getNode("replacement");
+        if (replacement.hasNodes()) {
+            replacement = replacement.getNodes().nextNode();
+            if (replacement.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
+                return replacement.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
+
+            }
+        }
+        return null;
+    }
 }
