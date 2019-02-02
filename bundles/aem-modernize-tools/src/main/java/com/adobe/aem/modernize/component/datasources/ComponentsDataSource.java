@@ -135,6 +135,10 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
 
         Resource rootResource = resolver.getResource(searchPath);
 
+        if (rootResource == null) {
+            return;
+        }
+
         String slingResourceType = rootResource.getValueMap().get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class);
         if (componentRewriteRuleService.getSlingResourceTypes(resolver).contains(slingResourceType)) {
             nodeMap.put(searchPath, rootResource.adaptTo(Node.class));
