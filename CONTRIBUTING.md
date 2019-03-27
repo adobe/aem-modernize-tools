@@ -50,3 +50,11 @@ The _master_ branch of AEM Modernization Tools (1.x) is expected to be installab
 ## Participating in Code Reviews
 
 Even if you don't have time to contribute code, reviewing code contributed by other people is an option. To do this, go to [https://github.com/adobe/aem-modernize-tools/pulls](https://github.com/adobe/aem-modernize-tools/pulls) to see the open pull requests.
+
+## Contributor License Agreement
+
+All third-party contributions to this project must be accompanied by a signed contributor
+license agreement. This gives Adobe permission to redistribute your contributions
+as part of the project. [Sign our CLA](http://opensource.adobe.com/cla.html). You
+only need to submit an Adobe CLA one time, so if you have submitted one previously,
+you are good to go!
