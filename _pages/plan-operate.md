@@ -1,6 +1,5 @@
 ---
 layout: section-page
-title: Plan & Operate
 ---
 
 <section id="banner">
