@@ -1,0 +1,20 @@
+{% assign layout = include.layout %}
+
+<section>
+    <div class="posts">
+
+        {% assign sorted = (site.pages | sort: 'order') %}
+        {% assign currentPagePath = page.path | remove: '.md' %}
+        {% for subpage in sorted %}
+            {% capture isSubPath %}{% if (subpage.path contains currentPagePath) %}true{% else %}false{% endif %}{% endcapture %}
+            {% capture isNotSame %}{% if (subpage.path != page.path) %}true{% else %}false{% endif %}{% endcapture %}
+
+            {% capture subFeature %}{% if isSubPath == 'true' and isNotSame == 'true' %}true{% else %}false{% endif %}{% endcapture %}
+
+            {% if subFeature == 'true' %}
+                {% include sub-page.html subpage=subpage %}
+            {% endif %}
+        {% endfor %}
+
+    </div>
+</section>
