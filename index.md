@@ -35,46 +35,46 @@ layout: default
     <header class="major">
         <h2>Learn about the suite!</h2>
     </header>
-    <div class="posts">
+    <div class="features">
         <article>
             <a href="{{ site.baseurl }}/pages/tools.html" class="image">
-                <img src="{{ site.baseurl }}/images/tools.png" alt="About the Tools" />
+                <img src="{{ site.baseurl }}/images/icons/tools.svg" alt="About the Tools" />
             </a>
-            <h3>The Tools</h3>
-            <p>Learn about the tools included in the AEM Modernization suite.</p>
-            <ul class="actions">
-                <li><a href="{{ site.baseurl }}/pages/tools.html" class="button">More about the tools</a></li>
-            </ul>
+            <div class="content">
+                <h3>The Tools</h3>
+                <p>Learn about the tools included in the AEM Modernization suite.</p>
+                <a href="{{ site.baseurl }}/pages/tools.html" class="button">More about the tools</a>
+            </div>
         </article>
         <article>
             <a href="{{ site.baseurl }}/pages/plan-operate.html" class="image">
-                <img src="{{ site.baseurl }}/images/plan-operate.png" alt="Plan & Operate" />
+                <img src="{{ site.baseurl }}/images/icons/plan-and-operate.svg" alt="Plan & Operate" />
             </a>
-            <h3>Plan & Operate</h3>
-            <p>Dive in to planning and executing a modernization effort for you AEM Site.</p>
-            <ul class="actions">
-                <li><a href="{{ site.baseurl }}/pages/plan-operate.html" class="button">Plan & Execute your project</a></li>
-            </ul>
+            <div class="content">
+                <h3>Plan &amp; Operate</h3>
+                <p>Dive in to planning and executing a modernization effort for you AEM Site.</p>
+                <a href="{{ site.baseurl }}/pages/plan-operate.html" class="button">Plan &amp; Execute your project</a>
+            </div>
         </article>
         <article>
             <a href="{{ site.baseurl }}/pages/configuration.html" class="image">
-                <img src="{{ site.baseurl }}/images/configuration.png" alt="Configure the Services." />
+                <img src="{{ site.baseurl }}/images/icons/configuration.svg" alt="Configure the Services." />
             </a>
-            <h3>Configuration</h3>
-            <p>Learn how to configure the available library services to meet your speciifc implementation requirements.</p>
-            <ul class="actions">
-                <li><a href="{{ site.baseurl }}/pages/configuration.html" class="button">Configure the services</a></li>
-            </ul>
+            <div class="content">
+                <h3>Configuration</h3>
+                <p>Learn how to configure the available library services to meet your speciifc implementation requirements.</p>
+                <a href="{{ site.baseurl }}/pages/configuration.html" class="button">Configure the services</a>
+            </div>
         </article>
         <article>
             <a href="{{ site.baseurl }}/pages/development.html" class="image">
-                <img src="{{ site.baseurl }}/images/development.png" alt="Extend the Library" />
+                <img src="{{ site.baseurl }}/images/icons/development.svg" alt="Extend the Library" />
             </a>
-            <h3>Development</h3>
-            <p>Out of the box features not able to meet your needs? Here's where you'll find information on extending the library with custom features.</p>
-            <ul class="actions">
-                <li><a href="{{ site.baseurl }}/pages/development.html" class="button">Extend the library</a></li>
-            </ul>
+            <div class="content">
+                <h3>Development</h3>
+                <p>Out of the box features not able to meet your needs? Here's where you'll find information on extending the library with custom features.</p>
+                <a href="{{ site.baseurl }}/pages/development.html" class="button">Extend the library</a>
+            </div>
         </article>
     </div>
 </section>
