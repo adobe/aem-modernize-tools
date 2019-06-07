@@ -1,0 +1,18 @@
+dist: xenial
+language: java
+matrix:
+  include:
+    - jdk: oraclejdk8
+      name: Java 8 Build
+      env: MAVEN_SKIP_RC=true MAVEN_OPTS="-Xmx512m -XX:MaxMetaspaceSize=512m
+    - jdk: oraclejdk11
+      name: Java 11 Build
+      env: MAVEN_SKIP_RC=true MAVEN_OPTS="-Xmx512m -XX:MaxMetaspaceSize=512m
+script: mvn verify -B
+sudo: false
+cache:
+  directories:
+    - $HOME/.m2
+before_cache:
+  # don't cache snapshots
+  - find $HOME/.m2 -name *SNAPSHOT* -exec rm -r "{}" \;`
