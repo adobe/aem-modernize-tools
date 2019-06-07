@@ -37,43 +37,43 @@ layout: default
     </header>
     <div class="features">
         <article>
-            <a href="{{ site.baseurl }}/pages/tools.html" class="image">
+            <a href="{{ site.baseurl }}/pages/tools.html" class="image left">
                 <img src="{{ site.baseurl }}/images/icons/tools.svg" alt="About the Tools" />
             </a>
             <div class="content">
                 <h3>The Tools</h3>
                 <p>Learn about the tools included in the AEM Modernization suite.</p>
-                <a href="{{ site.baseurl }}/pages/tools.html" class="button">More about the tools</a>
+                <a href="{{ site.baseurl }}/pages/tools.html" class="button primary small">More about the tools</a>
             </div>
         </article>
         <article>
-            <a href="{{ site.baseurl }}/pages/plan-operate.html" class="image">
+            <a href="{{ site.baseurl }}/pages/plan-operate.html" class="image left">
                 <img src="{{ site.baseurl }}/images/icons/plan-and-operate.svg" alt="Plan & Operate" />
             </a>
             <div class="content">
                 <h3>Plan &amp; Operate</h3>
                 <p>Dive in to planning and executing a modernization effort for you AEM Site.</p>
-                <a href="{{ site.baseurl }}/pages/plan-operate.html" class="button">Plan &amp; Execute your project</a>
+                <a href="{{ site.baseurl }}/pages/plan-operate.html" class="button primary small">Plan &amp; Execute your project</a>
             </div>
         </article>
         <article>
-            <a href="{{ site.baseurl }}/pages/configuration.html" class="image">
+            <a href="{{ site.baseurl }}/pages/configuration.html" class="image left">
                 <img src="{{ site.baseurl }}/images/icons/configuration.svg" alt="Configure the Services." />
             </a>
             <div class="content">
                 <h3>Configuration</h3>
                 <p>Learn how to configure the available library services to meet your speciifc implementation requirements.</p>
-                <a href="{{ site.baseurl }}/pages/configuration.html" class="button">Configure the services</a>
+                <a href="{{ site.baseurl }}/pages/configuration.html" class="button primary small">Configure the services</a>
             </div>
         </article>
         <article>
-            <a href="{{ site.baseurl }}/pages/development.html" class="image">
+            <a href="{{ site.baseurl }}/pages/development.html" class="image left">
                 <img src="{{ site.baseurl }}/images/icons/development.svg" alt="Extend the Library" />
             </a>
             <div class="content">
                 <h3>Development</h3>
                 <p>Out of the box features not able to meet your needs? Here's where you'll find information on extending the library with custom features.</p>
-                <a href="{{ site.baseurl }}/pages/development.html" class="button">Extend the library</a>
+                <a href="{{ site.baseurl }}/pages/development.html" class="button primary small">Extend the library</a>
             </div>
         </article>
     </div>

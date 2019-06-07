@@ -68,3 +68,16 @@ article.page-content {
 
   }
 }
+
+.features { 
+    article { 
+        .content { 
+            width: 60%;
+            padding-left: 15px;
+            h3 { 
+                font-weight: bold !important;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
