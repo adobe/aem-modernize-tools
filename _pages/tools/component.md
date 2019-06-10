@@ -3,6 +3,7 @@ layout: doc-page
 title: Component Converter
 description: Converts & manipulates component content.
 order: 2
+image: tools-component-converter.svg
 ---
 
 ## About

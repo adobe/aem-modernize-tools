@@ -3,6 +3,7 @@ layout: doc-page
 title: Policy Importer
 description: Imports design configurations as Editable Template policies.
 order: 3
+image: tools-policy-importer.svg
 ---
 
 ## About

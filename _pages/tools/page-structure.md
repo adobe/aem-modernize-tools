@@ -3,6 +3,7 @@ layout: doc-page
 title: Page Structure Converter
 description: Converts page structures from static to Editable Templates.
 order: 1
+image: tools-page-structure-converter.svg
 ---
 
 ## About

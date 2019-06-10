@@ -2,6 +2,7 @@
 layout: doc-page
 title: Extending the Services
 order: 2
+image: extending-services.svg
 ---
 
 This tool suite is designed to be extensible, allowing consumers to specify custom implementations should the framework not provide enough flexibility. Users of this suite can extend the feature set through registering OSGi services implementing specific API interfaces.

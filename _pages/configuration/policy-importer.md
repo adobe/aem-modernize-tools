@@ -3,6 +3,7 @@ layout: doc-page
 title: Policy Importer
 description: How to configure Policy importer node definitions (just like Components & Dialogs!). 
 order: 3
+image: config-policy-importer.svg
 ---
 
 Policy import & rewrite rule configurations are managed as repository node structures. These nodes must exist below the path: `/apps/cq/modernize/design/rules` in order to be applied. 

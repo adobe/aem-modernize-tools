@@ -3,6 +3,7 @@ layout: doc-page
 title: Dialog Converter
 description: How to configure Dialog conversion node definitions (just like Components & Policies!). 
 order: 4
+image: config-dialog-converter.svg
 ---
 
 Dialog rewrite rule configurations are managed as repository node structures. These nodes must exist below the path: `/apps/cq/modernize/dialog/rules` in order to be applied. 

@@ -3,6 +3,7 @@ layout: doc-page
 title: Page Structure Converter
 description: Details on how to define page content and column control conversion services to transform your pages.
 order: 1
+image: config-page-structure-converter.svg
 ---
 
 The Page Structure rewrite tool consists of three *rewrite rule* OSGi services. Here we'll review the configurations needed for each.

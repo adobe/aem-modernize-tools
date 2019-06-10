@@ -3,6 +3,7 @@ layout: doc-page
 title: Dialog Converter
 description: Converts Classic and Coral2 dialogs to Coral3.
 order: 4
+image: tools-dialog-converter.svg
 ---
 
 ## About

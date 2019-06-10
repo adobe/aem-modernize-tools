@@ -1,8 +1,9 @@
 ---
 layout: doc-page
 title: Component Converter
-description: How to configure Component conversion node definitions (just like Policies & Dialogs!). 
+description: How to configure Component conversion node definitions (just like Policies & Dialogs!).
 order: 2
+image: config-component-converter.svg
 ---
 
 Component rewrite rule configurations are managed as repository node structures. These nodes must exist below the path: `/apps/cq/modernize/component/rules` in order to be applied. 

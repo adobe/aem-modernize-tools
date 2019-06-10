@@ -3,7 +3,7 @@
 {% if p.link %}
     {% assign url = p.link %}
 {% endif %}
-{% capture image %}{{ site.baseurl }}{{ p.url | replace: 'pages', 'images' | replace: '.html', '.jpg' }}{% endcapture %}
+{% capture image %}{{ site.baseurl }}/images/icons/{{ p.image }}{% endcapture %}
 
 
 

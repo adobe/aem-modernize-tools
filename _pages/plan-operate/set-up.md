@@ -3,6 +3,7 @@ layout: doc-page
 title: Modernization Suite Set-Up
 description: Ready to start configuring the tools and install the suite.
 order: 3
+image: set-up.svg
 ---
 
 ## Tool Installation

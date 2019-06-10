@@ -3,6 +3,7 @@ layout: doc-page
 title: Evaluating a Site
 description: Evaluating existing Templates & Components for a conversion to modern capabilities.
 order: 2
+image: evaluate.svg
 ---
 
 ## Overview
