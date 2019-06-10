@@ -8,12 +8,12 @@
 
 
 <article>
-    <a href="{{ site.baseurl }}{{ url }}" class="image"><img src="{{ image }}" alt="{{ p.title }}" /></a>
-
-    <h3>{{ p.title }}</h3>
-    <p>{{ p.description }}</p>
-
-    <ul class="actions">
-        <li><a href="{{ site.baseurl }}{{ url }}" class="button">{{ p.title }}</a></li>
-    </ul>
+    <a href="{{ site.baseurl }}{{ url }}" class="image left"><img src="{{ image }}" alt="{{ p.title }}" /></a>
+    <div class="content">
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.description }}</p>
+        <a href="{{ site.baseurl }}{{ url }}" class="button primary small">Read More</a>
+    </div>
 </article>
+
+
