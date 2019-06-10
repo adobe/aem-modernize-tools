@@ -104,7 +104,7 @@ As with the previous example, we've annotated the image with our assessment. Thi
 
 ### Visual Review
 
-Visually reviewing a page allows for determining content which should be managed by template editors and which content authors. This review also helps with identifying placement and number of layout containers.
+Content management on pages must be delineated between that which is managed by *Template Editors* and that managed by *Content Authors*. A visual review of exemplar pages helps identify this breakout. This review also helps with identifying placement and number of layout containers.
 
 #### Geometrixx Shapes
 

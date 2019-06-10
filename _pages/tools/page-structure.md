@@ -50,4 +50,4 @@ As with the parsys, the Column Control is a legacy component, and while fully fu
 
 ### Content Removal
 
-Since static templates function via code defined paths, the are times when a template update creates orphaned content. The only way to remove this content is to do it manually. This conversion allows specified nodes to be deleted during the transformation process.
+Since static templates function via code defined paths, there are times when a template update creates orphaned content. The only way to remove this content is to do it manually. This conversion allows specified nodes to be deleted during the transformation process.

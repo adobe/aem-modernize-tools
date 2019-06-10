@@ -18,7 +18,7 @@ The following are the phases generally executed during a modernization effort.
 
 ### Author Training
 
-Part of a modernization effort is moving from Static to Editable templates. The process for creating new templates differs significantly through this evolution. It's important that the Authors are trained  new features, and prepare for any changes to their operational processes that these updates might bring.
+Part of a modernization effort is moving from Static to Editable templates. The process for creating new templates differs significantly through this evolution. It's important that the Authors are trained in new features, and prepare for any changes to their operational processes that these updates might bring.
 
 <p class="image">
     <img src="{{ site.baseurl }}/pages/plan-operate/images/author-training-plan.png" alt="Author Training Plan"/>
