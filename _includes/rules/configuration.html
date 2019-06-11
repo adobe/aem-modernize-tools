@@ -6,9 +6,22 @@ Rewrite rules are defined in two parts:
 1. One or more *patterns*, used for determining which transformation rule should be applied (if any) to a given node.
 1. A *replacement*, defining the rules for the transformation: How content should be coped and transformed to the replacement node.
 
-<p class="image">
-  <img src="{{ site.baseurl }}/pages/configuration/images/node-rewrite-rule-definition.png" alt="Node Rewrite Rule Definition"/>
-</p>
+```xml
+<title>
+  <patterns jcr:primaryType="nt:unstructured">
+    <title jcr:primaryType="nt:unstructured"
+           sling:resourceType="geometrixx/components/title"/>
+  </patterns>
+  <replacement jcr:primaryType="nt:unstructured">
+    <title jcr:primaryType="nt:unstructured"
+           jcr:title="${'./jcr:title'}"
+           linkURL="${'./href'}"
+           sling:resourceType="geodemo/components/content/title"
+           type="${'./type'}"/>
+  </replacement>
+</title>
+```
+
 
 ## Ranking (Optional)
 
