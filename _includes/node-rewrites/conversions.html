@@ -1,0 +1,30 @@
+> While each of these sections references a *node*, the rules and conversions apply to entire node trees, depending on how the pattern rules are defined. However, for brevity, the document will only refer to nodes.
+
+### Set Static Value
+
+This isn't a conversion, so much as setting a static value ot the newly created node. Any number of properties can be defined with static values. They need not exist on the original node for the conversion.
+
+The largest use case for this conversion is setting the new node's `sling:resourceType` to the desired value.
+
+### Property Copy
+
+Updated nodes will likely still use content from the original. This allows for copying a property from the original node to the newly created one. Some additional options of the copy operation are:
+
+* Change the property name on the new node
+* Negate the value of a boolean property.
+* Set a default value if the property is not found.
+* Set a value of a property to a second property, if the first is not found.
+
+### Rewrite Properties
+
+Sometimes a simple property copy is not sufficient as the new node's values must conform to the new implementation. This feature adds an additional rewrite capability to the property copy. Once the value has been copied from the original node, rewrite rules via regular expressions are applied.
+
+### Copy Children
+
+Some components have children nodes, this flag will inform the conversion process to copy all of the children of the matched node to the updated definition.
+
+### Map Children
+
+This is a more advanced form of the copy children operation, where new node names can be specified for each of the expected child nodes from the original tree. It also allows some basic ordering definitions.
+
+
