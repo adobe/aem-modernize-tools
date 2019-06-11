@@ -17,17 +17,30 @@ Subfolders are supported to allow for delineating between multi-tenant configura
 
 ### Copy Common Attributes
 
-<p class="image">
-  <img src="{{ site.baseurl }}/pages/configuration/images/node-copy-common-definition.png" alt="Copy Common Attributes Definition"/>
-</p>
+```xml
+  <replacement
+    jcr:primaryType="nt:unstructured"
+    cq:rewriteFinal="{Boolean}true"
+    cq:rewriteCommonAttrs="{Boolean}true" >
+    <container
+          jcr:primaryType="nt:unstructured"
+          sling:resourceType="granite/ui/components/coral/foundation/container" />
+  </replacement>
+```
 
 This is a flag that can be set on dialog conversions. This tells the rewrite engine to convert known common legacy dialog properties to their Coral3 counterparts, eliminating the need for users to specify each property individually.
 
 
 ### Copy Render Conditions
 
-<p class="image">
-  <img src="{{ site.baseurl }}/pages/configuration/images/node-copy-rendercondition-definition.png" alt="Copy Render Conditions Definition"/>
-</p>
-
+```xml
+  <replacement
+    jcr:primaryType="nt:unstructured"
+    cq:rewriteFinal="{Boolean}true"
+    cq:rewriteRenderCondition="{Boolean}true" >
+    <container
+      jcr:primaryType="nt:unstructured"
+      sling:resourceType="granite/ui/components/coral/foundation/container" />
+  </replacement>
+```
 This is another flag unique to dialog conversions. It informs the rewrite engine to copy any render conditions that may exist on the source node. Any Coral2 references are modified to reference their Coral3 equivalent.
