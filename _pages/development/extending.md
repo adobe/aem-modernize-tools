@@ -13,21 +13,21 @@ All of the following interfaces extend the **RewriteRule** interface - which def
 
 Page & Structure rewrites are managed through two interface definitions:
 
-The <a href="">StructureRewriteRule</a> interface is used to define the transformations at the page structure level. These services are used during the transformation of a page's node structure. Service ranking is not used at this time, as there should only ever be one matching service per structure to convert. 
+The <a href="{{ site.baseurl}}/apidocs/com/adobe/aem/modernize/structure/StructureRewriteRule.html">StructureRewriteRule</a> interface is used to define the transformations at the page structure level. These services are used during the transformation of a page's node structure. Service ranking is not used at this time, as there should only ever be one matching service per structure to convert. 
 
-The <a href="">PageStructureRewriteRule</a> is the interface that should *also* be implemented and registered, in order for matching page's to be displayed on the administration page.
+The <a href="{{ site.baseurl}}/apidocs/com/adobe/aem/modernize/structure/PageStructureRewriteRule.html">PageStructureRewriteRule</a> is the interface that should *also* be implemented and registered, in order for matching page's to be displayed on the administration page.
 
 ### Components
 
 
-The <a href="">ComponentRewriteRule</a> interface identifies service implementations to be used to match & transform Component instances. 
+The <a href="{{ site.baseurl }}/apidocs/com/adobe/aem/modernize/component/ComponentRewriteRule.html">ComponentRewriteRule</a> interface identifies service implementations to be used to match & transform Component instances. 
 
 
 ### Policies
 
-The <a href="">PoliciesImportRule</a> interface identifies service implementations to be used to match, transform and import Policy definitions. 
+The <a href="{{ site.baseurl }}/apidocs/com/adobe/aem/modernize/design/PoliciesImportRule.html">PoliciesImportRule</a> interface identifies service implementations to be used to match, transform and import Policy definitions. 
 
 
 ### Dialogs 
 
-The <a href="">DialogRewriteRule</a> interface identifies service implementations to be used to match & transform Dialog widgets . 
+The <a href="{{ site.baseurl }}/apidocs/com/adobe/aem/modernize/dialog/DialogRewriteRule.html">DialogRewriteRule</a> interface identifies service implementations to be used to match & transform Dialog widgets . 
