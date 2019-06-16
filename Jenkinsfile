@@ -472,13 +472,13 @@ static def buildVersionFolder(version) {
 }
 
 static def updateJavadocs(script) {
-  script.dir('apidocs') {
+  script.dir('_apidocs') {
     script.unstash name: script.env.JAVADOC_STASH
   }
 }
 
 static def commitDocs(script, version) {
-  script.sh 'git add apidocs _pages/releases'
+  script.sh 'git add _apidocs _pages/releases'
   String msg = "Updating docs for release v${version}"
   gitCommit(script, msg)
   gitPush(script)
