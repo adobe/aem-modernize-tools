@@ -34,9 +34,9 @@
     <!-- S C M  D E F I N I T I O N                                             -->
     <!-- ====================================================================== -->
     <scm>
-        <connection>scm:git:git@github.com:Adobe-Marketing-Cloud/aem-modernize-tools.git</connection>
-        <developerConnection>scm:git:git@github.com:Adobe-Marketing-Cloud/aem-modernize-tools.git</developerConnection>
-        <url>https://github.com/Adobe-Marketing-Cloud/aem-modernize-tools/tree/master/content</url>
+        <connection>scm:git:https://github.com/adobe/aem-modernize-tools.git</connection>
+        <developerConnection>scm:git:https://github.com/adobe/aem-modernize-tools.git</developerConnection>
+        <url>https://github.com/adobe/aem-modernize-tools/tree/master/content</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -111,7 +111,7 @@
                     <scmCommentPrefix>@releng [maven-scm] :</scmCommentPrefix>
                     <preparationGoals>clean install</preparationGoals>
                     <goals>deploy</goals>
-                    <releaseProfiles>release</releaseProfiles>
+                    <releaseProfiles>release,adobe-public</releaseProfiles>
                     <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
                 </configuration>
             </plugin>
