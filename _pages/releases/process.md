@@ -11,7 +11,7 @@ title: Release Process
 
 The release process is performed entirely by the Jenkins pipeline. To perform a release:
 
-1. Access the [AEM Modernize Tools pipeline](https://acs.ci.corp.adobe.com) on the ACS Jenkins instance.
+1. Access the [AEM Modernize Tools pipeline](https://acs.ci.corp.adobe.com/blue/organizations/jenkins/AEM%20Modernize%20Tools/branches/) on the ACS Jenkins instance.
 1. Trigger the pipeline (do *not* replay the last run.)
 1. Answer the question on the type of release being performed.
 1. Verify the release version.
@@ -53,7 +53,9 @@ The project's POM is already configured for the Bintray Adobe repository & packa
 
 1. Check to see if an existing *Maven Settings* exists with an **ID** of `acsbuild-settings`. If so edit the existing one, otherwise create a new one with this **ID**.
 1. Give it an appropriate name and description if it did not previously exist.
-1. Add the ACSBuild Bintray credentials to the *Server Credentials* section. The *ServerId* is: `bintray-adobe-maven` (this is the value from the pom).
+1. Add two credentials to the *Server Credentials* section:
+  * ACSBuild Github Token credentials, the *ServerId* is `adobe-acsbuild-github-token` (this is the value from the pom's `project.scm.id`).
+   * ACSBuild Bintray credentials, the *ServerId* is `bintray-adobe-maven` (this is the value from the pom's `distributionManagement`).
 
 <p class="image">
     <img src="{{ site.baseurl }}/pages/releases/images/acsbuild-settings.png" alt="ACSBuild Maven Settings"/>
@@ -67,7 +69,6 @@ Install the JKD 8 and Maven 3.5 tools on the Jenkins server. Name them `JKD8` an
 
 The pipeline makes use of a few plugins, not all of which are likely to be installed by default. Install the following Jenkins Plugins:
 
-* SSH Agent
 * HTTP Request
 
 ### Pipeline Job
@@ -78,13 +79,13 @@ The pipeline is self-contained - so we just need to configure the actual Jenkins
 1. Fill out the configuration, anything not shown in this image can be left with the default value.
 
 <p class="image">
-    <img src="{{ site.baseurl }}/pages/releases/images/jenkins-job-configuration.png" alt="ACSBuild Maven Settings"/>
+    <img src="{{ site.baseurl }}/pages/releases/images/jenkins-job-configuration.png" alt="AEM Modernize Tools Jenkins configuration"/>
 </p>
 
 
 #### Script Approvals
 
-The first run of a release may error at the Github Release stage, due to a security check. Scripted pipelines are not permitted to call the JsonSlurperClassic used to parse Github API responses. Approving the following signatures will resolve this and allow the pipeline to complete successfully.
+The first run of a release may error at the Metadata or Github Release stage, due to a security check. Scripted pipelines are not permitted to call the SCM User Config or to instantiate JsonSlurperClassic used to parse Github API responses. Approving the following signatures will resolve this and allow the pipeline to complete successfully.
 
 Also, to parse a response from the Github API we need to approve the JsonSlurper API as well.
 
