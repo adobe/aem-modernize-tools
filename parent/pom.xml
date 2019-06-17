@@ -18,7 +18,7 @@
     <groupId>com.adobe.cq</groupId>
     <artifactId>aem-modernize-tools-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>Adobe AEM Modernize Tools Parent</name>
 
     <scm>

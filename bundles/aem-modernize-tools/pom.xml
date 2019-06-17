@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.adobe.cq</groupId>
         <artifactId>aem-modernize-tools-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
 
@@ -31,7 +31,7 @@
     <!-- P R O J E C T  D E S C R I P T I O N                                   -->
     <!-- ====================================================================== -->
     <artifactId>aem-modernize-tools</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>Adobe AEM Modernize Tools</name>
