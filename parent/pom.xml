@@ -18,14 +18,14 @@
     <groupId>com.adobe.cq</groupId>
     <artifactId>aem-modernize-tools-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Adobe AEM Modernize Tools Parent</name>
 
     <scm>
         <connection>scm:git:https://github.com/adobe/aem-modernize-tools.git</connection>
         <developerConnection>scm:git:ghttps://github.com/adobe/aem-modernize-tools.git</developerConnection>
         <url>https://github.com/adobe/aem-modernize-tools/tree/master/parent</url>
-        <tag>HEAD</tag>
+        <tag>aem-modernize-tools-1.0.0</tag>
     </scm>
 
     <properties>

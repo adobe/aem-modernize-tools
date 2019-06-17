@@ -17,7 +17,7 @@
     <parent>
         <groupId>com.adobe.cq</groupId>
         <artifactId>aem-modernize-tools-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -25,7 +25,7 @@
     <!-- P R O J E C T  D E S C R I P T I O N                                   -->
     <!-- ====================================================================== -->
     <artifactId>aem-modernize-tools-content</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Adobe AEM Component Conversion Tool</name>
     <description>Content package containing the component conversion tool</description>
     <packaging>content-package</packaging>
@@ -37,7 +37,7 @@
         <connection>scm:git:https://github.com/adobe/aem-modernize-tools.git</connection>
         <developerConnection>scm:git:https://github.com/adobe/aem-modernize-tools.git</developerConnection>
         <url>https://github.com/adobe/aem-modernize-tools/tree/master/content</url>
-        <tag>HEAD</tag>
+        <tag>aem-modernize-tools-1.0.0</tag>
     </scm>
 
     <!-- ====================================================================== -->
@@ -211,7 +211,7 @@
         <dependency>
             <groupId>com.adobe.cq</groupId>
             <artifactId>aem-modernize-tools</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>javax.jcr</groupId>
