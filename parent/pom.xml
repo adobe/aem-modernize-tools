@@ -22,16 +22,17 @@
     <name>Adobe AEM Modernize Tools Parent</name>
 
     <scm>
-        <connection>scm:git:https://github.com/Adobe-Marketing-Cloud/aem-modernize-tools.git</connection>
-        <developerConnection>scm:git:git@github.com:Adobe-Marketing-Cloud/aem-modernize-tools.git</developerConnection>
-        <url>https://github.com/Adobe-Marketing-Cloud/aem-modernize-tools/tree/master/parent</url>
+        <connection>scm:git:https://github.com/adobe/aem-modernize-tools.git</connection>
+        <developerConnection>scm:git:ghttps://github.com/adobe/aem-modernize-tools.git</developerConnection>
+        <url>https://github.com/adobe/aem-modernize-tools/tree/master/parent</url>
         <tag>HEAD</tag>
     </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <license.licenseName>apache_v2</license.licenseName>
-        <license.addJavaLicenseAfterPackage>false</license.addJavaLicenseAfterPackage>        <aem.host>localhost</aem.host>
+        <license.addJavaLicenseAfterPackage>false</license.addJavaLicenseAfterPackage>
+        <aem.host>localhost</aem.host>
         <aem.port>4502</aem.port>
         <aem.publish.host>localhost</aem.publish.host>
         <aem.publish.port>4503</aem.publish.port>
@@ -43,6 +44,9 @@
         <slf4j.version>1.7.6</slf4j.version>
         <aem.java.version>8</aem.java.version>
         <jackrabbit.version>2.16.3</jackrabbit.version>
+        <bintray.org>adobe</bintray.org>
+        <bintray.repo>maven</bintray.repo>
+        <bintray.package>aem-modernize-tools</bintray.package>
     </properties>
 
     <licenses>
@@ -87,6 +91,20 @@
         <defaultGoal>clean install</defaultGoal>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>show-profiles</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>active-profiles</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Require Java 8 or higher for building -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -133,7 +151,7 @@
                     <scmCommentPrefix>@releng [maven-scm] :</scmCommentPrefix>
                     <preparationGoals>clean install</preparationGoals>
                     <goals>deploy</goals>
-                    <releaseProfiles>release</releaseProfiles>
+                    <releaseProfiles>release,adobe-public</releaseProfiles>
                     <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
                 </configuration>
             </plugin>
@@ -380,12 +398,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
-            <properties>
-                <releaseRepository-Id>adobe-public-releases</releaseRepository-Id>
-                <releaseRepository-Name>Adobe Public Releases</releaseRepository-Name>
-                <releaseRepository-URL>https://repo.adobe.com/nexus/content/groups/public</releaseRepository-URL>
-            </properties>
-
             <repositories>
                 <repository>
                     <id>adobe-public-releases</id>
@@ -442,6 +454,25 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>bintray-release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>bintray-adobe-maven</id>
+                    <name>Adobe Bintray Maven</name>
+                    <url>https://api.bintray.com/maven/${bintray.org}/${bintray.repo}/${bintray.package}/;publish=1</url>
+                </repository>
+                <snapshotRepository>
+                    <id>bintray-adobe-maven</id>
+                    <name>Adobe Bintray Maven</name>
+                    <url>https://api.bintray.com/maven/${bintray.org}/${bintray.repo}/${bintray.package}/;publish=1</url>
+                </snapshotRepository>
+            </distributionManagement>
+
         </profile>
     </profiles>
 
@@ -670,28 +701,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-
-    <!--
-      Deploy to the Maven Repositories using WebDAV URLs. This enables abstracting
-      the real location of the repositories and better access control. Finally
-      it mirrors read and write operations through the same mechanism.
-      NOTE: To use these dav: URLs, the WebDAV extension to Maven Wagon must
-      be declared in the build section above.
-    -->
-    <distributionManagement>
-        <repository>
-            <id>${releaseRepository-Id}</id>
-            <name>${releaseRepository-Name}</name>
-            <url>${releaseRepository-URL}</url>
-        </repository>
-        <snapshotRepository>
-            <id>${snapshotRepository-Id}</id>
-            <name>${snapshotRepository-Name}</name>
-            <url>${snapshotRepository-URL}</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
-
 </project>

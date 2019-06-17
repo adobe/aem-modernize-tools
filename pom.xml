@@ -33,9 +33,9 @@
     <!-- S C M  D E F I N I T I O N                                             -->
     <!-- ====================================================================== -->
     <scm>
-        <connection>scm:git:git@github.com:Adobe-Marketing-Cloud/aem-modernize-tools.git</connection>
-        <developerConnection>scm:git:git@github.com:Adobe-Marketing-Cloud/aem-modernize-tools.git</developerConnection>
-        <url>https://github.com/Adobe-Marketing-Cloud/aem-modernize-tools/tree/master</url>
+        <connection>scm:git:https://github.com/adobe/aem-modernize-tools.git</connection>
+        <developerConnection>scm:git:https://github.com/adobe/aem-modernize-tools.git</developerConnection>
+        <url>https://github.com/adobe/aem-modernize-tools/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -53,6 +53,10 @@
         <name>Adobe</name>
         <url>http://www.adobe.com/</url>
     </organization>
+
+    <properties>
+        <project.scm.id>adobe-acsbuild-github-token</project.scm.id>
+    </properties>
 
     <!-- ====================================================================== -->
     <!-- M O D U L E S                                                          -->
