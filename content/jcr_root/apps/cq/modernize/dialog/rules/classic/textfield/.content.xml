@@ -12,7 +12,7 @@
             sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
             fieldLabel="${./fieldLabel}"
             fieldDescription="${./fieldDescription}"
-            name="${./name}"
+            name="[${./name},${./key}]"
             value="${./value}"
             required="!${./allowBlank}"
             disabled="${./disabled}"
