@@ -3,6 +3,7 @@
     jcr:primaryType="nt:unstructured">
     <patterns jcr:primaryType="nt:unstructured">
         <textfield/>
+        <textfield_unstructured/>
     </patterns>
     <replacement
         jcr:primaryType="nt:unstructured"
@@ -12,7 +13,7 @@
             sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
             fieldLabel="${./fieldLabel}"
             fieldDescription="${./fieldDescription}"
-            name="${./name}"
+            name="[${./name},${./key}]"
             value="${./value}"
             required="!${./allowBlank}"
             disabled="${./disabled}"
