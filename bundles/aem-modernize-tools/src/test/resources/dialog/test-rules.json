@@ -306,5 +306,32 @@
         }
       }
     }
+  },
+  "setSelected": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "granite/ui/components/foundation/container"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "cq:setSelected" : true,
+      "select": {
+        "jcr:primaryType": "nt:unstructured",
+        "items" : {
+          "item1": {
+            "jcr:primaryType": "nt:unstructured",
+            "value" : "item1"
+          },
+          "item2": {
+            "jcr:primaryType": "nt:unstructured",
+            "value" : "item2"
+          }
+        }
+      }
+    }
   }
 }

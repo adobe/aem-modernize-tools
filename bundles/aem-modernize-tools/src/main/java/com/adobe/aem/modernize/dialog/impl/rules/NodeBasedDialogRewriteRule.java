@@ -19,10 +19,7 @@
 package com.adobe.aem.modernize.dialog.impl.rules;
 
 import java.util.Iterator;
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
-import javax.jcr.RepositoryException;
+import javax.jcr.*;
 
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -54,6 +51,7 @@ public class NodeBasedDialogRewriteRule extends AbstractNodeBasedRewriteRule imp
 
     // special properties
     private static final String PROPERTY_COMMON_ATTRS = "cq:rewriteCommonAttrs";
+    private static final String PROPERTY_SET_SELECTED = "cq:setSelected";
     private static final String PROPERTY_RENDER_CONDITION = "cq:rewriteRenderCondition";
 
     // node names
@@ -77,6 +75,10 @@ public class NodeBasedDialogRewriteRule extends AbstractNodeBasedRewriteRule imp
         // common attribute mapping
         if (replacementRules.hasProperty(PROPERTY_COMMON_ATTRS)) {
             addCommonAttrMappings(root, copy);
+        }
+        //set selected to true if defaultValue set in selection xtype
+        if (replacementRules.hasProperty(PROPERTY_SET_SELECTED)) {
+            addSelectedAttrMappings(root, copy);
         }
 
         // render condition mapping
@@ -141,6 +143,26 @@ public class NodeBasedDialogRewriteRule extends AbstractNodeBasedRewriteRule imp
                 Node dataNode = node.getNode(NN_GRANITE_DATA);
                 String nameWithoutPrefix = name.substring(DATA_PREFIX.length());
                 mapProperty(root, dataNode.setProperty(nameWithoutPrefix, "${./" + name + "}"));
+            }
+        }
+    }
+
+    /**
+     * Set selected to true in select option if defaultValue is set in selection xtype
+     * @param root
+     * @param node
+     * @throws RepositoryException
+     */
+    private void addSelectedAttrMappings(Node root, Node node) throws RepositoryException {
+        if (!root.hasProperty("defaultValue") || !node.hasNode("items")) {
+            return;
+        }
+        String defaultValue = root.getProperty("defaultValue").getString();
+        NodeIterator ni = node.getNode("items").getNodes();
+        while (ni.hasNext()) {
+            Node optionNode = ni.nextNode();
+            if (optionNode.hasProperty("value") && defaultValue.equals(optionNode.getProperty("value").getString())) {
+                mapProperty(root, optionNode.setProperty("selected", true));
             }
         }
     }

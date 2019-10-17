@@ -309,4 +309,35 @@ public class NodeBasedDialogRewriteRuleTest {
         NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
         assertEquals(Integer.MAX_VALUE, rule.getRanking());
     }
+
+    @Test
+    public void testAddSelectedAttrMappings() throws Exception {
+        Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/setSelected").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/setSelected").adaptTo(Node.class);
+
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
+        Set<Node> finalNodes = new LinkedHashSet<>();
+        Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
+
+        final String expectedPropertyName = "selected";
+        assertTrue(rewrittenNode.getNode("items").getNode("item2").hasProperty(expectedPropertyName));
+        assertTrue(rewrittenNode.getNode("items").getNode("item2").getProperty(expectedPropertyName).getBoolean());
+
+        assertFalse(rewrittenNode.getNode("items").getNode("item1").hasProperty(expectedPropertyName));
+
+    }
+
+    @Test
+    public void testAddSelectedAttrMappingsWithoutDefault() throws Exception {
+        Node ruleNode = context.resourceResolver().getResource(RULES_PATH + "/setSelected").adaptTo(Node.class);
+        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/setSelectedWithoutDefaultValue").adaptTo(Node.class);
+
+        NodeBasedDialogRewriteRule rule = new NodeBasedDialogRewriteRule(ruleNode);
+        Set<Node> finalNodes = new LinkedHashSet<>();
+        Node rewrittenNode = rule.applyTo(rootNode, finalNodes);
+        final String selectedPropertyName = "selected";
+        assertFalse(rewrittenNode.getNode("items").getNode("item1").hasProperty(selectedPropertyName));
+        assertFalse(rewrittenNode.getNode("items").getNode("item2").hasProperty(selectedPropertyName));
+    }
+
 }

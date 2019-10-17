@@ -6,6 +6,7 @@
     </patterns>
     <replacement
         jcr:primaryType="nt:unstructured"
+        cq:setSelected="{Boolean}true"
         cq:rewriteFinal="{Boolean}true">
         <select
             jcr:primaryType="nt:unstructured"
