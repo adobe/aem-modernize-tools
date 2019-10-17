@@ -77,5 +77,34 @@
     "rewrite-concat-tokens": "token1-separator-token2",
     "rewrite-single-operand": "prefix-token",
     "rewrite-boolean": true
+  },
+  "setSelected": {
+    "jcr:primaryType": "nt:unstructured",
+    "defaultValue" : "item2",
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured",
+         "value" : "item1"
+      },
+      "item2": {
+        "jcr:primaryType": "nt:unstructured",
+        "value" : "item2"
+      }
+    }
+  },
+  "setSelectedWithoutDefaultValue": {
+    "jcr:primaryType": "nt:unstructured",
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured",
+        "value" : "item1"
+      },
+      "item2": {
+        "jcr:primaryType": "nt:unstructured",
+        "value" : "item2"
+      }
+    }
   }
 }
