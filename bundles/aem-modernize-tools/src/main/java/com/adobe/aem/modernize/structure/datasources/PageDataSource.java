@@ -20,11 +20,7 @@
 package com.adobe.aem.modernize.structure.datasources;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -37,7 +33,6 @@ import com.adobe.aem.modernize.impl.RewriteUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
-import org.apache.jackrabbit.util.ISO9075;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -124,14 +119,21 @@ public final class PageDataSource extends SlingSafeMethodsServlet {
             if (pageContent.hasProperty(NameConstants.PN_TITLE)) {
                 title = pageContent.getProperty(NameConstants.PN_TITLE).getString();
             }
-            Map<String, Object> map = new HashMap<>();
-            map.put("title", title);
-            map.put("pagePath", pagePath);
-            map.put("templateType", pageContent.getProperty(NameConstants.NN_TEMPLATE).getString());
-            map.put("href", href);
-            map.put("crxHref", crxHref);
-            resources.add(new ValueMapResource(request.getResourceResolver(), request.getResource() + "/page" + index, itemResourceType, new ValueMapDecorator(map)));
-            index++;
+
+            String staticTemplate = pageContent.getProperty(NameConstants.NN_TEMPLATE).getString();
+            Set<String> editableTemplates = structureRewriteRuleService.getEditableTemplates(staticTemplate);
+
+            for(String editableTmpl : editableTemplates) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("title", title);
+                map.put("pagePath", pagePath);
+                map.put("templateType", staticTemplate);
+                map.put("editableTemplate", editableTmpl);
+                map.put("href", href);
+                map.put("crxHref", crxHref);
+                resources.add(new ValueMapResource(request.getResourceResolver(), request.getResource() + "/page" + index, itemResourceType, new ValueMapDecorator(map)));
+                index++;
+            }
         }
         return resources;
     }

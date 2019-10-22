@@ -81,6 +81,11 @@ $(document).ready(function () {
             var selection = event && event.detail && event.detail.selection ? event.detail.selection : [];
             var count = selection.length;
 
+            // un-hide all rows
+            for (var i = 0; i < pageRows.length; i++) {
+                pageRows[i].set('hidden', false, true);
+            }
+
             // Deselect already converted structures
             for (var i = 0; i < selection.length; i++) {
                 var row = selection[i];
@@ -89,6 +94,14 @@ $(document).ready(function () {
                     row.set('selected', false, true);
                     count--;
                 }
+
+                // hide other template options for selected page
+                var selectedPage = row.dataset['foundationCollectionItemId'];
+                for (var j = 0, length = pageRows.length; j < length; j++) {
+                    if(!pageRows[j].selected && pageRows[j].dataset['foundationCollectionItemId'] === selectedPage) {
+                        pageRows[j].set('hidden', true, true);
+                    }
+                }
             }
 
             adjustConvertButton(count);
@@ -96,24 +109,29 @@ $(document).ready(function () {
 
         convertPagesButton.on("click", function () {
             // get paths from table
-            var paths = [];
+            var pages = [];
 
             var selectedStructureRows = pageTable.selectedItems;
             for (var i = 0, length = selectedStructureRows.length; i < length; i++) {
-                var value = selectedStructureRows[i].dataset["foundationCollectionItemId"];
+                var path = selectedStructureRows[i].dataset["foundationCollectionItemId"];
+                var tmpl = selectedStructureRows[i].dataset["modernizeEditabletmpl"];
 
-                if (value) {
-                    paths.push(value);
+                if (path) {
+                    pages.push({
+                        path: path,
+                        template: tmpl
+                    });
                 }
             }
 
             var url = REMOTE_STRUCTURE_CONVERSION_SERVICE_PATH + "/content/convert.json";
-            var data = {
-                paths : paths
-            };
 
             // show overlay and wait
             ui.wait();
+
+            var data = JSON.stringify({
+                pages: pages
+            });
 
             $.post(url, data, function (data) {
                 convertPagesButton.hidden = true;

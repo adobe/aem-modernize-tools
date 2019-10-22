@@ -18,27 +18,25 @@
  */
 package com.adobe.aem.modernize.structure.impl;
 
-import java.io.IOException;
-import java.util.List;
-import javax.jcr.Node;
-import javax.jcr.Session;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.structure.StructureRewriteRule;
+import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
+import com.adobe.aem.modernize.structure.impl.rules.PageRewriteRule;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.request.RequestParameter;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONObject;
-
-import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.structure.StructureRewriteRule;
-import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
-import com.adobe.aem.modernize.structure.impl.StructureTreeRewriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @SlingServlet(
         methods = "POST",
@@ -58,30 +56,46 @@ public class StructureConversionServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response)
-            throws ServletException, IOException {
-        // validate 'paths' parameter
-        RequestParameter[] paths = request.getRequestParameters(PARAM_PATHS);
-        if (paths == null) {
-            logger.warn("Missing parameter '" + PARAM_PATHS + "'");
-            response.setContentType("text/html");
-            response.getWriter().println("Missing parameter '" + PARAM_PATHS + "'");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
+            throws ServletException {
+        // validate request data
         try {
-            // get structure rewrite rules
-            List<StructureRewriteRule> rules = structureRewriteRuleService.getRules(request.getResourceResolver());
+            // FIXME: need to send json content type and not handle this like a form post
+            String requestData = request.getRequestParameterList().get(0).getName();
+            JSONObject jsonRequest = new JSONObject(requestData);
+
+            if (!jsonRequest.has("pages")) {
+                logger.warn("Missing pages");
+                response.setContentType("text/html");
+                response.getWriter().println("Missing parameter");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
 
             long tick = System.currentTimeMillis();
             Session session = request.getResourceResolver().adaptTo(Session.class);
-            StructureTreeRewriter rewriter = new StructureTreeRewriter(rules);
             JSONObject results = new JSONObject();
-            logger.debug("Converting {} structures", paths.length);
+            JSONArray pages = jsonRequest.getJSONArray("pages");
+            logger.debug("Converting {} structures", pages.length());
 
             // iterate over all paths
-            for (RequestParameter parameter : paths) {
-                String path = parameter.getString();
+            for (int i = 0; i < pages.length(); i++) {
+                // get rules for the structure
+                String path = pages.getJSONObject(i).getString("path");
+                String template = pages.getJSONObject(i).getString("template");
+                List<StructureRewriteRule> rules = structureRewriteRuleService.getRules(request.getResourceResolver());
+
+                // remove rule not pertaining to chosen editable template
+                for (int i1 = 0; i1 < rules.size(); i1++) {
+                    StructureRewriteRule rule = rules.get(i1);
+                    if (rule instanceof PageRewriteRule) {
+                        String editableTemplate = ((PageRewriteRule) rule).getEditableTemplate();
+                        if (!editableTemplate.equals(template)) {
+                            rules.remove(rule);
+                        }
+                    }
+                }
+                StructureTreeRewriter rewriter = new StructureTreeRewriter(rules);
+
                 JSONObject json = new JSONObject();
                 results.put(path, json);
 
@@ -102,11 +116,12 @@ public class StructureConversionServlet extends SlingAllMethodsServlet {
                     logger.warn("Converting structure {} failed", path, e);
                 }
             }
+
             response.setContentType("application/json");
             response.getWriter().write(results.toString());
 
             long tack = System.currentTimeMillis();
-            logger.debug("Rewrote {} structures in {} ms", paths.length, tack - tick);
+            logger.debug("Rewrote {} structures in {} ms", pages.length(), tack - tick);
         } catch (Exception e) {
             throw new ServletException("Caught exception while rewriting structures", e);
         }

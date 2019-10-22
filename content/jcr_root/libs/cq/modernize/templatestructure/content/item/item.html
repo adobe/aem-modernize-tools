@@ -16,12 +16,14 @@
     class="${!converted ? 'foundation-collection-item' : ''}"
     data-foundation-collection-item-id="${properties.pagePath @ uri}"
     data-sly-attribute.hidden="${converted ? converted : ''}"
-    data-sly-attribute.data-modernize-component-converted="${converted ? converted : ''}">
+    data-sly-attribute.data-modernize-component-converted="${converted ? converted : ''}"
+    data-sly-attribute.data-modernize-editabletmpl="${properties.editableTemplate}">
     <td is="coral-table-cell">
         <coral-checkbox disabled="${converted}" coral-table-rowselect></coral-checkbox>
     </td>
     <td is="coral-table-cell">${properties.title} (${properties.pagePath @ uri})</td>
     <td is="coral-table-cell">${properties.templateType}</td>
+    <td is="coral-table-cell">${properties.editableTemplate}</td>
     <td is="coral-table-cell">
         <a href="${properties.href @ uri}" target="_blank" class="coral-Link">${'show' @ i18n}</a> / <a href="${properties.crxHref @ uri}" x-cq-linkchecker="skip" target="_blank" class="coral-Link">crxde</a>
     </td>

@@ -72,7 +72,7 @@
                             </secondary>
                         </actionbar>
                         <pages
-                            granite:class="js-aem-StructureConverter-pages"
+                            granite:class="aem-StructureConverter-pages js-aem-StructureConverter-pages"
                             granite:rel="aem-modernize-structure-pages"
                             jcr:primaryType="nt:unstructured"
                             sling:resourceType="granite/ui/components/coral/foundation/table"
@@ -92,6 +92,11 @@
                                 <template
                                     jcr:primaryType="nt:unstructured"
                                     jcr:title="Template"
+                                    alignment="center"
+                                    sortable="{Boolean}true"/>
+                                <editableTemplate
+                                    jcr:primaryType="nt:unstructured"
+                                    jcr:title="Editable Template"
                                     alignment="center"
                                     sortable="{Boolean}true"/>
                                 <links

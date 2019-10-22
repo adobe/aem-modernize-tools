@@ -19,12 +19,8 @@
 
 package com.adobe.aem.modernize.structure.impl;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -33,7 +29,6 @@ import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ResourceResolver;
 
-import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.structure.PageStructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
@@ -99,6 +94,14 @@ public class StructureRewriteRuleServiceImpl implements StructureRewriteRuleServ
             templates.add(r.getStaticTemplate());
         }
         return templates;
+    }
+
+    @Override
+    public Set<String> getEditableTemplates(String staticTemplate) {
+        return pageRules.stream()
+                .filter(rule -> rule.getStaticTemplate().equals(staticTemplate))
+                .map(PageStructureRewriteRule::getEditableTemplate)
+                .collect(Collectors.toSet());
     }
 
     @Override

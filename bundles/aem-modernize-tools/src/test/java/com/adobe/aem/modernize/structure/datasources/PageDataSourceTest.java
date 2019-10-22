@@ -58,6 +58,8 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.BundleContext;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PageDataSourceTest {
@@ -67,8 +69,9 @@ public class PageDataSourceTest {
 
     private static final String STATIC_HOME_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String STATIC_PRODUCT_TEMPLATE = "/apps/geometrixx/templates/productpage";
-    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
-        private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
+    private static final String EDITABLE_HOME_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
+    private static final String EDITABLE_PRODUCT_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page";
+    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
 
     private PageDataSource pageDataSource;
 
@@ -118,7 +121,6 @@ public class PageDataSourceTest {
         // register data source
         pageDataSource = context.registerService(PageDataSource.class, new PageDataSource());
 
-
         // mock request
         Mockito.stub(request.getLocale()).toReturn(Locale.US);
         Mockito.stub(request.getResource()).toReturn(requestResource);
@@ -128,7 +130,7 @@ public class PageDataSourceTest {
         StructureRewriteRule rule = new PageRewriteRule();
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_HOME_TEMPLATE);
-        props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("editable.template", EDITABLE_HOME_TEMPLATE);
         props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         MockOsgi.activate(rule, bundleContext, props);
         rules.add(rule);
@@ -136,7 +138,15 @@ public class PageDataSourceTest {
         rule = new PageRewriteRule();
         props = new Hashtable<>();
         props.put("static.template", STATIC_PRODUCT_TEMPLATE);
-        props.put("editable.template", "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page");
+        props.put("editable.template", EDITABLE_PRODUCT_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
+        MockOsgi.activate(rule, bundleContext, props);
+        rules.add(rule);
+
+        rule = new PageRewriteRule();
+        props = new Hashtable<>();
+        props.put("static.template", STATIC_PRODUCT_TEMPLATE);
+        props.put("editable.template", EDITABLE_HOME_TEMPLATE);
         props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         MockOsgi.activate(rule, bundleContext, props);
         rules.add(rule);
@@ -149,19 +159,24 @@ public class PageDataSourceTest {
 
         Mockito.stub(structureRewriteRuleService.getTemplates()).toReturn(templates);
         Mockito.stub(structureRewriteRuleService.getRules(resolver)).toReturn(rules);
+        Mockito.stub(structureRewriteRuleService.getEditableTemplates(eq(STATIC_HOME_TEMPLATE))).toReturn(new HashSet<String>(){{
+            add(EDITABLE_HOME_TEMPLATE);
+        }});
+        Mockito.stub(structureRewriteRuleService.getEditableTemplates(eq(STATIC_PRODUCT_TEMPLATE))).toReturn(new HashSet<String>(){{
+            add(EDITABLE_PRODUCT_TEMPLATE);
+        }});
 
         // inject dependencies
         MockOsgi.injectServices(pageDataSource, bundleContext);
 
         // prepare request resource
-        HashMap<String, Object> properties = new HashMap<String, Object>();
+        HashMap<String, Object> properties = new HashMap<>();
         properties.put("path", PAGE_ROOT);
         properties.put("itemResourceType", ITEM_RESOURCE_TYPE);
         Mockito.stub(requestResource.getValueMap()).toReturn(new ValueMapDecorator(properties));
 
         // prepare expression resolver
         Mockito.stub(expressionResolver.resolve(PAGE_ROOT, Locale.US, String.class, request)).toReturn(PAGE_ROOT);
-
     }
 
     @Test
@@ -173,7 +188,7 @@ public class PageDataSourceTest {
         pageDataSource.doGet(request, response);
 
         ArgumentCaptor<DataSource> dataSourceArgumentCaptor = ArgumentCaptor.forClass(DataSource.class);
-        Mockito.verify(request).setAttribute(Mockito.anyString(), dataSourceArgumentCaptor.capture());
+        Mockito.verify(request).setAttribute(anyString(), dataSourceArgumentCaptor.capture());
 
         DataSource pageDataSource = dataSourceArgumentCaptor.getValue();
 
@@ -189,6 +204,7 @@ public class PageDataSourceTest {
             assertNotNull(valueMap.get("title"));
             assertNotNull(valueMap.get("pagePath"));
             assertNotNull(valueMap.get("templateType"));
+            assertNotNull(valueMap.get("editableTemplate"));
             assertNotNull(valueMap.get("href"));
             assertNotNull(valueMap.get("crxHref"));
 
