@@ -19,13 +19,9 @@
 
 package com.adobe.aem.modernize.structure;
 
-import java.util.Set;
-
-import org.apache.sling.api.resource.ResourceResolver;
-
-import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.RewriteRuleService;
-import com.adobe.aem.modernize.component.ComponentRewriteRule;
+
+import java.util.Set;
 
 /**
  * Provides a mechanism for listing all of the configured rules either via Nodes or custom implementations.
@@ -37,4 +33,11 @@ public interface StructureRewriteRuleService extends RewriteRuleService<Structur
      * @return
      */
     Set<String> getTemplates();
+
+    /**
+     * List all the editable templates for the given static template
+     * @param staticTemplate
+     * @return
+     */
+    Set<String> getEditableTemplates(String staticTemplate);
 }

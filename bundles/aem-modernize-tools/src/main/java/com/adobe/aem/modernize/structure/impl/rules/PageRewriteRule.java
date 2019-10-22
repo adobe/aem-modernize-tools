@@ -303,6 +303,11 @@ public class PageRewriteRule implements PageStructureRewriteRule {
     }
 
     @Override
+    public String getEditableTemplate() {
+        return editableTemplate;
+    }
+
+    @Override
     public int getRanking() {
         return this.ranking;
     }

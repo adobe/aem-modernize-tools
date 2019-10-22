@@ -50,8 +50,8 @@ public class StructureRewriteRuleServiceImplTest {
 
     private static final String STATIC_HOME_TEMPLATE = "/apps/geometrixx/templates/homepage";
     private static final String STATIC_PRODUCT_TEMPLATE = "/apps/geometrixx/templates/productpage";
-    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
-    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
+    private static final String EDITABLE_HOME_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
+    private static final String EDITABLE_PRODUCT_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page";    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
 
     private static final String LAYOUT_VALUE = "2;cq-colctrl-lt0";
     private static final String[] COLUMN_WIDTHS = {"6", "6"};
@@ -82,7 +82,7 @@ public class StructureRewriteRuleServiceImplTest {
         StructureRewriteRule rule = new PageRewriteRule();
         Dictionary<String, Object> props = new Hashtable<>();
         props.put("static.template", STATIC_HOME_TEMPLATE);
-        props.put("editable.template", EDITABLE_TEMPLATE);
+        props.put("editable.template", EDITABLE_HOME_TEMPLATE);
         props.put("sling.resourceType", SLING_RESOURCE_TYPE);
         MockOsgi.activate(rule, bundleContext, props);
         context.registerService(PageStructureRewriteRule.class, (PageStructureRewriteRule) rule);
@@ -92,7 +92,16 @@ public class StructureRewriteRuleServiceImplTest {
         props = new Hashtable<>();
         props.put("static.template", STATIC_PRODUCT_TEMPLATE);
         props.put("sling.resourceType", SLING_RESOURCE_TYPE);
-        props.put("editable.template", "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page");
+        props.put("editable.template", EDITABLE_PRODUCT_TEMPLATE);
+        MockOsgi.activate(rule, bundleContext, props);
+        context.registerService(PageStructureRewriteRule.class, (PageStructureRewriteRule) rule);
+        rules.add(rule);
+
+        rule = new PageRewriteRule();
+        props = new Hashtable<>();
+        props.put("static.template", STATIC_PRODUCT_TEMPLATE);
+        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
+        props.put("editable.template", EDITABLE_HOME_TEMPLATE);
         MockOsgi.activate(rule, bundleContext, props);
         context.registerService(PageStructureRewriteRule.class, (PageStructureRewriteRule) rule);
         rules.add(rule);
@@ -130,9 +139,11 @@ public class StructureRewriteRuleServiceImplTest {
         List<StructureRewriteRule> rules = structureRewriteRuleService.getRules(null);
         assertNotNull(rules);
         assertFalse(rules.isEmpty());
-        assertEquals(4, rules.size());
+        assertEquals(5, rules.size());
         Iterator<StructureRewriteRule> it = rules.iterator();
         StructureRewriteRule rule = it.next();
+        assertTrue(rule instanceof PageStructureRewriteRule);
+        rule = it.next();
         assertTrue(rule instanceof PageStructureRewriteRule);
         rule = it.next();
         assertTrue(rule instanceof PageStructureRewriteRule);
@@ -140,6 +151,20 @@ public class StructureRewriteRuleServiceImplTest {
         assertTrue(rule instanceof ParsysRewriteRule);
         rule = it.next();
         assertTrue(rule instanceof ColumnControlRewriteRule);
+    }
 
+    @Test
+    public void testGetEditableTemplates() {
+        Set<String> templates = structureRewriteRuleService.getEditableTemplates(STATIC_HOME_TEMPLATE);
+        assertEquals(1, templates.size());
+        assertTrue(templates.contains(EDITABLE_HOME_TEMPLATE));
+    }
+
+    @Test
+    public void testGetEditableTemplatesWithMultiple() {
+        Set<String> templates = structureRewriteRuleService.getEditableTemplates(STATIC_PRODUCT_TEMPLATE);
+        assertEquals(2, templates.size());
+        assertTrue(templates.contains(EDITABLE_PRODUCT_TEMPLATE));
+        assertTrue(templates.contains(EDITABLE_HOME_TEMPLATE));
     }
 }

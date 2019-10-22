@@ -22,4 +22,10 @@ package com.adobe.aem.modernize.structure;
 public interface PageStructureRewriteRule extends StructureRewriteRule{
 
     String getStaticTemplate();
+
+    /**
+     * Gets the editable template for this structure rewrite rule
+     * @return
+     */
+    String getEditableTemplate();
 }
