@@ -18,41 +18,42 @@
  */
 package com.adobe.aem.modernize.dialog.impl.rules;
 
-import java.util.Set;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
+import com.day.cq.commons.PathInfo;
+import com.day.cq.commons.jcr.JcrUtil;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.request.RequestPathInfo;
 
-import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
-import com.day.cq.commons.PathInfo;
-import com.day.cq.commons.jcr.JcrUtil;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import java.util.Set;
+
+import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.hasType;
+import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.hasXtype;
 import static com.adobe.aem.modernize.impl.RewriteUtils.hasPrimaryType;
-import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 
 /**
- * Rewrites widgets of xtype "cqinclude". The referenced widget is copied over and will be handled by
- * subsequent passes of the algorithm.
+ * Rewrites widgets of xtype "cqinclude" or of type "granite/ui/components/foundation/include".
+ * The referenced widget is copied over and will be handled by subsequent passes of the algorithm.
  */
 @Component
 @Service
 @Properties({
-        @Property(name="service.ranking", intValue = 2)
+        @Property(name = "service.ranking", intValue = 2)
 })
 public class IncludeRewriteRule extends AbstractDialogRewriteRule {
 
     private static final String XTYPE = "cqinclude";
+    private static final String CORAL2_INCLUDE = "granite/ui/components/foundation/include";
 
-    public boolean matches(Node root)
-            throws RepositoryException {
-        return hasXtype(root, XTYPE);
+    public boolean matches(Node root) throws RepositoryException {
+        return hasXtype(root, XTYPE) || hasType(root, CORAL2_INCLUDE);
     }
 
     public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
@@ -95,5 +96,4 @@ public class IncludeRewriteRule extends AbstractDialogRewriteRule {
             return JcrUtil.copy(session.getNode(path), parent, name);
         }
     }
-
 }
