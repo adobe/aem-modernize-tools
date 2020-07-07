@@ -281,13 +281,7 @@
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
                     <extensions>true</extensions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>biz.aQute.bnd</groupId>
-                            <artifactId>bndlib</artifactId>
-                            <version>2.4.0</version>
-                        </dependency>
-                    </dependencies>
+                   
                     <executions>
                         <!-- Configure extra execution of 'manifest' in process-classes phase to make sure SCR metadata is generated before unit test runs -->
                         <execution>
@@ -570,6 +564,13 @@
                 <version>2.4.0</version>
                 <scope>provided</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/biz.aQute.bnd/biz.aQute.bndlib -->
+<!--            <dependency>-->
+<!--                <groupId>biz.aQute.bnd</groupId>-->
+<!--                <artifactId>biz.aQute.bndlib</artifactId>-->
+<!--                <version>5.1.1</version>-->
+<!--                <scope>provided</scope>-->
+<!--            </dependency>-->
 
 
             <!-- Servlet API -->
