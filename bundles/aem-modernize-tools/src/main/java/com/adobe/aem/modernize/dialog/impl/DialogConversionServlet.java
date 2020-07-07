@@ -18,18 +18,10 @@
  */
 package com.adobe.aem.modernize.dialog.impl;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.dialog.DialogRewriteRule;
+import com.adobe.aem.modernize.dialog.impl.rules.NodeBasedDialogRewriteRule;
+import com.day.cq.commons.jcr.JcrConstants;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
@@ -41,13 +33,20 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.commons.json.JSONObject;
-
-import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.dialog.DialogRewriteRule;
-import com.adobe.aem.modernize.dialog.impl.rules.NodeBasedDialogRewriteRule;
-import com.day.cq.commons.jcr.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 @SlingServlet(
         methods = "POST",
@@ -55,18 +54,18 @@ import org.slf4j.LoggerFactory;
         extensions = "json"
 )
 public class DialogConversionServlet extends SlingAllMethodsServlet {
-
+    
     /**
      * Relative path to the node containing node-based dialog rewrite rules
      */
     public static final String RULES_SEARCH_PATH = "cq/modernize/dialog/rules";
-
+    
     public static final String PARAM_PATHS = "paths";
     private static final String KEY_RESULT_PATH = "resultPath";
     private static final String KEY_ERROR_MESSAGE = "errorMessage";
-
-    private Logger logger = LoggerFactory.getLogger(DialogConversionServlet.class);
-
+    
+    private final Logger logger = LoggerFactory.getLogger(DialogConversionServlet.class);
+    
     /**
      * Keeps track of OSGi services implementing dialog rewrite rules
      */
@@ -77,21 +76,21 @@ public class DialogConversionServlet extends SlingAllMethodsServlet {
             bind = "bindRule",
             unbind = "unbindRule"
     )
-    private List<DialogRewriteRule> rules = Collections.synchronizedList(new LinkedList<DialogRewriteRule>());
-
+    private final List<DialogRewriteRule> rules = Collections.synchronizedList(new LinkedList<DialogRewriteRule>());
+    
     @SuppressWarnings("unused")
     public void bindRule(DialogRewriteRule rule) {
         rules.add(rule);
     }
-
+    
     @SuppressWarnings("unused")
     public void unbindRule(DialogRewriteRule rule) {
         rules.remove(rule);
     }
-
+    
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response)
-throws ServletException, IOException {
+            throws ServletException, IOException {
         // validate 'paths' parameter
         RequestParameter[] paths = request.getRequestParameters(PARAM_PATHS);
         if (paths == null) {
@@ -101,30 +100,30 @@ throws ServletException, IOException {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-
+        
         // get dialog rewrite rules
         List<DialogRewriteRule> rules = getRules(request.getResourceResolver());
-
+        
         long tick = System.currentTimeMillis();
         Session session = request.getResourceResolver().adaptTo(Session.class);
         DialogTreeRewriter rewriter = new DialogTreeRewriter(rules);
         JSONObject results = new JSONObject();
         logger.debug("Converting {} dialogs", paths.length);
-
+        
         try {
             // iterate over all paths
             for (RequestParameter parameter : paths) {
                 String path = parameter.getString();
                 JSONObject json = new JSONObject();
                 results.put(path, json);
-
+                
                 // verify that the path exists
                 if (!session.nodeExists(path)) {
                     json.put(KEY_ERROR_MESSAGE, "Invalid path");
                     logger.debug("Path {} doesn't exist", path);
                     continue;
                 }
-
+                
                 try {
                     // rewrite the dialog
                     Node result = rewriter.rewrite(session.getNode(path));
@@ -137,24 +136,24 @@ throws ServletException, IOException {
             }
             response.setContentType("application/json");
             response.getWriter().write(results.toString());
-
+            
             long tack = System.currentTimeMillis();
             logger.debug("Rewrote {} dialogs in {} ms", paths.length, tack - tick);
         } catch (Exception e) {
             throw new ServletException("Caught exception while rewriting dialogs", e);
         }
     }
-
+    
     private List<DialogRewriteRule> getRules(ResourceResolver resolver) throws ServletException {
-        final List<DialogRewriteRule> rules = new LinkedList<DialogRewriteRule>();
-
+        final List<DialogRewriteRule> rules = new LinkedList<>();
+        
         // 1) rules provided as OSGi services
         // (we need to synchronize, since the 'addAll' will iterate over 'rules')
         synchronized (this.rules) {
             rules.addAll(this.rules);
         }
         int nb = rules.size();
-
+        
         // 2) node-based rules
         Resource resource = resolver.getResource(RULES_SEARCH_PATH);
         if (resource != null) {
@@ -182,32 +181,32 @@ throws ServletException, IOException {
                 throw new ServletException("Caught exception while collecting rewrite rules", e);
             }
         }
-
+        
         // sort rules according to their ranking
         Collections.sort(rules, new RuleComparator());
-
+        
         logger.debug("Found {} rules ({} Java-based, {} node-based)", nb, rules.size() - nb);
         for (DialogRewriteRule rule : rules) {
             logger.debug(rule.toString());
         }
         return rules;
     }
-
+    
+    private boolean isFolder(Node node) throws RepositoryException {
+        String primaryType = node.getPrimaryNodeType().getName();
+        
+        return primaryType.equals("sling:Folder")
+                || primaryType.equals("sling:OrderedFolder")
+                || primaryType.equals(JcrConstants.NT_FOLDER);
+    }
+    
     private class RuleComparator implements Comparator<DialogRewriteRule> {
-
+        
         public int compare(DialogRewriteRule rule1, DialogRewriteRule rule2) {
             int ranking1 = rule1.getRanking();
             int ranking2 = rule2.getRanking();
             return Double.compare(ranking1, ranking2);
         }
-
-    }
-
-    private boolean isFolder(Node node) throws RepositoryException {
-        String primaryType = node.getPrimaryNodeType().getName();
-
-        return primaryType.equals("sling:Folder")
-            || primaryType.equals("sling:OrderedFolder")
-            || primaryType.equals(JcrConstants.NT_FOLDER);
+        
     }
 }

@@ -18,18 +18,17 @@
  */
 package com.adobe.aem.modernize.dialog.impl.rules;
 
-import java.util.Iterator;
+import com.adobe.aem.modernize.dialog.DialogRewriteRule;
+import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
+import com.day.cq.commons.jcr.JcrUtil;
+import org.apache.jackrabbit.commons.flat.TreeTraverser;
+import org.apache.sling.api.resource.ResourceResolver;
+
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-
-import org.apache.jackrabbit.commons.flat.TreeTraverser;
-import org.apache.sling.api.resource.ResourceResolver;
-
-import com.adobe.aem.modernize.dialog.DialogRewriteRule;
-import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
-import com.day.cq.commons.jcr.JcrUtil;
+import java.util.Iterator;
 
 /**
  * An rule that rewrites a tree based on a given node structure. The node structure follows all
@@ -51,45 +50,45 @@ import com.day.cq.commons.jcr.JcrUtil;
  * </ul>
  */
 public class NodeBasedDialogRewriteRule extends AbstractNodeBasedRewriteRule implements DialogRewriteRule {
-
+    
     // special properties
     private static final String PROPERTY_COMMON_ATTRS = "cq:rewriteCommonAttrs";
     private static final String PROPERTY_RENDER_CONDITION = "cq:rewriteRenderCondition";
-
+    
     // node names
     private static final String NN_RENDER_CONDITION = "rendercondition";
     private static final String NN_GRANITE_RENDER_CONDITION = "granite:rendercondition";
     private static final String NN_GRANITE_DATA = "granite:data";
-
+    
     // Granite
-    private static final String[] GRANITE_COMMON_ATTR_PROPERTIES = { "id", "rel", "class", "title", "hidden", "itemscope", "itemtype", "itemprop" };
+    private static final String[] GRANITE_COMMON_ATTR_PROPERTIES = {"id", "rel", "class", "title", "hidden", "itemscope", "itemtype", "itemprop"};
     private static final String RENDER_CONDITION_CORAL2_RESOURCE_TYPE_PREFIX = "granite/ui/components/foundation/renderconditions";
     private static final String RENDER_CONDITION_CORAL3_RESOURCE_TYPE_PREFIX = "granite/ui/components/coral/foundation/renderconditions";
     private static final String DATA_PREFIX = "data-";
-
-
+    
+    
     public NodeBasedDialogRewriteRule(Node ruleNode) {
         super(ruleNode);
     }
-
+    
     public void doAdditionalApplyTo(Node root, Node copy, Node replacementRules) throws RepositoryException {
-
+        
         // common attribute mapping
         if (replacementRules.hasProperty(PROPERTY_COMMON_ATTRS)) {
             addCommonAttrMappings(root, copy);
         }
-
+        
         // render condition mapping
         if (replacementRules.hasProperty(PROPERTY_RENDER_CONDITION)) {
             if (root.hasNode(NN_GRANITE_RENDER_CONDITION) || root.hasNode(NN_RENDER_CONDITION)) {
                 Node renderConditionRoot = root.hasNode(NN_GRANITE_RENDER_CONDITION) ?
                         root.getNode(NN_GRANITE_RENDER_CONDITION) : root.getNode(NN_RENDER_CONDITION);
                 Node renderConditionCopy = JcrUtil.copy(renderConditionRoot, copy, NN_GRANITE_RENDER_CONDITION);
-
+                
                 // convert render condition resource types recursively
                 TreeTraverser renderConditionTraverser = new TreeTraverser(renderConditionCopy);
                 Iterator<Node> renderConditionIterator = renderConditionTraverser.iterator();
-
+                
                 while (renderConditionIterator.hasNext()) {
                     Node renderConditionNode = renderConditionIterator.next();
                     String resourceType = renderConditionNode.getProperty(ResourceResolver.PROPERTY_RESOURCE_TYPE).getString();
@@ -101,8 +100,7 @@ public class NodeBasedDialogRewriteRule extends AbstractNodeBasedRewriteRule imp
             }
         }
     }
-
-
+    
     /**
      * Adds property mappings on a replacement node for Granite common attributes.
      *
@@ -111,31 +109,31 @@ public class NodeBasedDialogRewriteRule extends AbstractNodeBasedRewriteRule imp
      */
     private void addCommonAttrMappings(Node root, Node node) throws RepositoryException {
         for (String property : GRANITE_COMMON_ATTR_PROPERTIES) {
-            String[] mapping = { "${./" + property + "}", "${\'./granite:" + property + "\'}" };
+            String[] mapping = {"${./" + property + "}", "${'./granite:" + property + "'}"};
             mapProperty(root, node.setProperty("granite:" + property, mapping));
         }
-
+        
         if (root.hasNode(NN_GRANITE_DATA)) {
             // the root has granite:data defined, copy it before applying data-* properties
             JcrUtil.copy(root.getNode(NN_GRANITE_DATA), node, NN_GRANITE_DATA);
         }
-
+        
         // map data-* prefixed properties to granite:data child
         PropertyIterator propertyIterator = root.getProperties(DATA_PREFIX + "*");
         while (propertyIterator.hasNext()) {
             Property property = propertyIterator.nextProperty();
             String name = property.getName();
-
+            
             // skip protected properties
             if (property.getDefinition().isProtected()) {
                 continue;
             }
-
+            
             // add the granite:data child if necessary
             if (!node.hasNode(NN_GRANITE_DATA)) {
                 node.addNode(NN_GRANITE_DATA);
             }
-
+            
             // set up the property mapping
             if (node.hasNode(NN_GRANITE_DATA)) {
                 Node dataNode = node.getNode(NN_GRANITE_DATA);

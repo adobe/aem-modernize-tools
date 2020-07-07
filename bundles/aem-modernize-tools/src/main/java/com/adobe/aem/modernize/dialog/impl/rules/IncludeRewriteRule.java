@@ -18,24 +18,25 @@
  */
 package com.adobe.aem.modernize.dialog.impl.rules;
 
-import java.util.Set;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
+import com.adobe.aem.modernize.dialog.DialogConstants;
+import com.day.cq.commons.PathInfo;
+import com.day.cq.commons.jcr.JcrUtil;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.request.RequestPathInfo;
 
-import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
-import com.day.cq.commons.PathInfo;
-import com.day.cq.commons.jcr.JcrUtil;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import java.util.Set;
+
+import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.hasXtype;
 import static com.adobe.aem.modernize.impl.RewriteUtils.hasPrimaryType;
-import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 
 /**
  * Rewrites widgets of xtype "cqinclude". The referenced widget is copied over and will be handled by
@@ -44,41 +45,41 @@ import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 @Component
 @Service
 @Properties({
-        @Property(name="service.ranking", intValue = 2)
+        @Property(name = "service.ranking", intValue = 2)
 })
 public class IncludeRewriteRule extends AbstractDialogRewriteRule {
-
-    private static final String XTYPE = "cqinclude";
-
+    
+    private static final String CQINCLUDE = "cqinclude";
+    
     public boolean matches(Node root)
             throws RepositoryException {
-        return hasXtype(root, XTYPE);
+        return hasXtype(root, CQINCLUDE);
     }
-
+    
     public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
         // check if the 'path property exists
-        if (!root.hasProperty("path")) {
+        if (!root.hasProperty(DialogConstants.PATH)) {
             throw new RewriteException("Missing include path");
         }
-
+        
         // get path to included node
-        RequestPathInfo info = new PathInfo(root.getProperty("path").getString());
+        RequestPathInfo info = new PathInfo(root.getProperty(DialogConstants.PATH).getString());
         String path = info.getResourcePath();
-
+        
         // check if the path is valid
         Session session = root.getSession();
         if (!session.nodeExists(path)) {
             throw new RewriteException("Include path does not exist");
         }
-
+        
         // remove original
         Node parent = root.getParent();
         String name = root.getName();
         root.remove();
-
+        
         Node node = session.getNode(path);
         // check if referenced node is a widget collection
-        if (hasPrimaryType(node, "cq:WidgetCollection")) {
+        if (hasPrimaryType(node, DialogConstants.CQ_WIDGET_COLLECTION)) {
             NodeIterator iterator = node.getNodes();
             Node newRoot = null;
             // copy all items of the widget collection
@@ -95,5 +96,5 @@ public class IncludeRewriteRule extends AbstractDialogRewriteRule {
             return JcrUtil.copy(session.getNode(path), parent, name);
         }
     }
-
+    
 }

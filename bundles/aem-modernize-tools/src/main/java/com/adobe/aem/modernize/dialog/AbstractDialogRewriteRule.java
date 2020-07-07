@@ -18,15 +18,14 @@
  */
 package com.adobe.aem.modernize.dialog;
 
-import java.util.Dictionary;
-import javax.jcr.RepositoryException;
-
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.util.Dictionary;
 
 /**
  * Base class for services that implement a dialog rewrite rule. This class provides a default implementation of
@@ -34,11 +33,11 @@ import org.slf4j.LoggerFactory;
  */
 @Component(componentAbstract = true)
 public abstract class AbstractDialogRewriteRule implements DialogRewriteRule {
-
-    private Logger logger = LoggerFactory.getLogger(AbstractDialogRewriteRule.class);
-
+    
+    private final Logger logger = LoggerFactory.getLogger(AbstractDialogRewriteRule.class);
+    
     private int ranking = Integer.MAX_VALUE;
-
+    
     @Activate
     protected void activate(ComponentContext context) throws RepositoryException {
         @SuppressWarnings("unchecked")
@@ -54,14 +53,14 @@ public abstract class AbstractDialogRewriteRule implements DialogRewriteRule {
             }
         }
     }
-
+    
     public int getRanking() {
         return ranking;
     }
-
+    
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "[ranking=" + getRanking() + "]";
     }
-
+    
 }

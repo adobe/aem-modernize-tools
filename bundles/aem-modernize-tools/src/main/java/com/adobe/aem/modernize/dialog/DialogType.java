@@ -22,35 +22,35 @@ package com.adobe.aem.modernize.dialog;
  * Enumeration that defines the type of a dialog Node in the repository
  */
 public enum DialogType {
-
+    
     /**
      * Classic dialog
      */
     CLASSIC("Classic"),
-
+    
     /**
      * Granite UI based dialog that uses (legacy) Coral 2 resource types
      */
     CORAL_2("Coral 2"),
-
+    
     /**
      * Granite UI based dialog that uses Coral 3 resource types
      */
     CORAL_3("Coral 3"),
-
+    
     /**
      * Dialog type is unknown
      */
     UNKNOWN("");
-
+    
     private final String text;
-
+    
     DialogType(String text) {
         this.text = text;
     }
-
+    
     public String getString() {
         return text;
     }
-
+    
 }
