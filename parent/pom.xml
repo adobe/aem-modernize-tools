@@ -564,14 +564,6 @@
                 <version>2.4.0</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/biz.aQute.bnd/biz.aQute.bndlib -->
-<!--            <dependency>-->
-<!--                <groupId>biz.aQute.bnd</groupId>-->
-<!--                <artifactId>biz.aQute.bndlib</artifactId>-->
-<!--                <version>5.1.1</version>-->
-<!--                <scope>provided</scope>-->
-<!--            </dependency>-->
-
 
             <!-- Servlet API -->
             <dependency>
