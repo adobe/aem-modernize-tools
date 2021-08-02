@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/aem-modernize/components"/>
+    <filter root="/apps/aem-modernize/content"/>
+    <filter root="/apps/cq/core/content/nav/tools/aem-modernize"/>
+
+</workspaceFilter>

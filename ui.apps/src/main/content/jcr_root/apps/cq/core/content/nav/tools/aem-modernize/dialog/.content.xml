@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+      jcr:mixinTypes="[rep:AccessControllable]"
+      jcr:primaryType="nt:unstructured"
+      jcr:title="Dialog Conversion"
+      href="/apps/aem-modernize/content/dialog.html"
+      id="aem-modernize-tools-dialog"
+      target="_blank"/>
