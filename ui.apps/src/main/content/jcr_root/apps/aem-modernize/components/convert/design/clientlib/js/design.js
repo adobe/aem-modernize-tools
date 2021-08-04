@@ -31,7 +31,7 @@ $(document).ready(function () {
     var showPropertiesButton = document.querySelector(".js-aem-PoliciesImporter-showProperties");
     var backButton = document.querySelector(".js-aem-PoliciesImporter-back");
 
-    var targetPathField = document.querySelector(".aem-cloudconfig-configpathbrowser foundation-autocomplete"); // TODO: More robust
+    var targetPathField = document.querySelector(".cq-cloudconfig-configpathbrowser foundation-autocomplete"); // TODO: More robust
     var importDesignPropertiesButton = document.querySelector(".js-aem-PoliciesImporter-importDesignProperties");
     var DEFAULT_IMPORT_POLICIES_BUTTON = importDesignPropertiesButton.textContent;
 
