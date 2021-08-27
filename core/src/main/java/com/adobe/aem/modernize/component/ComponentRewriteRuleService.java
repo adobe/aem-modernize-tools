@@ -35,7 +35,9 @@ public interface ComponentRewriteRuleService extends RewriteRuleService<Componen
 
     /**
      * Lists all of the sling:resourceType properties identified by the patterns.
-     * @return
+     * @param resolver ResourceResolver for repository operations
+     * @return list of ResourceTypes this service can process
+     * @throws RepositoryException when any repository operation errors occur
      */
     Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException;
 }

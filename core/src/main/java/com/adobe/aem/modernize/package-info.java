@@ -16,22 +16,5 @@
  * limitations under the License.
  *
  */
-
-package com.adobe.aem.modernize.structure;
-
-import java.util.Set;
-
-import com.adobe.aem.modernize.RewriteRuleService;
-
-/**
- * Provides a mechanism for listing all the configured rules either via Nodes or custom implementations.
- */
-public interface StructureRewriteRuleService extends RewriteRuleService<StructureRewriteRule> {
-
-  /**
-   * Lists all the cq:template properties identified by the patterns.
-   *
-   * @return set of templates which this service will process
-   */
-  Set<String> getTemplates();
-}
+@org.osgi.annotation.versioning.Version("1.0.0")
+package com.adobe.aem.modernize;

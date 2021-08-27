@@ -49,14 +49,15 @@ public interface PoliciesImportRule extends RewriteRule {
 
     /**
      * Returns a set of all <code>sling:resourceType</code> values specified in the <i>pattern</i> properties.
-     * @return
+     * @return set of all resource types
+     * @throws RepositoryException when any repository operation error occurs
      */
     Set<String> getPatternSlingResourceTypes() throws RepositoryException;
 
     /**
      * The replacement <code>sling:resourceType</code> specified on the replacement node.
-     * @return
-     * @throws RepositoryException
+     * @return replacement slingResourceType
+     * @throws RepositoryException when any repository operation error occurs
      */
     String getReplacementSlingResourceType() throws RepositoryException;
 

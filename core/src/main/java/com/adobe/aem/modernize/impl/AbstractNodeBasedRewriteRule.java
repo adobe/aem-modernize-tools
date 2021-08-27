@@ -122,9 +122,9 @@ import org.slf4j.LoggerFactory;
  * </li>
  * </ul>
  * <p>
- * In addition, a special <code><cq:rewriteProperties></code> node can be added to a replacement node to define
+ * In addition, a special <code>cq:rewriteProperties</code> node can be added to a replacement node to define
  * string rewrites for mapped properties in the result. The node is removed from the replacement.
- * The properties of the <code><cq:rewriteProperties></code> node must
+ * The properties of the <code>cq:rewriteProperties</code> node must
  * be named the same as those which they are rewriting and accept a string array with two parameters:
  * <p>
  * - pattern: regexp to match against. e.g. "(?:coral-Icon--)(.+)"
@@ -426,9 +426,9 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
      * @param root     the root node of the original tree
      * @param property the (potentially) mapped property in the replacement copy tree
      * @return the mapped property if there was a successful mapping, null otherwise
+     * @throws RepositoryException when any repository operation error occurs
      */
-    protected Property mapProperty(Node root, Property property)
-            throws RepositoryException {
+    protected Property mapProperty(Node root, Property property) throws RepositoryException {
         if (property.getType() != PropertyType.STRING) {
             // a mapped property must be of type string
             return null;
@@ -505,6 +505,7 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
      *
      * @param property the property to rewrite
      * @param rewriteProperty the property that defines the string rewrite
+     * @throws RepositoryException when any repository operation error occurs
      */
     protected void rewriteProperty(Property property, Property rewriteProperty) throws RepositoryException {
         if (property.getType() == PropertyType.STRING) {
@@ -537,6 +538,7 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
         }
         return this.ranking;
     }
+
 
     protected Node getRuleNode() {
         return this.ruleNode;

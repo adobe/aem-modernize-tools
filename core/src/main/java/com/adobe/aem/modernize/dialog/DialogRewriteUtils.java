@@ -49,7 +49,7 @@ public class DialogRewriteUtils {
      * @param node The node to check
      * @param xtype The xtype to check or null to check if the node has no xtype
      * @return true if the node has the specified xtype, false otherwise
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static boolean hasXtype(Node node, String xtype)
             throws RepositoryException {
@@ -66,7 +66,7 @@ public class DialogRewriteUtils {
      * @param node The node to check
      * @param type The type to check or null to check if the node has no type
      * @return true if the node has the specified type, false otherwise
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static boolean hasType(Node node, String type)
             throws RepositoryException {
@@ -85,7 +85,7 @@ public class DialogRewriteUtils {
      * @param destination The destination node
      * @param name The name for the copy of the property
      * @return The copied property or null if the source property doesn't exist
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static Property copyProperty(Node source, String relPropertyPath, Node destination, String name)
             throws RepositoryException {
@@ -100,7 +100,7 @@ public class DialogRewriteUtils {
      *
      * @param node The dialog node
      * @return The dialog type of the node
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static DialogType getDialogType(Node node) throws RepositoryException {
         DialogType type = DialogType.UNKNOWN;
@@ -133,7 +133,7 @@ public class DialogRewriteUtils {
      *
      * @param node The dialog node
      * @return 'true' if the node represents a design dialog
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static boolean isDesignDialog(Node node) throws RepositoryException {
         if (node == null) {

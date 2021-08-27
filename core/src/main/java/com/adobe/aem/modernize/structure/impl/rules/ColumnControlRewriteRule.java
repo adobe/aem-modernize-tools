@@ -173,10 +173,10 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
     /**
      * Updates this node, the returned node is the primary column control resource, although this updates a number of sibling resources.
      * @param root The root of the subtree to be rewritten
-     * @param finalNodes
-     * @return
-     * @throws RewriteException
-     * @throws RepositoryException
+     * @param finalNodes list of nodes that should not be processed
+     * @return updated Node
+     * @throws RewriteException when an error occurs during the rewrite operation
+     * @throws RepositoryException when any repository operation error occurs
      */
     @Override
     public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {

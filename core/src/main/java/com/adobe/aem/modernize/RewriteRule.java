@@ -30,6 +30,7 @@ public interface RewriteRule {
      *
      * @param root The root of the subtree to be checked for a match
      * @return true if this rule applies, false otherwise
+     * @throws RepositoryException if reading the repository fails
      */
     boolean matches(Node root) throws RepositoryException;
 
@@ -46,8 +47,10 @@ public interface RewriteRule {
      * specified set.
      **
      * @param root The root of the subtree to be rewritten
+     * @param finalNodes list of nodes to which should not be updated
      * @return the root node of the rewritten tree, or null if it was removed
      * @throws RewriteException if the rewrite operation failed or cannot be completed
+     * @throws RepositoryException if the node updates cannot be saved
      */
     Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException;
 

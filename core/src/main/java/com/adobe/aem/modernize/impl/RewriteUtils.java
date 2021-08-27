@@ -43,7 +43,7 @@ public class RewriteUtils {
      * @param node The node to check
      * @param typeName The name of the primary type to check
      * @return true if the node has the specified primary type, false otherwise
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static boolean hasPrimaryType(Node node, String typeName)
             throws RepositoryException {
@@ -54,7 +54,7 @@ public class RewriteUtils {
      * Renames the specified node to a temporary name.
      *
      * @param node The node to be renamed
-     * @throws RepositoryException
+     * @throws RepositoryException when any repository operation error occurs
      */
     public static void rename(Node node)
             throws RepositoryException {
@@ -67,9 +67,9 @@ public class RewriteUtils {
 
     /**
      * Convert a parameter key for osgi servcies into a map.
-     * @param values
-     * @param separator
-     * @return
+     * @param values the OSGi values to convert
+     * @param separator the separator
+     * @return mapped configuration values
      */
     public static Map<String, String> toMap(final String[] values, final String separator) {
         final Map<String, String> map = new LinkedHashMap<>();

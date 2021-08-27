@@ -33,7 +33,8 @@ public interface ComponentRewriteRule extends RewriteRule {
 
     /**
      * Returns a set of all <code>sling:resourceType</code> values specified in the <i>pattern</i> properties.
-     * @return
+     * @return List of Sling Resource Types which this rule will process
+     * @throws RepositoryException when an error occurs reading the repository
      */
     Set<String> getSlingResourceTypes() throws RepositoryException;
 }

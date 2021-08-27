@@ -29,7 +29,9 @@ public interface RewriteRuleService<T extends RewriteRule> {
 
     /**
      * Lists all of the registered ComponentRewriteRules for processing.
+     * @param resolver the resource resolver for reading the repository
      * @return a list of all component rewrite rules.
+     * @throws RepositoryException if the rules cannot be read
      */
     List<T> getRules(ResourceResolver resolver) throws RepositoryException;
 

@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
  * Creates a root responsive layout component and moves all children nodes (e.g. components) to this container.
  */
 @Component(
-    name = "Responsive Grid Policy Import Rule",
     service = { PoliciesImportRule.class },
     property = { "service.ranking=1" }
 )
