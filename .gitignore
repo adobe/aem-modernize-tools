@@ -100,4 +100,4 @@ coverage/
 reports/
 
 # Others
-dispatcher/src/conf.d/variables/default.vars
+/.java-version

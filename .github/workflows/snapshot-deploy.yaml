@@ -1,0 +1,62 @@
+name: Snapshot Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up environment with Java and Maven
+      # See https://github.com/actions/setup-java#publishing-using-apache-maven
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Import GPG key
+        env:
+          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+        run: |
+          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
+          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Publish Java8 to Apache Maven Central
+        run: mvn clean deploy -P release,java8
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish to Apache Maven Central
+        run: mvn clean deploy -P release,attach-javadoc,attach-source
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Upload CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./target/site/jacoco/jacoco.xml
+          flags: unittests
