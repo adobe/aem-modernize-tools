@@ -19,6 +19,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2.3.0
         with:
+          distribution: 'zulu'
           java-version: 11
           server-id: ossrh
           server-username: MAVEN_USERNAME
