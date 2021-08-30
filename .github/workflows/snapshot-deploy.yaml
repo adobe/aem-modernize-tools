@@ -8,6 +8,7 @@ on:
 jobs:
   deploy-snapshot:
     runs-on: ubuntu-latest
+    if: github.repository == 'adobe/aem-modernize-tools' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code

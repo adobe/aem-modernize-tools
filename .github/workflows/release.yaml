@@ -10,7 +10,7 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.repository == 'adobe/aem-modernize-tools' && github.ref == 'refs/heads/main'
 
     outputs:
       version: ${{ steps.store-version.outputs.version }}
