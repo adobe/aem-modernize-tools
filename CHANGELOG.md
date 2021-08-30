@@ -1,24 +1,32 @@
-# Changelog
-All notable changes to this project will be documented in this file.
+#
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
 
-## [Unreleased]
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-1.0.0...HEAD)
 
-### Added
+###
 
-### Changed
+- Only dialog conversion tool detects nodes in 6.3\*, other tools do not seem to work. [\#14](https://github.com/adobe/aem-modernize-tools/issues/14)
+- Github Links in pom are wrong [\#5](https://github.com/adobe/aem-modernize-tools/issues/5)
+- Following the download link leads to 404 [\#1](https://github.com/adobe/aem-modernize-tools/issues/1)
 
-### Fixed
+###
 
+- Stabalize Build [\#34](https://github.com/adobe/aem-modernize-tools/pull/34) ([bstopp](https://github.com/bstopp))
 
-## v1.0.0
-    
-### Added
-    
-### Changed
-    
-### Fixed
+## [aem-modernize-tools-1.0.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-1.0.0) (2019-06-17)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/168d40edef75843649b0fa8628d26c106bf7e243...aem-modernize-tools-1.0.0)
+
+###
+
+- Following the documentation link leads to wrong page [\#2](https://github.com/adobe/aem-modernize-tools/issues/2)
+
+###
+
+- Automate the release! [\#11](https://github.com/adobe/aem-modernize-tools/pull/11) ([bstopp](https://github.com/bstopp))
+- Fix Travis Build. [\#8](https://github.com/adobe/aem-modernize-tools/pull/8) ([bstopp](https://github.com/bstopp))
+- Adding initial travis file. [\#7](https://github.com/adobe/aem-modernize-tools/pull/7) ([bstopp](https://github.com/bstopp))
+
 
 
