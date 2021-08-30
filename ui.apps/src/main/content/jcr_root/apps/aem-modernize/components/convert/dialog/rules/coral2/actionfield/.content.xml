@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <patterns jcr:primaryType="nt:unstructured">
+        <container jcr:primaryType="nt:unstructured"
+                   sling:resourceType="granite/ui/components/foundation/container">
+            <layout jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/foundation/layouts/form/actionfield"/>
+            <field jcr:primaryType="nt:unstructured"/>
+            <action jcr:primaryType="nt:unstructured"/>
+        </container>
+        <form jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/components/foundation/form">
+            <layout jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/foundation/layouts/form/actionfield"/>
+            <field jcr:primaryType="nt:unstructured"/>
+            <action jcr:primaryType="nt:unstructured"/>
+        </form>
+        <section jcr:primaryType="nt:unstructured"
+                 sling:resourceType="granite/ui/components/foundation/section">
+            <layout jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/foundation/layouts/form/actionfield"/>
+            <field jcr:primaryType="nt:unstructured"/>
+            <action jcr:primaryType="nt:unstructured"/>
+        </section>
+    </patterns>
+    <replacement
+        jcr:primaryType="nt:unstructured"
+        cq:rewriteCommonAttrs="{Boolean}true"
+        cq:rewriteRenderCondition="{Boolean}true">
+        <actionfield
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/form/actionfield"
+            cq:rewriteFinal="{Boolean}true">
+            <field
+                cq:rewriteFinal="{Boolean}true"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="${\'./field/sling:resourceType\'}"
+                fieldLabel="${./field/fieldLabel}"
+                fieldDescription="${./field/fieldDescription}"/>
+            <action
+                cq:rewriteFinal="{Boolean}true"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="${\'./action/sling:resourceType\'}"
+                text="${./action/text}"/>
+        </actionfield>
+    </replacement>
+</jcr:root>
