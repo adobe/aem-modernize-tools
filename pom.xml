@@ -739,7 +739,7 @@ Bundle-DocURL:
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.framework</artifactId>
-                <version>1.9.0</version>
+                <version>1.10.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
