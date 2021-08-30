@@ -58,5 +58,5 @@ jobs:
       - name: Upload CodeCov
         uses: codecov/codecov-action@v1
         with:
-          file: ./target/site/jacoco/jacoco.xml
+          file: core/target/site/jacoco/jacoco.xml
           flags: unittests
