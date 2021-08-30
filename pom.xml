@@ -22,8 +22,59 @@
     <artifactId>aem-modernize-tools</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    <name>AEM Modernize Tools</name>
-    <description>AEM Modernize Tools</description>
+    <name>AEM Modernization Tools</name>
+    <description>AEM Modernization Tools</description>
+
+    <organization>
+        <name>Adobe Inc.</name>
+    </organization>
+    <inceptionYear>2019</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/adobe/aem-modernize-tools.git</connection>
+        <developerConnection>scm:git:https://github.com/adobe/aem-modernize-tools.git</developerConnection>
+        <url>https://github.com/adobe/aem-modernize-tools/tree/main</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/adobe/aem-modernize-tools/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>Bryan Stopp</name>
+            <organization>Adobe Inc.</organization>
+            <organizationUrl>https://www.adobe.com</organizationUrl>
+            <url>https://github.com/bstopp</url>
+        </developer>
+        <developer>
+            <name>Gilles Knobloch</name>
+            <organization>Adobe Inc.</organization>
+            <organizationUrl>https://www.adobe.com</organizationUrl>
+            <url>https://github.com/gknobloch</url>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>all</module>
