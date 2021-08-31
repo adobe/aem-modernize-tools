@@ -57,7 +57,7 @@ jobs:
           cache: maven
 
       - name: Maven Verify
-        run: mvn -U clean verify && mvn verify -P java8
+        run: mvn -U clean verify #&& mvn verify -P java8
 
       - name: Generate Release Changelog
         id: generate-release-changelog
@@ -130,15 +130,15 @@ jobs:
           echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
-      - name: Build Java8 Artifact
-        run: mvn clean package -P release,java8
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+#      - name: Build Java8 Artifact
+#        run: mvn clean package -P release,java8
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+#          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy -P release,attach-javadoc,attach-source,attach-java8 -DautoReleaseAfterClose=true
+        run: mvn deploy -P release,attach-javadoc,attach-source -DautoReleaseAfterClose=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
