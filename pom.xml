@@ -52,12 +52,14 @@
 
     <developers>
         <developer>
+            <id>bryan.stopp</id>
             <name>Bryan Stopp</name>
             <organization>Adobe Inc.</organization>
             <organizationUrl>https://www.adobe.com</organizationUrl>
             <url>https://github.com/bstopp</url>
         </developer>
         <developer>
+            <id>gilles.knobloch</id>
             <name>Gilles Knobloch</name>
             <organization>Adobe Inc.</organization>
             <organizationUrl>https://www.adobe.com</organizationUrl>
@@ -94,7 +96,7 @@
         <vault.password>admin</vault.password>
 
         <aem.version>6.5.0</aem.version>
-        <bnd.version>5.1.2</bnd.version>
+        <bnd.version>5.3.0</bnd.version>
         <slf4j.version>1.7.32</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -104,25 +106,6 @@
 
     <build>
         <plugins>
-            <!-- Maven Release Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <scmCommentPrefix>[maven-scm] :</scmCommentPrefix>
-                    <preparationGoals>clean install</preparationGoals>
-                    <goals>install</goals>
-                    <releaseProfiles>release</releaseProfiles>
-                </configuration>
-            </plugin>
-            <!-- Maven Source Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <inherited>true</inherited>
-            </plugin>
             <!-- Maven Enforcer Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -191,6 +174,12 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <inherited>true</inherited>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>3.3.0</version>
                     <configuration>
@@ -224,13 +213,18 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <!-- Maven Clean Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
                 </plugin>
                 <!-- BND Maven Plugin -->
                 <plugin>
@@ -278,6 +272,9 @@ Bundle-DocURL:
                     <groupId>biz.aQute.bnd</groupId>
                     <artifactId>bnd-baseline-maven-plugin</artifactId>
                     <version>${bnd.version}</version>
+                    <configuration>
+                        <includeDistributionManagement>false</includeDistributionManagement>
+                    </configuration>
                 </plugin>
                 <!-- Maven Resources Plugin -->
                 <plugin>
@@ -342,7 +339,7 @@ Bundle-DocURL:
                     <groupId>org.apache.jackrabbit</groupId>
                     <artifactId>filevault-package-maven-plugin</artifactId>
                     <extensions>true</extensions>
-                    <version>1.1.6</version>
+                    <version>1.1.8</version>
                     <configuration>
                         <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
                         <validatorsSettings>
@@ -397,7 +394,12 @@ Bundle-DocURL:
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -433,15 +435,10 @@ Bundle-DocURL:
                                 </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>
-                                            org.apache.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            maven-dependency-plugin
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin
                                         </artifactId>
-                                        <versionRange>
-                                            [2.2,)
-                                        </versionRange>
+                                        <versionRange>[2.2,)</versionRange>
                                         <goals>
                                             <goal>copy-dependencies</goal>
                                             <goal>unpack</goal>
@@ -453,15 +450,9 @@ Bundle-DocURL:
                                 </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>
-                                            org.codehaus.mojo
-                                        </groupId>
-                                        <artifactId>
-                                            build-helper-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.5,)
-                                        </versionRange>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>build-helper-maven-plugin</artifactId>
+                                        <versionRange>[1.5,)</versionRange>
                                         <goals>
                                             <goal>
                                                 reserve-network-port
@@ -614,7 +605,6 @@ Bundle-DocURL:
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.2.0</version>
                         <configuration>
                             <classifier>java8</classifier>
                         </configuration>
@@ -643,8 +633,8 @@ Bundle-DocURL:
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>target/${project.artifactId}-${project.version}-java8.jar</file>
-                                    <type>jar</type>
+                                    <file>target/${project.artifactId}-${project.version}-java8.zip</file>
+                                    <type>zip</type>
                                     <classifier>java8</classifier>
                                 </artifact>
                             </artifacts>
@@ -824,7 +814,7 @@ Bundle-DocURL:
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.models.api</artifactId>
-                <version>1.3.6</version>
+                <version>1.3.8</version>
                 <scope>provided</scope>
             </dependency>
             <!-- Servlet API -->
