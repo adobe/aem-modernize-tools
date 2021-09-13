@@ -95,9 +95,10 @@
         <vault.user>admin</vault.user>
         <vault.password>admin</vault.password>
 
-        <aem.version>6.5.0</aem.version>
+        <aem.version>6.5.9</aem.version>
         <bnd.version>5.3.0</bnd.version>
         <slf4j.version>1.7.32</slf4j.version>
+        <jmockit.version>1.49</jmockit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -226,11 +227,6 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
-                </plugin>
                 <!-- BND Maven Plugin -->
                 <plugin>
                     <groupId>biz.aQute.bnd</groupId>
@@ -305,6 +301,9 @@ Bundle-DocURL:
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.2</version>
                     <configuration>
+                        <argLine>
+                            -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                        </argLine>
                         <useSystemClassLoader>false</useSystemClassLoader>
                     </configuration>
                 </plugin>
@@ -812,7 +811,6 @@ Bundle-DocURL:
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>uber-jar</artifactId>
                 <version>${aem.version}</version>
-                <classifier>apis</classifier>
                 <scope>provided</scope>
             </dependency>
             <!-- Apache Sling Dependencies -->
@@ -857,42 +855,73 @@ Bundle-DocURL:
                 <scope>provided</scope>
             </dependency>
 
-            <!-- Testing -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+
+            <!-- Testing -->
+<!--            <dependency>-->
+<!--                <groupId>junit</groupId>-->
+<!--                <artifactId>junit</artifactId>-->
+<!--                <version>4.13.2</version>-->
+<!--                <scope>test</scope>-->
+<!--            </dependency>-->
+
+            <dependency>
+                <groupId>org.jmockit</groupId>
+                <artifactId>jmockit</artifactId>
+                <version>${jmockit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.7.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.7.2</version>
+                <scope>test</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
-                <version>1.7.4</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>1.7.4</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.sling</groupId>
-                <artifactId>org.apache.sling.testing.sling-mock-oak</artifactId>
-                <version>2.1.10-1.16.0</version>
-                <scope>test</scope>
-            </dependency>
-
+<!--            <dependency>-->
+<!--                <groupId>org.powermock</groupId>-->
+<!--                <artifactId>powermock-api-mockito</artifactId>-->
+<!--                <version>1.7.4</version>-->
+<!--                <scope>test</scope>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.powermock</groupId>-->
+<!--                <artifactId>powermock-module-junit4</artifactId>-->
+<!--                <version>1.7.4</version>-->
+<!--                <scope>test</scope>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>org.apache.sling</groupId>
-                <artifactId>org.apache.sling.testing.sling-mock.junit4</artifactId>
-                <version>3.0.2</version>
+                <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
+                <version>1.5.4</version>
+                <scope>test</scope>
+            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.sling</groupId>-->
+<!--                <artifactId>org.apache.sling.testing.sling-mock-oak</artifactId>-->
+<!--                <version>3.0.0-1.16.0</version>-->
+<!--                <scope>test</scope>-->
+<!--            </dependency>-->
+            <dependency>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>org.apache.sling.testing.sling-mock.junit5</artifactId>
+                <version>3.1.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -900,34 +929,30 @@ Bundle-DocURL:
                 <artifactId>org.apache.sling.commons.testing</artifactId>
                 <version>2.1.2</version>
                 <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.jackrabbit</groupId>
-                        <artifactId>jackrabbit-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.jackrabbit</groupId>
-                        <artifactId>jackrabbit-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>org.apache.sling.api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>org.apache.sling.jcr.api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-io</groupId>
-                        <artifactId>commons-io</artifactId>
-                    </exclusion>
-                </exclusions>
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.apache.jackrabbit</groupId>-->
+<!--                        <artifactId>jackrabbit-api</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.apache.jackrabbit</groupId>-->
+<!--                        <artifactId>jackrabbit-core</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.apache.sling</groupId>-->
+<!--                        <artifactId>org.apache.sling.api</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.apache.sling</groupId>-->
+<!--                        <artifactId>org.apache.sling.jcr.api</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>commons-io</groupId>-->
+<!--                        <artifactId>commons-io</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
             </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.11.0</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
