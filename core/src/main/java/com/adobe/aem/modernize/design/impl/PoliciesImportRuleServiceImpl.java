@@ -26,6 +26,8 @@ import com.day.cq.commons.jcr.JcrConstants;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.day.cq.wcm.api.designer.Design;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -80,6 +82,10 @@ public class PoliciesImportRuleServiceImpl implements PoliciesImportRuleService 
     @SuppressWarnings("unused")
     public void unbindRule(PoliciesImportRule rule) {
         rules.remove(rule);
+    }
+
+    @Override
+    public void apply(@NotNull Design design, @NotNull String[] rules, boolean deep, boolean overwrite) {
     }
 
     public List<PoliciesImportRule> getRules(ResourceResolver resolver) throws RepositoryException {

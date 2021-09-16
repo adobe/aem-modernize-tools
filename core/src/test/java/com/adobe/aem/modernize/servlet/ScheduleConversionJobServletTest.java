@@ -19,7 +19,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
-import com.adobe.aem.modernize.job.ConversionJobExecutor;
+import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJobItem;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -178,9 +178,9 @@ public class ScheduleConversionJobServletTest {
     ObjectMapper mapper = new ObjectMapper();
     JsonNode result = mapper.readTree(response.getOutputAsString());
 
-    assertEquals(SC_INTERNAL_SERVER_ERROR, response.getStatus());
-    assertEquals("failure", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+    assertEquals(SC_INTERNAL_SERVER_ERROR, response.getStatus(), "Correct response code.");
+    assertEquals("failure", result.get("status").asText(), "Correct result status.");
+    assertNotNull(result.get("message").asText(), "Message was set.");
   }
 
   @Test
@@ -206,30 +206,31 @@ public class ScheduleConversionJobServletTest {
     servlet.doPost(request, response);
     ObjectMapper mapper = new ObjectMapper();
     JsonNode result = mapper.readTree(response.getOutputAsString());
-    assertEquals(SC_OK, response.getStatus());
-    assertEquals("success", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+
+    assertEquals(SC_OK, response.getStatus(), "Correct response code.");
+    assertEquals("success", result.get("status").asText(), "Correct result status.");
+    assertNotNull(result.get("message").asText(), "Message was set.");
 
     Calendar today = Calendar.getInstance();
     String path = String.format("%s/%d/%d/%d/%s",
-        ConversionJobExecutor.JOB_DATA_LOCATION,
+        ConversionJobItem.JOB_DATA_LOCATION,
         today.get(Calendar.YEAR),
         today.get(Calendar.MONTH),
         today.get(Calendar.DAY_OF_MONTH),
         "test-job");
 
-    assertFalse(serviceSession.isLive());
+    assertFalse(serviceSession.isLive(), "Session was closed");
     Field f = serviceSession.getClass().getDeclaredField("isLive");
     f.setAccessible(true);
     f.set(serviceSession, true);
-    assertTrue(serviceSession.nodeExists(path));
-    assertTrue(serviceSession.nodeExists(path + "/bucket"));
-    assertTrue(serviceSession.nodeExists(path + "/bucket0"));
-    assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJobItem.PN_TITLE).getString());
-    assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJobItem.PN_INITIATOR).getString());
-    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_TEMPLATE_RULES));
-    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_COMPONENT_RULES));
-    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_POLICY_RULES));
+    assertTrue(serviceSession.nodeExists(path), "Tracking node was created.");
+    assertTrue(serviceSession.nodeExists(path + "/bucket"), "Bucket 1 was created");
+    assertTrue(serviceSession.nodeExists(path + "/bucket0"), "Bucket 2 was created");
+    assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJobItem.PN_TITLE).getString(), "Title was set");
+    assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJobItem.PN_INITIATOR).getString(), "Initiated by was set");
+    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_TEMPLATE_RULES), "Template rules were set.");
+    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_COMPONENT_RULES), "Component rules were set.");
+    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_POLICY_RULES), "Policy rules were set.");
   }
 
   @Test
@@ -253,15 +254,15 @@ public class ScheduleConversionJobServletTest {
       result = true;
       slingRepository.loginService(anyString, null);
       result = serviceSession;
-      jobManager.addJob(ConversionJobExecutor.JOB_TOPIC, (Map<String, Object>) any);
+      jobManager.addJob(FullConversionJobExecutor.JOB_TOPIC, (Map<String, Object>) any);
       result = null;
     }};
     servlet.doPost(request, response);
     ObjectMapper mapper = new ObjectMapper();
     JsonNode result = mapper.readTree(response.getOutputAsString());
-    assertEquals(SC_INTERNAL_SERVER_ERROR, response.getStatus());
-    assertEquals("failure", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+    assertEquals(SC_INTERNAL_SERVER_ERROR, response.getStatus(), "Correct response code.");
+    assertEquals("failure", result.get("status").asText(), "Correct result status.");
+    assertNotNull(result.get("message").asText(), "Message was set");
 
   }
 
@@ -286,22 +287,22 @@ public class ScheduleConversionJobServletTest {
       result = true;
       slingRepository.loginService(anyString, null);
       result = serviceSession;
-      jobManager.addJob(ConversionJobExecutor.JOB_TOPIC, withCapture(jobProperties));
+      jobManager.addJob(FullConversionJobExecutor.JOB_TOPIC, withCapture(jobProperties));
     }};
     servlet.doPost(request, response);
     ObjectMapper mapper = new ObjectMapper();
     JsonNode result = mapper.readTree(response.getOutputAsString());
-    assertEquals(SC_OK, response.getStatus());
-    assertEquals("success", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+    assertEquals(SC_OK, response.getStatus(), "Correct response code.");
+    assertEquals("success", result.get("status").asText(), "Correct result status.");
+    assertNotNull(result.get("message").asText(), "Message was set.");
 
-    assertEquals(2, jobProperties.size());
+    assertEquals(2, jobProperties.size(), "Number of jobs created.");
     Map<String, Object> jobProps = jobProperties.get(0);
-    assertNotNull(jobProps.get(ConversionJobItem.PN_PAGE_PATHS));
-    assertEquals(500, ((String[]) jobProps.get(ConversionJobItem.PN_PAGE_PATHS)).length);
-    assertNotNull(jobProps.get(ConversionJobItem.PN_TEMPLATE_RULES));
-    assertNotNull(jobProps.get(ConversionJobItem.PN_COMPONENT_RULES));
-    assertNotNull(jobProps.get(ConversionJobItem.PN_POLICY_RULES));
-    assertNotNull(jobProps.get(ConversionJobItem.PN_TRACKING_PATH));
+    assertNotNull(jobProps.get(ConversionJobItem.PN_PAGE_PATHS), "Job paths are set.");
+    assertEquals(500, ((String[]) jobProps.get(ConversionJobItem.PN_PAGE_PATHS)).length, "Number of paths correct on first job.");
+    assertNotNull(jobProps.get(ConversionJobItem.PN_TEMPLATE_RULES), "Job has template rules.");
+    assertNotNull(jobProps.get(ConversionJobItem.PN_COMPONENT_RULES), "Job has component rules.");
+    assertNotNull(jobProps.get(ConversionJobItem.PN_POLICY_RULES), "Job has policy rules.");
+    assertNotNull(jobProps.get(ConversionJobItem.PN_TRACKING_PATH), "Job has tracking node path.");
   }
 }

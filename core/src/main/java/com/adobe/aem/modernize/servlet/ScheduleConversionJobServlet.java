@@ -25,8 +25,7 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
 
-import com.adobe.aem.modernize.job.ConversionJobExecutor;
-import com.adobe.aem.modernize.model.ConversionJobItem;
+import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -75,8 +74,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
 
       systemSession = repository.loginService(SERVICE_NAME, null);
       List<String[]> buckets = createBuckets(data);
-      Node tracking = createTrackingState(systemSession, data, rr.getUserID(), buckets);
-      if (scheduleJobs(data, buckets, tracking.getPath())) {
+      String tracking = createTrackingState(systemSession, data, rr.getUserID(), buckets);
+      if (scheduleJobs(data, buckets, tracking)) {
         writeResponse(response, SC_OK, true, "Successfully scheduled conversions.");
       } else {
         writeResponse(response, SC_INTERNAL_SERVER_ERROR, false, "Creating one of the the conversion jobs failed.");
@@ -84,8 +83,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     } catch (AccessDeniedException e) {
       writeResponse(response, SC_FORBIDDEN, false,"Missing permissions for modifying a requested path.");
     } catch (RepositoryException e) {
-      logger.error("Error occurred while trying to save tracking state.", e);
-      writeResponse(response, SC_INTERNAL_SERVER_ERROR, false, "Unable to schedule jobs, check logs for details");
+      writeResponse(response, SC_INTERNAL_SERVER_ERROR, false, "Unable to schedule job(s), check logs for details");
     } finally {
       if (systemSession != null) {
         systemSession.logout();
@@ -128,7 +126,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       noOfBuckets++;
     }
 
-    logger.warn("Processing {} paths exceeds the limit of {}, splitting it into {} distinct transactions", paths.length, MAX_PROCESS_PATHS, noOfBuckets);
+    logger.warn("Processing {} paths exceeds the limit of {}, splitting it into {} distinct jobs.", paths.length, MAX_PROCESS_PATHS, noOfBuckets);
     int offset = 0;
 
     while (offset < paths.length) {
@@ -144,7 +142,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   }
 
   // Create the tree of data for tracking the state of the job.
-  private Node createTrackingState(Session session, JobData jobData, String userId, List<String[]> buckets) {
+  private String createTrackingState(Session session, JobData jobData, String userId, List<String[]> buckets) throws RepositoryException {
     Node tracking = null;
     try {
       tracking = createTrackingNode(session, jobData, userId);
@@ -153,17 +151,18 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       }
       session.save();
       session.refresh(true);
+      return tracking.getPath();
     } catch (RepositoryException e) {
       logger.error("Could not save tracking data state.", e);
+      throw e;
     }
-    return tracking;
   }
 
   // Create the parent node for tracking.
   private Node createTrackingNode(Session session, JobData jobData, String userId) throws RepositoryException {
     Calendar today = Calendar.getInstance();
     String path = String.format("%s/%d/%d/%d/%s",
-        ConversionJobExecutor.JOB_DATA_LOCATION,
+        JOB_DATA_LOCATION,
         today.get(Calendar.YEAR),
         today.get(Calendar.MONTH),
         today.get(Calendar.DAY_OF_MONTH),
@@ -192,8 +191,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       jobProperties.put(PN_TEMPLATE_RULES, jobData.getTemplateRules());
       jobProperties.put(PN_COMPONENT_RULES, jobData.getComponentRules());
       jobProperties.put(PN_POLICY_RULES, jobData.getPolicyRules());
-      if (jobManager.addJob(ConversionJobExecutor.JOB_TOPIC, jobProperties) == null) {
-        logger.error("Unable to create job for topic: {}", ConversionJobExecutor.JOB_TOPIC);
+      if (jobManager.addJob(FullConversionJobExecutor.JOB_TOPIC, jobProperties) == null) {
+        logger.error("Unable to create job for topic: {}", FullConversionJobExecutor.JOB_TOPIC);
         return false;
       }
     }

@@ -132,10 +132,10 @@
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.day.cq.wcm</groupId>
-            <artifactId>cq-wcm-taglib</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.day.cq.wcm</groupId>-->
+<!--            <artifactId>cq-wcm-taglib</artifactId>-->
+<!--        </dependency>-->
 
         <!-- HTL dependencies needed for the HTL Maven Plugin source code generation -->
         <dependency>

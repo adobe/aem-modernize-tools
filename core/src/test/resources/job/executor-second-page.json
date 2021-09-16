@@ -1,0 +1,13 @@
+{
+  "jcr:primaryType": "cq:Page",
+  "jcr:content": {
+    "jcr:primaryType": "cq:PageContent",
+    "jcr:title": "Test Page",
+    "cq:designPath": "/etc/designs/second-site",
+    "component": {
+      "jcr:primaryType": "nt:unstructured",
+      "jcr:title": "Test Page",
+      "sling:resourceType": "modernize/components/test"
+    }
+  }
+}

@@ -36,6 +36,7 @@ import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.component.impl.rules.NodeBasedComponentRewriteRule;
 import com.day.cq.commons.jcr.JcrConstants;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -79,6 +80,10 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     @SuppressWarnings("unused")
     public void unbindRule(ComponentRewriteRule rule) {
         rules.remove(rule);
+    }
+
+    @Override
+    public void apply(@NotNull Resource resource, @NotNull String[] rules, boolean deep) {
     }
 
     public List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws RepositoryException {
@@ -128,7 +133,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         return rules;
     }
 
-    @Override
+//    @Override
     public Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException {
         List<ComponentRewriteRule> rules = getRules(resolver);
 

@@ -26,11 +26,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.jcr.Node;
+
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.structure.PageStructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
+import com.day.cq.wcm.api.Page;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -97,6 +102,10 @@ public class StructureRewriteRuleServiceImpl implements StructureRewriteRuleServ
     @SuppressWarnings("unused")
     public void unbindPageRule(PageStructureRewriteRule rule) {
         pageRules.remove(rule);
+    }
+
+    @Override
+    public void apply(@NotNull Page page, @NotNull String[] rules) {
     }
 
     @Override
