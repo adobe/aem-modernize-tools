@@ -195,7 +195,7 @@ public class FullConversionJobExecutorTest {
   }
 
   @Test
-  public <P extends PageManager> void testPagesNotReprocess(@Mocked Revision revision) {
+  public <P extends PageManager> void testPagesNotReprocess(@Mocked Revision revision) throws Exception {
 
     final List<String> revisions = new ArrayList<>();
     new Expectations() {{
@@ -245,7 +245,7 @@ public class FullConversionJobExecutorTest {
   }
 
   @Test
-  public <P extends PageManager> void testPagesReprocess(@Mocked Revision revision) {
+  public <P extends PageManager> void testPagesReprocess(@Mocked Revision revision) throws Exception {
     final List<String> revisions = new ArrayList<>();
     final List<String> restored = new ArrayList<>();
     new Expectations() {{
