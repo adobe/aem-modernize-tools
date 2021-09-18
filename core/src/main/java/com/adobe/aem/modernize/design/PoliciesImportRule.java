@@ -35,7 +35,7 @@
  **************************************************************************/
 package com.adobe.aem.modernize.design;
 
-import com.adobe.aem.modernize.RewriteRule;
+import com.adobe.aem.modernize.rule.RewriteRule;
 
 import javax.jcr.RepositoryException;
 import java.util.Set;

@@ -83,6 +83,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
 
     private List<String> nested = new ArrayList<>();
     private int ranking = Integer.MAX_VALUE;
+    private String id = PageRewriteRule.class.getName();
     private static final String RESPONSIVE_GRID_NODE_NAME = "root";
 
     @ObjectClassDefinition(
@@ -129,6 +130,11 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         )
         String[] rename_components();
 
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -250,6 +256,7 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         Dictionary<String, Object> props = context.getProperties();
         // read service ranking property
         this.ranking = PropertiesUtil.toInteger(props.get("service.ranking"), this.ranking);
+        this.id = PropertiesUtil.toString(props.get("service.pidranking"), this.id);
         this.ranking = Converters.standardConverter().convert(props.get("service.ranking")).defaultValue(Integer.MAX_VALUE).to(Integer.class);
 
         staticTemplate = config.static_template();
@@ -303,8 +310,4 @@ public class PageRewriteRule implements PageStructureRewriteRule {
         return staticTemplate;
     }
 
-    @Override
-    public int getRanking() {
-        return this.ranking;
-    }
 }

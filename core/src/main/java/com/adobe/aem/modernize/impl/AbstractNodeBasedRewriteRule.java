@@ -38,8 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.RewriteRule;
-import com.adobe.aem.modernize.impl.RewriteUtils;
+import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,8 +159,13 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private String path;
     private Node ruleNode;
     private Integer ranking = null;
+
+    public AbstractNodeBasedRewriteRule(String path) {
+        this.path = path;
+    }
 
     public AbstractNodeBasedRewriteRule(Node ruleNode) {
         this.ruleNode = ruleNode;
@@ -248,7 +252,13 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
         return true;
     }
 
-    public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
+    @Override
+    public String getId() {
+        return path;
+    }
+
+
+    public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException{
         // check if the 'replacement' node exists
         if (!ruleNode.hasNode("replacement")) {
             throw new RewriteException("The rule does not define a replacement node");

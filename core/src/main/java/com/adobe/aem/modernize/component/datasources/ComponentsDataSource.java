@@ -101,11 +101,11 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
                 return;
             }
 
-            if (CollectionUtils.isEmpty(
-                    componentRewriteRuleService.getSlingResourceTypes(request.getResourceResolver()))) {
-                // No rules.
-                return;
-            }
+//            if (CollectionUtils.isEmpty(
+//                    componentRewriteRuleService.getSlingResourceTypes(request.getResourceResolver()))) {
+//                // No rules.
+//                return;
+//            }
 
 
             setDataSource(path, request, itemResourceType);
@@ -146,9 +146,9 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
         }
 
         String slingResourceType = rootResource.getValueMap().get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class);
-        if (componentRewriteRuleService.getSlingResourceTypes(resolver).contains(slingResourceType)) {
-            nodeMap.put(searchPath, rootResource.adaptTo(Node.class));
-        }
+//        if (componentRewriteRuleService.getSlingResourceTypes(resolver).contains(slingResourceType)) {
+//            nodeMap.put(searchPath, rootResource.adaptTo(Node.class));
+//        }
 
         // If the path does not point to a component node: we query for component nodes
         if (nodeMap.isEmpty()) {
@@ -204,13 +204,13 @@ public final class ComponentsDataSource extends SlingSafeMethodsServlet {
         sb.append("WHERE ISDESCENDANTNODE(res, '").append(encodedPath).append("') ");
         sb.append("AND res.[sling:resourceType] IN (");
 
-        Iterator<String> it = componentRewriteRuleService.getSlingResourceTypes(resourceResolver).iterator();
-        while (it.hasNext()) {
-            sb.append("'").append(it.next()).append("'");
-            if (it.hasNext()) {
-                sb.append(", ");
-            }
-        }
+//        Iterator<String> it = componentRewriteRuleService.getSlingResourceTypes(resourceResolver).iterator();
+//        while (it.hasNext()) {
+//            sb.append("'").append(it.next()).append("'");
+//            if (it.hasNext()) {
+//                sb.append(", ");
+//            }
+//        }
         sb.append(")");
 
         Session session = resourceResolver.adaptTo(Session.class);

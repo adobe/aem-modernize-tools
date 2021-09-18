@@ -47,6 +47,11 @@ public class CqDialogRewriteRule extends AbstractDialogRewriteRule {
         return hasPrimaryType(root, NT_DIALOG);
     }
 
+    @Override
+    public String getId() {
+        return CqDialogRewriteRule.class.getName();
+    }
+
     public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
         // Granite UI dialog already exists at this location
         Node parent = root.getParent();

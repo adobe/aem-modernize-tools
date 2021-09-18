@@ -16,14 +16,5 @@
  * limitations under the License.
  *
  */
-package com.adobe.aem.modernize.dialog;
-
-import com.adobe.aem.modernize.rule.RewriteRule;
-
-/**
- * Interface for services that implement a dialog rewrite rule. A rewrite rule matches certain subtrees of the
- * dialog tree (usually corresponding to one dialog component) and rewrites (i.e. modifies or replaces) them.
- */
-public interface DialogRewriteRule extends RewriteRule {
-
-}
+@org.osgi.annotation.versioning.Version("2.0.0")
+package com.adobe.aem.modernize.rule;

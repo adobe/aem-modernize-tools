@@ -19,13 +19,9 @@
 
 package com.adobe.aem.modernize.component;
 
-import java.util.List;
-import java.util.Set;
-import javax.jcr.RepositoryException;
-
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
+import com.adobe.aem.modernize.RewriteException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,16 +41,7 @@ public interface ComponentRewriteRuleService {
      * @param resource  Parent node for applying rules
      * @param rules the rules to apply
      * @param deep {@code true} to recurse into the tree
+     * @throws RewriteException if any errors occur when applying the rules
      */
-    void apply(@NotNull final Resource resource, @NotNull final String[] rules, boolean deep);
-
-    // TODO: Remove these
-    /**
-     * Lists all of the sling:resourceType properties identified by the patterns.
-     * @param resolver ResourceResolver for repository operations
-     * @return list of ResourceTypes this service can process
-     * @throws RepositoryException when any repository operation errors occur
-     */
-    Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException;
-    List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws RepositoryException;
+    void apply(@NotNull final Resource resource, @NotNull final String[] rules, boolean deep) throws RewriteException;
 }

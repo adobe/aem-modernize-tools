@@ -46,6 +46,12 @@ import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 public class IncludeRewriteRule extends AbstractDialogRewriteRule {
 
     private static final String XTYPE = "cqinclude";
+    private String id = getClass().getName();
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
 
     public boolean matches(Node root)
             throws RepositoryException {

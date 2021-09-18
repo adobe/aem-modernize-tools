@@ -194,24 +194,11 @@ throws ServletException, IOException {
             }
         }
 
-        // sort rules according to their ranking
-        rules.sort(new RuleComparator());
-
         logger.debug("Found {} rules ({} Java-based, {} node-based)", rules.size(), rules.size() - nb, nb);
         for (DialogRewriteRule rule : rules) {
             logger.debug(rule.toString());
         }
         return rules;
-    }
-
-    private static class RuleComparator implements Comparator<DialogRewriteRule> {
-
-        public int compare(DialogRewriteRule rule1, DialogRewriteRule rule2) {
-            int ranking1 = rule1.getRanking();
-            int ranking2 = rule2.getRanking();
-            return Double.compare(ranking1, ranking2);
-        }
-
     }
 
     private boolean isFolder(Node node) throws RepositoryException {

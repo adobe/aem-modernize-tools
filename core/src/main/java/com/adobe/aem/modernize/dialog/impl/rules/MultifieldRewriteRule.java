@@ -42,6 +42,11 @@ public class MultifieldRewriteRule extends AbstractDialogRewriteRule {
     private static final String GRANITEUI_MULTIFIELD_RT = "granite/ui/components/coral/foundation/form/multifield";
     private static final String GRANITEUI_TEXTFIELD_RT = "granite/ui/components/coral/foundation/form/textfield";
 
+    @Override
+    public String getId() {
+        return this.getClass().getName();
+    }
+
     public boolean matches(Node root)
             throws RepositoryException {
         return hasXtype(root, XTYPE);

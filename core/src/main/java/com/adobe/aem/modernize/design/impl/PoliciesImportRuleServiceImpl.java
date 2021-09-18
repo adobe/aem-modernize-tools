@@ -121,9 +121,6 @@ public class PoliciesImportRuleServiceImpl implements PoliciesImportRuleService 
             }
         }
 
-        // sort rules according to their ranking
-        Collections.sort(rules, new PoliciesImportRuleServiceImpl.RuleComparator());
-
         LOGGER.debug("Found {} rules ({} Java-based, {} node-based)", rules.size(), jb, rules.size() - jb);
         if (LOGGER.isDebugEnabled()) {
             for (PoliciesImportRule rule : rules) {
@@ -144,16 +141,6 @@ public class PoliciesImportRuleServiceImpl implements PoliciesImportRuleService 
             types.addAll(r.getPatternSlingResourceTypes());
         }
         return types;
-    }
-
-    private class RuleComparator implements Comparator<PoliciesImportRule> {
-
-        public int compare(PoliciesImportRule rule1, PoliciesImportRule rule2) {
-            int ranking1 = rule1.getRanking();
-            int ranking2 = rule2.getRanking();
-            return Double.compare(ranking1, ranking2);
-        }
-
     }
 
     private boolean isFolder(Node node) throws RepositoryException {

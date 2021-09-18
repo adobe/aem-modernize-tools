@@ -19,7 +19,7 @@
 
 package com.adobe.aem.modernize.structure;
 
-import com.adobe.aem.modernize.RewriteRule;
+import com.adobe.aem.modernize.rule.RewriteRule;
 
 public interface StructureRewriteRule extends RewriteRule {
 }

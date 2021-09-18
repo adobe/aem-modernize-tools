@@ -66,6 +66,7 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
 
     private static final Logger logger = LoggerFactory.getLogger(ColumnControlRewriteRule.class);
 
+    private String id = this.getClass().getName();
     private int ranking = Integer.MAX_VALUE;
     private static final String PROP_LAYOUT = "layout";
     private static final String PROP_CONTROL_TYPE = "controlType";
@@ -85,7 +86,6 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
     private String layout;
     private long[] widths;
 
-
     @ObjectClassDefinition(
         // The name and description of the @ObjectClassDefinition define the name/description that show in the OSGi Console for this Component.
         name = "Column Control Rewrite Rule",
@@ -94,22 +94,27 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
     @interface Config {
         @AttributeDefinition(
             name = "Column Control ResourceType",
-            description =  "The sling:resourceType of this column control, leave blank to use Foundation component. (some customers extend/create their own)"
+            description = "The sling:resourceType of this column control, leave blank to use Foundation component. (some customers extend/create their own)"
         )
         String sling_resourceType() default PROP_RESOURCE_TYPE_DEFAULT;
 
         @AttributeDefinition(
             name = "Layout Property Value",
-            description =  "The value of the `layout` property on the primary column control component."
+            description = "The value of the `layout` property on the primary column control component."
         )
         String layout_value();
 
         @AttributeDefinition(
             name = "Column Widths",
-            description =  "An array of widths for each of the columns in target grid. (e.g. 50%/50% column control is [6,6] in target grid. 75%/25% => [8,4])",
+            description = "An array of widths for each of the columns in target grid. (e.g. 50%/50% column control is [6,6] in target grid. 75%/25% => [8,4])",
             cardinality = Integer.MAX_VALUE
         )
         String[] column_widths();
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -146,17 +151,17 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
             Node sibling = siblings.nextNode();
             if (sibling.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY) &&
                 StringUtils.equals(
-                        sibling.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(),
-                        resourceType)) {
+                    sibling.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(),
+                    resourceType)) {
 
                 // If it has a layout, then it's a new column control,
                 // This shouldn't ever happen, but who knows.
                 if (sibling.hasProperty(PROP_LAYOUT) && count != 0) {
                     return false;
 
-                // If we hit a break or end control, reduce the number of columns
+                    // If we hit a break or end control, reduce the number of columns
                 } else if (sibling.hasProperty(PROP_CONTROL_TYPE) &&
-                        (StringUtils.equals(sibling.getProperty(PROP_CONTROL_TYPE).getString(), CONTROL_TYPE_BREAK)
+                    (StringUtils.equals(sibling.getProperty(PROP_CONTROL_TYPE).getString(), CONTROL_TYPE_BREAK)
                         || StringUtils.equals(sibling.getProperty(PROP_CONTROL_TYPE).getString(), CONTROL_TYPE_END))) {
                     count--;
 
@@ -172,10 +177,11 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
 
     /**
      * Updates this node, the returned node is the primary column control resource, although this updates a number of sibling resources.
-     * @param root The root of the subtree to be rewritten
+     *
+     * @param root       The root of the subtree to be rewritten
      * @param finalNodes list of nodes that should not be processed
      * @return updated Node
-     * @throws RewriteException when an error occurs during the rewrite operation
+     * @throws RewriteException    when an error occurs during the rewrite operation
      * @throws RepositoryException when any repository operation error occurs
      */
     @Override
@@ -199,7 +205,7 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
             // Create the new first responsive grid.
             String gridName = JcrUtil.createValidChildName(parent, RESPONSIVE_GRID_NAME);
             Node grid = parent.addNode(gridName, JcrConstants.NT_UNSTRUCTURED);
-            if (i == 0){
+            if (i == 0) {
                 firstNodeName = grid.getName();
             }
             parent.orderBefore(grid.getName(), node.getName());
@@ -233,6 +239,7 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
         Dictionary<String, Object> props = context.getProperties();
         // read service ranking property
         this.ranking = PropertiesUtil.toInteger(props.get("service.ranking"), this.ranking);
+        this.id = PropertiesUtil.toString(props.get("service.pid"), this.id);
 
         resourceType = config.sling_resourceType();
         if (StringUtils.isBlank(resourceType)) {
@@ -258,8 +265,4 @@ public class ColumnControlRewriteRule implements StructureRewriteRule {
             }
         }
     }
-
-    @Override
-    public int getRanking() {
-        return this.ranking;
-    }}
+}

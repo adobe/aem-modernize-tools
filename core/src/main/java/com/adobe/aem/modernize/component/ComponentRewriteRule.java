@@ -21,7 +21,7 @@ package com.adobe.aem.modernize.component;
 import javax.jcr.RepositoryException;
 import java.util.Set;
 
-import com.adobe.aem.modernize.RewriteRule;
+import com.adobe.aem.modernize.rule.RewriteRule;
 
 /**
  * Interface for services that implement a component rewrite rule. A rewrite rule matches certain subtrees of the

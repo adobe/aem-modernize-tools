@@ -16,6 +16,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.design.PoliciesImportRuleService;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
@@ -82,6 +83,7 @@ public class FullConversionJobExecutor implements JobExecutor {
       }
       resourceResolver.commit();
 
+      // TODO: Clean this up
       if (paths.length != preparedPaths.length) {
         return context.result().message(String.format("Number requested paths to process [{}] does not match processed [{}]", paths.length, preparedPaths.length)).failed();
       }
@@ -90,9 +92,10 @@ public class FullConversionJobExecutor implements JobExecutor {
       context.log("Unable to log in using service user: {}", e.getLocalizedMessage());
       logger.error("Unable to log in using service user to perform conversion", e);
       return context.result().message("Unable to log in using service user.").failed();
-    } catch (PersistenceException e) {
-      context.log("Error when trying to save the changes.", e.getLocalizedMessage());
-      logger.error("Unable to save changes to repository.", e);
+    } catch (RewriteException | PersistenceException e) {
+      context.log("Error when trying to update the requested content.", e.getLocalizedMessage());
+      logger.error("Unable to make changes to repository.", e);
+      resourceResolver.revert();
       return context.result().message("Error when trying to save the changes.").failed();
     } finally {
       if (resourceResolver != null && resourceResolver.isLive()) {
@@ -171,7 +174,7 @@ public class FullConversionJobExecutor implements JobExecutor {
   /*
     Process the resource using the Component rules.
    */
-  private void processComponents(JobExecutionContext context, Resource root, Job job) {
+  private void processComponents(JobExecutionContext context, Resource root, Job job) throws RewriteException {
     final String[] rules = job.getProperty(PN_COMPONENT_RULES, String[].class);
     if (rules == null || rules.length == 0) {
       context.log("No component rules found, skipping skipping component conversion.");

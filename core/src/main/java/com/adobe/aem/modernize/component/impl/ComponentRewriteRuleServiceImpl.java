@@ -19,29 +19,41 @@
 
 package com.adobe.aem.modernize.component.impl;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
 
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.component.impl.rules.NodeBasedComponentRewriteRule;
-import com.day.cq.commons.jcr.JcrConstants;
+import com.adobe.aem.modernize.impl.TreeRewriter;
+import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import org.jetbrains.annotations.NotNull;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,108 +71,89 @@ import org.slf4j.LoggerFactory;
         )
     }
 )
+@Designate(ocd = ComponentRewriteRuleServiceImpl.Config.class)
 public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleService {
 
-    private Logger logger = LoggerFactory.getLogger(ComponentRewriteRuleServiceImpl.class);
-    /**
-     * Relative path to the node containing node-based component rewrite rules
-     */
-    public static final String RULES_SEARCH_PATH = "cq/modernize/component/rules";
+  private static final Logger logger = LoggerFactory.getLogger(ComponentRewriteRuleServiceImpl.class);
+  /**
+   * Keeps track of OSGi services implementing component rewrite rules
+   */
+  private final RankedServices<ComponentRewriteRule> rules = new RankedServices<>(Order.ASCENDING);
+  private Config config;
 
-    /**
-     * Keeps track of OSGi services implementing component rewrite rules
-     */
-    private List<ComponentRewriteRule> rules = Collections.synchronizedList(new LinkedList<>());
+  @SuppressWarnings("unused")
+  public void bindRule(ComponentRewriteRule rule, Map<String, Object> properties) {
+    rules.bind(rule, properties);
+  }
 
-    @SuppressWarnings("unused")
-    public void bindRule(ComponentRewriteRule rule) {
-        rules.add(rule);
-    }
+  @SuppressWarnings("unused")
+  public void unbindRule(ComponentRewriteRule rule, Map<String, Object> properties) {
+    rules.unbind(rule, properties);
+  }
 
-    @SuppressWarnings("unused")
-    public void unbindRule(ComponentRewriteRule rule) {
-        rules.remove(rule);
-    }
+  @Override
+  public void apply(@NotNull Resource resource, @NotNull String[] rules, boolean deep) throws RewriteException {
+    ResourceResolver rr = resource.getResourceResolver();
 
-    @Override
-    public void apply(@NotNull Resource resource, @NotNull String[] rules, boolean deep) {
-    }
-
-    public List<ComponentRewriteRule> getRules(ResourceResolver resolver) throws RepositoryException {
-        final List<ComponentRewriteRule> rules = new LinkedList<>();
-
-        // 1) rules provided as OSGi services
-        // (we need to synchronize, since the 'addAll' will iterate over 'rules')
-        synchronized (this.rules) {
-            rules.addAll(this.rules);
+    List<RewriteRule> rewrites = create(rr, rules);
+    Node node = resource.adaptTo(Node.class);
+    try {
+      if (deep) {
+        new TreeRewriter(rewrites).rewrite(node);
+      } else {
+        for (RewriteRule rule : rewrites) {
+          if (rule.matches(node)) {
+            rule.applyTo(node, new HashSet<>());
+          }
         }
-        int jb = rules.size();
+      }
+    } catch (RepositoryException e) {
+      logger.error("Error occurred while trying to perform a rewrite operation.", e);
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+    }
+  }
 
-        // 2) node-based rules
-        Resource resource = resolver.getResource(RULES_SEARCH_PATH);
-        if (resource != null) {
-            Node rulesContainer = resource.adaptTo(Node.class);
-            NodeIterator iterator = rulesContainer.getNodes();
-            while (iterator.hasNext()) {
-                Node nextNode = iterator.nextNode();
-                if (isFolder(nextNode)) {
-                    // add first level folder rules
-                    NodeIterator nodeIterator = nextNode.getNodes();
-                    while (nodeIterator.hasNext()) {
-                        Node nestedNode = nodeIterator.nextNode();
-                        // don't include nested folders
-                        if (!isFolder(nestedNode)) {
-                            rules.add(new NodeBasedComponentRewriteRule(nestedNode));
-                        }
-                    }
-                } else {
-                    // add rules directly at the rules search path
-                    rules.add(new NodeBasedComponentRewriteRule(nextNode));
-                }
+  @Activate
+  @Modified
+  protected void activate(Config config) {
+    this.config = config;
+  }
+
+  private List<RewriteRule> create(ResourceResolver rr, String[] rules) {
+    List<String> searchPaths = Arrays.asList(config.search_paths());
+
+    return Arrays.stream(rules).map(id -> {
+          RewriteRule rule = null;
+          if (PathUtils.isAbsolute(id)) {
+            Resource r = rr.getResource(id);
+            if (r != null && searchPaths.contains(PathUtils.getParentPath(r.getPath()))) {
+              try {
+                rule = new NodeBasedRewriteRule(r.adaptTo(Node.class));
+              } catch (RepositoryException e) {
+                logger.error(String.format("Unable to create RewriteRule for path: {}", id), e);
+              }
             }
-        }
+          } else { // Assume non-absolute path is a PID
+            rule = StreamSupport.stream(this.rules.spliterator(), false).filter(r -> StringUtils.equals(id, r.getId())).findFirst().orElse(null);
+          }
+          return rule;
+        })
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
 
-        // sort rules according to their ranking
-        Collections.sort(rules, new ComponentRewriteRuleServiceImpl.RuleComparator());
+  }
 
-        logger.debug("Found {} rules ({} Java-based, {} node-based)", rules.size(), jb, rules.size() - jb);
-        if (logger.isDebugEnabled()) {
-            for (ComponentRewriteRule rule : rules) {
-                logger.debug(rule.toString());
-            }
-        }
-
-        return rules;
-    }
-
-//    @Override
-    public Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException {
-        List<ComponentRewriteRule> rules = getRules(resolver);
-
-        Set<String> types = new HashSet<>(rules.size());
-
-        for (ComponentRewriteRule r : rules) {
-            types.addAll(r.getSlingResourceTypes());
-        }
-        return types;
-    }
-
-    private class RuleComparator implements Comparator<ComponentRewriteRule> {
-
-        public int compare(ComponentRewriteRule rule1, ComponentRewriteRule rule2) {
-            int ranking1 = rule1.getRanking();
-            int ranking2 = rule2.getRanking();
-            return Double.compare(ranking1, ranking2);
-        }
-
-    }
-
-    private boolean isFolder(Node node) throws RepositoryException {
-        String primaryType = node.getPrimaryNodeType().getName();
-
-        return primaryType.equals("sling:Folder")
-                || primaryType.equals("sling:OrderedFolder")
-                || primaryType.equals(JcrConstants.NT_FOLDER);
-    }
+  @ObjectClassDefinition(
+      name = "Component Rewrite Rule Service",
+      description = "Manages operations for performing component-level rewrites for Modernization tasks."
+  )
+  @interface Config {
+    @AttributeDefinition(
+        name = "Component Rule Paths",
+        description = "List of paths to find node-based Component Rewrite Rules",
+        cardinality = Integer.MAX_VALUE
+    )
+    String[] search_paths();
+  }
 
 }

@@ -55,6 +55,12 @@ public class ParsysRewriteRule implements StructureRewriteRule {
     private static final String PARSYS_RESOURCE_TYPE = "foundation/components/parsys";
 
     private int ranking = Integer.MAX_VALUE;
+    private String id = this.getClass().getName();
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
 
     @Override
     public boolean matches(Node root) throws RepositoryException {
@@ -107,10 +113,6 @@ public class ParsysRewriteRule implements StructureRewriteRule {
         Dictionary<String, Object> props = context.getProperties();
         // read service ranking property
         this.ranking = PropertiesUtil.toInteger(props.get("service.ranking"), Integer.MAX_VALUE);
-    }
-
-    @Override
-    public int getRanking() {
-        return this.ranking;
+        this.id = PropertiesUtil.toString(props.get("service.pid"), this.id);
     }
 }

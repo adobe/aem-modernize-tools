@@ -17,14 +17,23 @@
  *
  */
 
-package com.adobe.aem.modernize;
+package com.adobe.aem.modernize.rule;
 
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import com.adobe.aem.modernize.RewriteException;
 
 public interface RewriteRule {
+
+    /**
+     * Returns the unique identifier for this Rule.
+     *
+     * @return the id
+     */
+    String getId();
+
     /**
      * Returns true if this rule matches the given subtree.
      *
@@ -54,11 +63,4 @@ public interface RewriteRule {
      */
     Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException;
 
-    /**
-     * Returns the ranking of this rule. The larger the returned value, the lower the priority of the rule (the lowest
-     * priority corresponds to <code>Integer.MAX_VALUE</code>. The order of rules with equal rankings is arbitrary.
-     *
-     * @return The ranking
-     */
-    default int getRanking() { return Integer.MAX_VALUE; }
 }

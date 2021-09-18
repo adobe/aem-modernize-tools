@@ -28,6 +28,7 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -65,6 +66,7 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
     }
 
     private int ranking = Integer.MAX_VALUE;
+    private String id = this.getClass().getName();
 
     @Override
     public Set<String> getPatternSlingResourceTypes() throws RepositoryException {
@@ -74,6 +76,11 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
     @Override
     public String getReplacementSlingResourceType() throws RepositoryException {
         return RewriteUtils.RESPONSIVE_GRID_RES_TYPE;
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -102,6 +109,7 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
     protected void activate(ComponentContext context) throws RepositoryException {
         @SuppressWarnings("unchecked")
         Dictionary<String, Object> props = context.getProperties();
+        this.id = PropertiesUtil.toString(props.get("service.pid"), this.id);
         // read service ranking property
         Object ranking = props.get("service.ranking");
         if (ranking != null) {
@@ -112,10 +120,5 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
                 logger.warn("Found invalid service.ranking value {}", ranking);
             }
         }
-    }
-
-    @Override
-    public int getRanking() {
-        return this.ranking;
     }
 }

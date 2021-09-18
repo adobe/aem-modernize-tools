@@ -19,7 +19,6 @@
 package com.adobe.aem.modernize.design.impl;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.RewriteRule;
 import com.adobe.aem.modernize.design.PoliciesImportRule;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.designer.Style;
@@ -31,7 +30,6 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import org.slf4j.Logger;

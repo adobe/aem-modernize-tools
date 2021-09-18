@@ -77,7 +77,7 @@ public class ComponentConversionServlet extends SlingAllMethodsServlet {
 
         try {
             // get component rewrite rules
-            List<ComponentRewriteRule> rules = componentRewriteRuleService.getRules(request.getResourceResolver());
+            List<ComponentRewriteRule> rules = null; // componentRewriteRuleService.getRules(request.getResourceResolver());
 
             long tick = System.currentTimeMillis();
             Session session = request.getResourceResolver().adaptTo(Session.class);
