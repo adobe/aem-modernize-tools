@@ -118,17 +118,11 @@ public class ComponentRewriteRuleServiceImplTest {
     new Expectations() {{
       matchedRewriteRule.getId();
       result = "com.adobe.aem.modernize.component.ComponentRewriteRuleFound";
-      matchedRewriteRule.matches(withInstanceOf(Node.class));
-      result = true;
-      matchedRewriteRule.applyTo(withInstanceOf(Node.class), withInstanceOf(Set.class));
-      notMatchedRewriteRule.getId();
-      result = "Not Matched";
-      minTimes = 0;
     }};
     Resource resource = context.resourceResolver().getResource("/content/test/shallow/simple");
     componentRewriteRuleService.apply(resource, rules, false);
 
-    assertEquals(2, callCounts[0], "Correct number of matched called.");
+    assertEquals(1, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
   }
 

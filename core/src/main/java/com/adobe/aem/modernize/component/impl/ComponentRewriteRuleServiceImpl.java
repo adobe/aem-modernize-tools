@@ -104,6 +104,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         for (RewriteRule rule : rewrites) {
           if (rule.matches(node)) {
             rule.applyTo(node, new HashSet<>());
+            break;
           }
         }
       }
