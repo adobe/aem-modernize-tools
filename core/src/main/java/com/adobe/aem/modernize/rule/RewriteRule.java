@@ -54,7 +54,7 @@ public interface RewriteRule {
      * <p>Optionally, the implementation can indicate which nodes of the resulting tree are final and therefore
      * safe for the algorithm to skip in subsequent traversals of the tree. Add the paths of final nodes to the
      * specified set.
-     **
+     *
      * @param root The root of the subtree to be rewritten
      * @param finalNodes list of nodes to which should not be updated
      * @return the root node of the rewritten tree, or null if it was removed
