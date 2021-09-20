@@ -194,7 +194,7 @@ public abstract class AbstractNodeBasedRewriteRule implements RewriteRule {
     }
     private boolean matches(Node root, Node pattern) throws RepositoryException {
         // check if the primary types match
-        if (!RewriteUtils.hasPrimaryType(root, pattern.getPrimaryNodeType().getName())) {
+        if (!StringUtils.equals(root.getPrimaryNodeType().getName(), pattern.getPrimaryNodeType().getName())) {
             return false;
         }
 

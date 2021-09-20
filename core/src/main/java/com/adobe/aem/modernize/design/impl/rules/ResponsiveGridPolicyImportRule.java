@@ -85,8 +85,7 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
 
     @Override
     public boolean matches(Node root) throws RepositoryException {
-
-        if (!RewriteUtils.hasPrimaryType(root, JcrConstants.NT_UNSTRUCTURED)) {
+        if (!StringUtils.equals(root.getPrimaryNodeType().getName(), JcrConstants.NT_UNSTRUCTURED)) {
             return false;
         }
 

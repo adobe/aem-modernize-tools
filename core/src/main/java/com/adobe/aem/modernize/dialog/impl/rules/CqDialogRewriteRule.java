@@ -23,6 +23,8 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.dialog.AbstractDialogRewriteRule;
 import com.adobe.aem.modernize.dialog.DialogRewriteRule;
@@ -30,7 +32,6 @@ import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
 import org.osgi.service.component.annotations.Component;
 import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
-import static com.adobe.aem.modernize.impl.RewriteUtils.*;
 
 /**
  * Rule that rewrites the basic structure of dialogs. It creates a Granite UI container using either a "tabs" or
@@ -44,7 +45,7 @@ import static com.adobe.aem.modernize.impl.RewriteUtils.*;
 public class CqDialogRewriteRule extends AbstractDialogRewriteRule {
 
     public boolean matches(Node root) throws RepositoryException {
-        return hasPrimaryType(root, NT_DIALOG);
+        return StringUtils.equals(root.getPrimaryNodeType().getName(), NT_DIALOG);
     }
 
     @Override

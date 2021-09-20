@@ -37,18 +37,6 @@ import com.day.text.ISO9075;
 public class RewriteUtils {
 
     public static final String RESPONSIVE_GRID_RES_TYPE = "wcm/foundation/components/responsivegrid";
-    /**
-     * Checks if a node has a certain primary type.
-     *
-     * @param node The node to check
-     * @param typeName The name of the primary type to check
-     * @return true if the node has the specified primary type, false otherwise
-     * @throws RepositoryException when any repository operation error occurs
-     */
-    public static boolean hasPrimaryType(Node node, String typeName)
-            throws RepositoryException {
-        return typeName != null && typeName.equals(node.getPrimaryNodeType().getName());
-    }
 
     /**
      * Renames the specified node to a temporary name.

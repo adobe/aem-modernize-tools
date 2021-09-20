@@ -24,6 +24,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.request.RequestPathInfo;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -32,7 +33,6 @@ import com.adobe.aem.modernize.dialog.DialogRewriteRule;
 import com.day.cq.commons.PathInfo;
 import com.day.cq.commons.jcr.JcrUtil;
 import org.osgi.service.component.annotations.Component;
-import static com.adobe.aem.modernize.impl.RewriteUtils.hasPrimaryType;
 import static com.adobe.aem.modernize.dialog.DialogRewriteUtils.*;
 
 /**
@@ -81,7 +81,7 @@ public class IncludeRewriteRule extends AbstractDialogRewriteRule {
 
         Node node = session.getNode(path);
         // check if referenced node is a widget collection
-        if (hasPrimaryType(node, "cq:WidgetCollection")) {
+        if (!StringUtils.equals(node.getPrimaryNodeType().getName(), "cq:WidgetCollection")) {
             NodeIterator iterator = node.getNodes();
             Node newRoot = null;
             // copy all items of the widget collection
