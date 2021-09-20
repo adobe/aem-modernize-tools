@@ -105,7 +105,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
       if (!matches(iterator.nextNode(), iterator.nextPattern())) {
         return false;
       }
-      if (iterator.hasMatchingLength()) {
+      if (!iterator.checkNext()) {
         return false;
       }
     }
@@ -260,7 +260,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     }
 
     // Check if there are more patterns, if so, but no more nodes, does not match
-    public boolean hasMatchingLength() {
+    public boolean checkNext() {
       return !patternIterator.hasNext() || nodeIterator.hasNext();
     }
   }

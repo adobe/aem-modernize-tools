@@ -377,5 +377,40 @@
         "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
       }
     }
+  },
+  "aggregateLongerThanNodes": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "simple": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "geometrixx/components/simple"
+        },
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "geometrixx/components/title"
+        },
+        "text": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "foundation/components/text"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "foundation/components/image"
+        },
+        "lead": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "geometrixx/components/lead"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+      }
+    }
   }
 }

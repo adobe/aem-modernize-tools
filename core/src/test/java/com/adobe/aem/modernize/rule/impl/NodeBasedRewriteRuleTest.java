@@ -76,6 +76,7 @@ public class NodeBasedRewriteRuleTest {
     rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/missingChild").adaptTo(Node.class));
     assertFalse(rule.matches(content));
 
+    // Tree checks
     content = rr.getResource(CONTENT_ROOT + "/simpleTree").adaptTo(Node.class);
     rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/missingGrandChild").adaptTo(Node.class));
     assertFalse(rule.matches(content));
@@ -88,10 +89,16 @@ public class NodeBasedRewriteRuleTest {
     rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/wrongGrandChildPropertyValue").adaptTo(Node.class));
     assertFalse(rule.matches(content));
 
-    content = rr.getResource(CONTENT_ROOT + "/aggregate").adaptTo(Node.class);
+
+    // Aggregate negative checks
+    content = rr.getResource(CONTENT_ROOT + "/aggregate/title").adaptTo(Node.class);
     rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/aggregateNotMatched").adaptTo(Node.class));
     assertFalse(rule.matches(content));
     rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/aggregateIntermediateNode").adaptTo(Node.class));
+    assertFalse(rule.matches(content));
+
+    content = rr.getResource(CONTENT_ROOT + "/aggregate/simple").adaptTo(Node.class);
+    rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/aggregateLongerThanNodes").adaptTo(Node.class));
     assertFalse(rule.matches(content));
 
   }
