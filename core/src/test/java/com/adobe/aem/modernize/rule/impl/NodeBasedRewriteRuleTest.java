@@ -30,7 +30,7 @@ public class NodeBasedRewriteRuleTest {
 
 
   @Test
-  public void testNegativeMatches() throws Exception {
+  public void testDoesNotMatch() throws Exception {
     context.load().json("/rewrite/test-negative-rules.json", RULES_ROOT);
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + "/simple").adaptTo(Node.class);
@@ -104,11 +104,25 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
-  public void testMatchPattern() {
-    context.load().json("/rewrite/test-simple-rules.json", RULES_ROOT);
+  public void testMatches() throws Exception {
+    context.load().json("/rewrite/test-simple-rules.json", RULES_ROOT + "/simple");
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + "/simple").adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/simple/simple").adaptTo(Node.class));
+    assertTrue(rule.matches(content));
 
+    content = rr.getResource(CONTENT_ROOT + "/rewriteOptional").adaptTo(Node.class);
+    rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/simple/rewriteOptional").adaptTo(Node.class));
+    assertTrue(rule.matches(content));
+
+    content = rr.getResource(CONTENT_ROOT + "/nestedRewriteOptional").adaptTo(Node.class);
+    rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/simple/nestedRewriteOptional").adaptTo(Node.class));
+    assertTrue(rule.matches(content));
+
+    context.load().json("/rewrite/test-aggregate-rules.json", RULES_ROOT + "/aggregate");
+    content = rr.getResource(CONTENT_ROOT + "/aggregate/simple").adaptTo(Node.class);
+    rule = new NodeBasedRewriteRule(rr.getResource(RULES_ROOT + "/aggregate/aggregate").adaptTo(Node.class));
+    assertTrue(rule.matches(content));
   }
 
 }

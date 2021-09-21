@@ -30,7 +30,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   /**
    * Creates a new RewriteRule referencing the specified path.
    *
-   * @param node
+   * @param node the node containing the rewrite data
    */
   public NodeBasedRewriteRule(@NotNull Node node) throws RepositoryException {
     this.rule = node;
@@ -121,16 +121,16 @@ public class NodeBasedRewriteRule implements RewriteRule {
       return false;
 
       // Check the properties
-    } else if (!match(node, pattern.getProperties())) {
+    } else if (!matchProperties(node, pattern.getProperties())) {
       return false;
     }
 
     // Check the children tree
-    return match(node, pattern);
+    return matchTree(node, pattern);
   }
 
   // Checks for required properties on Node
-  private boolean match(Node node, PropertyIterator requiredProperties) throws RepositoryException {
+  private boolean matchProperties(Node node, PropertyIterator requiredProperties) throws RepositoryException {
     // check that all properties of the pattern match
     while (requiredProperties.hasNext()) {
       Property property = requiredProperties.nextProperty();
@@ -160,7 +160,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   }
 
   // Check content tree for required children.
-  private boolean match(Node node, Node patterns) throws RepositoryException {
+  private boolean matchTree(Node node, Node patterns) throws RepositoryException {
     // check that the tree contains all children defined in the pattern (optimization measure, before
     // checking all children recursively)
     String rootPath = patterns.getPath();
@@ -193,7 +193,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
         return false;
 
         // Check that the required relative path is in the node's structure
-      } else if (!match(node.getNode(relativePath), pattern.getProperties())) {
+      } else if (!matchProperties(node.getNode(relativePath), pattern.getProperties())) {
         return false;
       }
     }

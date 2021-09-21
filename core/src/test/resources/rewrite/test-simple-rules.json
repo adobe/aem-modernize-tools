@@ -104,6 +104,31 @@
       }
     }
   },
+  "nestedRewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geometrixx/components/rewriteOptional",
+        "items": {
+          "jcr:primaryType": "nt:unstructured",
+          "item0": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "geometrixx/components/rewriteOptional/item",
+            "cq:rewriteOptional": true
+          }
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteOptional": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
   "rewriteRanking": {
     "cq:rewriteRanking" : "3",
     "jcr:primaryType": "nt:unstructured",
