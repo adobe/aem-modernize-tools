@@ -154,7 +154,7 @@
     "rewrite-remove-prefix": "prefix-token",
     "rewrite-remove-suffix": "token-suffix",
     "rewrite-concat-tokens": "token1-separator-token2",
-    "rewrite-single-operand": "prefix-token",
+    "rewrite-no-capture-use": "prefix-token",
     "rewrite-boolean": true
   },
   "simpleTree": {
@@ -191,7 +191,7 @@
     },
     "text": {
       "jcr:primaryType": "nt:unstructured",
-      "text": "Text of the Text Component",
+      "text": "<p>Text of the Text Component</p>",
       "sling:resourceType": "foundation/components/text"
     },
     "image": {

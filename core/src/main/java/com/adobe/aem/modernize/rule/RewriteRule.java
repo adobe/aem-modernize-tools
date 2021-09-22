@@ -63,4 +63,5 @@ public interface RewriteRule {
      */
     Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException;
 
+    default int getRanking() { return Integer.MAX_VALUE; }
 }

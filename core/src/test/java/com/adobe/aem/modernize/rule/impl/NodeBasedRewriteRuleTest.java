@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
+import static com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule.*;
+
 @ExtendWith(SlingContextExtension.class)
 public class NodeBasedRewriteRuleTest {
 
@@ -38,8 +40,16 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
-  public void testRanking() {
-    fail("Not Implemented");
+  public void testRanking() throws Exception {
+    ResourceResolver rr = context.resourceResolver();
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/rewriteRanking").adaptTo(Node.class));
+    assertEquals(3, rule.getRanking(), "Provided ranking match");
+
+    rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/simple").adaptTo(Node.class));
+    assertEquals(Integer.MAX_VALUE, rule.getRanking(), "Default ranking match");
+
+    rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/remove").adaptTo(Node.class));
+    assertEquals(Integer.MAX_VALUE, rule.getRanking(), "Invalid ranking match");
   }
 
   @Test
@@ -125,7 +135,7 @@ public class NodeBasedRewriteRuleTest {
     rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/nestedRewriteOptional").adaptTo(Node.class));
     assertTrue(rule.matches(content), "Nested rewrite optional");
 
-    content = rr.getResource(CONTENT_ROOT + "/aggregate/simple").adaptTo(Node.class);
+    content = rr.getResource(CONTENT_ROOT + "/aggregate/title").adaptTo(Node.class);
     rule = new NodeBasedRewriteRule(rr.getResource(AGGREGATE_ROOT + "/aggregate").adaptTo(Node.class));
     assertTrue(rule.matches(content), "Simple aggregate match");
   }
@@ -152,7 +162,6 @@ public class NodeBasedRewriteRuleTest {
     rule = new NodeBasedRewriteRule(rr.getResource(AGGREGATE_ROOT + "/remove").adaptTo(Node.class));
     rule.applyTo(content, new HashSet<>());
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
-    content.getSession().save();
     assertNull(rr.getResource(CONTENT_ROOT + "/aggregate/title"), "Aggregate title node was removed");
     assertNull(rr.getResource(CONTENT_ROOT + "/aggregate/text"), "Aggregate text node was removed");
     assertNull(rr.getResource(CONTENT_ROOT + "/aggregate/image"), "Aggregate image node was removed");
@@ -182,6 +191,7 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.hasProperty(PN_CQ_COPY_CHILDREN), "Directive property removed");
     assertNotNull(updated.getNode("items"), "Items child was copied");
     assertNotNull(updated.getNode("header"), "Header child was copied");
   }
@@ -196,6 +206,7 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.getNode("parsys").hasProperty(PN_CQ_COPY_CHILDREN), "Directive property removed");
     assertNotNull(updated.getNode("parsys/items"), "Items child was copied");
     assertNotNull(updated.getNode("parsys/header"), "Header child was copied");
   }
@@ -210,6 +221,7 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.getNode("items").hasProperty(PN_CQ_ORDER_BEFORE), "Directive property removed");
     NodeIterator children = updated.getNodes();
     assertEquals("parsys", children.nextNode().getName(), "Correct order");
     assertEquals("items", children.nextNode().getName(), "Correct order");
@@ -226,9 +238,11 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+
     assertEquals("map-property-1", updated.getProperty("map-property-simple").getString(), "Simple mapped value");
     assertFalse(updated.getProperty("map-property-negation").getBoolean(), "Negated mapped value");
     assertEquals("map-property-3", updated.getProperty("map-property-nested").getString(), "Nested mapped value");
+    assertFalse(updated.hasProperty("map-property-unknown"), "Bad source reference is removed.");
     assertFalse(updated.hasNode("items"), "Items not copied");
     assertEquals("default", updated.getProperty("map-property-default").getString(), "Default mapped value");
     assertEquals("default", updated.getProperty("map-property-default-quoted").getString(), "Quoted Default mapped value");
@@ -249,7 +263,7 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
-  public void testRewriteMapChildren() throws Exception {
+  public void testRewriteMapChildrenApplyTo() throws Exception {
     final String nodePath = "/rewriteMapChildren";
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
@@ -258,6 +272,7 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.getNode("items").hasProperty(PN_CQ_MAP_CHILDREN), "Directive property removed");
     assertFalse(updated.hasNode("notItems"), "NotItems not found.");
     assertTrue(updated.hasNode("items"), "Items found.");
     assertTrue(updated.hasNode("items/item1"), "Item child found.");
@@ -265,7 +280,7 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
-  public void testRewriteMapChildrenNested() throws Exception {
+  public void testRewriteMapChildrenNestedApplyTo() throws Exception {
     final String nodePath = "/rewriteMapChildrenNested";
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
@@ -274,6 +289,7 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.getNode("items/item2").hasProperty(PN_CQ_COPY_CHILDREN), "Directive property removed");
     assertFalse(updated.hasNode("items/not-item2"), "not-item2 not found.");
     assertTrue(updated.hasNode("items"), "Items found.");
     assertTrue(updated.hasNode("items/item1"), "Item child found.");
@@ -281,7 +297,7 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
-  public void testRewriteFinal() throws Exception {
+  public void testRewriteFinalApplyTo() throws Exception {
     final String nodePath = "/rewriteFinal";
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
@@ -290,12 +306,14 @@ public class NodeBasedRewriteRuleTest {
     rule.applyTo(content, finalPaths);
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
+    Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.hasProperty(PN_CQ_COPY_CHILDREN), "Directive property removed");
     assertEquals(1, finalPaths.size(), "Final node list size");
     assertEquals(CONTENT_ROOT + nodePath, finalPaths.stream().findFirst().get(), "Final node path");
   }
 
   @Test
-  public void testReplacementRewriteFinal() throws Exception {
+  public void testReplacementRewriteFinalApplyTo() throws Exception {
     final String nodePath = "/replacementRewriteFinal";
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
@@ -307,5 +325,50 @@ public class NodeBasedRewriteRuleTest {
     assertEquals(2, finalPaths.size(), "Final node list size");
     assertTrue(finalPaths.contains(CONTENT_ROOT + nodePath), "Final root node path");
     assertTrue(finalPaths.contains(CONTENT_ROOT + nodePath + "/items"), "Final root node path");
+  }
+
+  @Test
+  public void testRewritePropertiesApplyTo() throws Exception {
+    final String nodePath = "/rewriteProperties";
+    ResourceResolver rr = context.resourceResolver();
+    Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + nodePath).adaptTo(Node.class));
+    Set<String> finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+
+    Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.hasNode(NN_CQ_REWRITE_PROPERTIES), "Directive node removed");
+
+    assertEquals("token", updated.getProperty("rewrite-remove-prefix").getString(), "Prefix rewrite");
+    assertEquals("token", updated.getProperty("rewrite-remove-suffix").getString(), "Suffix rewrite");
+    assertEquals("token1token2", updated.getProperty("rewrite-concat-tokens").getString(), "Concat rewrite");
+    assertEquals("prefix-token", updated.getProperty("rewrite-no-capture-use").getString(), "No capture use rewrite");
+    assertTrue(updated.getProperty("rewrite-boolean").getBoolean(), "Boolean rewrite (not supported)");
+
+  }
+
+  @Test
+  public void testAggregateApplyTo() throws Exception {
+    ResourceResolver rr = context.resourceResolver();
+    Node content = rr.getResource(CONTENT_ROOT + "/aggregate/title").adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(AGGREGATE_ROOT + "/aggregate").adaptTo(Node.class));
+    Set<String> finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+
+    Node updated = rr.getResource(CONTENT_ROOT + "/aggregate/title").adaptTo(Node.class);
+
+    // Aggregate nodes were removed
+    Node parent = updated.getParent();
+    assertFalse(parent.hasNode("text"), "Title node removed");
+    assertFalse(parent.hasNode("image"), "Image node removed");
+    assertEquals("core/wcm/components/teaser/v1/teaser", updated.getProperty("sling:resourceType").getString(), "sling:resourceType value");
+    assertEquals("Strategic Consulting", updated.getProperty("jcr:title").getString(), "jcr:title value");
+    assertEquals("<p>Text of the Text Component</p>", updated.getProperty("jcr:description").getString(), "jcr:description value");
+    assertTrue(updated.getProperty("textIsRich").getBoolean(), "textIsRich value");
+    assertEquals("/content/dam/aem-modernize/portraits/jane_doe.jpg", updated.getProperty("fileReference").getString(), "fileReference value");
   }
 }

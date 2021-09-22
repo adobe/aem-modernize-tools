@@ -23,6 +23,8 @@ import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NodeBasedRewriteRule implements RewriteRule {
 
@@ -30,17 +32,21 @@ public class NodeBasedRewriteRule implements RewriteRule {
   public static final String NN_PATTERNS = "patterns";
   public static final String NN_AGGREGATE = "aggregate";
   public static final String NN_REPLACEMENT = "replacement";
-  public static final String PN_REWRITE_OPTIONAL = "cq:rewriteOptional";
-  public static final String PN_REWRITE_FINAL = "cq:rewriteFinal";
-  public static final String PN_COPY_CHILDREN = "cq:copyChildren";
-  public static final String PN_ORDER_BEFORE = "cq:orderBefore";
-  public static final String PN_MAP_CHILDREN = "cq:rewriteMapChildren";
+  public static final String PN_CQ_RANKING = "cq:rewriteRanking";
+  public static final String PN_CQ_REWRITE_OPTIONAL = "cq:rewriteOptional";
+  public static final String PN_CQ_REWRITE_FINAL = "cq:rewriteFinal";
+  public static final String PN_CQ_COPY_CHILDREN = "cq:copyChildren";
+  public static final String PN_CQ_ORDER_BEFORE = "cq:orderBefore";
+  public static final String PN_CQ_MAP_CHILDREN = "cq:rewriteMapChildren";
 
+  private static final Logger logger = LoggerFactory.getLogger(NodeBasedRewriteRule.class);
+  private static final Pattern PATTERN_NODE_PATTERN = Pattern.compile("\\[pattern:(.*)\\]");
 
   // pattern that matches the regex for mapped properties: ${<path>}
   private static final Pattern MAPPED_PATTERN = Pattern.compile("^(\\!{0,1})\\$\\{(\'.*?\'|.*?)(:(.+))?\\}$");
   private final Node rule;
   private final String id;
+  private Integer ranking;
 
   /**
    * Creates a new RewriteRule referencing the specified path.
@@ -58,6 +64,23 @@ public class NodeBasedRewriteRule implements RewriteRule {
   }
 
   @Override
+  public int getRanking() {
+    if (ranking == null) {
+      try {
+        if (rule.hasProperty(PN_CQ_RANKING)) {
+          this.ranking = Long.valueOf( rule.getProperty(PN_CQ_RANKING).getLong()).intValue();
+        } else {
+          this.ranking = RewriteRule.super.getRanking();
+        }
+      } catch (RepositoryException e) {
+        logger.warn("Caught exception while reading the {} property from rule, using default: {}", PN_CQ_RANKING, e.getLocalizedMessage());
+        this.ranking = RewriteRule.super.getRanking();
+      }
+    }
+    return this.ranking;
+  }
+
+  @Override
   public boolean matches(Node root) throws RepositoryException {
 
     // Need some kind of replacement, or it is an invalid rule.
@@ -67,9 +90,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
 
     if (rule.hasNode(NN_PATTERNS)) {
       return matchesPattern(root);
-    }
-
-    if (rule.hasNode(NN_AGGREGATE)) {
+    } else if (isAggregate()) {
       return matchesAggregate(root);
     }
     return false;
@@ -86,41 +107,42 @@ public class NodeBasedRewriteRule implements RewriteRule {
     // i.e. we remove the original tree
     Node replacement = rule.getNode(NN_REPLACEMENT);
     if (!replacement.hasNodes()) {
-      if (rule.hasNode(NN_AGGREGATE)) {
-        Node parent = root.getParent();
-        NodeIterator patterns = rule.getNode(NN_AGGREGATE).getNode(NN_PATTERNS).getNodes();
-        while (patterns.hasNext()) {
-          parent.getNode(patterns.nextNode().getName()).remove();
-        }
-      } else {
-        root.remove();
-      }
+      processRemovals(root);
       return null;
     }
 
     // true if the replacement tree is final and all its nodes are excluded from
     // further processing by the algorithm
     boolean treeIsFinal = false;
-    if (replacement.hasProperty(PN_REWRITE_FINAL)) {
-      treeIsFinal = replacement.getProperty(PN_REWRITE_FINAL).getBoolean();
+    if (replacement.hasProperty(PN_CQ_REWRITE_FINAL)) {
+      treeIsFinal = replacement.getProperty(PN_CQ_REWRITE_FINAL).getBoolean();
     }
     /**
      * Approach:
-     * - copy the tree to be rewritten to a temporary name
-     * - delete the original
+     * - rename (move) the tree to be rewritten to a temporary name
      * - copy the replacement tree to be a new child of the original tree's parent with the original's name
      * - process the copied replacement tree (mapped properties, children, etc.)
-     * - at the end, we remove the original tree
+     * - at the end, remove the original tree
      */
     // move (rename) original tree
+    Map<String, String> patternNodeNames = new HashMap<>();
     Node parent = root.getParent();
-    String originalName = root.getName();
+    Node source;
+
     String tmpName = JcrUtil.createValidChildName(parent, "tmp-" + System.currentTimeMillis());
+    if (isAggregate()) {
+      source = parent;
+      // Used in potential aggregate use case
+      patternNodeNames = createPatternNodeMapping(parent, tmpName);
+    } else {
+      source = root;
+    }
+
+    String originalName = root.getName();
     root.getSession().move(root.getPath(), PathUtils.concat(parent.getPath(), tmpName));
 
     // copy replacement to original tree under original name
     Node replacementNext = replacement.getNodes().nextNode();
-
     Node updated = JcrUtil.copy(replacementNext, parent, originalName);
 
     // collect mappings: (node in original tree) -> (node in replacement tree)
@@ -131,14 +153,21 @@ public class NodeBasedRewriteRule implements RewriteRule {
 
       // Rewrite Properties is special case - store it for later when processing properties
       Node rewritePropertiesNode = null;
+      if (node.hasNode(NN_CQ_REWRITE_PROPERTIES)) {
+        rewritePropertiesNode = node.getNode(NN_CQ_REWRITE_PROPERTIES);
+      }
 
       // Store this node as being final, if the tree isn't already set
-      if (processProperties(root, node, rewritePropertiesNode, mappings) && !treeIsFinal) {
+      if (processProperties(source, node, rewritePropertiesNode, patternNodeNames, mappings) && !treeIsFinal) {
         finalPaths.add(node.getPath());
+      }
+
+      if (rewritePropertiesNode != null) {
+        rewritePropertiesNode.remove();
       }
     }
 
-    mappings.processCopies(root, updated);
+    mappings.processCopies(source, updated);
     mappings.processOrder(updated);
 
     if (treeIsFinal) {
@@ -146,8 +175,75 @@ public class NodeBasedRewriteRule implements RewriteRule {
         finalPaths.add(n.getPath());
       }
     }
-    root.remove();
+
+    // Remove the nodes - aggregate were consolidated to one.
+    if (isAggregate()) {
+      for (String name : patternNodeNames.values()) {
+        parent.getNode(name).remove();
+      }
+    } else {
+      root.remove();
+    }
+
     return updated;
+  }
+
+  private boolean isAggregate() throws RepositoryException {
+    return rule.hasNode(NN_AGGREGATE);
+  }
+
+  private void processRemovals(Node root) throws RepositoryException {
+    if (isAggregate()) {
+      // Aggregate patterns match
+      NodeIterator patterns = rule.getNode(NN_AGGREGATE).getNode(NN_PATTERNS).getNodes();
+      Node parent = root.getParent();
+      NodeIterator siblings = parent.getNodes();
+      List<String> names = new ArrayList<>();
+      // Find this node in the parent's node list
+      while (siblings.hasNext()) {
+        Node sibling = siblings.nextNode();
+        if (root.getPath().equals(sibling.getPath())) {
+          patterns.next();
+          names.add(sibling.getName());
+          break;
+        }
+      }
+      // Get the remaining pattern matched nodes
+      while (patterns.hasNext()) {
+        patterns.next();
+        names.add(siblings.nextNode().getName());
+      }
+      for (String name : names) {
+        parent.getNode(name).remove();
+      }
+    } else {
+      root.remove();
+    }
+  }
+
+  /*
+    Creates a map of pattern node names to the name of the node it mached
+   */
+  private Map<String, String> createPatternNodeMapping(Node parent, String newName) throws RepositoryException {
+    Map<String, String> mapping = new HashMap<>();
+    NodeIterator patterns = rule.getNode(NN_AGGREGATE).getNode(NN_PATTERNS).getNodes();
+    Node pattern = patterns.nextNode();
+
+    NodeIterator children = parent.getNodes();
+    while (children.hasNext()) {
+      Node child = children.nextNode();
+      if (matches(child, pattern)) {
+        // First child that matched will be what gets renamed
+        mapping.put(pattern.getName(), newName);
+        break;
+      }
+    }
+
+    while (patterns.hasNext()) {
+      mapping.put(patterns.nextNode().getName(), children.nextNode().getName());
+    }
+
+    return mapping;
   }
 
   /*
@@ -227,7 +323,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
       }
 
       // Optional rewrites don't fail matching
-      if (PN_REWRITE_OPTIONAL.equals(name)) {
+      if (PN_CQ_REWRITE_OPTIONAL.equals(name)) {
         continue;
       }
 
@@ -259,7 +355,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     while (patternChildren.hasNext()) {
       for (Node child : new TreeTraverser(patternChildren.nextNode())) {
         // Skip optional children trees
-        if (child.hasProperty(PN_REWRITE_OPTIONAL)) {
+        if (child.hasProperty(PN_CQ_REWRITE_OPTIONAL)) {
           continue;
         }
         // Check that the required relative path is in the node's structure
@@ -290,7 +386,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   /*
    * Replaces the value of a mapped property with a value from the original tree.
    */
-  protected Property mapProperty(Node original, Property property) throws RepositoryException {
+  protected Property mapProperty(Node original, Property property, Map<String, String> patternMappings) throws RepositoryException {
     if (property.getType() != PropertyType.STRING) {
       // a mapped property must be of type string
       return null;
@@ -307,7 +403,20 @@ public class NodeBasedRewriteRule implements RewriteRule {
 
     boolean deleteProperty = false;
     for (Value value : values) {
-      Matcher matcher = MAPPED_PATTERN.matcher(value.getString());
+      String reference = value.getString();
+
+      if (isAggregate()) {
+        Matcher patternMatcher = PATTERN_NODE_PATTERN.matcher(reference);
+        while (patternMatcher.find()) {
+          String name = patternMappings.get(patternMatcher.group(1));
+          if (name != null) {
+            reference = patternMatcher.replaceFirst(name);
+            patternMatcher.reset(reference);
+          }
+        }
+      }
+
+      Matcher matcher = MAPPED_PATTERN.matcher(reference);
       if (matcher.matches()) {
         // this is a mapped property, we will delete it if the mapped destination property doesn't exist
         deleteProperty = true;
@@ -344,7 +453,6 @@ public class NodeBasedRewriteRule implements RewriteRule {
             } else {
               property.setValue(defaultValue);
             }
-
             deleteProperty = false;
             break;
           }
@@ -361,9 +469,9 @@ public class NodeBasedRewriteRule implements RewriteRule {
   }
 
   /*
-    Process the properties for the rewritten node
+    Process the properties for the rewritten node; returns indication if this node was considered "final"
    */
-  private boolean processProperties(Node originalContent, Node node, Node rewritePropertiesNode, TreeStructure mapping) throws RepositoryException {
+  private boolean processProperties(Node originalContent, Node node, Node rewritePropertiesNode, Map<String, String> patternMappings, TreeStructure mapping) throws RepositoryException {
     PropertyIterator propertyIterator = node.getProperties();
     boolean nodeIsFinal = false;
     while (propertyIterator.hasNext()) {
@@ -374,7 +482,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
       }
 
       // add mapping to collection
-      if (PN_MAP_CHILDREN.equals(property.getName())) {
+      if (PN_CQ_MAP_CHILDREN.equals(property.getName())) {
         mapping.addNodeMapping(node.getParent().getPath(), property.getString(), node.getName());
         // remove property, as we don't want it to be part of the result
         property.remove();
@@ -382,7 +490,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
       }
 
       // Add the mapping order
-      if (PN_ORDER_BEFORE.equals(property.getName())) {
+      if (PN_CQ_ORDER_BEFORE.equals(property.getName())) {
         mapping.addOrder(node.getPath(), property.getString());
         // remove order, as we don't want it to be part of the result
         property.remove();
@@ -390,30 +498,26 @@ public class NodeBasedRewriteRule implements RewriteRule {
       }
 
       // Set up the status of this node being final
-      if (PN_REWRITE_FINAL.equals(property.getName())) {
+      if (PN_CQ_REWRITE_FINAL.equals(property.getName())) {
         nodeIsFinal = true;
         property.remove();
         continue;
       }
 
       // Set the flag if we are supposed to copy the children node.
-      if (PN_COPY_CHILDREN.equals(property.getName())) {
+      if (PN_CQ_COPY_CHILDREN.equals(property.getName())) {
         // Store path relative to start of traversal for copying nodes.
         mapping.addCopyChildrenPath(node.getPath());
         property.remove();
         continue;
       }
       // set value from original tree in case this is a mapped property
-      Property mappedProperty = mapProperty(originalContent, property);
+      Property mappedProperty = mapProperty(originalContent, property, patternMappings);
       if (mappedProperty != null && rewritePropertiesNode != null) {
         if (rewritePropertiesNode.hasProperty("./" + mappedProperty.getName())) {
           rewriteProperty(property, rewritePropertiesNode.getProperty("./" + mappedProperty.getName()));
         }
       }
-    }
-    // remove <cq:rewriteProperties> node post-mapping
-    if (rewritePropertiesNode != null) {
-      rewritePropertiesNode.remove();
     }
     return nodeIsFinal;
   }
@@ -476,7 +580,6 @@ public class NodeBasedRewriteRule implements RewriteRule {
       Process the nodes to be copied and/or mapped from original
     */
     private void processCopies(Node fromRoot, Node toRoot) throws RepositoryException {
-
 
       for (String path : copyChildrenPaths) {
 

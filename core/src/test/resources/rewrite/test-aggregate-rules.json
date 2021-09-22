@@ -5,19 +5,15 @@
     "aggregate": {
       "jcr:primaryType": "nt:unstructured",
       "patterns": {
-        "simple": {
-          "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "aem-modernize/components/simple"
-        },
-        "title": {
+        "titlePattern": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "aem-modernize/components/title"
         },
-        "text": {
+        "textPattern": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "foundation/components/text"
         },
-        "image": {
+        "imagePattern": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "foundation/components/image"
         }
@@ -25,9 +21,13 @@
     },
     "replacement": {
       "jcr:primaryType": "nt:unstructured",
-      "simple": {
+      "teaser": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser",
+        "jcr:title": "${'./[pattern:titlePattern]/jcr:title'}",
+        "jcr:description": "${./[pattern:textPattern]/text}",
+        "textIsRich": true,
+        "fileReference": "${./[pattern:imagePattern]/fileReference}"
       }
     }
   },
@@ -36,15 +36,15 @@
     "aggregate": {
       "jcr:primaryType": "nt:unstructured",
       "patterns": {
-        "title": {
+        "titlePattern": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "aem-modernize/components/title"
         },
-        "text": {
+        "textPattern": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "foundation/components/text"
         },
-        "image": {
+        "imagPattern": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "foundation/components/image"
         }
