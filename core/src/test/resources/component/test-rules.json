@@ -6,7 +6,7 @@
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": {
@@ -23,7 +23,7 @@
       "jcr:primaryType": "nt:unstructured",
       "copyChildren": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": {
@@ -41,7 +41,7 @@
       "jcr:primaryType": "nt:unstructured",
       "copyChildren": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": {
@@ -64,7 +64,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/mapProperties"
+        "sling:resourceType": "aem-modernize/components/mapProperties"
       }
     },
     "replacement": {
@@ -89,7 +89,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteOptional",
+        "sling:resourceType": "aem-modernize/components/rewriteOptional",
         "items": {
           "jcr:primaryType": "nt:unstructured",
           "cq:rewriteOptional": true
@@ -111,7 +111,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteRanking"
+        "sling:resourceType": "aem-modernize/components/rewriteRanking"
       }
     },
     "replacement": {
@@ -131,7 +131,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteMapChildren"
+        "sling:resourceType": "aem-modernize/components/rewriteMapChildren"
       }
     },
     "replacement": {
@@ -152,7 +152,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteFinal"
+        "sling:resourceType": "aem-modernize/components/rewriteFinal"
       }
     },
     "replacement": {
@@ -173,7 +173,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteFinalOnReplacement"
+        "sling:resourceType": "aem-modernize/components/rewriteFinalOnReplacement"
       }
     },
     "replacement": {
@@ -194,7 +194,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteProperties"
+        "sling:resourceType": "aem-modernize/components/rewriteProperties"
       }
     },
     "replacement": {

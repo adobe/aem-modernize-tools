@@ -6,8 +6,8 @@
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {
@@ -26,8 +26,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {
@@ -54,8 +54,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage",
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage",
         "items": {
           "jcr:primaryType": "nt:unstructured",
           "cq:rewriteOptional": true
@@ -79,8 +79,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {
@@ -102,8 +102,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {
@@ -127,8 +127,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {
@@ -151,8 +151,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {
@@ -175,8 +175,8 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "cq:PageContent",
-        "cq:template": "/apps/geometrixx/templates/homepage",
-        "sling:resourceType": "geometrixx/components/homepage"
+        "cq:template": "/apps/aem-modernize/templates/homepage",
+        "sling:resourceType": "aem-modernize/components/homepage"
       }
     },
     "replacement": {

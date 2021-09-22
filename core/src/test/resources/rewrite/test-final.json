@@ -8,11 +8,11 @@
       "jcr:lastModifiedBy": "admin",
       "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
       "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-      "sling:resourceType": "geometrixx/components/simple"
+      "sling:resourceType": "aem-modernize/components/simple"
     },
     "mapProperties": {
       "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "geometrixx/components/mapProperties",
+      "sling:resourceType": "aem-modernize/components/mapProperties",
       "map-property-1": "map-property-1",
       "map-property-2": true,
       "items": {
@@ -22,7 +22,7 @@
     },
     "rewriteProperties": {
       "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "geometrixx/components/rewriteProperties",
+      "sling:resourceType": "aem-modernize/components/rewriteProperties",
       "rewrite-remove-prefix": "prefix-token",
       "rewrite-remove-suffix": "token-suffix",
       "rewrite-concat-tokens": "token1-separator-token2",

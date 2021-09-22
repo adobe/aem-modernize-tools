@@ -1,4 +1,8 @@
 {
+  "remove": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/remove"
+  },
   "simple": {
     "jcr:primaryType": "nt:unstructured",
     "jcr:createdBy": "admin",
@@ -6,7 +10,7 @@
     "jcr:lastModifiedBy": "admin",
     "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
     "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "sling:resourceType": "geometrixx/components/simple"
+    "sling:resourceType": "aem-modernize/components/simple"
   },
   "copyChildren": {
     "jcr:primaryType": "nt:unstructured",
@@ -15,7 +19,7 @@
     "jcr:lastModifiedBy": "admin",
     "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
     "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "sling:resourceType": "geometrixx/components/simple",
+    "sling:resourceType": "aem-modernize/components/copyChildren",
     "items": {
       "jcr:primaryType": "nt:unstructured",
       "item1": "item1"
@@ -25,56 +29,24 @@
       "text": "Some Header Value"
     }
   },
-  "rewriteOptional": {
+  "copyChildrenNested": {
     "jcr:primaryType": "nt:unstructured",
     "jcr:createdBy": "admin",
     "jcr:title": "Strategic Consulting",
     "jcr:lastModifiedBy": "admin",
     "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
     "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "sling:resourceType": "geometrixx/components/rewriteOptional"
-  },
-  "nestedRewriteOptional": {
-    "jcr:primaryType": "nt:unstructured",
-    "jcr:createdBy": "admin",
-    "jcr:title": "Strategic Consulting",
-    "jcr:lastModifiedBy": "admin",
-    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
-    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "sling:resourceType": "geometrixx/components/rewriteOptional",
-    "items": {
-      "jcr:primaryType": "nt:unstructured"
-    }
-  },
-  "mapProperties": {
-    "jcr:primaryType": "nt:unstructured",
-    "sling:resourceType": "geometrixx/components/mapProperties",
-    "map-property-1": "map-property-1",
-    "map-property-2": true,
-    "items": {
+    "sling:resourceType": "aem-modernize/components/copyChildrenNested",
+    "parsys": {
       "jcr:primaryType": "nt:unstructured",
-      "map-property-3": "map-property-3"
-    }
-  },
-  "rewriteProperties": {
-    "jcr:primaryType": "nt:unstructured",
-    "sling:resourceType": "geometrixx/components/rewriteProperties",
-    "rewrite-remove-prefix": "prefix-token",
-    "rewrite-remove-suffix": "token-suffix",
-    "rewrite-concat-tokens": "token1-separator-token2",
-    "rewrite-single-operand": "prefix-token",
-    "rewrite-boolean": true
-  },
-  "rewriteMapChildren": {
-    "jcr:primaryType": "nt:unstructured",
-    "sling:resourceType": "geometrixx/components/rewriteMapChildren",
-    "notItems": {
-      "jcr:primaryType": "nt:unstructured",
-      "item1": {
-        "jcr:primaryType": "nt:unstructured"
+      "sling:resourceType": "foundation/components/parsys",
+      "items": {
+        "jcr:primaryType": "nt:unstructured",
+        "item1": "item1"
       },
-      "item2": {
-        "jcr:primaryType": "nt:unstructured"
+      "header": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "Some Header Value"
       }
     }
   },
@@ -85,12 +57,7 @@
     "jcr:lastModifiedBy": "admin",
     "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
     "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "sling:resourceType": "geometrixx/components/simple",
-    "notItems": {
-      "jcr:primaryType": "nt:unstructured",
-      "item1": "item1",
-      "sling:resourceType": "geometrixx/components/items"
-    },
+    "sling:resourceType": "aem-modernize/components/simple",
     "parsys": {
       "jcr:primaryType": "nt:unstructured",
       "text": "Some Header Value",
@@ -99,8 +66,78 @@
     "header": {
       "jcr:primaryType": "nt:unstructured",
       "text": "Some Header Value",
-      "sling:resourceType": "geometrixx/components/header"
+      "sling:resourceType": "aem-modernize/components/header"
     }
+  },
+  "mapProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/mapProperties",
+    "map-property-1": "map-property-1",
+    "map-property-2": true,
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "map-property-3": "map-property-3"
+    },
+    "map-property-4": [
+      "map-property-4-value-1",
+      "map-property-4-value-2"
+    ]
+  },
+  "rewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/rewriteOptional"
+  },
+  "nestedRewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/rewriteOptional",
+    "items": {
+      "jcr:primaryType": "nt:unstructured"
+    }
+  },
+  "rewriteMapChildren": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapChildren",
+    "notItems": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured"
+      },
+      "item2": {
+        "jcr:primaryType": "nt:unstructured"
+      }
+    }
+  },
+  "rewriteMapChildrenNested": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapChildren",
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured"
+      },
+      "not-item2": {
+        "jcr:primaryType": "nt:unstructured"
+      }
+    }
+  },
+  "rewriteProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteProperties",
+    "rewrite-remove-prefix": "prefix-token",
+    "rewrite-remove-suffix": "token-suffix",
+    "rewrite-concat-tokens": "token1-separator-token2",
+    "rewrite-single-operand": "prefix-token",
+    "rewrite-boolean": true
   },
   "simpleTree": {
     "jcr:primaryType": "nt:unstructured",
@@ -109,13 +146,13 @@
     "jcr:lastModifiedBy": "admin",
     "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
     "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-    "sling:resourceType": "geometrixx/components/simple",
+    "sling:resourceType": "aem-modernize/components/simple",
     "child": {
       "jcr:primaryType": "nt:unstructured",
-      "sling:resourceType": "geometrixx/components/simple/child",
+      "sling:resourceType": "aem-modernize/components/simple/child",
       "grandChild": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple/grandchild"
+        "sling:resourceType": "aem-modernize/components/simple/grandchild"
       }
     }
   },
@@ -127,12 +164,12 @@
       "jcr:lastModifiedBy": "admin",
       "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
       "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
-      "sling:resourceType": "geometrixx/components/simple"
+      "sling:resourceType": "aem-modernize/components/simple"
     },
     "title": {
       "jcr:primaryType": "nt:unstructured",
       "jcr:title": "Strategic Consulting",
-      "sling:resourceType": "geometrixx/components/title"
+      "sling:resourceType": "aem-modernize/components/title"
     },
     "text": {
       "jcr:primaryType": "nt:unstructured",
@@ -141,7 +178,7 @@
     },
     "image": {
       "jcr:primaryType": "nt:unstructured",
-      "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+      "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
       "width": "340",
       "sling:resourceType": "foundation/components/image"
     }

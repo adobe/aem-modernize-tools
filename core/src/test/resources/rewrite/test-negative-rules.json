@@ -94,7 +94,7 @@
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     }
   },
@@ -104,23 +104,10 @@
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": "property"
-  },
-  "replacementIsEmpty": {
-    "jcr:primaryType": "nt:unstructured",
-    "patterns": {
-      "jcr:primaryType": "nt:unstructured",
-      "simple": {
-        "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
-      }
-    },
-    "replacement": {
-      "jcr:primaryType": "nt:unstructured"
-    }
   },
   "wrongPrimaryType": {
     "jcr:primaryType": "nt:unstructured",
@@ -128,7 +115,7 @@
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "sling:Folder",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": {
@@ -146,7 +133,7 @@
       "simple": {
         "jcr:primaryType": "nt:unstructured",
         "missingProperty": "willnotexist",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": {
@@ -163,7 +150,7 @@
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/not-simple"
+        "sling:resourceType": "aem-modernize/components/not-simple"
       }
     },
     "replacement": {
@@ -184,7 +171,7 @@
       },
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple",
+        "sling:resourceType": "aem-modernize/components/simple",
         "missingNode": {
           "jcr:primaryType": "nt:unstructured"
         }
@@ -208,7 +195,7 @@
       },
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple",
+        "sling:resourceType": "aem-modernize/components/simple",
         "child": {
           "jcr:primaryType": "nt:unstructured",
           "missingNode": {
@@ -235,7 +222,7 @@
       },
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple",
+        "sling:resourceType": "aem-modernize/components/simple",
         "child": {
           "jcr:primaryType": "sling:Folder"
         }
@@ -258,10 +245,10 @@
       },
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple",
+        "sling:resourceType": "aem-modernize/components/simple",
         "child": {
           "jcr:primaryType": "sling:Folder",
-          "sling:resourceType": "geometrixx/components/simple/notfound"
+          "sling:resourceType": "aem-modernize/components/simple/notfound"
         }
       }
     },
@@ -283,7 +270,7 @@
       },
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple",
+        "sling:resourceType": "aem-modernize/components/simple",
         "child": {
           "jcr:primaryType": "nt:unstructured",
           "grandChild": {
@@ -309,13 +296,13 @@
       },
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple",
+        "sling:resourceType": "aem-modernize/components/simple",
         "child": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/simple/child",
+          "sling:resourceType": "aem-modernize/components/simple/child",
           "grandChild": {
             "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "geometrixx/components/simple/notfound"
+            "sling:resourceType": "aem-modernize/components/simple/notfound"
           }
         }
       }
@@ -335,7 +322,7 @@
       "patterns": {
         "title": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/title"
+          "sling:resourceType": "aem-modernize/components/title"
         },
         "text": {
           "jcr:primaryType": "nt:unstructured",
@@ -343,7 +330,7 @@
         },
         "image": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/image"
+          "sling:resourceType": "aem-modernize/components/image"
         }
       }
     },
@@ -362,7 +349,7 @@
       "patterns": {
         "title": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/title"
+          "sling:resourceType": "aem-modernize/components/title"
         },
         "image": {
           "jcr:primaryType": "nt:unstructured",
@@ -385,11 +372,11 @@
       "patterns": {
         "simple": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/simple"
+          "sling:resourceType": "aem-modernize/components/simple"
         },
         "title": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/title"
+          "sling:resourceType": "aem-modernize/components/title"
         },
         "text": {
           "jcr:primaryType": "nt:unstructured",
@@ -401,7 +388,7 @@
         },
         "lead": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "geometrixx/components/lead"
+          "sling:resourceType": "aem-modernize/components/lead"
         }
       }
     },

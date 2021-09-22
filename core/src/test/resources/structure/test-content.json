@@ -8,9 +8,9 @@
       "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
       "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
       "jcr:primaryType": "cq:PageContent",
-      "cq:designPath": "/etc/designs/geometrixx/en",
-      "cq:template": "/apps/geometrixx/templates/homepage",
-      "sling:resourceType": "geometrixx/components/homepage",
+      "cq:designPath": "/etc/designs/aem-modernize/en",
+      "cq:template": "/apps/aem-modernize/templates/homepage",
+      "sling:resourceType": "aem-modernize/components/homepage",
       "par": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "foundation/components/parsys",
@@ -25,7 +25,7 @@
         },
         "image": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+          "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_1": {
@@ -46,7 +46,7 @@
         },
         "image_0": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "fileReference": "/content/dam/aem-modernize/offices/clean_room.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_2": {
@@ -69,9 +69,9 @@
       "toBeRemoved": {
         "jcr:primaryType": "nt:unstructured",
         "jcr:title": "trust our experience\r\nto manage your business",
-        "imageReference": "/content/dam/geometrixx/header.png",
+        "imageReference": "/content/dam/aem-modernize/header.png",
         "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
-        "sling:resourceType": "geometrixx/components/header"
+        "sling:resourceType": "aem-modernize/components/header"
       },
       "title": {
         "jcr:primaryType": "nt:unstructured",
@@ -81,9 +81,9 @@
       "header": {
         "jcr:primaryType": "nt:unstructured",
         "jcr:title": "trust our experience\r\nto manage your business",
-        "imageReference": "/content/dam/geometrixx/header.png",
+        "imageReference": "/content/dam/aem-modernize/header.png",
         "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
-        "sling:resourceType": "geometrixx/components/header"
+        "sling:resourceType": "aem-modernize/components/header"
       },
       "rightpar": {
         "jcr:primaryType": "nt:unstructured",
@@ -110,8 +110,8 @@
       "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
       "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
       "jcr:primaryType": "cq:PageContent",
-      "cq:template": "/apps/geometrixx/templates/products",
-      "sling:resourceType": "geometrixx/components/products",
+      "cq:template": "/apps/aem-modernize/templates/products",
+      "sling:resourceType": "aem-modernize/components/products",
       "par": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "foundation/components/parsys",
@@ -126,7 +126,7 @@
         },
         "image": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+          "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_1": {
@@ -147,7 +147,7 @@
         },
         "image_0": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "fileReference": "/content/dam/aem-modernize/offices/clean_room.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_2": {
@@ -168,7 +168,7 @@
         },
         "image_3": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "fileReference": "/content/dam/aem-modernize/offices/clean_room.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_3": {
@@ -199,8 +199,8 @@
       "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
       "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
       "jcr:primaryType": "cq:PageContent",
-      "cq:template": "/apps/geometrixx/templates/productpage",
-      "sling:resourceType": "geometrixx/components/products",
+      "cq:template": "/apps/aem-modernize/templates/productpage",
+      "sling:resourceType": "aem-modernize/components/products",
       "par": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "foundation/components/parsys",
@@ -215,7 +215,7 @@
         },
         "image": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/portraits/jane_doe.jpg",
+          "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_1": {
@@ -241,7 +241,7 @@
         },
         "image_0": {
           "jcr:primaryType": "nt:unstructured",
-          "fileReference": "/content/dam/geometrixx/offices/clean_room.jpg",
+          "fileReference": "/content/dam/aem-modernize/offices/clean_room.jpg",
           "sling:resourceType": "geodemo/components/content/image"
         },
         "title_2": {
