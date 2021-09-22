@@ -117,9 +117,9 @@ public class TreeRewriterTest {
     }
 
     @Override
-    public Node applyTo(Node root, Set<Node> finalNodes) throws RepositoryException {
+    public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException {
       if (StringUtils.equals(root.getPath(), path)) {
-        finalNodes.add(root);
+        finalPaths.add(root.getPath());
       }
       return root;
     }

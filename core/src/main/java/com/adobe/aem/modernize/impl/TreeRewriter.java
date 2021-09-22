@@ -78,7 +78,7 @@ public class TreeRewriter {
         for (RewriteRule rule : rules) {
           if (rule.matches(node)) {
             logger.debug("Rule [{}] matched subtree at [{}]", rule.getId(), node.getPath());
-            Node result = rule.applyTo(node, finalNodes);
+            Node result = rule.applyTo(node, finalPaths);
             // set the start node in case it was rewritten
             if (node.equals(startNode)) {
               startNode = result;

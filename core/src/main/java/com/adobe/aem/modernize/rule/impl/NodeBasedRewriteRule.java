@@ -36,6 +36,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   public static final String PN_ORDER_BEFORE = "cq:orderBefore";
   public static final String PN_MAP_CHILDREN = "cq:rewriteMapChildren";
 
+
   // pattern that matches the regex for mapped properties: ${<path>}
   private static final Pattern MAPPED_PATTERN = Pattern.compile("^(\\!{0,1})\\$\\{(\'.*?\'|.*?)(:(.+))?\\}$");
   private final Node rule;
@@ -75,7 +76,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   }
 
   @Override
-  public Node applyTo(Node root, Set<Node> finalNodes) throws RepositoryException, RewriteException {
+  public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException, RewriteException {
     // check if the 'replacement' node exists
     if (!rule.hasNode(NN_REPLACEMENT)) {
       throw new RewriteException("The replacement node was removed between matching check and request to update.");
@@ -131,12 +132,20 @@ public class NodeBasedRewriteRule implements RewriteRule {
       // Rewrite Properties is special case - store it for later when processing properties
       Node rewritePropertiesNode = null;
 
-      processProperties(root, node, rewritePropertiesNode, mappings);
+      // Store this node as being final, if the tree isn't already set
+      if (processProperties(root, node, rewritePropertiesNode, mappings) && !treeIsFinal) {
+        finalPaths.add(node.getPath());
+      }
     }
 
     mappings.processCopies(root, updated);
     mappings.processOrder(updated);
 
+    if (treeIsFinal) {
+      for (Node n : new TreeTraverser(updated)) {
+        finalPaths.add(n.getPath());
+      }
+    }
     root.remove();
     return updated;
   }
@@ -354,8 +363,9 @@ public class NodeBasedRewriteRule implements RewriteRule {
   /*
     Process the properties for the rewritten node
    */
-  private void processProperties(Node originalContent, Node node, Node rewritePropertiesNode, TreeStructure mapping) throws RepositoryException {
+  private boolean processProperties(Node originalContent, Node node, Node rewritePropertiesNode, TreeStructure mapping) throws RepositoryException {
     PropertyIterator propertyIterator = node.getProperties();
+    boolean nodeIsFinal = false;
     while (propertyIterator.hasNext()) {
       Property property = propertyIterator.nextProperty();
       // skip protected properties
@@ -379,6 +389,13 @@ public class NodeBasedRewriteRule implements RewriteRule {
         continue;
       }
 
+      // Set up the status of this node being final
+      if (PN_REWRITE_FINAL.equals(property.getName())) {
+        nodeIsFinal = true;
+        property.remove();
+        continue;
+      }
+
       // Set the flag if we are supposed to copy the children node.
       if (PN_COPY_CHILDREN.equals(property.getName())) {
         // Store path relative to start of traversal for copying nodes.
@@ -398,6 +415,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     if (rewritePropertiesNode != null) {
       rewritePropertiesNode.remove();
     }
+    return nodeIsFinal;
   }
 
   /*

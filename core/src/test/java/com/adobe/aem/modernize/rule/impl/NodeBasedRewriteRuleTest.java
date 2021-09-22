@@ -1,6 +1,7 @@
 package com.adobe.aem.modernize.rule.impl;
 
 import java.util.HashSet;
+import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Property;
@@ -277,5 +278,34 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(updated.hasNode("items"), "Items found.");
     assertTrue(updated.hasNode("items/item1"), "Item child found.");
     assertTrue(updated.hasNode("items/item2"), "Item child found.");
+  }
+
+  @Test
+  public void testRewriteFinal() throws Exception {
+    final String nodePath = "/rewriteFinal";
+    ResourceResolver rr = context.resourceResolver();
+    Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + nodePath).adaptTo(Node.class));
+    Set<String> finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+    assertEquals(1, finalPaths.size(), "Final node list size");
+    assertEquals(CONTENT_ROOT + nodePath, finalPaths.stream().findFirst().get(), "Final node path");
+  }
+
+  @Test
+  public void testReplacementRewriteFinal() throws Exception {
+    final String nodePath = "/replacementRewriteFinal";
+    ResourceResolver rr = context.resourceResolver();
+    Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + nodePath).adaptTo(Node.class));
+    Set<String> finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+    assertEquals(2, finalPaths.size(), "Final node list size");
+    assertTrue(finalPaths.contains(CONTENT_ROOT + nodePath), "Final root node path");
+    assertTrue(finalPaths.contains(CONTENT_ROOT + nodePath + "/items"), "Final root node path");
   }
 }

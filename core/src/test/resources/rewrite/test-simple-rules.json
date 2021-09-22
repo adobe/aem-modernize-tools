@@ -246,20 +246,20 @@
       "rewriteFinal": {
         "cq:rewriteFinal": true,
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "sling:resourceType": "aem-modernize/components/rewriteFinal",
         "items": {
           "jcr:primaryType": "nt:unstructured"
         }
       }
     }
   },
-  "rewriteFinalOnReplacement": {
+  "replacementRewriteFinal": {
     "jcr:primaryType": "nt:unstructured",
     "patterns": {
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "aem-modernize/components/rewriteFinalOnReplacement"
+        "sling:resourceType": "aem-modernize/components/replacementRewriteFinal"
       }
     },
     "replacement": {
@@ -267,7 +267,7 @@
       "jcr:primaryType": "nt:unstructured",
       "rewriteFinalOnReplacement": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "sling:resourceType": "aem-modernize/components/replacementRewriteFinal",
         "items": {
           "jcr:primaryType": "nt:unstructured"
         }

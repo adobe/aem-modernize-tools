@@ -56,11 +56,11 @@ public interface RewriteRule {
      * specified set.
      *
      * @param root The root of the subtree to be rewritten
-     * @param finalNodes list of nodes to which should not be updated
+     * @param finalPaths list of nodes paths which should not be updated after this method completes
      * @return the root node of the rewritten tree, or null if it was removed
      * @throws RewriteException if the rewrite operation failed or cannot be completed
      * @throws RepositoryException if the node updates cannot be saved
      */
-    Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException;
+    Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException;
 
 }

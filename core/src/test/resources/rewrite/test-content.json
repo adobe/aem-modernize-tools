@@ -130,6 +130,24 @@
       }
     }
   },
+  "rewriteFinal": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/rewriteFinal"
+  },
+  "replacementRewriteFinal": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/replacementRewriteFinal"
+  },
   "rewriteProperties": {
     "jcr:primaryType": "nt:unstructured",
     "sling:resourceType": "aem-modernize/components/rewriteProperties",
