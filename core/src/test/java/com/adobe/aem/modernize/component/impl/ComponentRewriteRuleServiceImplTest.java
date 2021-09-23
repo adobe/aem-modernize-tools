@@ -360,7 +360,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
     @Override
     public ValueMap getProperties() throws RepositoryException {
-      return this.resource.adaptTo(ValueMap.class);
+      return this.resource.getValueMap();
     }
 
     @Override

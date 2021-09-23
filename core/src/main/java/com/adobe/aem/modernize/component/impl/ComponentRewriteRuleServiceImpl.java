@@ -248,7 +248,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         }
         Resource hitResource = hit.getResource();
         if (StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, hitResource.getParent().getName())) {
-          ValueMap vm = hitResource.adaptTo(ValueMap.class);
+          ValueMap vm = hitResource.getValueMap();
           types.add(vm.get(ResourceResolver.PROPERTY_RESOURCE_TYPE, String.class));
         }
       }

@@ -1,0 +1,8 @@
+{
+  "table": {
+    "jcr:primaryType": "nt:unstructured",
+    "path": "${param.path}",
+    "itemResourceType": "aem-modernize/components/convert/component/item",
+    "sling:resourceType": "granite/ui/components/coral/foundation/table"
+  }
+}
