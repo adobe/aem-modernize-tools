@@ -29,11 +29,13 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.osgi.Order;
 import org.apache.sling.commons.osgi.RankedServices;
 
@@ -43,6 +45,14 @@ import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.TreeRewriter;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
+import com.day.cq.search.Predicate;
+import com.day.cq.search.PredicateGroup;
+import com.day.cq.search.Query;
+import com.day.cq.search.QueryBuilder;
+import com.day.cq.search.eval.JcrPropertyPredicateEvaluator;
+import com.day.cq.search.eval.PathPredicateEvaluator;
+import com.day.cq.search.result.Hit;
+import com.day.cq.search.result.SearchResult;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -81,6 +91,9 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
   private final RankedServices<ComponentRewriteRule> rules = new RankedServices<>(Order.ASCENDING);
   private Config config;
 
+  @Reference
+  private QueryBuilder queryBuilder;
+
   @SuppressWarnings("unused")
   public void bindRule(ComponentRewriteRule rule, Map<String, Object> properties) {
     rules.bind(rule, properties);
@@ -114,6 +127,67 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     }
   }
 
+  @Override
+  @NotNull
+  public Set<String> find(Resource resource) {
+    Set<String> paths = findByNodeRules(resource);
+    paths.addAll(findByService(resource));
+    return paths;
+  }
+
+  private Set<String> findByNodeRules(Resource resource) {
+
+    Set<String> paths = new HashSet<>();
+
+    Set<String> types = getSlingResourceTypes(resource);
+    if (types.isEmpty()) {
+      return paths;
+    }
+
+    PredicateGroup predicates = new PredicateGroup();
+
+    Predicate predicate = new Predicate(PathPredicateEvaluator.PATH);
+    predicate.set(PathPredicateEvaluator.PATH, resource.getPath());
+    predicates.add(predicate);
+    predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
+    predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+    int i = 0;
+    for (String type : types) {
+      predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);
+    }
+    predicate.set(JcrPropertyPredicateEvaluator.AND, "false");
+
+    ResourceResolver rr = resource.getResourceResolver();
+    Query query = queryBuilder.createQuery(predicates, rr.adaptTo(Session.class));
+    SearchResult results = query.getResult();
+    // QueryBuilder has a leaking ResourceResolver, so the following workaround is required.
+    ResourceResolver qrr = null;
+    try {
+      for (final Hit hit : results.getHits()) {
+        if (qrr == null) {
+          qrr = hit.getResource().getResourceResolver();
+        }
+        paths.add(hit.getPath());
+      }
+    } catch (RepositoryException e) {
+      logger.error("Encountered an error when trying to gather all of the resources that match the rules.", e);
+    } finally {
+      if (qrr != null) {
+        // Always close the leaking QueryBuilder resourceResolver.
+        qrr.close();
+      }
+    }
+    return paths;
+  }
+
+  private Set<String> findByService(Resource resource) {
+    Set<String> paths = new HashSet<>();
+    for (ComponentRewriteRule rule : rules.getList()) {
+      paths.addAll(rule.find(resource));
+    }
+    return paths;
+  }
+
   @Activate
   @Modified
   protected void activate(Config config) {
@@ -143,6 +217,51 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         .sorted(new RewriteRule.Comparator())
         .collect(Collectors.toList());
 
+  }
+
+  private Set<String> getSlingResourceTypes(Resource resource) {
+    Set<String> types = new HashSet<>();
+
+    PredicateGroup predicates = new PredicateGroup("paths");
+    for (String path : config.search_paths()) {
+      PredicateGroup pg = new PredicateGroup();
+
+      Predicate predicate = new Predicate(PathPredicateEvaluator.PATH);
+      predicate.set(PathPredicateEvaluator.PATH, path);
+      pg.add(predicate);
+      predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
+      predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+      predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EXISTS);
+      pg.add(predicate);
+      predicates.add(pg);
+    }
+    ResourceResolver rr = resource.getResourceResolver();
+    Query query = queryBuilder.createQuery(predicates, rr.adaptTo(Session.class));
+    SearchResult results = query.getResult();
+
+    // QueryBuilder has a leaking ResourceResolver, so the following workaround is required.
+    ResourceResolver qrr = null;
+    try {
+      for (final Hit hit : results.getHits()) {
+        if (qrr == null) {
+          qrr = hit.getResource().getResourceResolver();
+        }
+        Resource hitResource = hit.getResource();
+        if (StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, hitResource.getParent().getName())) {
+          ValueMap vm = hitResource.adaptTo(ValueMap.class);
+          types.add(vm.get(ResourceResolver.PROPERTY_RESOURCE_TYPE, String.class));
+        }
+      }
+    } catch (RepositoryException e) {
+      logger.error("Encountered an error when trying to gather all of the sling:resourceTypes for rule patterns.", e);
+    } finally {
+      if (qrr != null) {
+        // Always close the leaking QueryBuilder resourceResolver.
+        qrr.close();
+      }
+    }
+
+    return types;
   }
 
   @ObjectClassDefinition(

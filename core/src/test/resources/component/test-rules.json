@@ -23,7 +23,7 @@
       "jcr:primaryType": "nt:unstructured",
       "copyChildren": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "aem-modernize/components/simple"
+        "sling:resourceType": "aem-modernize/components/copyChildren"
       }
     },
     "replacement": {
@@ -41,7 +41,7 @@
       "jcr:primaryType": "nt:unstructured",
       "copyChildren": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "aem-modernize/components/simple"
+        "sling:resourceType": "aem-modernize/components/copyChildrenOrder"
       }
     },
     "replacement": {

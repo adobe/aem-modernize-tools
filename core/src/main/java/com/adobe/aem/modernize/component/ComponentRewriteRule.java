@@ -18,23 +18,29 @@
  */
 package com.adobe.aem.modernize.component;
 
-import javax.jcr.RepositoryException;
 import java.util.Set;
+import javax.jcr.RepositoryException;
+
+import org.apache.sling.api.resource.Resource;
 
 import com.adobe.aem.modernize.rule.RewriteRule;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for services that implement a component rewrite rule. A rewrite rule matches certain subtrees of the
- * component tree (usually corresponding to one component component) and rewrites (i.e. modifies or replaces) them.
+ * component tree (usually corresponding to one component) and rewrites (i.e. modifies or replaces) them.
  */
 public interface ComponentRewriteRule extends RewriteRule {
 
-
-
-    /**
-     * Returns a set of all <code>sling:resourceType</code> values specified in the <i>pattern</i> properties.
-     * @return List of Sling Resource Types which this rule will process
-     * @throws RepositoryException when an error occurs reading the repository
-     */
-    Set<String> getSlingResourceTypes() throws RepositoryException;
+  /**
+   * Lists all resource paths that match any rules of which this service is aware.
+   *
+   * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
+   *
+   * @param resource Resource for the root of the search
+   * @return list of paths that match rules or an empty set if none match
+   */
+  @SuppressWarnings("unused")
+  @NotNull
+  Set<String> find(@NotNull Resource resource);
 }

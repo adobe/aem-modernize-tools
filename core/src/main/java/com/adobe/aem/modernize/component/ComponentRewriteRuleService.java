@@ -19,6 +19,9 @@
 
 package com.adobe.aem.modernize.component;
 
+import java.util.Set;
+import javax.jcr.RepositoryException;
+
 import org.apache.sling.api.resource.Resource;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -44,4 +47,15 @@ public interface ComponentRewriteRuleService {
      * @throws RewriteException if any errors occur when applying the rules
      */
     void apply(@NotNull final Resource resource, @NotNull final String[] rules, boolean deep) throws RewriteException;
+
+    /**
+     * Lists all resource paths that match any rules of which this service is aware.
+     *
+     * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
+     *
+     * @param resource Resource for the root of the search
+     * @return list of paths that match rules or empty set if none found or an error occurs
+     */
+    @NotNull
+    Set<String> find(Resource resource);
 }
