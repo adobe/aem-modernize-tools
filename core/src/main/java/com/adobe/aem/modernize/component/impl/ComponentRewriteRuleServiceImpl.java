@@ -140,6 +140,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
           return rule;
         })
         .filter(Objects::nonNull)
+        .sorted(new RewriteRule.Comparator())
         .collect(Collectors.toList());
 
   }

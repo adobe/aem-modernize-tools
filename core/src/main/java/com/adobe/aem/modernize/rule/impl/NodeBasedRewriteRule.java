@@ -44,7 +44,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
 
   // pattern that matches the regex for mapped properties: ${<path>}
   private static final Pattern MAPPED_PATTERN = Pattern.compile("^(\\!{0,1})\\$\\{(\'.*?\'|.*?)(:(.+))?\\}$");
-  private final Node rule;
+  protected final Node rule;
   private final String id;
   private Integer ranking;
 
@@ -73,7 +73,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
           this.ranking = RewriteRule.super.getRanking();
         }
       } catch (RepositoryException e) {
-        logger.warn("Caught exception while reading the {} property from rule, using default: {}", PN_CQ_RANKING, e.getLocalizedMessage());
+        logger.warn("Caught exception while reading the {} property from rule [{}], using default", PN_CQ_RANKING, id);
         this.ranking = RewriteRule.super.getRanking();
       }
     }
@@ -541,6 +541,11 @@ public class NodeBasedRewriteRule implements RewriteRule {
         property.setValue(matcher.replaceAll(replacement));
       }
     }
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s[path=%s,ranking=%d]", NodeBasedRewriteRule.class.getSimpleName(), id, getRanking());
   }
 
   /*

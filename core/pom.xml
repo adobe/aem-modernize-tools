@@ -40,6 +40,7 @@
                         <id>bnd-process</id>
                         <goals>
                             <goal>bnd-process</goal>
+                            <goal>bnd-process-tests</goal>
                         </goals>
                         <configuration>
                             <bnd><![CDATA[

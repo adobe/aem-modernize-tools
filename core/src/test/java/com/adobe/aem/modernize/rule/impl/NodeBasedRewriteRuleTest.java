@@ -17,9 +17,8 @@ import com.adobe.aem.modernize.rule.RewriteRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.junit.jupiter.api.Assertions.*;
-
 import static com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
 public class NodeBasedRewriteRuleTest {
@@ -50,6 +49,13 @@ public class NodeBasedRewriteRuleTest {
 
     rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/remove").adaptTo(Node.class));
     assertEquals(Integer.MAX_VALUE, rule.getRanking(), "Invalid ranking match");
+  }
+
+  @Test
+  public void testToString() throws Exception {
+    ResourceResolver rr = context.resourceResolver();
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/rewriteRanking").adaptTo(Node.class));
+    assertEquals("NodeBasedRewriteRule[path=" + SIMPLE_ROOT + "/rewriteRanking,ranking=3]", rule.toString(), "Equals is");
   }
 
   @Test

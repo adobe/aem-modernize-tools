@@ -178,7 +178,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
 
   private void addBucketNode(Session session, Node parent, String[] paths) throws RepositoryException {
     Node bucket = JcrUtil.createUniqueNode(parent, "bucket", JcrConstants.NT_UNSTRUCTURED, session);
-    bucket.setProperty(PN_PAGE_PATHS, paths);
+    bucket.setProperty(PN_PATHS, paths);
   }
 
   private boolean scheduleJobs(JobData jobData, List<String[]> buckets, String trackingPath) {
@@ -187,7 +187,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     for (String[] bucket: buckets) {
       jobProperties = new HashMap<>();
       jobProperties.put(PN_TRACKING_PATH, trackingPath);
-      jobProperties.put(PN_PAGE_PATHS, bucket);
+      jobProperties.put(PN_PATHS, bucket);
       jobProperties.put(PN_TEMPLATE_RULES, jobData.getTemplateRules());
       jobProperties.put(PN_COMPONENT_RULES, jobData.getComponentRules());
       jobProperties.put(PN_POLICY_RULES, jobData.getPolicyRules());

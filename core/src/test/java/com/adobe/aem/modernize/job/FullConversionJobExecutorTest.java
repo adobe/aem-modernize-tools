@@ -2,17 +2,11 @@ package com.adobe.aem.modernize.job;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.sling.api.resource.LoginException;
-import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
-import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
@@ -64,11 +58,6 @@ public class FullConversionJobExecutorTest {
   @Mocked
   private JobExecutionContext jobExecutionContext;
 
-  @Mocked
-  private JobExecutionContext.ResultBuilder resultBuilder;
-
-  @Mocked
-  private JobExecutionResult executionResult;
 
   @Mocked
   private Resource resource;
@@ -79,109 +68,40 @@ public class FullConversionJobExecutorTest {
     templateRules = new String[]{ "/path/to/first/template/rule", "/path/to/second/template/rule" };
     componentRules = new String[]{ "/path/to/first/component/rule", "/path/to/second/component/rule" };
     policyRules = new String[]{ "/path/to/first/policy/rule", "/path/to/second/policy/rule" };
-
   }
 
   @BeforeEach
-  public void before() {
+  public void beforeEach() {
     context.registerService(StructureRewriteRuleService.class, structureService);
     context.registerService(PoliciesImportRuleService.class, policyService);
     context.registerService(ComponentRewriteRuleService.class, componentService);
     context.registerInjectActivateService(executor);
     context.load().json("/job/executor-first-page.json", "/content/test/first-page");
     context.load().json("/job/executor-second-page.json", "/content/test/second-page");
-    context.load().json("/job/job-data.json", JOB_DATA_LOCATION + "/job");
+    context.load().json("/job/job-data.json", JOB_DATA_LOCATION + "/job/full");
   }
 
-
-  private void setupResult(boolean success) {
+  @Test
+  public void testPathsNotPage() throws Exception {
     new Expectations() {{
-      jobExecutionContext.result();
-      result = resultBuilder;
-      resultBuilder.message(anyString);
-      result = resultBuilder;
-      if (success) {
-        resultBuilder.succeeded();
-      } else {
-        resultBuilder.failed();
-      }
-      result = executionResult;
-    }};
-  }
-
-  @Test
-  public void testMissingJobData() {
-    setupResult(false);
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
-  }
-
-  @Test
-  public <R extends ResourceResolverFactory> void testLoginFails() {
-
-    new MockUp<R>() {
-      @Mock
-      public ResourceResolver getServiceResourceResolver(Map<String, Object> authenticationInfo) throws LoginException {
-        throw new LoginException("Login Failed.");
-      }
-    };
-
-    new Expectations() {{
-      job.getProperty(PN_PAGE_PATHS, String[].class);
-      result = paths;
-    }};
-    setupResult(false);
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
-  }
-
-  @Test
-  public <R extends ResourceResolver> void testCommitFails() {
-
-    new MockUp<R>() {
-      @Mock
-      public void commit() throws PersistenceException {
-        throw new PersistenceException("Failure");
-      }
-    };
-    setupResult(false);
-
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
-  }
-
-  @Test
-  public void testPathsNotPage() {
-    new Expectations() {{
-      job.getProperty(PN_PAGE_PATHS, String[].class);
+      job.getProperty(PN_PATHS, String[].class);
       result = new String[]{ "/content/test/first-page/jcr:content/component", "/content/test/second-page/jcr:content/component" };
       job.getProperty(PN_REPROCESS, false);
       result = false;
-      job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
-      job.getId();
-      result = "JobId";
-
       jobExecutionContext.initProgress(paths.length * 2, -1);
     }};
-    setupResult(false);
 
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
-
-    ValueMap vm = context.resourceResolver().getResource(JOB_DATA_LOCATION + "/job").getValueMap();
-    assertEquals("JobId", vm.get(PN_JOB_ID, String.class), "Job Id saved");
-
+    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
   }
 
   @Test
-  public <P extends PageManager> void testPreparePageFails() {
+  public <P extends PageManager> void testPreparePageFails() throws Exception {
     new Expectations() {{
       jobExecutionContext.initProgress(paths.length * 2, -1);
-      job.getProperty(PN_PAGE_PATHS, String[].class);
+      job.getProperty(PN_PATHS, String[].class);
       result = paths;
       job.getProperty(PN_REPROCESS, false);
       result = false;
-      job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
-      job.getId();
-      result = "JobId";
     }};
     new MockUp<P>() {
       @Mock
@@ -189,9 +109,7 @@ public class FullConversionJobExecutorTest {
         throw new WCMException("Failed");
       }
     };
-    setupResult(false);
-
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
+    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
   }
 
   @Test
@@ -199,7 +117,7 @@ public class FullConversionJobExecutorTest {
 
     final List<String> revisions = new ArrayList<>();
     new Expectations() {{
-      job.getProperty(PN_PAGE_PATHS, String[].class);
+      job.getProperty(PN_PATHS, String[].class);
       result = paths;
       job.getProperty(PN_TEMPLATE_RULES, String[].class);
       result = templateRules;
@@ -209,10 +127,6 @@ public class FullConversionJobExecutorTest {
       result = policyRules;
       job.getProperty(PN_REPROCESS, false);
       result = false;
-      job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
-      job.getId();
-      result = "JobId";
       jobExecutionContext.initProgress(paths.length * 2, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = paths.length * 2;
@@ -232,11 +146,9 @@ public class FullConversionJobExecutorTest {
           return revision;
       }
     };
-    setupResult(true);
 
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
-    ValueMap vm = context.resourceResolver().getResource(JOB_DATA_LOCATION + "/job").getValueMap();
-    assertEquals("JobId", vm.get(PN_JOB_ID, String.class), "Job Id saved");
+    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
+    ValueMap vm;
     for (String path : paths) {
       vm = context.resourceResolver().getResource(path + "/jcr:content").getValueMap();
       assertEquals(version, vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
@@ -249,7 +161,7 @@ public class FullConversionJobExecutorTest {
     final List<String> revisions = new ArrayList<>();
     final List<String> restored = new ArrayList<>();
     new Expectations() {{
-      job.getProperty(PN_PAGE_PATHS, String[].class);
+      job.getProperty(PN_PATHS, String[].class);
       result = paths;
       job.getProperty(PN_TEMPLATE_RULES, String[].class);
       result = templateRules;
@@ -259,10 +171,6 @@ public class FullConversionJobExecutorTest {
       result = policyRules;
       job.getProperty(PN_REPROCESS, false);
       result = true;
-      job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
-      job.getId();
-      result = "JobId";
       jobExecutionContext.initProgress(paths.length * 2, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = paths.length * 2;
@@ -289,13 +197,9 @@ public class FullConversionJobExecutorTest {
         return revision;
       }
     };
-    setupResult(true);
+    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
 
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
-
-    ValueMap vm = context.resourceResolver().getResource(JOB_DATA_LOCATION + "/job").getValueMap();
-    assertEquals("JobId", vm.get(PN_JOB_ID, String.class), "Job Id saved");
-    vm = context.resourceResolver().getResource("/content/test/first-page/jcr:content").getValueMap();
+    ValueMap vm = context.resourceResolver().getResource("/content/test/first-page/jcr:content").getValueMap();
     assertEquals("1234567890", vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
     vm = context.resourceResolver().getResource("/content/test/second-page/jcr:content").getValueMap();
     assertEquals("987654321", vm.get(PN_PRE_MODERNIZE_VERSION, String.class));

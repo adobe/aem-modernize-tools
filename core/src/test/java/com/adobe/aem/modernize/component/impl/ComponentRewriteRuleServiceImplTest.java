@@ -113,6 +113,11 @@ public class ComponentRewriteRuleServiceImplTest {
         callCounts[1]++;
         return root;
       }
+
+      @Mock
+      public int getRanking() {
+        return Integer.MAX_VALUE;
+      }
     };
 
     new Expectations() {{
@@ -199,22 +204,22 @@ public class ComponentRewriteRuleServiceImplTest {
 //  public void testGetSlingResourceTypes() throws Exception {
 //    Set<String> resourceTypes = componentRewriteRuleService.getSlingResourceTypes(context.resourceResolver());
 //
-//    assertTrue(resourceTypes.contains("geometrixx/components/simple"));
-//    resourceTypes.remove("geometrixx/components/simple");
-//    assertTrue(resourceTypes.contains("geometrixx/components/mapProperties"));
-//    resourceTypes.remove("geometrixx/components/mapProperties");
-//    assertTrue(resourceTypes.contains("geometrixx/components/rewriteOptional"));
-//    resourceTypes.remove("geometrixx/components/rewriteOptional");
-//    assertTrue(resourceTypes.contains("geometrixx/components/rewriteRanking"));
-//    resourceTypes.remove("geometrixx/components/rewriteRanking");
-//    assertTrue(resourceTypes.contains("geometrixx/components/rewriteMapChildren"));
-//    resourceTypes.remove("geometrixx/components/rewriteMapChildren");
-//    assertTrue(resourceTypes.contains("geometrixx/components/rewriteFinal"));
-//    resourceTypes.remove("geometrixx/components/rewriteFinal");
-//    assertTrue(resourceTypes.contains("geometrixx/components/rewriteFinalOnReplacement"));
-//    resourceTypes.remove("geometrixx/components/rewriteFinalOnReplacement");
-//    assertTrue(resourceTypes.contains("geometrixx/components/rewriteProperties"));
-//    resourceTypes.remove("geometrixx/components/rewriteProperties");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/simple"));
+//    resourceTypes.remove("aem-modernize/components/simple");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/mapProperties"));
+//    resourceTypes.remove("aem-modernize/components/mapProperties");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/rewriteOptional"));
+//    resourceTypes.remove("aem-modernize/components/rewriteOptional");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/rewriteRanking"));
+//    resourceTypes.remove("aem-modernize/components/rewriteRanking");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/rewriteMapChildren"));
+//    resourceTypes.remove("aem-modernize/components/rewriteMapChildren");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/rewriteFinal"));
+//    resourceTypes.remove("aem-modernize/components/rewriteFinal");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/rewriteFinalOnReplacement"));
+//    resourceTypes.remove("aem-modernize/components/rewriteFinalOnReplacement");
+//    assertTrue(resourceTypes.contains("aem-modernize/components/rewriteProperties"));
+//    resourceTypes.remove("aem-modernize/components/rewriteProperties");
 //    assertTrue(resourceTypes.contains("granite/ui/components/foundation/container"));
 //    resourceTypes.remove("granite/ui/components/foundation/container");
 //

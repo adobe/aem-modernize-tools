@@ -74,7 +74,6 @@ public class TreeRewriter {
         }
 
         // Apply the rules
-        Set<Node> finalNodes = new LinkedHashSet<>();
         for (RewriteRule rule : rules) {
           if (rule.matches(node)) {
             logger.debug("Rule [{}] matched subtree at [{}]", rule.getId(), node.getPath());
@@ -83,7 +82,6 @@ public class TreeRewriter {
             if (node.equals(startNode)) {
               startNode = result;
             }
-            addPaths(finalPaths, finalNodes);
             matched = true;
             // Only one rule is allowed to match.
             break;
@@ -97,12 +95,5 @@ public class TreeRewriter {
     logger.debug("Rewrote content tree rooted at [{}] in {}ms", root.getPath(), tock - tick);
 
     return startNode;
-  }
-
-  private void addPaths(Set<String> paths, Set<Node> nodes)
-      throws RepositoryException {
-    for (Node node : nodes) {
-      paths.add(node.getPath());
-    }
   }
 }

@@ -91,10 +91,6 @@ public class ScheduleConversionJobServletTest {
     jobData = new ObjectMapper().writeValueAsString(data);
   }
 
-  @BeforeEach
-  public void before() throws Exception {
-  }
-
   @Test
   public void invalidJobData() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
@@ -298,8 +294,8 @@ public class ScheduleConversionJobServletTest {
 
     assertEquals(2, jobProperties.size(), "Number of jobs created.");
     Map<String, Object> jobProps = jobProperties.get(0);
-    assertNotNull(jobProps.get(ConversionJobItem.PN_PAGE_PATHS), "Job paths are set.");
-    assertEquals(500, ((String[]) jobProps.get(ConversionJobItem.PN_PAGE_PATHS)).length, "Number of paths correct on first job.");
+    assertNotNull(jobProps.get(ConversionJobItem.PN_PATHS), "Job paths are set.");
+    assertEquals(500, ((String[]) jobProps.get(ConversionJobItem.PN_PATHS)).length, "Number of paths correct on first job.");
     assertNotNull(jobProps.get(ConversionJobItem.PN_TEMPLATE_RULES), "Job has template rules.");
     assertNotNull(jobProps.get(ConversionJobItem.PN_COMPONENT_RULES), "Job has component rules.");
     assertNotNull(jobProps.get(ConversionJobItem.PN_POLICY_RULES), "Job has policy rules.");
