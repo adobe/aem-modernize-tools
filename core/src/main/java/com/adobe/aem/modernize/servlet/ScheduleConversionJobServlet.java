@@ -25,7 +25,9 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
 
+import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -37,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.apache.sling.api.SlingHttpServletResponse.*;
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
-import static com.adobe.aem.modernize.model.ConversionJobItem.*;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 
 @Component(
     service = { Servlet.class },
@@ -162,7 +164,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   private Node createTrackingNode(Session session, JobData jobData, String userId) throws RepositoryException {
     Calendar today = Calendar.getInstance();
     String path = String.format("%s/%d/%d/%d/%s",
-        JOB_DATA_LOCATION,
+        ConversionJob.JOB_DATA_LOCATION,
         today.get(Calendar.YEAR),
         today.get(Calendar.MONTH),
         today.get(Calendar.DAY_OF_MONTH),
@@ -173,6 +175,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     node.setProperty(PN_COMPONENT_RULES, jobData.getComponentRules());
     node.setProperty(PN_POLICY_RULES, jobData.getPolicyRules());
     node.setProperty(PN_INITIATOR, userId);
+    node.setProperty(PN_TYPE, jobData.getType().toString());
     return node;
   }
 
@@ -191,8 +194,17 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       jobProperties.put(PN_TEMPLATE_RULES, jobData.getTemplateRules());
       jobProperties.put(PN_COMPONENT_RULES, jobData.getComponentRules());
       jobProperties.put(PN_POLICY_RULES, jobData.getPolicyRules());
-      if (jobManager.addJob(FullConversionJobExecutor.JOB_TOPIC, jobProperties) == null) {
-        logger.error("Unable to create job for topic: {}", FullConversionJobExecutor.JOB_TOPIC);
+      String topic = null;
+      switch (jobData.getType()) {
+        case FULL:
+          topic = FullConversionJobExecutor.JOB_TOPIC;
+          break;
+        case COMPONENT:
+          topic = ComponentJobExecutor.JOB_TOPIC;
+          break;
+      }
+      if (jobManager.addJob(topic, jobProperties) == null) {
+        logger.error("Unable to create job for topic: {}", topic);
         return false;
       }
     }
@@ -217,6 +229,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     private String[] templateRules;
     private String[] componentRules;
     private String[] policyRules;
+    private Type type;
   }
 
 }

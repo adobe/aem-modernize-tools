@@ -65,6 +65,18 @@
                             <artifactId>aem-modernize-tools.core</artifactId>
                             <target>/apps/aem-modernize-packages/application/install</target>
                         </embedded>
+                        <embedded>
+                            <groupId>com.adobe.cq</groupId>
+                            <artifactId>aem-modernize-tools.ui.content</artifactId>
+                            <type>zip</type>
+                            <target>/apps/aem-modernize-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.adobe.cq</groupId>
+                            <artifactId>aem-modernize-tools.ui.config</artifactId>
+                            <type>zip</type>
+                            <target>/apps/aem-modernize-packages/application/install</target>
+                        </embedded>
                     </embeddeds>
                 </configuration>
             </plugin>
@@ -203,6 +215,18 @@
         <dependency>
             <groupId>com.adobe.cq</groupId>
             <artifactId>aem-modernize-tools.ui.apps</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.cq</groupId>
+            <artifactId>aem-modernize-tools.ui.config</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.cq</groupId>
+            <artifactId>aem-modernize-tools.ui.content</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>

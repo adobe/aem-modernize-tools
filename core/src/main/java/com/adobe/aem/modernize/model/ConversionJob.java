@@ -1,6 +1,6 @@
 package com.adobe.aem.modernize.model;
 
-public class ConversionJobItem {
+public class ConversionJob {
 
   public static final String JOB_DATA_LOCATION = "/var/aem-modernize/job-data";
 
@@ -14,4 +14,12 @@ public class ConversionJobItem {
   public static final String PN_REPROCESS = "reprocess";
   public static final String PN_PRE_MODERNIZE_VERSION = "premodernizeVersion";
   public static final String PN_JOB_ID = "jobId";
+  public static final String PN_TYPE = "type";
+
+  public enum Type {
+    FULL,
+    COMPONENT,
+    PAGE,
+    POLICY
+  }
 }

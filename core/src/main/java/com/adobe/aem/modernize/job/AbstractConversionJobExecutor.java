@@ -15,7 +15,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 import com.adobe.aem.modernize.RewriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.adobe.aem.modernize.model.ConversionJobItem.*;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 
 public abstract class AbstractConversionJobExecutor implements JobExecutor {
 

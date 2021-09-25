@@ -11,6 +11,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.design.PoliciesImportRuleService;
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
@@ -26,7 +27,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static com.adobe.aem.modernize.model.ConversionJobItem.*;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
@@ -78,7 +79,7 @@ public class FullConversionJobExecutorTest {
     context.registerInjectActivateService(executor);
     context.load().json("/job/executor-first-page.json", "/content/test/first-page");
     context.load().json("/job/executor-second-page.json", "/content/test/second-page");
-    context.load().json("/job/job-data.json", JOB_DATA_LOCATION + "/job/full");
+    context.load().json("/job/job-data.json", ConversionJob.JOB_DATA_LOCATION + "/job/full");
   }
 
   @Test

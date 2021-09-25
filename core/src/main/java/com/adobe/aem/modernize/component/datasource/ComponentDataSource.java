@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
 /**
- * Returns a list of components found on the given path
+ * Returns a list of components found on the given path that have rewrite rules available to execute
  */
 @Component(
     service = { Servlet.class },
@@ -62,7 +62,7 @@ public final class ComponentDataSource extends SlingSafeMethodsServlet {
 
   public static final String ITEM_RESOURCE_TYPE = "aem-modernize/components/convert/component/item";
 
-  private final static Logger log = LoggerFactory.getLogger(ComponentDataSource.class);
+  private final static Logger logger = LoggerFactory.getLogger(ComponentDataSource.class);
 
   @Reference
   private ExpressionResolver expressionResolver;
@@ -78,19 +78,19 @@ public final class ComponentDataSource extends SlingSafeMethodsServlet {
     path = expressionResolver.resolve(path, request.getLocale(), String.class, request);
 
     if (StringUtils.isEmpty(path)) {
-      log.warn("Path for component data source search was not specified.");
+      logger.warn("Path for component data source search was not specified.");
       return;
     }
 
     ResourceResolver resourceResolver = request.getResourceResolver();
     Resource searchRoot = resourceResolver.getResource(path);
     if (searchRoot == null) {
-      log.warn("Search path [{}] for component datasource was not found.", path);
+      logger.warn("Search path [{}] for component datasource was not found.", path);
       return;
     }
     Set<String> paths = componentRewriteRuleService.find(searchRoot);
     if (paths.isEmpty()) {
-      log.info("No components matched rules under provided path: [{}]", path);
+      logger.info("No components matched rules under provided path: [{}]", path);
     }
 
     AtomicInteger i = new AtomicInteger();

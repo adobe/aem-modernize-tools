@@ -16,6 +16,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.model.ConversionJob;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -26,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.model.ConversionJobItem.*;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
@@ -54,7 +55,7 @@ public class AbstractConversionJobExecutorTest {
 
   @BeforeEach
   public void beforeEach() {
-    context.load().json("/job/job-data.json", JOB_DATA_LOCATION + "/job");
+    context.load().json("/job/job-data.json", ConversionJob.JOB_DATA_LOCATION + "/job");
   }
 
   private void setupResult(boolean success) {
@@ -116,7 +117,7 @@ public class AbstractConversionJobExecutorTest {
       job.getProperty(PN_PATHS, String[].class);
       result = paths;
       job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
+      result = ConversionJob.JOB_DATA_LOCATION + "/job";
       job.getId();
       result = "JobId";
     }};
@@ -132,7 +133,7 @@ public class AbstractConversionJobExecutorTest {
       job.getProperty(PN_PATHS, String[].class);
       result = paths;
       job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
+      result = ConversionJob.JOB_DATA_LOCATION + "/job";
       job.getId();
       result = "JobId";
     }};
@@ -142,7 +143,7 @@ public class AbstractConversionJobExecutorTest {
 
     assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
 
-    ValueMap vm = context.resourceResolver().getResource(JOB_DATA_LOCATION + "/job").getValueMap();
+    ValueMap vm = context.resourceResolver().getResource(ConversionJob.JOB_DATA_LOCATION + "/job").getValueMap();
     assertEquals("JobId", vm.get(PN_JOB_ID, String.class), "Job Id saved");
   }
 
@@ -160,7 +161,7 @@ public class AbstractConversionJobExecutorTest {
       job.getProperty(PN_PATHS, String[].class);
       result = paths;
       job.getProperty(PN_TRACKING_PATH, String.class);
-      result = JOB_DATA_LOCATION + "/job";
+      result = ConversionJob.JOB_DATA_LOCATION + "/job";
       job.getId();
       result = "JobId";
       executor.doProcess(job, jobExecutionContext, withInstanceOf(ResourceResolver.class));

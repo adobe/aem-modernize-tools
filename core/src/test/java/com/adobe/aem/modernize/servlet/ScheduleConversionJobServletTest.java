@@ -20,15 +20,13 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
-import com.adobe.aem.modernize.model.ConversionJobItem;
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
 import mockit.Tested;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.BundleContext;
@@ -39,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ScheduleConversionJobServletTest {
 
   private static final String JOB_TITLE = "Test Job";
-  private static String jobData;
 
   private final SlingContext slingContext = new SlingContext(ResourceResolverType.JCR_MOCK);
   @Mocked
@@ -63,32 +60,29 @@ public class ScheduleConversionJobServletTest {
   @Tested
   private ScheduleConversionJobServlet servlet;
 
-  @BeforeAll
-  public static void beforeAll() throws Exception {
-    ScheduleConversionJobServlet.JobData data = new ScheduleConversionJobServlet.JobData();
+  public ScheduleConversionJobServlet.JobData buildJobData() {
     List<String> list = new ArrayList<>();
-
-    data.setName(JOB_TITLE);
+    ScheduleConversionJobServlet.JobData jobData = new ScheduleConversionJobServlet.JobData();
+    jobData.setName(JOB_TITLE);
     list.add("/content/test/path");
     list.add("/content/other/path");
     for (int i = 0; i <= 500; i++) {
       list.add("/content/other/path" + i);
     }
-    data.setPaths(list.toArray(new String[]{}));
+    jobData.setPaths(list.toArray(new String[]{}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/template");
-    data.setTemplateRules(list.toArray(new String[]{}));
+    jobData.setTemplateRules(list.toArray(new String[]{}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/component");
-    data.setComponentRules(list.toArray(new String[]{}));
+    jobData.setComponentRules(list.toArray(new String[]{}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/policy");
-    data.setPolicyRules(list.toArray(new String[]{}));
-
-    jobData = new ObjectMapper().writeValueAsString(data);
+    jobData.setPolicyRules(list.toArray(new String[]{}));
+    return jobData;
   }
 
   @Test
@@ -109,7 +103,8 @@ public class ScheduleConversionJobServletTest {
   public void noPermissionsSinglePath() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    request.setContent(jobData.getBytes());
+    ScheduleConversionJobServlet.JobData jobData = buildJobData();
+    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
 
     new Expectations() {{
       resourceResolver.adaptTo(Session.class);
@@ -133,7 +128,8 @@ public class ScheduleConversionJobServletTest {
   public void noPermissionsMultiplePaths() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    request.setContent(jobData.getBytes());
+    ScheduleConversionJobServlet.JobData jobData = buildJobData();
+    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
 
     new Expectations() {{
       resourceResolver.adaptTo(Session.class);
@@ -158,7 +154,8 @@ public class ScheduleConversionJobServletTest {
   public void testUnableToLoginService() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    request.setContent(jobData.getBytes());
+    ScheduleConversionJobServlet.JobData jobData = buildJobData();
+    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
     new Expectations() {{
       resourceResolver.adaptTo(Session.class);
       result = session;
@@ -186,7 +183,9 @@ public class ScheduleConversionJobServletTest {
     Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
-    request.setContent(jobData.getBytes());
+    ScheduleConversionJobServlet.JobData jobData = buildJobData();
+    jobData.setType(ConversionJob.Type.FULL);
+    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
     new Expectations() {{
       resourceResolver.getUserID();
       result = userId;
@@ -209,7 +208,7 @@ public class ScheduleConversionJobServletTest {
 
     Calendar today = Calendar.getInstance();
     String path = String.format("%s/%d/%d/%d/%s",
-        ConversionJobItem.JOB_DATA_LOCATION,
+        ConversionJob.JOB_DATA_LOCATION,
         today.get(Calendar.YEAR),
         today.get(Calendar.MONTH),
         today.get(Calendar.DAY_OF_MONTH),
@@ -222,11 +221,11 @@ public class ScheduleConversionJobServletTest {
     assertTrue(serviceSession.nodeExists(path), "Tracking node was created.");
     assertTrue(serviceSession.nodeExists(path + "/bucket"), "Bucket 1 was created");
     assertTrue(serviceSession.nodeExists(path + "/bucket0"), "Bucket 2 was created");
-    assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJobItem.PN_TITLE).getString(), "Title was set");
-    assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJobItem.PN_INITIATOR).getString(), "Initiated by was set");
-    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_TEMPLATE_RULES), "Template rules were set.");
-    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_COMPONENT_RULES), "Component rules were set.");
-    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJobItem.PN_POLICY_RULES), "Policy rules were set.");
+    assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJob.PN_TITLE).getString(), "Title was set");
+    assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJob.PN_INITIATOR).getString(), "Initiated by was set");
+    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_TEMPLATE_RULES), "Template rules were set.");
+    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_COMPONENT_RULES), "Component rules were set.");
+    assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_POLICY_RULES), "Policy rules were set.");
   }
 
   @Test
@@ -236,9 +235,9 @@ public class ScheduleConversionJobServletTest {
     Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
-    List<Map<String, Object>> jobProperties = new ArrayList<>();
-
-    request.setContent(jobData.getBytes());
+    ScheduleConversionJobServlet.JobData jobData = buildJobData();
+    jobData.setType(ConversionJob.Type.FULL);
+    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
     new Expectations() {{
       resourceResolver.getUserID();
       result = userId;
@@ -263,15 +262,17 @@ public class ScheduleConversionJobServletTest {
   }
 
   @Test
-  public void testJobScheduling() throws Exception {
+  public void testFullJobScheduling() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
     Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
     List<Map<String, Object>> jobProperties = new ArrayList<>();
+    ScheduleConversionJobServlet.JobData jobData = buildJobData();
+    jobData.setType(ConversionJob.Type.FULL);
+    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
 
-    request.setContent(jobData.getBytes());
     new Expectations() {{
       resourceResolver.getUserID();
       result = userId;
@@ -294,11 +295,11 @@ public class ScheduleConversionJobServletTest {
 
     assertEquals(2, jobProperties.size(), "Number of jobs created.");
     Map<String, Object> jobProps = jobProperties.get(0);
-    assertNotNull(jobProps.get(ConversionJobItem.PN_PATHS), "Job paths are set.");
-    assertEquals(500, ((String[]) jobProps.get(ConversionJobItem.PN_PATHS)).length, "Number of paths correct on first job.");
-    assertNotNull(jobProps.get(ConversionJobItem.PN_TEMPLATE_RULES), "Job has template rules.");
-    assertNotNull(jobProps.get(ConversionJobItem.PN_COMPONENT_RULES), "Job has component rules.");
-    assertNotNull(jobProps.get(ConversionJobItem.PN_POLICY_RULES), "Job has policy rules.");
-    assertNotNull(jobProps.get(ConversionJobItem.PN_TRACKING_PATH), "Job has tracking node path.");
+    assertNotNull(jobProps.get(ConversionJob.PN_PATHS), "Job paths are set.");
+    assertEquals(500, ((String[]) jobProps.get(ConversionJob.PN_PATHS)).length, "Number of paths correct on first job.");
+    assertNotNull(jobProps.get(ConversionJob.PN_TEMPLATE_RULES), "Job has template rules.");
+    assertNotNull(jobProps.get(ConversionJob.PN_COMPONENT_RULES), "Job has component rules.");
+    assertNotNull(jobProps.get(ConversionJob.PN_POLICY_RULES), "Job has policy rules.");
+    assertNotNull(jobProps.get(ConversionJob.PN_TRACKING_PATH), "Job has tracking node path.");
   }
 }

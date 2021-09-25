@@ -13,8 +13,8 @@ import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.component.job.ComponentConversionJobExecutor.*;
-import static com.adobe.aem.modernize.model.ConversionJobItem.*;
+import static com.adobe.aem.modernize.component.job.ComponentJobExecutor.*;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -22,7 +22,7 @@ import static com.adobe.aem.modernize.model.ConversionJobItem.*;
         JobExecutor.PROPERTY_TOPICS + "=" + JOB_TOPIC
     }
 )
-public class ComponentConversionJobExecutor extends AbstractConversionJobExecutor {
+public class ComponentJobExecutor extends AbstractConversionJobExecutor {
 
   public static final String JOB_TOPIC = "com/adobe/aem/modernize/job/topic/convert/component";
 
