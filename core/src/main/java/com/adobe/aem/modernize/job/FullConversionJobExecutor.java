@@ -16,6 +16,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.design.PoliciesImportRuleService;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
@@ -25,10 +26,11 @@ import com.day.cq.wcm.api.designer.Designer;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @Component(
     service = { JobExecutor.class },
-    properties = {
+    property = {
         JobExecutor.PROPERTY_TOPICS + "=" + FullConversionJobExecutor.JOB_TOPIC
     }
 )

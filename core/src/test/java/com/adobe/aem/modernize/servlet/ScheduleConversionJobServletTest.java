@@ -1,6 +1,7 @@
 package com.adobe.aem.modernize.servlet;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
@@ -31,9 +31,9 @@ import mockit.Tested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.BundleContext;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 import static org.apache.sling.api.SlingHttpServletResponse.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @ExtendWith(SlingContextExtension.class)
 public class ScheduleConversionJobServletTest {
@@ -209,11 +209,9 @@ public class ScheduleConversionJobServletTest {
     assertNotNull(result.get("message").asText(), "Message was set.");
 
     Calendar today = Calendar.getInstance();
-    String path = String.format("%s/%d/%d/%d/%s",
+    String path = String.format("%s/%s/%s",
         ConversionJob.JOB_DATA_LOCATION,
-        today.get(Calendar.YEAR),
-        today.get(Calendar.MONTH),
-        today.get(Calendar.DAY_OF_MONTH),
+        new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
         "test-job");
 
     assertFalse(serviceSession.isLive(), "Session was closed");
@@ -221,8 +219,8 @@ public class ScheduleConversionJobServletTest {
     f.setAccessible(true);
     f.set(serviceSession, true);
     assertTrue(serviceSession.nodeExists(path), "Tracking node was created.");
-    assertTrue(serviceSession.nodeExists(path + "/bucket"), "Bucket 1 was created");
-    assertTrue(serviceSession.nodeExists(path + "/bucket0"), "Bucket 2 was created");
+    assertTrue(serviceSession.nodeExists(path + "/buckets/bucket"), "Bucket 1 was created");
+    assertTrue(serviceSession.nodeExists(path + "/buckets/bucket0"), "Bucket 2 was created");
     assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJob.PN_TITLE).getString(), "Title was set");
     assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJob.PN_INITIATOR).getString(), "Initiated by was set");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_TEMPLATE_RULES), "Template rules were set.");

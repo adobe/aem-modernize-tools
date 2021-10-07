@@ -1,6 +1,7 @@
 package com.adobe.aem.modernize.servlet;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -147,11 +148,11 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
 
   // Create the tree of data for tracking the state of the job.
   private String createTrackingState(Session session, JobData jobData, String userId, List<String[]> buckets) throws RepositoryException {
-    Node tracking = null;
     try {
-      tracking = createTrackingNode(session, jobData, userId);
+      Node tracking = createTrackingNode(session, jobData, userId);
+      Node parent = tracking.addNode("buckets", JcrConstants.NT_UNSTRUCTURED);
       for (String[] bucket : buckets) {
-        addBucketNode(session, tracking, bucket);
+        addBucketNode(session, parent, bucket);
       }
       session.save();
       session.refresh(true);
@@ -165,11 +166,9 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   // Create the parent node for tracking.
   private Node createTrackingNode(Session session, JobData jobData, String userId) throws RepositoryException {
     Calendar today = Calendar.getInstance();
-    String path = String.format("%s/%d/%d/%d/%s",
+    String path = String.format("%s/%s/%s",
         ConversionJob.JOB_DATA_LOCATION,
-        today.get(Calendar.YEAR),
-        today.get(Calendar.MONTH),
-        today.get(Calendar.DAY_OF_MONTH),
+        new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
         JcrUtil.createValidName(jobData.getName(), JcrUtil.HYPHEN_LABEL_CHAR_MAPPING, "-"));
     Node node = JcrUtils.getOrCreateByPath(path, true, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
     node.setProperty(PN_TITLE, jobData.getName());

@@ -134,7 +134,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     predicates.add(predicate);
 
     predicate = new Predicate(Predicate.ORDER_BY);
-    predicate.set(Predicate.ORDER_BY, "@" + JcrConstants.JCR_CREATED);
+    predicate.set(Predicate.ORDER_BY, PathPredicateEvaluator.PATH);
     predicate.set(Predicate.PARAM_SORT, Predicate.SORT_DESCENDING);
     predicates.add(predicate);
 
