@@ -13,9 +13,11 @@ import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 
 import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 public abstract class AbstractConversionJobExecutor implements JobExecutor {
 
@@ -27,7 +29,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   public JobExecutionResult process(Job job, JobExecutionContext context) {
     String[] paths = job.getProperty(PN_PATHS, String[].class);
     if (paths == null || paths.length == 0) {
-      return context.result().message("Invalid job state, no paths specified to process.").failed();
+      return context.result().message("Invalid job state, no paths specified to process.").cancelled();
     }
     ResourceResolver resourceResolver = null;
     try {
@@ -39,12 +41,12 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     } catch (LoginException e) {
       context.log("Unable to log in using service user: {}", e.getLocalizedMessage());
       logger.error("Unable to log in using service user to perform conversion", e);
-      return context.result().message("Unable to log in using service user.").failed();
+      return context.result().message("Unable to log in using service user.").cancelled();
     } catch (RewriteException | PersistenceException e) {
       context.log("Error when trying to update the requested content.", e.getLocalizedMessage());
       logger.error("Unable to make changes to repository.", e);
       resourceResolver.revert();
-      return context.result().message("Error when trying to save the changes.").failed();
+      return context.result().message("Error when trying to save the changes.").cancelled();
     } finally {
       if (resourceResolver != null && resourceResolver.isLive()) {
         resourceResolver.close();

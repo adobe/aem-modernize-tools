@@ -1,0 +1,37 @@
+<sly data-sly-test.stacked="${properties.multi}"/>
+<coral-card class="foundation-collection-navigator"
+    assetwidth="400"
+    assetheight="230"
+    data-viewdetailpath=""
+    data-multi="${properties.multi}"
+    title="${properties.title}"
+    data-foundation-collection-navigator-href=""
+    colorhint="#FFFFFF"
+    data-sly-attribute.stacked="${stacked}">
+  <coral-card-asset class="jobCardAsset">
+    <div class="globalnav-toolcard-icon">
+      <coral-icon icon="taskList" size="XL" autoarialable="on" role="img" aria-label="clock check"></coral-icon>
+    </div>
+  </coral-card-asset>
+  <coral-card-content class="jobCardContent">
+    <coral-card-title class="jobCardTitle">
+      <table>
+        <tr>
+          <td>
+            <div class="smallIcon ${properties.statusClass}Background">
+              <coral-icon icon="${properties.icon}"></coral-icon>
+            </div>
+          </td>
+          <td>
+            <div class="truncatedText">${properties.title}</div>
+          </td>
+        </tr>
+      </table>
+    </coral-card-title>
+    <coral-card-propertylist class="propertyWithMargin">
+      <coral-card-property>
+        Status: ${properties.status}
+      </coral-card-property>
+    </coral-card-propertylist>
+  </coral-card-content>
+</coral-card>

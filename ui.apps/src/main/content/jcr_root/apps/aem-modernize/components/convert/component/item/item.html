@@ -11,22 +11,9 @@
  *  governing permissions and limitations under the License.
  */
 -->
-<sly data-sly-test.converted="${properties.converted}"/>
-<tr is="coral-table-row"
-    class="${!converted ? 'foundation-collection-item' : ''}"
-    data-foundation-collection-item-id="${properties.componentPath}"
-    data-sly-attribute.hidden="${converted ? converted : ''}"
-    data-sly-attribute.data-modernize-component-converted="${converted ? converted : ''}">
+<tr is="coral-table-row" data-foundation-collection-item-id="${properties.componentPath}">
+    <td is="coral-table-cell">${properties.path}</td>
     <td is="coral-table-cell">
-        <coral-checkbox disabled="${converted}" coral-table-rowselect></coral-checkbox>
+        <a href="${properties.ruleHref @  context='uri'}" class="coral-Link">${'modernize.show.rule' @ i18n}</a>
     </td>
-    <td is="coral-table-cell">${properties.componentPath}</td>
-    <td is="coral-table-cell">${properties.resourceType}</td>
-    <td is="coral-table-cell">
-        <a href="${properties.href @  context='uri'}" target="_blank" class="coral-Link">${'show' @ i18n}</a> / <a href="${properties.crxHref @  context='uri'}" x-cq-linkchecker="skip" target="_blank" class="coral-Link">crxde</a>
-    </td>
-    <td data-sly-test="${converted}" is="coral-table-cell">
-        <a href="${properties.touchHref @  context='uri'}" target="_blank" class="coral-Link">${'show' @ i18n}</a> / <a href="${properties.touchCrxHref @  context='uri'}" x-cq-linkchecker="skip" target="_blank" class="coral-Link">crxde</a>
-    </td>
-    <td data-sly-test="${!converted}" is="coral-table-cell">-</td>
 </tr>

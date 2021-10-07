@@ -28,6 +28,7 @@ import org.apache.sling.jcr.api.SlingRepository;
 import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import static org.apache.sling.api.SlingHttpServletResponse.*;
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @Component(
     service = { Servlet.class },

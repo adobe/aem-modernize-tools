@@ -33,13 +33,13 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.commons.json.JSONObject;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
+import com.adobe.aem.modernize.impl.TreeRewriter;
+import com.adobe.aem.modernize.rule.RewriteRule;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
 @Component(
@@ -77,11 +77,11 @@ public class ComponentConversionServlet extends SlingAllMethodsServlet {
 
         try {
             // get component rewrite rules
-            List<ComponentRewriteRule> rules = null; // componentRewriteRuleService.getRules(request.getResourceResolver());
+            List<RewriteRule> rules = null; // componentRewriteRuleService.getRules(request.getResourceResolver());
 
             long tick = System.currentTimeMillis();
             Session session = request.getResourceResolver().adaptTo(Session.class);
-            ComponentTreeRewriter rewriter = new ComponentTreeRewriter(rules);
+            TreeRewriter rewriter = new TreeRewriter(rules);
             JSONObject results = new JSONObject();
             logger.debug("Converting {} components", paths.length);
 

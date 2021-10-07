@@ -8,6 +8,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,16 +16,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @ExtendWith(SlingContextExtension.class)
-public class ComponentConversionJobExecutorTest {
+public class ComponentJobExecutorTest {
 
   private static String[] paths;
   private static String[] componentRules;
 
   private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
-  private ComponentConversionJobExecutor executor = new ComponentConversionJobExecutor();
+  private ComponentJobExecutor executor = new ComponentJobExecutor();
 
   @Mocked
   private ComponentRewriteRuleService componentService;

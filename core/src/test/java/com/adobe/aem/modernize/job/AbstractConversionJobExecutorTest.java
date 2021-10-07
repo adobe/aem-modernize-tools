@@ -17,6 +17,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
@@ -67,7 +69,7 @@ public class AbstractConversionJobExecutorTest {
       if (success) {
         resultBuilder.succeeded();
       } else {
-        resultBuilder.failed();
+        resultBuilder.cancelled();
       }
       result = executionResult;
     }};

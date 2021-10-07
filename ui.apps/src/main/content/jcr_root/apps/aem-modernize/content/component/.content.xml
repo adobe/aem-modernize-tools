@@ -1,137 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-    jcr:primaryType="cq:Page">
-    <jcr:content
-        jcr:mixinTypes="[]"
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          jcr:primaryType="nt:unstructured"
+          jcr:title="Component Conversion"
+          sling:resourceType="granite/ui/components/shell/collectionpage"
+          consoleId="aem-modernize-component-job"
+          modeGroup="aem-modernize-component-job-collection"
+          pageURITemplate="/apps/aem-modernize/content/component.html"
+          currentView="${state[&quot;shell.collectionpage.layoutId&quot;].string}"
+          targetCollection=".aem-modernize-component-job-collection">
+  <head jcr:primaryType="nt:unstructured">
+    <clientlibs
         jcr:primaryType="nt:unstructured"
-        jcr:title="Component Conversion Tool"
-        sling:resourceType="aem-modernize/components/convert/component"
-        consoleId="aem-modernize-component">
-        <head jcr:primaryType="nt:unstructured">
-            <clientlibs
-                jcr:primaryType="nt:unstructured"
-                sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
-                categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.component]"/>
-        </head>
-        <title
-            jcr:primaryType="nt:unstructured"
-            sling:resourceType="granite/ui/components/coral/foundation/text"
-            text="Component Conversion Tool"/>
-        <actions jcr:primaryType="nt:unstructured">
-            <secondary jcr:primaryType="nt:unstructured">
-                <convert
-                    granite:class="aem-ComponentConverter-convertComponents js-aem-ComponentConverter-convertComponents"
-                    jcr:primaryType="nt:unstructured"
-                    sling:resourceType="granite/ui/components/coral/foundation/collection/action"
-                    activeSelectionCount="multiple"
-                    target=".aem-modernize-component-components"
-                    text="Convert component(s)"
-                    variant="primary">
-                </convert>
-                <back
-                    granite:class="js-aem-ComponentConverter-back"
-                    granite:hidden="{Boolean}true"
-                    jcr:primaryType="nt:unstructured"
-                    sling:resourceType="granite/ui/components/coral/foundation/button"
-                    text="Back">
-                </back>
-            </secondary>
-        </actions>
-        <content
-            granite:class="js-aem-ComponentConverter-container"
-            jcr:primaryType="nt:unstructured"
-            sling:resourceType="granite/ui/components/coral/foundation/container">
-            <items jcr:primaryType="nt:unstructured">
-                <componentSearch
-                    granite:class="js-aem-ComponentConverter-componentSearch"
-                    jcr:primaryType="nt:unstructured"
-                    sling:resourceType="granite/ui/components/coral/foundation/container">
-                    <items jcr:primaryType="nt:unstructured">
-                        <actionbar
-                            jcr:primaryType="nt:unstructured"
-                            sling:resourceType="granite/ui/components/coral/foundation/actionbar">
-                            <primary jcr:primaryType="nt:unstructured">
-                                <pathField
-                                    granite:class="js-aem-ComponentConverter-searchPath aem-ComponentConverter-searchPath"
-                                    jcr:primaryType="nt:unstructured"
-                                    sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
-                                    filter="nosystem"
-                                    emptyText="Enter a path, e.g. /content/weretail/en"
-                                    value="${empty param.path ? &quot;&quot; : param.path}"/>
-                                <showButton
-                                    granite:class="js-aem-ComponentConverter-showComponents"
-                                    jcr:primaryType="nt:unstructured"
-                                    sling:resourceType="granite/ui/components/coral/foundation/button"
-                                    text="Show components"/>
-                            </primary>
-                            <secondary jcr:primaryType="nt:unstructured">
-                                <text
-                                    granite:class="js-aem-ComponentConverter-infoText aem-ComponentConverter-infoText"
-                                    jcr:primaryType="nt:unstructured"
-                                    sling:resourceType="granite/ui/components/coral/foundation/text"
-                                    text=""/>
-                            </secondary>
-                        </actionbar>
-                        <components
-                            granite:class="js-aem-ComponentConverter-components"
-                            granite:rel="aem-modernize-component-components"
-                            jcr:primaryType="nt:unstructured"
-                            sling:resourceType="granite/ui/components/coral/foundation/table"
-                            itemResourceType="aem-modernize/components/convert/component/item"
-                            orderable="{Boolean}false"
-                            path="${param.path}"
-                            selectionMode="row">
-                            <columns jcr:primaryType="nt:unstructured">
-                                <select
-                                    jcr:primaryType="nt:unstructured"
-                                    fixedWidth="{Boolean}true"
-                                    select="{Boolean}true"/>
-                                <componentPath
-                                    jcr:primaryType="nt:unstructured"
-                                    jcr:title="Component path"
-                                    sortable="{Boolean}true"/>
-                                <type
-                                    jcr:primaryType="nt:unstructured"
-                                    jcr:title="Type"
-                                    alignment="center"
-                                    sortable="{Boolean}true"/>
-                                <links
-                                    jcr:primaryType="nt:unstructured"
-                                    jcr:title="Links"
-                                    alignment="center"/>
-                                <convertedLinks
-                                    jcr:primaryType="nt:unstructured"
-                                    jcr:title="Converted component"
-                                    alignment="center"
-                                    sortable="{Boolean}true"/>
-                            </columns>
-                            <datasource
-                                jcr:primaryType="nt:unstructured"
-                                sling:resourceType="aem-modernize/components/convert/component/datasource"/>
-                        </components>
-                    </items>
-                </componentSearch>
-                <convertedComponents
-                    granite:class="js-aem-ComponentConverter-convertedComponents"
-                    granite:hidden="{Boolean}true"
-                    jcr:primaryType="nt:unstructured"
-                    sling:resourceType="granite/ui/components/coral/foundation/table"
-                    orderable="{Boolean}false">
-                    <columns jcr:primaryType="nt:unstructured">
-                        <componentPath
-                            jcr:primaryType="nt:unstructured"
-                            jcr:title="Component path"
-                            sortable="{Boolean}true"/>
-                        <conversion
-                            jcr:primaryType="nt:unstructured"
-                            jcr:title="Conversion result"/>
-                        <message
-                            jcr:primaryType="nt:unstructured"
-                            jcr:title="Message"
-                            sortable="{Boolean}true"/>
-                    </columns>
-                </convertedComponents>
-            </items>
-        </content>
-    </jcr:content>
+        sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
+        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common]"/>
+  </head>
+  <actions jcr:primaryType="nt:unstructured">
+    <secondary jcr:primaryType="nt:unstructured">
+      <create jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
+              href="/apps/aem-modernize/content/job/create.component.html"
+              text="Create"
+              variant="primary"/>
+    </secondary>
+  </actions>
+  <title jcr:primaryType="nt:unstructured"
+         text="Component Conversion"
+         sling:resourceType="granite/ui/components/coral/foundation/text"/>
+  <views jcr:primaryType="nt:unstructured">
+    <card jcr:primaryType="nt:unstructured"
+          jcr:title="Card View"
+          sling:resourceType="granite/ui/components/coral/foundation/masonry"
+          granite:rel="aem-modernize-component-job-collection"
+          icon="viewCard"
+          layoutId="card"
+          modeGroup="aem-modernize-component-job-collection"
+          path="/var/aem-modernize/job-data/component"
+          src="/apps/aem-modernize/content/component/views/card.html"
+          itemResourceType="aem-modernize/components/convert/job/component/card"
+          stateId="shell.collectionpage"
+          size="40"
+          limit="{Long}20">
+      <datasource jcr:primaryType="nt:unstructured"
+                  limit="${empty requestPathInfo.selectors[1] ? &quot;20&quot; : requestPathInfo.selectors[1]}"
+                  offset="${requestPathInfo.selectors[0]}"
+                  path="${requestPathInfo.suffix}"
+                  jobType="aem-modernize/components/convert/job/component"
+                  sling:resourceType="aem-modernize/components/convert/job/datasource"/>
+    </card>
+    <list jcr:primaryType="nt:unstructured"
+          jcr:title="List View"
+          sling:resourceType="granite/ui/components/coral/foundation/table"
+          granite:rel="aem-modernize-component-job-collection"
+          draggable="{Boolean}false"
+          icon="viewList"
+          layoutId="list"
+          modeGroup="aem-modernize-component-job-collection"
+          path="/var/aem-modernize/job-data/component"
+          src="/apps/aem-modernize/content/component/views/list.html"
+          itemResourceType="aem-modernize/components/convert/job/component/listitem"
+          stateId="shell.collectionpage"
+          sortMode="local"
+          size="40"
+          limit="{Long}100">
+      <datasource jcr:primaryType="nt:unstructured"
+                  limit="${empty requestPathInfo.selectors[1] ? &quot;100&quot; : requestPathInfo.selectors[1]}"
+                  offset="${requestPathInfo.selectors[0]}"
+                  path="${requestPathInfo.suffix}"
+                  jobType="aem-modernize/components/convert/job/component"
+                  sling:resourceType="aem-modernize/components/convert/job/datasource"/>
+      <columns jcr:primaryType="nt:unstructured">
+        <name jcr:primaryType="nt:unstructured"
+              jcr:title="Name"
+              sortType="alphanumeric"
+              sortable="{Boolean}true"/>
+        <status jcr:primaryType="nt:unstructured"
+                jcr:title="Job Status"
+                sortType="number"
+                sortable="{Boolean}true"/>
+        <date jcr:primaryType="nt:unstructured"
+              jcr:title="Execution Date"
+              sortType="date"
+              alignment="center"
+              sortable="{Boolean}true"/>
+        <multi jcr:primaryType="nt:unstructured"
+               jcr:title="Multi-Bucket"
+               alignment="right"
+               sortable="{Boolean}false"/>
+      </columns>
+    </list>
+  </views>
 </jcr:root>

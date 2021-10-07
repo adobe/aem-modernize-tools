@@ -1,0 +1,83 @@
+.jobCardAsset {
+  height: 230px !important;
+  background-color: white !important;
+  text-align: center;
+  padding: 2rem;
+}
+
+.jobCardContent {
+  margin: 0;
+  padding: 0;
+}
+
+.jobCardTitle {
+  background-color: #e0e0e0;
+  word-break: normal;
+  word-wrap: normal;
+}
+
+
+.smallIcon {
+  padding: .9375rem;
+  background-color: #bbb;
+  margin-right: .5rem
+}
+
+.mediumIcon {
+  font-size: 1rem;
+  margin-right: 1rem;
+}
+
+.smallIcon {
+  color: #fff;
+}
+
+.error {
+  color: #fa7d73;
+}
+
+.errorBackground {
+  background-color: #fa7d73;
+}
+
+.warn {
+  background-color: #fad782;
+}
+
+.warnBackground {
+  background-color: #fad782;
+}
+
+.success {
+  background-color: #b3da8a;
+}
+
+.successBackground {
+  background-color: #b3da8a;
+}
+
+.info {
+  color: #696969;
+}
+
+.infoBackground {
+  background-color: #696969;
+}
+
+.truncatedText {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  word-break: normal;
+  word-wrap: normal;
+}
+
+.propertyWithMargin {
+  margin: 1rem !important;
+}
+
+.darkText {
+  color: #666;
+  margin-right: 2rem;
+}

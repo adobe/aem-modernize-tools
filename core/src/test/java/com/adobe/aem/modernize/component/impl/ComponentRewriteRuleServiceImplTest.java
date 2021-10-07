@@ -38,6 +38,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
+import com.adobe.aem.modernize.MockHit;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.TreeRewriter;
@@ -333,59 +334,5 @@ public class ComponentRewriteRuleServiceImplTest {
       hits.add(new MockHit(child));
     }
     return hits;
-  }
-
-  private static class MockHit implements Hit {
-
-    private final Resource resource;
-
-    private MockHit(Resource resource) {
-      this.resource = resource;
-    }
-
-    @Override
-    public Resource getResource() throws RepositoryException {
-      return this.resource;
-    }
-
-    @Override
-    public Node getNode() throws RepositoryException {
-      return this.resource.adaptTo(Node.class);
-    }
-
-    @Override
-    public String getPath() throws RepositoryException {
-      return this.resource.getPath();
-    }
-
-    @Override
-    public ValueMap getProperties() throws RepositoryException {
-      return this.resource.getValueMap();
-    }
-
-    @Override
-    public long getIndex() {
-      throw new UnsupportedOperationException("Unsupported");
-    }
-
-    @Override
-    public Map<String, String> getExcerpts() throws RepositoryException {
-      throw new UnsupportedOperationException("Unsupported");
-    }
-
-    @Override
-    public String getExcerpt() throws RepositoryException {
-      throw new UnsupportedOperationException("Unsupported");
-    }
-
-    @Override
-    public String getTitle() throws RepositoryException {
-      throw new UnsupportedOperationException("Unsupported");
-    }
-
-    @Override
-    public double getScore() throws RepositoryException {
-      throw new UnsupportedOperationException("Unsupported");
-    }
   }
 }

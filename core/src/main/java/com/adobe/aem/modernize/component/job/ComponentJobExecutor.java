@@ -15,10 +15,11 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.component.job.ComponentJobExecutor.*;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @Component(
     service = { JobExecutor.class },
-    properties = {
+    property = {
         JobExecutor.PROPERTY_TOPICS + "=" + JOB_TOPIC
     }
 )

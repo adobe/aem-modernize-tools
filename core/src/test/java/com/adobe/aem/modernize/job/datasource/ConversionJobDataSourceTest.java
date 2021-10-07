@@ -11,6 +11,9 @@ import javax.jcr.Session;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.event.jobs.Job;
+import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
@@ -54,6 +57,22 @@ public class ConversionJobDataSourceTest {
   @Mocked
   private SearchResult searchResult;
 
+  @Mocked
+  private JobManager jobManager;
+
+  @Mocked
+  private Job success;
+
+  @Mocked
+  private Job active;
+
+  @Mocked
+  private Job queued;
+
+  @Mocked
+  private Job error;
+
+
   @BeforeAll
   public static void beforeAll() {
     Calendar today = Calendar.getInstance();
@@ -68,6 +87,7 @@ public class ConversionJobDataSourceTest {
   public void beforeEach() {
     context.load().json("/job/datasource/test-component-job.json", jobDataPath);
     context.load().json("/job/datasource/test-component-view.json", componentViewsPath);
+    context.registerService(JobManager.class, jobManager);
     context.registerService(ExpressionResolver.class, expressionResolver);
     context.registerService(QueryBuilder.class, queryBuilder);
 
@@ -80,6 +100,19 @@ public class ConversionJobDataSourceTest {
     Resource resource = context.resourceResolver().getResource(componentViewsPath + "/missingPath");
     request.setResource(resource);
     dataSource.doGet(request, new MockSlingHttpServletResponse());
+    DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
+    assertNull(ds, "DataSource not set");
+  }
+
+
+  @Test
+  public void testNoJobResourceType() throws Exception {
+    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(context.resourceResolver(), context.bundleContext());
+    Resource resource = context.resourceResolver().getResource(componentViewsPath + "/missingJobResourceType");
+    request.setResource(resource);
+    dataSource.doGet(request, new MockSlingHttpServletResponse());
+    DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
+    assertNull(ds, "DataSource not set");
   }
 
   @Test
@@ -88,6 +121,8 @@ public class ConversionJobDataSourceTest {
     Resource resource = context.resourceResolver().getResource(componentViewsPath + "/missingItemResourceType");
     request.setResource(resource);
     dataSource.doGet(request, new MockSlingHttpServletResponse());
+    DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
+    assertNull(ds, "DataSource not set");
   }
 
   @Test
@@ -97,6 +132,8 @@ public class ConversionJobDataSourceTest {
     request.setResource(resource);
     request.setLocale(Locale.ENGLISH);
     dataSource.doGet(request, new MockSlingHttpServletResponse());
+    DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
+    assertNull(ds, "DataSource not set");
   }
 
   @Test
@@ -124,6 +161,8 @@ public class ConversionJobDataSourceTest {
       result = new RepositoryException("Error");
     }};
     dataSource.doGet(request, new MockSlingHttpServletResponse());
+    DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
+    assertNull(ds, "DataSource not set");
   }
 
   @Test
@@ -148,6 +187,8 @@ public class ConversionJobDataSourceTest {
       result = Collections.emptyList();
     }};
     dataSource.doGet(request, new MockSlingHttpServletResponse());
+    DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
+    assertNull(ds, "DataSource not set");
   }
 
   @Test
@@ -183,14 +224,58 @@ public class ConversionJobDataSourceTest {
       times = 1;
       searchResult.getHits();
       result = buildHits();
+
+      active.getJobState();
+      result = Job.JobState.ACTIVE;
+      error.getJobState();
+      result = Job.JobState.ERROR;
+      queued.getJobState();
+      result = Job.JobState.QUEUED;
+      success.getJobState();
+      result = Job.JobState.SUCCEEDED;
+
+      jobManager.getJobById("1");
+      result = queued;
+      jobManager.getJobById("2");
+      result = success;
+      jobManager.getJobById("3");
+      result = error;
+      jobManager.getJobById("4");
+      result = active;
+      jobManager.getJobById("5");
+      result = null;
     }};
     dataSource.doGet(request, new MockSlingHttpServletResponse());
     DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
     Iterator<Resource> it = ds.iterator();
-    assertEquals("geodemo-components0", it.next().getName(), "Resource hit included.");
-    assertEquals("geodemo-components1", it.next().getName(), "Resource hit included.");
-    assertEquals("geodemo-components2", it.next().getName(), "Resource hit included.");
-    assertEquals("geodemo-components3", it.next().getName(), "Resource hit included.");
+    ValueMap vm = it.next().adaptTo(ValueMap.class);
+    assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
+    assertFalse(vm.get("multi", Boolean.class), "Multi value");
+    assertEquals("QUEUED", vm.get("status", String.class), "Status value");
+    assertEquals("info", vm.get("statusClass", String.class), "Status value");
+    assertEquals("clock", vm.get("icon", String.class), "Status value");
+
+    vm = it.next().adaptTo(ValueMap.class);
+    assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
+    assertTrue(vm.get("multi", Boolean.class), "Multi value");
+    assertEquals("ERROR", vm.get("status", String.class), "Status value");
+    assertEquals("error", vm.get("statusClass", String.class), "Status value");
+    assertEquals("closeCircle", vm.get("icon", String.class), "Status value");
+
+    vm = it.next().adaptTo(ValueMap.class);
+    assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
+    assertFalse(vm.get("multi", Boolean.class), "Multi value");
+    assertEquals("ACTIVE", vm.get("status", String.class), "Status value");
+    assertEquals("info", vm.get("statusClass", String.class), "Status value");
+    assertEquals("clockCheck", vm.get("icon", String.class), "Status value");
+
+
+    vm = it.next().adaptTo(ValueMap.class);
+    assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
+    assertFalse(vm.get("multi", Boolean.class), "Multi value");
+    assertEquals("unknown", vm.get("status", String.class), "Status value");
+    assertEquals("info", vm.get("statusClass", String.class), "Status value");
+    assertEquals("helpCircle", vm.get("icon", String.class), "Status value");
 
     assertTrue(closeCalled[0], "Query RR was closed");
 

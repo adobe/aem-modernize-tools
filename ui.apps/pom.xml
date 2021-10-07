@@ -48,7 +48,6 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
-                    <acHandling>merge_preserve</acHandling>
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
                     </properties>
@@ -61,6 +60,13 @@
                             <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
                         </repositoryStructurePackage>
                     </repositoryStructurePackages>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.adobe.cq</groupId>
+                            <artifactId>aem-modernize-tools.ui.config</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
                 </configuration>
             </plugin>
             <plugin>
@@ -109,13 +115,19 @@
             <artifactId>aem-modernize-tools.core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.adobe.cq</groupId>
+            <artifactId>aem-modernize-tools.ui.config</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>com.adobe.cq</groupId>
             <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
+
 
         <dependency>
             <groupId>com.adobe.aem</groupId>
