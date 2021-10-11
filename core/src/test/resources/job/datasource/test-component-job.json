@@ -10,7 +10,7 @@
       "/var/aem-modernize/job-data/component/title",
       "/var/aem-modernize/job-data/component/text"
     ],
-    "sling:resourceType": "aem-modernize/components/convert/job/component",
+    "sling:resourceType": "aem-modernize/components/job/component",
     "buckets": {
       "bucket0": {
         "jcr:primaryType": "nt:unstructured",
@@ -55,7 +55,7 @@
       "/var/aem-modernize/job-data/component/title",
       "/var/aem-modernize/job-data/component/text"
     ],
-    "sling:resourceType": "aem-modernize/components/convert/job/component",
+    "sling:resourceType": "aem-modernize/components/job/component",
     "buckets": {
       "bucket0": {
         "jcr:primaryType": "nt:unstructured",
@@ -130,7 +130,7 @@
       "/var/aem-modernize/job-data/component/title",
       "/var/aem-modernize/job-data/component/text"
     ],
-    "sling:resourceType": "aem-modernize/components/convert/job/component",
+    "sling:resourceType": "aem-modernize/components/job/component",
     "buckets": {
       "bucket0": {
         "jcr:primaryType": "nt:unstructured",
@@ -175,7 +175,7 @@
       "/var/aem-modernize/job-data/component/title",
       "/var/aem-modernize/job-data/component/text"
     ],
-    "sling:resourceType": "aem-modernize/components/convert/job/component",
+    "sling:resourceType": "aem-modernize/components/job/component",
     "buckets": {
       "bucket0": {
         "jcr:primaryType": "nt:unstructured",

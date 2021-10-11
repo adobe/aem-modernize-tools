@@ -92,7 +92,7 @@ public class TreeRewriterTest {
     session.save();
 
     // Should only be called once when matched.
-    assertEquals(1, finalRewriteRule.invoked);
+    assertEquals(1, finalRewriteRule.invoked, "Rewrite rule invocations");
   }
 
   private static class SetRootFinalRewriteRule implements RewriteRule {

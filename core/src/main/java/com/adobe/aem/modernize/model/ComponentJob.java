@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 public class ComponentJob extends ConversionJob {
 
-  public static final String RESOURCE_TYPE = "aem-modernize/components/convert/job/component";
+  public static final String RESOURCE_TYPE = "aem-modernize/components/job/component";
   public static final String JOB_DATA_LOCATION = PathUtils.concat(ConversionJob.JOB_DATA_LOCATION, Type.COMPONENT.toString().toLowerCase());
 
 

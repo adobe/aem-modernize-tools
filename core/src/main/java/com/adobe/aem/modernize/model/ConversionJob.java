@@ -16,7 +16,7 @@ import lombok.Getter;
 )
 @Getter
 public class ConversionJob {
-  public static final String RESOURCE_TYPE = "aem-modernize/components/convert/job";
+  public static final String RESOURCE_TYPE = "aem-modernize/components/job";
 
   public static final String JOB_DATA_LOCATION = "/var/aem-modernize/job-data";
 

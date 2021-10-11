@@ -1,6 +1,7 @@
 {
   "jcr:primaryType": "sling:OrderedFolder",
   "simple": {
+    "jcr:title": "Simple Rule",
     "jcr:primaryType": "nt:unstructured",
     "patterns": {
       "jcr:primaryType": "nt:unstructured",

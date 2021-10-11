@@ -106,6 +106,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     return null;
   }
 
+  // TODO: Add Logic for checking write permissions in /conf and /etc
   private void checkPermissions(Session session, String[] paths) throws AccessDeniedException {
     try {
       AccessControlManager acm = session.getAccessControlManager();
@@ -212,7 +213,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     return true;
   }
 
-  private void writeResponse(SlingHttpServletResponse response, int code, boolean success, String message) throws ServletException, IOException {
+  private void writeResponse(SlingHttpServletResponse response, int code, boolean success, String message) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     ObjectNode result = mapper.createObjectNode();
     result.put("status", success ? "success" : "failure");

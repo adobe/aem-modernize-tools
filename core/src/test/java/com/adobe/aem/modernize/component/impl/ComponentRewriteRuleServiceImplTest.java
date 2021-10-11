@@ -206,7 +206,7 @@ public class ComponentRewriteRuleServiceImplTest {
     Set<String> paths = componentRewriteRuleService.find(root);
     assertTrue(paths.contains("/content/test/all/serviceTest"));
     paths.remove("/content/test/all/serviceTest");
-    assertTrue(paths.isEmpty());
+    assertTrue(paths.isEmpty(), "Paths content");
   }
 
   @Test
@@ -246,7 +246,7 @@ public class ComponentRewriteRuleServiceImplTest {
     Set<String> paths = componentRewriteRuleService.find(root);
     assertTrue(paths.contains("/content/test/all/serviceTest"));
     paths.remove("/content/test/all/serviceTest");
-    assertTrue(paths.isEmpty());
+    assertTrue(paths.isEmpty(), "Paths content");
     assertTrue(closeCalled[0], "Query RR was closed");
   }
 
@@ -286,29 +286,29 @@ public class ComponentRewriteRuleServiceImplTest {
     Resource root = context.resourceResolver().getResource("/content/test/all");
     Set<String> paths = componentRewriteRuleService.find(root);
 
-    assertTrue(paths.contains("/content/test/all/simple"));
+    assertTrue(paths.contains("/content/test/all/simple"), "Simple rule");
     paths.remove("/content/test/all/simple");
-    assertTrue(paths.contains("/content/test/all/copyChildren"));
+    assertTrue(paths.contains("/content/test/all/copyChildren"), "Copy children rule");
     paths.remove("/content/test/all/copyChildren");
-    assertTrue(paths.contains("/content/test/all/copyChildrenOrder"));
+    assertTrue(paths.contains("/content/test/all/copyChildrenOrder"), "Copy children order rule");
     paths.remove("/content/test/all/copyChildrenOrder");
-    assertTrue(paths.contains("/content/test/all/mapProperties"));
+    assertTrue(paths.contains("/content/test/all/mapProperties"), "Map properties rule");
     paths.remove("/content/test/all/mapProperties");
-    assertTrue(paths.contains("/content/test/all/rewriteOptional"));
+    assertTrue(paths.contains("/content/test/all/rewriteOptional"), "Rewrite Optional rule");
     paths.remove("/content/test/all/rewriteOptional");
-    assertTrue(paths.contains("/content/test/all/rewriteRanking"));
+    assertTrue(paths.contains("/content/test/all/rewriteRanking"), "Ranking rule");
     paths.remove("/content/test/all/rewriteRanking");
-    assertTrue(paths.contains("/content/test/all/rewriteMapChildren"));
+    assertTrue(paths.contains("/content/test/all/rewriteMapChildren"), "Rewrite map children rule");
     paths.remove("/content/test/all/rewriteMapChildren");
-    assertTrue(paths.contains("/content/test/all/rewriteFinal"));
+    assertTrue(paths.contains("/content/test/all/rewriteFinal"), "Rewrite final rule");
     paths.remove("/content/test/all/rewriteFinal");
-    assertTrue(paths.contains("/content/test/all/rewriteFinalOnReplacement"));
+    assertTrue(paths.contains("/content/test/all/rewriteFinalOnReplacement"), "Rewrite final on replacement node rule.");
     paths.remove("/content/test/all/rewriteFinalOnReplacement");
-    assertTrue(paths.contains("/content/test/all/rewriteProperties"));
+    assertTrue(paths.contains("/content/test/all/rewriteProperties"), "Rewrite properties rule");
     paths.remove("/content/test/all/rewriteProperties");
-    assertTrue(paths.contains("/content/test/all/serviceTest"));
+    assertTrue(paths.contains("/content/test/all/serviceTest"), "Service rule");
     paths.remove("/content/test/all/serviceTest");
-    assertTrue(paths.isEmpty());
+    assertTrue(paths.isEmpty(), "Rule count");
 
     assertEquals(2, closeCalled[0], "Query RR was closed");
   }

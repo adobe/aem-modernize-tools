@@ -15,7 +15,7 @@ import lombok.Getter;
 )
 @Getter
 public class ConversionJobBucket {
-  public static final String RESOURCE_TYPE = "aem-modernize/components/convert/job/bucket";
+  public static final String RESOURCE_TYPE = "aem-modernize/components/job/bucket";
   public static final String PN_JOB_ID = "jobId";
   public static final String PN_PATHS = "paths";
   public static final String PN_SUCCESS = "success";

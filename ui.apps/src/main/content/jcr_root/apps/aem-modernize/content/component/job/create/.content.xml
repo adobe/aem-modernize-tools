@@ -1,0 +1,42 @@
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          cq:defaultView="html"
+          jcr:primaryType="nt:unstructured"
+          sling:resourceType="granite/ui/components/coral/foundation/page">
+  <head jcr:primaryType="nt:unstructured">
+    <clientlibs
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
+        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job]"/>
+  </head>
+  <body jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/page/body">
+    <items jcr:primaryType="nt:unstructured">
+      <form jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/form"
+            granite:class=" aem-modernize-job-form"
+            maximized="{Boolean}true"
+            method="post"
+            novalidate="true"
+            style="aligned">
+        <granite:data jcr:primaryType="nt:unstructured"
+                      modernizeUrl="/bin/modernize.json"
+                      modernizeOperation="${requestPathInfo.selectors[0]}"/>
+        <wizard jcr:primaryType="nt:unstructured"
+                cancelHref="${empty header.Referer ? &quot;/aem/start.html&quot; : header.Referer}"
+                jcr:title="Convert Content"
+                granite:class="aem-modernize-job-wizard"
+                sling:resourceType="granite/ui/components/coral/foundation/wizard"
+                trackingFeature="aem:modernize:${requestPathInfo.selectors[0]}">
+          <items jcr:primaryType="nt:unstructured">
+            <options jcr:primaryType="nt:unstructured"
+                     jcr:title="Options"
+                     sling:resourceType="granite/ui/components/coral/foundation/container">
+            </options>
+          </items>
+        </wizard>
+      </form>
+    </items>
+  </body>
+</jcr:root>

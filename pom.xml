@@ -84,7 +84,6 @@
         <module>ui.config</module>
         <module>ui.apps</module>
         <module>ui.apps.structure</module>
-        <module>ui.content</module>
     </modules>
 
     <properties>
@@ -97,7 +96,7 @@
         <vault.user>admin</vault.user>
         <vault.password>admin</vault.password>
 
-        <aem.version>6.5.9</aem.version>
+        <aem.version>6.5.0</aem.version>
         <bnd.version>5.3.0</bnd.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jmockit.version>1.49</jmockit.version>
@@ -813,6 +812,7 @@ Bundle-DocURL:
                 <groupId>com.adobe.aem</groupId>
                 <artifactId>uber-jar</artifactId>
                 <version>${aem.version}</version>
+                <classifier>apis</classifier>
                 <scope>provided</scope>
             </dependency>
             <!-- Apache Sling Dependencies -->
@@ -849,14 +849,13 @@ Bundle-DocURL:
                 <version>2.0</version>
                 <scope>provided</scope>
             </dependency>
-<!--            &lt;!&ndash; Taglibs &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>com.day.cq.wcm</groupId>-->
-<!--                <artifactId>cq-wcm-taglib</artifactId>-->
-<!--                <version>5.7.4</version>-->
-<!--                <scope>provided</scope>-->
-<!--            </dependency>-->
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.9.5</version>
+                <scope>provided</scope>
+            </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -877,13 +876,6 @@ Bundle-DocURL:
             </dependency>
 
             <!-- Testing -->
-<!--            <dependency>-->
-<!--                <groupId>junit</groupId>-->
-<!--                <artifactId>junit</artifactId>-->
-<!--                <version>4.13.2</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>org.jmockit</groupId>
                 <artifactId>jmockit</artifactId>
