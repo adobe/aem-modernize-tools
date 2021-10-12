@@ -1,0 +1,5 @@
+#base=js
+
+namespace.js
+common-list.js
+common-create.js

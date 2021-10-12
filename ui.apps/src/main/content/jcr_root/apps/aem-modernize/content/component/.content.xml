@@ -20,7 +20,7 @@
     <secondary jcr:primaryType="nt:unstructured">
       <create jcr:primaryType="nt:unstructured"
               sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
-              href="/apps/aem-modernize/content/job/create.component.html"
+              href="/apps/aem-modernize/content/component/job/create.html"
               text="Create"
               variant="primary"/>
     </secondary>
@@ -38,7 +38,7 @@
           modeGroup="aem-modernize-component-job-collection"
           path="/var/aem-modernize/job-data/component"
           src="/apps/aem-modernize/content/component/views/card.html"
-          itemResourceType="aem-modernize/components/convert/job/component/card"
+          itemResourceType="aem-modernize/components/job/component/card"
           stateId="shell.collectionpage"
           size="40"
           limit="{Long}20">
@@ -46,8 +46,8 @@
                   limit="${empty requestPathInfo.selectors[1] ? &quot;20&quot; : requestPathInfo.selectors[1]}"
                   offset="${requestPathInfo.selectors[0]}"
                   path="${requestPathInfo.suffix}"
-                  jobType="aem-modernize/components/convert/job/component"
-                  sling:resourceType="aem-modernize/components/convert/job/datasource"/>
+                  jobType="aem-modernize/components/job/component"
+                  sling:resourceType="aem-modernize/components/job/datasource"/>
     </card>
     <list jcr:primaryType="nt:unstructured"
           jcr:title="List View"
@@ -59,7 +59,7 @@
           modeGroup="aem-modernize-component-job-collection"
           path="/var/aem-modernize/job-data/component"
           src="/apps/aem-modernize/content/component/views/list.html"
-          itemResourceType="aem-modernize/components/convert/job/component/listitem"
+          itemResourceType="aem-modernize/components/job/component/listitem"
           stateId="shell.collectionpage"
           sortMode="local"
           size="40"
@@ -68,8 +68,8 @@
                   limit="${empty requestPathInfo.selectors[1] ? &quot;100&quot; : requestPathInfo.selectors[1]}"
                   offset="${requestPathInfo.selectors[0]}"
                   path="${requestPathInfo.suffix}"
-                  jobType="aem-modernize/components/convert/job/component"
-                  sling:resourceType="aem-modernize/components/convert/job/datasource"/>
+                  jobType="aem-modernize/components/job/component"
+                  sling:resourceType="aem-modernize/components/job/datasource"/>
       <columns jcr:primaryType="nt:unstructured">
         <name jcr:primaryType="nt:unstructured"
               jcr:title="Name"
