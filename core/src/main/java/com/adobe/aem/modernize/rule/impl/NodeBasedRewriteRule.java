@@ -22,6 +22,7 @@ import org.apache.jackrabbit.oak.commons.PathUtils;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
+import com.day.cq.wcm.api.NameConstants;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   private static final Pattern MAPPED_PATTERN = Pattern.compile("^(\\!{0,1})\\$\\{(\'.*?\'|.*?)(:(.+))?\\}$");
   protected final Node rule;
   private final String id;
+  private final String title;
   private Integer ranking;
 
   /**
@@ -56,11 +58,17 @@ public class NodeBasedRewriteRule implements RewriteRule {
   public NodeBasedRewriteRule(@NotNull Node node) throws RepositoryException {
     this.rule = node;
     this.id = node.getPath();
+    this.title = node.hasProperty(NameConstants.PN_TITLE) ? node.getProperty(NameConstants.PN_TITLE).getString() : this.id;
   }
 
   @Override
   public String getId() {
     return id;
+  }
+
+  @Override
+  public String getTitle() {
+    return title;
   }
 
   @Override
@@ -543,9 +551,25 @@ public class NodeBasedRewriteRule implements RewriteRule {
     }
   }
 
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    NodeBasedRewriteRule that = (NodeBasedRewriteRule) o;
+
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
+
   @Override
   public String toString() {
-    return String.format("%s[path=%s,ranking=%d]", NodeBasedRewriteRule.class.getSimpleName(), id, getRanking());
+    return String.format("%s[path=%s,ranking=%d]", getTitle(), getId(), getRanking());
   }
 
   /*

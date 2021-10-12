@@ -9,14 +9,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
+import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.rule.RewriteRule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -109,7 +112,7 @@ public class ListRulesServletTest {
   }
 
   @Test
-  public void componentRulesEmpty() throws Exception {
+  public void componentResourceListEmpty() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(slingContext.resourceResolver(), slingContext.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
@@ -119,11 +122,11 @@ public class ListRulesServletTest {
     params.put("operation", ConversionJob.Type.COMPONENT.toString());
     request.setParameterMap(params);
 
-    final Set<String> rules = Collections.emptySet();
+    final Set<String> resources = Collections.emptySet();
     final List<Resource> capture = new ArrayList<>();
     new Expectations() {{
-      componentRewriteRuleService.find(withCapture(capture));
-      result = rules;
+      componentRewriteRuleService.findResources(withCapture(capture));
+      result = resources;
     }};
 
 
@@ -156,15 +159,20 @@ public class ListRulesServletTest {
     params.put("operation", ConversionJob.Type.COMPONENT.toString());
     request.setParameterMap(params);
 
-    final Set<String> rules = new HashSet<>();
-    rules.add(RULE_PATH + "/component/simple");
-    rules.add(RULE_PATH + "/component/copyChildren");
+    final Set<String> resources = new HashSet<>();
+    resources.add(CONTENT_PATH + "/component/simple");
+    resources.add(CONTENT_PATH + "/component/copyChildren");
+
+    final Set<RewriteRule> rules = new HashSet<>();
+    rules.add(new MockRule(RULE_PATH + "/component/simple"));
+    rules.add(new MockRule(RULE_PATH + "/component/copyChildren"));
 
     final List<Resource> capture = new ArrayList<>();
     new Expectations() {{
-      componentRewriteRuleService.find(withCapture(capture));
+      componentRewriteRuleService.findResources(withCapture(capture));
+      result = resources;
+      componentRewriteRuleService.listRules(withInstanceOf(ResourceResolver.class), withNotNull());
       result = rules;
-
     }};
 
     servlet.doGet(request, response);
@@ -187,7 +195,7 @@ public class ListRulesServletTest {
     assertFalse(componentRules.isEmpty(), "Component Rule list empty");
 
     RuleInfo ri = componentRules.get(0);
-    assertEquals("Simple Rule", ri.getTitle());
+    assertEquals("/apps/rules/component/simple", ri.getTitle());
     assertEquals("/apps/rules/component/simple", ri.getPath());
 
     ri = componentRules.get(1);

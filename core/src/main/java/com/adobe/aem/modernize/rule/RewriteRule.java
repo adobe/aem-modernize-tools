@@ -23,6 +23,8 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.adobe.aem.modernize.RewriteException;
 
 public interface RewriteRule {
@@ -33,6 +35,15 @@ public interface RewriteRule {
      * @return the id
      */
     String getId();
+
+    /**
+     * The title for this rule.
+     *
+     * @return the title
+     */
+    default String getTitle() {
+        return this.getId();
+    }
 
     /**
      * Returns true if this rule matches the given subtree.

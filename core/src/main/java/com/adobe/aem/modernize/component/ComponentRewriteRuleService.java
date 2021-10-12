@@ -19,12 +19,14 @@
 
 package com.adobe.aem.modernize.component;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.rule.RewriteRule;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -57,7 +59,7 @@ public interface ComponentRewriteRuleService {
    * @return list of paths that match rules or empty set if none found or an error occurs
    */
   @NotNull
-  Set<String> find(Resource resource);
+  Set<String> findResources(Resource resource);
 
   /**
    * Lists all rules that may apply to the specified {@code sling:resourceType}.
@@ -68,5 +70,5 @@ public interface ComponentRewriteRuleService {
    * @return list of rules by path or PID
    */
   @NotNull
-  Set<String> listRules(ResourceResolver resourceResolver, String... slingResourceType);
+  Set<RewriteRule> listRules(ResourceResolver resourceResolver, String... slingResourceType);
 }

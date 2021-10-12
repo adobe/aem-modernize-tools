@@ -55,7 +55,7 @@ public class NodeBasedRewriteRuleTest {
   public void testToString() throws Exception {
     ResourceResolver rr = context.resourceResolver();
     RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/rewriteRanking").adaptTo(Node.class));
-    assertEquals("NodeBasedRewriteRule[path=" + SIMPLE_ROOT + "/rewriteRanking,ranking=3]", rule.toString(), "Equals is");
+    assertEquals(SIMPLE_ROOT + "/rewriteRanking[path=" + SIMPLE_ROOT + "/rewriteRanking,ranking=3]", rule.toString(), "Equals is");
   }
 
   @Test

@@ -2,6 +2,7 @@ package com.adobe.aem.modernize.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -14,12 +15,10 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -68,7 +67,8 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
       return;
     }
     RuleList rules = new RuleList();
-    rules.setComponentRules(getComponentRules(resource));
+    Set<String> resourceTypes = getComponentResourceTypes(resource);
+    rules.setComponentRules(getComponentRules(rr, resourceTypes));
     writeResponse(response, SC_OK, true, "", rules);
   }
 
@@ -102,18 +102,23 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
     return page == null ? resource : page.getContentResource();
   }
 
-  private List<RuleInfo> getComponentRules(@NotNull Resource resource) {
+  private Set<String> getComponentResourceTypes(@NotNull Resource resource) {
     final ResourceResolver rr = resource.getResourceResolver();
-    Set<String> paths = componentService.find(resource);
+    Set<String> paths = componentService.findResources(resource);
     return paths.stream().map(p -> {
       Resource r = rr.getResource(p);
-      RuleInfo info = null;
+      String type = null;
       if (r != null) {
-        String title = StringUtils.defaultIfBlank(r.getValueMap().get(NameConstants.PN_TITLE, String.class), p);
-        info = new RuleInfo(p, title);
+        type = r.getValueMap().get(ResourceResolver.PROPERTY_RESOURCE_TYPE, String.class);
       }
-      return info;
-    }).filter(Objects::nonNull).collect(Collectors.toList());
+      return type;
+    }).filter(Objects::nonNull).collect(Collectors.toSet());
+  }
+
+  private List<RuleInfo> getComponentRules(final ResourceResolver rr, Set<String> resourceTypes) {
+    return componentService.listRules(rr, resourceTypes.toArray(new String[] {})).stream()
+        .map(r -> new RuleInfo(r.getId(), r.getTitle()))
+        .collect(Collectors.toList());
   }
 
   private void writeResponse(SlingHttpServletResponse response, int code, boolean success, String message, RuleList list) throws IOException {

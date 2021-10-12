@@ -33,6 +33,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -52,6 +53,8 @@ import com.day.cq.search.Query;
 import com.day.cq.search.QueryBuilder;
 import com.day.cq.search.eval.JcrPropertyPredicateEvaluator;
 import com.day.cq.search.eval.PathPredicateEvaluator;
+import com.day.cq.search.eval.PredicateGroupEvaluator;
+import com.day.cq.search.eval.TypePredicateEvaluator;
 import com.day.cq.search.result.Hit;
 import com.day.cq.search.result.SearchResult;
 import org.jetbrains.annotations.NotNull;
@@ -130,7 +133,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
 
   @Override
   @NotNull
-  public Set<String> find(Resource resource) {
+  public Set<String> findResources(Resource resource) {
     Set<String> paths = new HashSet<>();
     paths.addAll(findByNodeRules(resource));
     paths.addAll(findByService(resource));
@@ -138,8 +141,8 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
   }
 
   @Override
-  public @NotNull Set<String> listRules(ResourceResolver rr, String... slingResourceTypes) {
-    Set<String> rules = new HashSet<>();
+  public @NotNull Set<RewriteRule> listRules(ResourceResolver rr, String... slingResourceTypes) {
+    Set<RewriteRule> rules = new HashSet<>();
     rules.addAll(listRulesByNode(rr, slingResourceTypes));
     rules.addAll(listRulesByService(slingResourceTypes));
     return rules;
@@ -151,20 +154,26 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     if (types.isEmpty()) {
       return Collections.emptySet();
     }
-
     PredicateGroup predicates = new PredicateGroup();
 
-    Predicate predicate = new Predicate(PathPredicateEvaluator.PATH);
+    Predicate predicate = new Predicate(TypePredicateEvaluator.TYPE);
+    predicate.set(TypePredicateEvaluator.TYPE, JcrConstants.NT_UNSTRUCTURED);
+    predicates.add(predicate);
+
+    predicate = new Predicate(PathPredicateEvaluator.PATH);
     predicate.set(PathPredicateEvaluator.PATH, resource.getPath());
     predicates.add(predicate);
+
     predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
     predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
     int i = 0;
     for (String type : types) {
       predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);
     }
+    predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EQUALS);
     predicate.set(JcrPropertyPredicateEvaluator.AND, "false");
     predicates.add(predicate);
+
     ResourceResolver rr = resource.getResourceResolver();
     return getHitPaths(predicates, rr);
   }
@@ -173,25 +182,35 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
   private Set<String> findByService(Resource resource) {
     Set<String> paths = new HashSet<>();
     for (ComponentRewriteRule rule : rules.getList()) {
-      paths.addAll(rule.find(resource));
+      paths.addAll(rule.findMatches(resource));
     }
     return paths;
   }
 
-  private Set<String> listRulesByNode(ResourceResolver rr, String... slingResourceTypes) {
-    PredicateGroup predicates = new PredicateGroup("paths");
+  private Set<RewriteRule> listRulesByNode(ResourceResolver rr, String... slingResourceTypes) {
+    if (slingResourceTypes == null || slingResourceTypes.length == 0) {
+      return Collections.emptySet();
+    }
+
+    PredicateGroup predicates = new PredicateGroup();
     for (String path : config.search_paths()) {
       PredicateGroup pg = new PredicateGroup();
 
-      Predicate predicate = new Predicate(PathPredicateEvaluator.PATH);
+      Predicate predicate = new Predicate(TypePredicateEvaluator.TYPE);
+      predicate.set(TypePredicateEvaluator.TYPE, JcrConstants.NT_UNSTRUCTURED);
+      predicates.add(predicate);
+
+      predicate = new Predicate(PathPredicateEvaluator.PATH);
       predicate.set(PathPredicateEvaluator.PATH, path);
       pg.add(predicate);
+
       predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
       predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
       int i = 0;
       for (String type : slingResourceTypes) {
         predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);
       }
+      predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EQUALS);
       predicate.set(JcrPropertyPredicateEvaluator.AND, "false");
       pg.add(predicate);
       predicates.add(pg);
@@ -200,18 +219,25 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     Set<String> paths = getHitPaths(predicates, rr);
     return paths.stream().map(p -> {
       Resource r = rr.getResource(p);
-      if (r == null || r.getParent() == null && !StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, r.getParent().getName())) {
+      if (r == null || r.getParent() == null || !StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, r.getParent().getName())) {
         return null;
       }
-      return r.getParent().getParent() == null ? null : r.getParent().getParent().getPath();
+      r = r.getParent().getParent();
+      Node rule = r == null ? null : r.adaptTo(Node.class);
+      try {
+        return new NodeBasedRewriteRule(rule);
+      } catch (RepositoryException e) {
+        logger.error("Unable to create Rewrite Rule from Node ({})", r.getPath());
+        return null;
+      }
     }).filter(Objects::nonNull).collect(Collectors.toSet());
   }
 
-  private Set<String> listRulesByService(String... slingResourceTypes) {
-    Set<String> services = new HashSet<>();
+  private Set<RewriteRule> listRulesByService(String... slingResourceTypes) {
+    Set<RewriteRule> services = new HashSet<>();
     for (ComponentRewriteRule rule : rules.getList()) {
       if (rule.hasPattern(slingResourceTypes)) {
-        services.add(rule.getId());
+        services.add(rule);
       }
     }
     return services;
@@ -245,19 +271,25 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
   private Set<String> getSlingResourceTypes(Resource resource) {
     Set<String> types = new HashSet<>();
 
-    PredicateGroup predicates = new PredicateGroup("paths");
-    for (String path : config.search_paths()) {
-      PredicateGroup pg = new PredicateGroup();
+    PredicateGroup predicates = new PredicateGroup();
+    Predicate predicate = new Predicate(TypePredicateEvaluator.TYPE);
+    predicate.set(TypePredicateEvaluator.TYPE, JcrConstants.NT_UNSTRUCTURED);
+    predicates.add(predicate);
 
-      Predicate predicate = new Predicate(PathPredicateEvaluator.PATH);
+    predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
+    predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+    predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EXISTS);
+    predicates.add(predicate);
+
+    PredicateGroup pg = new PredicateGroup("paths");
+    pg.setAllRequired(false);
+    for (String path : config.search_paths()) {
+      predicate = new Predicate(PathPredicateEvaluator.PATH);
       predicate.set(PathPredicateEvaluator.PATH, path);
       pg.add(predicate);
-      predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
-      predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
-      predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EXISTS);
-      pg.add(predicate);
-      predicates.add(pg);
     }
+    predicates.add(pg);
+
     ResourceResolver rr = resource.getResourceResolver();
     Set<String> hits = getHitPaths(predicates, rr);
     for (String path : hits) {

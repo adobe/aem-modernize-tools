@@ -33,12 +33,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.MockHit;
+import com.adobe.aem.modernize.MockRule;
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.TreeRewriter;
@@ -194,16 +195,16 @@ public class ComponentRewriteRuleServiceImplTest {
       searchResult.getHits();
       result = new RepositoryException("Error");
 
-      matchedRewriteRule.find(withInstanceOf(Resource.class));
+      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.singleton("/content/test/all/serviceTest");
-      notMatchedRewriteRule.find(withInstanceOf(Resource.class));
+      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.emptySet();
     }};
 
     Resource root = context.resourceResolver().getResource("/content/test/all");
-    Set<String> paths = componentRewriteRuleService.find(root);
+    Set<String> paths = componentRewriteRuleService.findResources(root);
     assertTrue(paths.contains("/content/test/all/serviceTest"));
     paths.remove("/content/test/all/serviceTest");
     assertTrue(paths.isEmpty(), "Paths content");
@@ -234,16 +235,16 @@ public class ComponentRewriteRuleServiceImplTest {
       result = buildRuleHits();
       result = new RepositoryException("Error");
 
-      matchedRewriteRule.find(withInstanceOf(Resource.class));
+      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.singleton("/content/test/all/serviceTest");
-      notMatchedRewriteRule.find(withInstanceOf(Resource.class));
+      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.emptySet();
     }};
 
     Resource root = context.resourceResolver().getResource("/content/test/all");
-    Set<String> paths = componentRewriteRuleService.find(root);
+    Set<String> paths = componentRewriteRuleService.findResources(root);
     assertTrue(paths.contains("/content/test/all/serviceTest"));
     paths.remove("/content/test/all/serviceTest");
     assertTrue(paths.isEmpty(), "Paths content");
@@ -275,16 +276,16 @@ public class ComponentRewriteRuleServiceImplTest {
       searchResult.getHits();
       returns(buildRuleHits(), buildComponentHits());
 
-      matchedRewriteRule.find(withInstanceOf(Resource.class));
+      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.singleton("/content/test/all/serviceTest");
-      notMatchedRewriteRule.find(withInstanceOf(Resource.class));
+      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.emptySet();
     }};
 
     Resource root = context.resourceResolver().getResource("/content/test/all");
-    Set<String> paths = componentRewriteRuleService.find(root);
+    Set<String> paths = componentRewriteRuleService.findResources(root);
 
     assertTrue(paths.contains("/content/test/all/simple"), "Simple rule");
     paths.remove("/content/test/all/simple");
@@ -347,17 +348,15 @@ public class ComponentRewriteRuleServiceImplTest {
       result = listRulesAsHits(foundRuleList);
       matchedRewriteRule.hasPattern(resourceTypes);
       result = true;
-      matchedRewriteRule.getId();
-      result = "Matched Service Rule";
       notMatchedRewriteRule.hasPattern(resourceTypes);
       result = false;
     }};
-    Set<String> rules = componentRewriteRuleService.listRules(context.resourceResolver(), resourceTypes);
+    Set<RewriteRule> rules = componentRewriteRuleService.listRules(context.resourceResolver(), resourceTypes);
 
     assertEquals(3, rules.size(), "Rule path count");
-    assertTrue(rules.contains("/apps/aem-modernize/component/rules/simple"), "simple rule returned");
-    assertTrue(rules.contains("/apps/aem-modernize/component/rules/copyChildren"), "copyChildren rule returned");
-    assertTrue(rules.contains("Matched Service Rule"), "Service rule returned");
+    assertTrue(rules.contains(new MockRule("/apps/aem-modernize/component/rules/simple")), "simple rule returned");
+    assertTrue(rules.contains(new MockRule("/apps/aem-modernize/component/rules/copyChildren")), "copyChildren rule returned");
+    assertTrue(rules.contains(matchedRewriteRule), "Service rule returned");
     assertEquals(1, closeCalled[0], "Query RR was closed");
 
   }
