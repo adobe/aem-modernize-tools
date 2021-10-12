@@ -313,6 +313,55 @@ public class ComponentRewriteRuleServiceImplTest {
     assertEquals(2, closeCalled[0], "Query RR was closed");
   }
 
+  @Test
+  public <R extends ResourceResolver> void testListRules(
+      @Mocked Query query,
+      @Mocked SearchResult searchResult
+  ) throws Exception {
+    final int[] closeCalled = { 0 };
+
+    new MockUp<R>() {
+      @Mock
+      public void close() {
+        closeCalled[0]++;
+      }
+    };
+
+    final String[] foundRuleList = new String[] {
+        "/apps/aem-modernize/component/rules/simple/patterns/simple",
+        "/apps/aem-modernize/component/rules/copyChildren/patterns/copyChildren"
+    };
+
+    final String[] resourceTypes = new String[] {
+        "aem-modernize/components/simple",
+        "aem-modernize/components/copyChildren",
+        "aem-modenrize/components/service"
+    };
+
+    new Expectations() {{
+      queryBuilder.createQuery(withInstanceOf(PredicateGroup.class), withInstanceOf(Session.class));
+      result = query;
+      query.getResult();
+      result = searchResult;
+      searchResult.getHits();
+      result = listRulesAsHits(foundRuleList);
+      matchedRewriteRule.hasPattern(resourceTypes);
+      result = true;
+      matchedRewriteRule.getId();
+      result = "Matched Service Rule";
+      notMatchedRewriteRule.hasPattern(resourceTypes);
+      result = false;
+    }};
+    Set<String> rules = componentRewriteRuleService.listRules(context.resourceResolver(), resourceTypes);
+
+    assertEquals(3, rules.size(), "Rule path count");
+    assertTrue(rules.contains("/apps/aem-modernize/component/rules/simple"), "simple rule returned");
+    assertTrue(rules.contains("/apps/aem-modernize/component/rules/copyChildren"), "copyChildren rule returned");
+    assertTrue(rules.contains("Matched Service Rule"), "Service rule returned");
+    assertEquals(1, closeCalled[0], "Query RR was closed");
+
+  }
+
   private List<Hit> buildRuleHits() throws Exception {
     List<Hit> hits = new ArrayList<>();
     ResourceResolver rr = context.resourceResolver();
@@ -332,6 +381,15 @@ public class ComponentRewriteRuleServiceImplTest {
     Resource ruleParent = context.resourceResolver().getResource("/content/test/all");
     for (Resource child : ruleParent.getChildren()) {
       hits.add(new MockHit(child));
+    }
+    return hits;
+  }
+
+  private List<Hit> listRulesAsHits(String... paths) {
+    List<Hit> hits = new ArrayList<>();
+    ResourceResolver rr = context.resourceResolver();
+    for (String path : paths) {
+      hits.add(new MockHit(rr.getResource(path)));
     }
     return hits;
   }

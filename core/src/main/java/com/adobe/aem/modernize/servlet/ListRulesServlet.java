@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +15,7 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
@@ -27,23 +29,33 @@ import lombok.Setter;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static javax.servlet.http.HttpServletResponse.*;
+import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
-public class ListRulesServlet extends SlingAllMethodsServlet {
+@Component(
+    service = { Servlet.class },
+    property = {
+        SLING_SERVLET_PATHS + "=/bin/modernize/rules.json"
+    }
+)
+public class ListRulesServlet extends SlingSafeMethodsServlet {
 
   private static final Logger logger = LoggerFactory.getLogger(ListRulesServlet.class);
+  private static final String PARAM_PATH = "path";
+  private static final String PARAM_OPERATION = "operation";
 
   @Reference
   private ComponentRewriteRuleService componentService;
 
   @Override
-  protected void doPost(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
 
     RequestData data = getRequestData(request);
-    if (data == null || StringUtils.isBlank(data.getPath())) {
+    if (data == null) {
       writeResponse(response, SC_BAD_REQUEST, false, "Error processing request parameters.", null);
       return;
     }
@@ -62,12 +74,21 @@ public class ListRulesServlet extends SlingAllMethodsServlet {
 
   @Nullable
   private RequestData getRequestData(SlingHttpServletRequest request) {
-    try {
-      return new ObjectMapper().readValue(request.getInputStream(), RequestData.class);
-    } catch (IOException e) {
-      logger.error("Unable to parse page data from request: {}", e.getLocalizedMessage());
+    String path = request.getParameter(PARAM_PATH);
+    if (StringUtils.isBlank(path)) {
+      return null;
     }
-    return null;
+    String op = request.getParameter(PARAM_OPERATION);
+    if (StringUtils.isBlank(op)) {
+      return null;
+    }
+    try {
+      ConversionJob.Type type = ConversionJob.Type.valueOf(op.toUpperCase());
+      return new RequestData(path, type);
+    } catch (IllegalArgumentException e) {
+      logger.warn("Operation was not a valid type: ({})", op);
+      return null;
+    }
   }
 
   @Nullable
@@ -103,11 +124,10 @@ public class ListRulesServlet extends SlingAllMethodsServlet {
     response.getWriter().write(result);
   }
 
-  @Getter
-  @Setter
-  static final class RequestData {
-    private String path;
-    private ConversionJob.Type type;
+  @Value
+  static class RequestData {
+    String path;
+    ConversionJob.Type type;
   }
 
   @Getter

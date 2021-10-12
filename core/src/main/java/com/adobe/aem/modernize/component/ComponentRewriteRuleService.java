@@ -20,9 +20,9 @@
 package com.adobe.aem.modernize.component;
 
 import java.util.Set;
-import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.RewriteException;
 import org.jetbrains.annotations.NotNull;
@@ -32,30 +32,41 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ComponentRewriteRuleService {
 
-    /**
-     * Applies the indicated rules to the provided resource. If {@code deep} is set, rules will be applied recursively.
-     *
-     * Transformations are performed but not saved.
-     *
-     * The rules can be either a fully qualified path to a rule or a Service PID depending on the implementation.
-     *
-     * Implementations decide how to handle rule paths which are invalid for their context.
-     *
-     * @param resource  Parent node for applying rules
-     * @param rules the rules to apply
-     * @param deep {@code true} to recurse into the tree
-     * @throws RewriteException if any errors occur when applying the rules
-     */
-    void apply(@NotNull final Resource resource, @NotNull final String[] rules, boolean deep) throws RewriteException;
+  /**
+   * Applies the indicated rules to the provided resource. If {@code deep} is set, rules will be applied recursively.
+   * <p>
+   * Transformations are performed but not saved.
+   * <p>
+   * The rules can be either a fully qualified path to a rule or a Service PID depending on the implementation.
+   * <p>
+   * Implementations decide how to handle rule paths which are invalid for their context.
+   *
+   * @param resource Parent node for applying rules
+   * @param rules    the rules to apply
+   * @param deep     {@code true} to recurse into the tree
+   * @throws RewriteException if any errors occur when applying the rules
+   */
+  void apply(@NotNull final Resource resource, @NotNull final String[] rules, boolean deep) throws RewriteException;
 
-    /**
-     * Lists all resource paths that match any rules of which this service is aware.
-     *
-     * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
-     *
-     * @param resource Resource for the root of the search
-     * @return list of paths that match rules or empty set if none found or an error occurs
-     */
-    @NotNull
-    Set<String> find(Resource resource);
+  /**
+   * Lists all resource paths that match any rules of which this service is aware.
+   * <p>
+   * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
+   *
+   * @param resource Resource for the root of the search
+   * @return list of paths that match rules or empty set if none found or an error occurs
+   */
+  @NotNull
+  Set<String> find(Resource resource);
+
+  /**
+   * Lists all rules that may apply to the specified {@code sling:resourceType}.
+   * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
+   *
+   * @param resourceResolver ResourceResolver for searching
+   * @param slingResourceType the {@code sling:resourceType}(s) to check
+   * @return list of rules by path or PID
+   */
+  @NotNull
+  Set<String> listRules(ResourceResolver resourceResolver, String... slingResourceType);
 }

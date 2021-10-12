@@ -20,6 +20,7 @@
 package com.adobe.aem.modernize.component.impl;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -130,18 +131,25 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
   @Override
   @NotNull
   public Set<String> find(Resource resource) {
-    Set<String> paths = findByNodeRules(resource);
+    Set<String> paths = new HashSet<>();
+    paths.addAll(findByNodeRules(resource));
     paths.addAll(findByService(resource));
     return paths;
   }
 
-  private Set<String> findByNodeRules(Resource resource) {
+  @Override
+  public @NotNull Set<String> listRules(ResourceResolver rr, String... slingResourceTypes) {
+    Set<String> rules = new HashSet<>();
+    rules.addAll(listRulesByNode(rr, slingResourceTypes));
+    rules.addAll(listRulesByService(slingResourceTypes));
+    return rules;
+  }
 
-    Set<String> paths = new HashSet<>();
+  private Set<String> findByNodeRules(Resource resource) {
 
     Set<String> types = getSlingResourceTypes(resource);
     if (types.isEmpty()) {
-      return paths;
+      return Collections.emptySet();
     }
 
     PredicateGroup predicates = new PredicateGroup();
@@ -156,29 +164,11 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
       predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);
     }
     predicate.set(JcrPropertyPredicateEvaluator.AND, "false");
-
+    predicates.add(predicate);
     ResourceResolver rr = resource.getResourceResolver();
-    Query query = queryBuilder.createQuery(predicates, rr.adaptTo(Session.class));
-    SearchResult results = query.getResult();
-    // QueryBuilder has a leaking ResourceResolver, so the following workaround is required.
-    ResourceResolver qrr = null;
-    try {
-      for (final Hit hit : results.getHits()) {
-        if (qrr == null) {
-          qrr = hit.getResource().getResourceResolver();
-        }
-        paths.add(hit.getPath());
-      }
-    } catch (RepositoryException e) {
-      logger.error("Encountered an error when trying to gather all of the resources that match the rules.", e);
-    } finally {
-      if (qrr != null) {
-        // Always close the leaking QueryBuilder resourceResolver.
-        qrr.close();
-      }
-    }
-    return paths;
+    return getHitPaths(predicates, rr);
   }
+
 
   private Set<String> findByService(Resource resource) {
     Set<String> paths = new HashSet<>();
@@ -188,10 +178,43 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     return paths;
   }
 
-  @Activate
-  @Modified
-  protected void activate(Config config) {
-    this.config = config;
+  private Set<String> listRulesByNode(ResourceResolver rr, String... slingResourceTypes) {
+    PredicateGroup predicates = new PredicateGroup("paths");
+    for (String path : config.search_paths()) {
+      PredicateGroup pg = new PredicateGroup();
+
+      Predicate predicate = new Predicate(PathPredicateEvaluator.PATH);
+      predicate.set(PathPredicateEvaluator.PATH, path);
+      pg.add(predicate);
+      predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
+      predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+      int i = 0;
+      for (String type : slingResourceTypes) {
+        predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);
+      }
+      predicate.set(JcrPropertyPredicateEvaluator.AND, "false");
+      pg.add(predicate);
+      predicates.add(pg);
+    }
+
+    Set<String> paths = getHitPaths(predicates, rr);
+    return paths.stream().map(p -> {
+      Resource r = rr.getResource(p);
+      if (r == null || r.getParent() == null && !StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, r.getParent().getName())) {
+        return null;
+      }
+      return r.getParent().getParent() == null ? null : r.getParent().getParent().getPath();
+    }).filter(Objects::nonNull).collect(Collectors.toSet());
+  }
+
+  private Set<String> listRulesByService(String... slingResourceTypes) {
+    Set<String> services = new HashSet<>();
+    for (ComponentRewriteRule rule : rules.getList()) {
+      if (rule.hasPattern(slingResourceTypes)) {
+        services.add(rule.getId());
+      }
+    }
+    return services;
   }
 
   private List<RewriteRule> create(ResourceResolver rr, String[] rules) {
@@ -236,9 +259,21 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
       predicates.add(pg);
     }
     ResourceResolver rr = resource.getResourceResolver();
+    Set<String> hits = getHitPaths(predicates, rr);
+    for (String path : hits) {
+      Resource r = rr.getResource(path);
+      if (r != null && r.getParent() != null && StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, r.getParent().getName())) {
+        ValueMap vm = r.getValueMap();
+        types.add(vm.get(ResourceResolver.PROPERTY_RESOURCE_TYPE, String.class));
+      }
+    }
+    return types;
+  }
+
+  private Set<String> getHitPaths(PredicateGroup predicates, ResourceResolver rr) {
+    Set<String> paths = new HashSet<>();
     Query query = queryBuilder.createQuery(predicates, rr.adaptTo(Session.class));
     SearchResult results = query.getResult();
-
     // QueryBuilder has a leaking ResourceResolver, so the following workaround is required.
     ResourceResolver qrr = null;
     try {
@@ -246,22 +281,23 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         if (qrr == null) {
           qrr = hit.getResource().getResourceResolver();
         }
-        Resource hitResource = hit.getResource();
-        if (StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, hitResource.getParent().getName())) {
-          ValueMap vm = hitResource.getValueMap();
-          types.add(vm.get(ResourceResolver.PROPERTY_RESOURCE_TYPE, String.class));
-        }
+        paths.add(hit.getPath());
       }
     } catch (RepositoryException e) {
-      logger.error("Encountered an error when trying to gather all of the sling:resourceTypes for rule patterns.", e);
+      logger.error("Encountered an error when trying to gather all of the resources that match the rules.", e);
     } finally {
       if (qrr != null) {
         // Always close the leaking QueryBuilder resourceResolver.
         qrr.close();
       }
     }
+    return paths;
+  }
 
-    return types;
+  @Activate
+  @Modified
+  protected void activate(Config config) {
+    this.config = config;
   }
 
   @ObjectClassDefinition(

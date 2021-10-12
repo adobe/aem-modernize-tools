@@ -43,4 +43,13 @@ public interface ComponentRewriteRule extends RewriteRule {
   @SuppressWarnings("unused")
   @NotNull
   Set<String> find(@NotNull Resource resource);
+
+  /**
+   * Indicates if this service uses any of the specified {@code sling:resourceType} in any of its matching logic.
+   *
+   * @param slingResourceTypes the sling resource type to check
+   * @return true type matches
+   */
+  @NotNull
+  boolean hasPattern(@NotNull String... slingResourceTypes);
 }

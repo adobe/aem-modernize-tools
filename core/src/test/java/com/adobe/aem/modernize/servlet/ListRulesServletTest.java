@@ -2,8 +2,10 @@ package com.adobe.aem.modernize.servlet;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
@@ -15,7 +17,6 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -41,7 +42,7 @@ public class ListRulesServletTest {
   private ListRulesServlet servlet;
 
   @BeforeEach
-  private void beforeEach() {
+  protected void beforeEach() {
     slingContext.load().json("/component/test-rules.json", RULE_PATH + "/component");
     slingContext.load().json("/component/all-content.json", CONTENT_PATH + "/component");
   }
@@ -51,9 +52,35 @@ public class ListRulesServletTest {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(slingContext.resourceResolver(), slingContext.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
-    servlet.doPost(request, response);
+    // No Path
+    servlet.doGet(request, response);
     ObjectMapper mapper = new ObjectMapper();
     ResponseData result = mapper.readValue(response.getOutputAsString(), ResponseData.class);
+
+    assertEquals(SC_BAD_REQUEST, response.getStatus(), "Request Status");
+    assertFalse(result.isSuccess(), "Success Status");
+    assertNotNull(result.getMessage(), "Message present");
+    assertNull(result.getRules(), "Rules present");
+
+    // No Operation
+    Map<String, Object> params = new HashMap<>();
+    params.put("path", "/path/to/content");
+
+    servlet.doGet(request, response);
+    result = mapper.readValue(response.getOutputAsString(), ResponseData.class);
+
+    assertEquals(SC_BAD_REQUEST, response.getStatus(), "Request Status");
+    assertFalse(result.isSuccess(), "Success Status");
+    assertNotNull(result.getMessage(), "Message present");
+    assertNull(result.getRules(), "Rules present");
+
+    // Invalid Operation
+    params = new HashMap<>();
+    params.put("path", "/path/to/content");
+    params.put("operation", "INVALID");
+
+    servlet.doGet(request, response);
+    result = mapper.readValue(response.getOutputAsString(), ResponseData.class);
 
     assertEquals(SC_BAD_REQUEST, response.getStatus(), "Request Status");
     assertFalse(result.isSuccess(), "Success Status");
@@ -66,11 +93,12 @@ public class ListRulesServletTest {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(slingContext.resourceResolver(), slingContext.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
-    RequestData data = new RequestData();
-    data.setPath("/does/not/exist");
-    request.setContent(new ObjectMapper().writeValueAsString(data).getBytes());
+    Map<String, Object> params = new HashMap<>();
+    params.put("path", "/does/not/exist");
+    params.put("operation", ConversionJob.Type.FULL.toString());
+    request.setParameterMap(params);
 
-    servlet.doPost(request, response);
+    servlet.doGet(request, response);
     ObjectMapper mapper = new ObjectMapper();
     ResponseData result = mapper.readValue(response.getOutputAsString(), ResponseData.class);
 
@@ -86,10 +114,10 @@ public class ListRulesServletTest {
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
     final String path = CONTENT_PATH + "/component/simple";
-    RequestData data = new RequestData();
-    data.setPath(path);
-    data.setType(ConversionJob.Type.COMPONENT);
-    request.setContent(new ObjectMapper().writeValueAsString(data).getBytes());
+    Map<String, Object> params = new HashMap<>();
+    params.put("path", path);
+    params.put("operation", ConversionJob.Type.COMPONENT.toString());
+    request.setParameterMap(params);
 
     final Set<String> rules = Collections.emptySet();
     final List<Resource> capture = new ArrayList<>();
@@ -99,7 +127,7 @@ public class ListRulesServletTest {
     }};
 
 
-    servlet.doPost(request, response);
+    servlet.doGet(request, response);
 
     assertEquals(1, capture.size(), "Component API calls");
     assertEquals(path, capture.get(0).getPath(), "Correct resource used");
@@ -123,10 +151,10 @@ public class ListRulesServletTest {
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
     final String path = CONTENT_PATH + "/component/simple";
-    RequestData data = new RequestData();
-    data.setPath(path);
-    data.setType(ConversionJob.Type.COMPONENT);
-    request.setContent(new ObjectMapper().writeValueAsString(data).getBytes());
+    Map<String, Object> params = new HashMap<>();
+    params.put("path", path);
+    params.put("operation", ConversionJob.Type.COMPONENT.toString());
+    request.setParameterMap(params);
 
     final Set<String> rules = new HashSet<>();
     rules.add(RULE_PATH + "/component/simple");
@@ -139,7 +167,7 @@ public class ListRulesServletTest {
 
     }};
 
-    servlet.doPost(request, response);
+    servlet.doGet(request, response);
 
     assertEquals(1, capture.size(), "Component API calls");
     assertEquals(path, capture.get(0).getPath(), "Correct resource used");
