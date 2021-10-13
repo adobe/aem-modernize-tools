@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          jcr:primaryType="nt:unstructured"
+          sling:resourceType="granite/ui/components/coral/foundation/dialog"
+          granite:class="aem-modernize-job-includechildren-dialog">
+  <items jcr:primaryType="nt:unstructured">
+    <form jcr:primaryType="nt:unstructured"
+          sling:resourceType="granite/ui/components/coral/foundation/form"
+          granite:id="aem-modernize-include-children-form">
+      <items jcr:primaryType="nt:unstructured">
+        <path jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/coral/foundation/form/hidden"
+              granite:id="pagePath"
+              name="path"
+              value="${empty requestPathInfo.suffix ? param.item : requestPathInfo.suffix}"/>
+        <charset jcr:primaryType="nt:unstructured"
+                 sling:resourceType="granite/ui/coral/foundation/form/hidden"
+                 granite:id="charset"
+                 name="_charset_"
+                 value="utf-8"/>
+        <depth jcr:primaryType="nt:unstructured"
+               jcr:title="Depth"
+               sling:resourceType="granite/ui/components/coral/foundation/form/fieldset">
+          <items jcr:primaryType="nt:unstructured">
+            <direct jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                    checked="{Boolean}true"
+                    name="direct"
+                    value="true"
+                    text="Include only direct descendants?"/>
+          </items>
+        </depth>
+      </items>
+    </form>
+  </items>
+</jcr:root>

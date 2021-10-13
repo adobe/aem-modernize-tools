@@ -5,7 +5,7 @@
       jcr:mixinTypes="[]"
       jcr:primaryType="nt:unstructured"
       jcr:title="Policies Importer Tool"
-      sling:resourceType="aem-modernize/components/convert/design"
+      sling:resourceType="aem-modernize/components/design"
       consoleId="aem-modernize-design">
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
@@ -91,7 +91,7 @@
                           jcr:primaryType="nt:unstructured"
                           sling:resourceType="granite/ui/components/coral/foundation/table"
                           designPath="${param.designPath}"
-                          itemResourceType="aem-modernize/components/convert/design/item"
+                          itemResourceType="aem-modernize/components/design/item"
                           orderable="{Boolean}false"
                           selectionMode="row">
                             <columns jcr:primaryType="nt:unstructured">
@@ -120,7 +120,7 @@
                             </columns>
                             <datasource
                               jcr:primaryType="nt:unstructured"
-                              sling:resourceType="aem-modernize/components/convert/design/datasource"/>
+                              sling:resourceType="aem-modernize/components/design/datasource"/>
                         </designProperties>
                     </items>
                 </designSearch>

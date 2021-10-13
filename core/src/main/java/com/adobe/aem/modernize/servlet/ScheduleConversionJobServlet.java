@@ -47,7 +47,9 @@ import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 @Component(
     service = { Servlet.class },
     property = {
-        SLING_SERVLET_PATHS + "=/bin/modernize.json"
+        SLING_SERVLET_RESOURCE_TYPES + "=aem-modernize/content/job/create",
+        SLING_SERVLET_METHODS + "=POST",
+        SLING_SERVLET_EXTENSIONS + "=json",
     }
 )
 public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {

@@ -38,7 +38,10 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 @Component(
     service = { Servlet.class },
     property = {
-        SLING_SERVLET_PATHS + "=/bin/modernize/rules.json"
+        SLING_SERVLET_RESOURCE_TYPES + "=aem-modernize/content/job/create",
+        SLING_SERVLET_METHODS + "=GET",
+        SLING_SERVLET_EXTENSIONS + "=json",
+        SLING_SERVLET_SELECTORS + "=rules"
     }
 )
 public class ListRulesServlet extends SlingSafeMethodsServlet {

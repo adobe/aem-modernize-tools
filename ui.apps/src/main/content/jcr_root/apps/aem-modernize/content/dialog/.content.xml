@@ -5,7 +5,7 @@
       jcr:mixinTypes="[]"
       jcr:primaryType="nt:unstructured"
       jcr:title="Dialog Conversion Tool"
-      sling:resourceType="aem-modernize/components/convert/dialog"
+      sling:resourceType="aem-modernize/components/dialog"
       consoleId="aem-modernize-dialog">
         <head jcr:primaryType="nt:unstructured">
             <clientlibs
@@ -81,7 +81,7 @@
                           granite:rel="aem-dialogconversion-dialogs"
                           jcr:primaryType="nt:unstructured"
                           sling:resourceType="granite/ui/components/coral/foundation/table"
-                          itemResourceType="aem-modernize/components/convert/dialog/item"
+                          itemResourceType="aem-modernize/components/dialog/item"
                           orderable="{Boolean}false"
                           path="${param.path}"
                           selectionMode="row">
@@ -111,7 +111,7 @@
                             </columns>
                             <datasource
                               jcr:primaryType="nt:unstructured"
-                              sling:resourceType="aem-modernize/components/convert/dialog/datasource"/>
+                              sling:resourceType="aem-modernize/components/dialog/datasource"/>
                         </dialogs>
                     </items>
                 </dialogSearch>

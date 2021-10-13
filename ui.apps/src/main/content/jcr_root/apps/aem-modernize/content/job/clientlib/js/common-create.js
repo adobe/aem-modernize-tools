@@ -3,7 +3,6 @@
 
   class CreateJobForm {
 
-    static #RULE_URL = "/bin/modernize/rules.json"
     static #NO_CONTENT = Granite.I18n.get("There is no item.");
     static #EMPTY_ROW = '<tr is="coral-table-row" class="empty-row"><td is="coral-table-cell" colspan="4" alignment="center">' + CreateJobForm.#NO_CONTENT + '</td></tr>';
 
@@ -117,7 +116,8 @@
           path: item.path,
           operation: this.#operation
         }
-        const url = Granite.HTTP.externalize(CreateJobForm.#RULE_URL, true);
+
+        const url = this.#$form.data("aemModernizeRuleUrl");
         $.getJSON(url, params, (data) => {
           item.templateRules = data.rules.templateRules;
           item.policyRules = data.rules.policyRules;
@@ -256,7 +256,7 @@
         }
       });
 
-      this.#$wizard.find(".foundation-collection-action-delete").on("click", (e) => {
+      this.#$wizard.find(".aem-modernize-collection-action-delete").on("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
 
