@@ -1,0 +1,43 @@
+{
+  "jcr:primaryType": "cq:Page",
+  "jcr:content": {
+    "jcr:primaryType": "cq:PageContent",
+    "jcr:title": "English",
+    "sling:resourceType": "geometrixx/components/homepage"
+  },
+  "notapage": {
+    "jcr:primaryType": "nt:folder"
+  },
+  "products": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:primaryType": "cq:PageContent",
+      "jcr:title": "Products",
+      "sling:resourceType": "geometrixx/components/contentpage"
+    },
+    "triangle": {
+      "jcr:primaryType": "cq:Page",
+      "jcr:content": {
+        "jcr:primaryType": "cq:PageContent",
+        "jcr:title": "Triangle",
+        "sling:resourceType": "geometrixx/components/contentpage"
+      }
+    },
+    "square": {
+      "jcr:primaryType": "cq:Page",
+      "jcr:content": {
+        "jcr:primaryType": "cq:PageContent",
+        "jcr:title": "Square",
+        "sling:resourceType": "geometrixx/components/contentpage"
+      }
+    },
+    "circle": {
+      "jcr:primaryType": "cq:Page",
+      "jcr:content": {
+        "jcr:primaryType": "cq:PageContent",
+        "jcr:title": "Circle",
+        "sling:resourceType": "geometrixx/components/contentpage"
+      }
+    }
+  }
+}

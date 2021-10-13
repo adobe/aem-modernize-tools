@@ -2,7 +2,6 @@ package com.adobe.aem.modernize.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -27,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -75,7 +73,6 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
     writeResponse(response, SC_OK, true, "", rules);
   }
 
-  @Nullable
   private RequestData getRequestData(SlingHttpServletRequest request) {
     String path = request.getParameter(PARAM_PATH);
     if (StringUtils.isBlank(path)) {
@@ -94,8 +91,7 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
     }
   }
 
-  @Nullable
-  private Resource getResource(@NotNull ResourceResolver rr, @NotNull String path) {
+  private Resource getResource(ResourceResolver rr, String path) {
     Resource resource = rr.getResource(path);
     if (resource == null) {
       return resource;
@@ -105,7 +101,7 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
     return page == null ? resource : page.getContentResource();
   }
 
-  private Set<String> getComponentResourceTypes(@NotNull Resource resource) {
+  private Set<String> getComponentResourceTypes(Resource resource) {
     final ResourceResolver rr = resource.getResourceResolver();
     Set<String> paths = componentService.findResources(resource);
     return paths.stream().map(p -> {
@@ -125,11 +121,9 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
   }
 
   private void writeResponse(SlingHttpServletResponse response, int code, boolean success, String message, RuleList list) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    String result = mapper.writeValueAsString(new ResponseData(success, message, list));
     response.setStatus(code);
     response.setContentType("application/json");
-    response.getWriter().write(result);
+    new ObjectMapper().writeValue(response.getWriter(), new ResponseData(success, message, list));
   }
 
   @Value
