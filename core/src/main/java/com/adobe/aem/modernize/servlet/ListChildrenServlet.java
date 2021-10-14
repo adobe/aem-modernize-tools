@@ -1,14 +1,15 @@
 package com.adobe.aem.modernize.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -16,11 +17,15 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 
+import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.ListPageVisitor;
+import com.adobe.aem.modernize.rule.RewriteRule;
+import com.day.cq.wcm.api.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
@@ -37,6 +42,9 @@ public class ListChildrenServlet extends SlingSafeMethodsServlet {
 
   private static final String PARAM_PATH = "path";
   private static final String PARAM_DIRECT = "direct";
+
+  @Reference
+  private ComponentRewriteRuleService componentRewriteRuleService;
 
   @Override
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
@@ -67,20 +75,20 @@ public class ListChildrenServlet extends SlingSafeMethodsServlet {
     writeResponse(response, SC_OK, paths);
   }
 
-  private void writeResponse(SlingHttpServletResponse response, int code, List<String> paths) throws IOException {
-    response.setStatus(code);
-    response.setContentType("application/json");
-    new ObjectMapper().writeValue(response.getWriter(), new ResponseData(paths, paths.size()));
-  }
-
   private ListChildrenServlet.RequestData getRequestData(SlingHttpServletRequest request) {
     String path = request.getParameter(PARAM_PATH);
     if (StringUtils.isBlank(path)) {
       return null;
     }
     String directStr = request.getParameter(PARAM_DIRECT);
-    boolean direct = StringUtils.isBlank(directStr);
+    boolean direct = StringUtils.isNotBlank(directStr);
     return new RequestData(path, direct);
+  }
+
+  private void writeResponse(SlingHttpServletResponse response, int code, List<String> paths) throws IOException {
+    response.setStatus(code);
+    response.setContentType("application/json");
+    new ObjectMapper().writeValue(response.getWriter(), new ResponseData(paths, paths.size()));
   }
 
   @Value
@@ -94,4 +102,5 @@ public class ListChildrenServlet extends SlingSafeMethodsServlet {
     List<String> paths;
     int total;
   }
+
 }

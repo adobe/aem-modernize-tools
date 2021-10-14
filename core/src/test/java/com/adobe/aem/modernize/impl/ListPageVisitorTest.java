@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.apache.sling.testing.mock.sling.junit5.SlingContext;
-import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -13,25 +11,24 @@ import mockit.Tested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
 public class ListPageVisitorTest {
 
-  private final AemContext slingContext = new AemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext aemContext = new AemContext(ResourceResolverType.JCR_MOCK);
 
   @Tested
   private ListPageVisitor visitor;
 
   @BeforeEach
   protected void beforeEach() {
-    slingContext.load().json("/servlet/page-content.json", "/content/test");
+    aemContext.load().json("/servlet/page-content.json", "/content/test");
   }
 
   @Test
   public void testVisit() {
-    Resource r = slingContext.resourceResolver().getResource("/content/test");
+    Resource r = aemContext.resourceResolver().getResource("/content/test");
     visitor.accept(r);
     List<String> paths = visitor.getPaths();
     assertTrue(paths.contains("/content/test"), "Contains root page");
@@ -44,7 +41,7 @@ public class ListPageVisitorTest {
 
   @Test
   public void testVisitDepth() {
-    Resource r = slingContext.resourceResolver().getResource("/content/test");
+    Resource r = aemContext.resourceResolver().getResource("/content/test");
     ListPageVisitor visitor = new ListPageVisitor(3);
     visitor.accept(r);
     List<String> paths = visitor.getPaths();

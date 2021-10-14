@@ -150,12 +150,5 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
     private List<RuleInfo> policyRules = new ArrayList<>();
   }
 
-  @Getter
-  @Setter
-  @NoArgsConstructor
-  @AllArgsConstructor
-  static final class RuleInfo {
-    private String path;
-    private String title;
-  }
+
 }

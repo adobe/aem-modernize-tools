@@ -150,7 +150,8 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
 
   private Set<String> findByNodeRules(Resource resource) {
 
-    Set<String> types = getSlingResourceTypes(resource);
+    ResourceResolver rr = resource.getResourceResolver();
+    Set<String> types = getSlingResourceTypes(rr);
     if (types.isEmpty()) {
       return Collections.emptySet();
     }
@@ -174,10 +175,8 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     predicate.set(JcrPropertyPredicateEvaluator.AND, "false");
     predicates.add(predicate);
 
-    ResourceResolver rr = resource.getResourceResolver();
     return getHitPaths(predicates, rr);
   }
-
 
   private Set<String> findByService(Resource resource) {
     Set<String> paths = new HashSet<>();
@@ -268,7 +267,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
 
   }
 
-  private Set<String> getSlingResourceTypes(Resource resource) {
+  private Set<String> getSlingResourceTypes(ResourceResolver rr) {
     Set<String> types = new HashSet<>();
 
     PredicateGroup predicates = new PredicateGroup();
@@ -290,7 +289,6 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     }
     predicates.add(pg);
 
-    ResourceResolver rr = resource.getResourceResolver();
     Set<String> hits = getHitPaths(predicates, rr);
     for (String path : hits) {
       Resource r = rr.getResource(path);
