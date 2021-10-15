@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.jcr.LoginException;
@@ -11,6 +12,7 @@ import javax.jcr.Session;
 import javax.jcr.security.AccessControlManager;
 import javax.jcr.security.Privilege;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
@@ -22,7 +24,6 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -62,29 +63,29 @@ public class ScheduleConversionJobServletTest {
   @Tested
   private ScheduleConversionJobServlet servlet;
 
-  public ScheduleConversionJobServlet.JobData buildJobData() {
+  public ScheduleConversionJobServlet.RequestData buildJobData() {
     List<String> list = new ArrayList<>();
-    ScheduleConversionJobServlet.JobData jobData = new ScheduleConversionJobServlet.JobData();
-    jobData.setName(JOB_TITLE);
+    ScheduleConversionJobServlet.RequestData requestData = new ScheduleConversionJobServlet.RequestData();
+    requestData.setName(JOB_TITLE);
     list.add("/content/test/path");
     list.add("/content/other/path");
     for (int i = 0; i <= 500; i++) {
       list.add("/content/other/path" + i);
     }
-    jobData.setPaths(list.toArray(new String[]{}));
+    requestData.setPaths(list.toArray(new String[]{}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/template");
-    jobData.setTemplateRules(list.toArray(new String[]{}));
+    requestData.setTemplateRules(list.toArray(new String[]{}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/component");
-    jobData.setComponentRules(list.toArray(new String[]{}));
+    requestData.setComponentRules(list.toArray(new String[]{}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/policy");
-    jobData.setPolicyRules(list.toArray(new String[]{}));
-    return jobData;
+    requestData.setPolicyRules(list.toArray(new String[]{}));
+    return requestData;
   }
 
   @Test
@@ -93,20 +94,22 @@ public class ScheduleConversionJobServletTest {
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
 
-    assertEquals(SC_BAD_REQUEST, response.getStatus());
-    assertEquals("failure", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+    assertEquals(SC_BAD_REQUEST, response.getStatus(), "Response status code");
+    assertFalse(result.isSuccess(), "Response status");
+    assertNotNull(result.getMessage(), "Response message");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
   }
 
   @Test
   public void noPermissionsSinglePath() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    ScheduleConversionJobServlet.JobData jobData = buildJobData();
-    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
 
     new Expectations() {{
       resourceResolver.adaptTo(Session.class);
@@ -118,20 +121,22 @@ public class ScheduleConversionJobServletTest {
     }};
 
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
 
-    assertEquals(SC_FORBIDDEN, response.getStatus());
-    assertEquals("failure", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+    assertEquals(SC_FORBIDDEN, response.getStatus(), "Response status code");
+    assertFalse(result.isSuccess(), "Response status");
+    assertNotNull(result.getMessage(), "Response message");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
   }
 
   @Test
   public void noPermissionsMultiplePaths() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    ScheduleConversionJobServlet.JobData jobData = buildJobData();
-    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
 
     new Expectations() {{
       resourceResolver.adaptTo(Session.class);
@@ -144,20 +149,23 @@ public class ScheduleConversionJobServletTest {
     }};
 
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
 
-    assertEquals(SC_FORBIDDEN, response.getStatus());
-    assertEquals("failure", result.get("status").asText());
-    assertNotNull(result.get("message").asText());
+    assertEquals(SC_FORBIDDEN, response.getStatus(), "Response status code");
+    assertFalse(result.isSuccess(), "Response status");
+    assertNotNull(result.getMessage(), "Response message");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
   }
 
   @Test
   public void testUnableToLoginService() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    ScheduleConversionJobServlet.JobData jobData = buildJobData();
-    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
+
     new Expectations() {{
       resourceResolver.adaptTo(Session.class);
       result = session;
@@ -170,12 +178,12 @@ public class ScheduleConversionJobServletTest {
     }};
 
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
 
     assertEquals(SC_INTERNAL_SERVER_ERROR, response.getStatus(), "Correct response code.");
-    assertEquals("failure", result.get("status").asText(), "Correct result status.");
-    assertNotNull(result.get("message").asText(), "Message was set.");
+    assertFalse(result.isSuccess(), "Correct result status.");
+    assertNotNull(result.getMessage(), "Message was set.");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
   }
 
   @Test
@@ -185,9 +193,11 @@ public class ScheduleConversionJobServletTest {
     Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
-    ScheduleConversionJobServlet.JobData jobData = buildJobData();
-    jobData.setType(ConversionJob.Type.FULL);
-    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    requestData.setType(ConversionJob.Type.FULL);
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
     new Expectations() {{
       resourceResolver.getUserID();
       result = userId;
@@ -201,18 +211,19 @@ public class ScheduleConversionJobServletTest {
       result = serviceSession;
     }};
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
-
-    assertEquals(SC_OK, response.getStatus(), "Correct response code.");
-    assertEquals("success", result.get("status").asText(), "Correct result status.");
-    assertNotNull(result.get("message").asText(), "Message was set.");
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
 
     Calendar today = Calendar.getInstance();
     String path = String.format("%s/%s/%s",
         ConversionJob.JOB_DATA_LOCATION,
         new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
         "test-job");
+
+
+    assertEquals(SC_OK, response.getStatus(), "Correct response code.");
+    assertTrue(result.isSuccess(), "Correct result status.");
+    assertNotNull(result.getMessage(), "Message was set.");
+    assertEquals(path, result.getJob(), "Tracking path");
 
     assertFalse(serviceSession.isLive(), "Session was closed");
     Field f = serviceSession.getClass().getDeclaredField("isLive");
@@ -235,9 +246,11 @@ public class ScheduleConversionJobServletTest {
     Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
-    ScheduleConversionJobServlet.JobData jobData = buildJobData();
-    jobData.setType(ConversionJob.Type.FULL);
-    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    requestData.setType(ConversionJob.Type.FULL);
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
     new Expectations() {{
       resourceResolver.getUserID();
       result = userId;
@@ -253,11 +266,11 @@ public class ScheduleConversionJobServletTest {
       result = null;
     }};
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
     assertEquals(SC_INTERNAL_SERVER_ERROR, response.getStatus(), "Correct response code.");
-    assertEquals("failure", result.get("status").asText(), "Correct result status.");
-    assertNotNull(result.get("message").asText(), "Message was set");
+    assertFalse(result.isSuccess(), "Correct result status.");
+    assertNotNull(result.getMessage(), "Message was set");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
 
   }
 
@@ -269,9 +282,11 @@ public class ScheduleConversionJobServletTest {
     String userId = "TestUser";
 
     List<Map<String, Object>> jobProperties = new ArrayList<>();
-    ScheduleConversionJobServlet.JobData jobData = buildJobData();
-    jobData.setType(ConversionJob.Type.FULL);
-    request.setContent(new ObjectMapper().writeValueAsString(jobData).getBytes());
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    requestData.setType(ConversionJob.Type.FULL);
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
 
     new Expectations() {{
       resourceResolver.getUserID();
@@ -287,11 +302,19 @@ public class ScheduleConversionJobServletTest {
       jobManager.addJob(FullConversionJobExecutor.JOB_TOPIC, withCapture(jobProperties));
     }};
     servlet.doPost(request, response);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode result = mapper.readTree(response.getOutputAsString());
+
+    Calendar today = Calendar.getInstance();
+    String path = String.format("%s/%s/%s",
+        ConversionJob.JOB_DATA_LOCATION,
+        new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
+        "test-job");
+
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
+
     assertEquals(SC_OK, response.getStatus(), "Correct response code.");
-    assertEquals("success", result.get("status").asText(), "Correct result status.");
-    assertNotNull(result.get("message").asText(), "Message was set.");
+    assertTrue(result.isSuccess(), "Correct result status.");
+    assertNotNull(result.getMessage(), "Message was set.");
+    assertEquals(path, result.getJob(), "Tracking path");
 
     assertEquals(2, jobProperties.size(), "Number of jobs created.");
     Map<String, Object> jobProps = jobProperties.get(0);

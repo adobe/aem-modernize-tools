@@ -82,6 +82,6 @@
   margin-right: 2rem;
 }
 
-.aem-modernize-rule-list {
+.aem-modernize-rule-list, .aem-modernize-path-list {
   display: none;
 }

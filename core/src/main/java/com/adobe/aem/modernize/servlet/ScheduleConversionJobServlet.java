@@ -15,8 +15,8 @@ import javax.jcr.Session;
 import javax.jcr.security.AccessControlManager;
 import javax.jcr.security.Privilege;
 import javax.servlet.Servlet;
-import javax.servlet.ServletException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -29,20 +29,18 @@ import org.apache.sling.jcr.api.SlingRepository;
 import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.apache.sling.api.SlingHttpServletResponse.*;
-import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
+import static org.apache.sling.api.SlingHttpServletResponse.*;
+import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
 @Component(
     service = { Servlet.class },
@@ -57,7 +55,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   private static final Logger logger = LoggerFactory.getLogger(ScheduleConversionJobServlet.class);
 
   private static final String SERVICE_NAME = "schedule-job";
-
+  private static final String PARAM_DATA = "data";
   private static final int MAX_PROCESS_PATHS = 500;
 
   @Reference
@@ -67,11 +65,14 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   private JobManager jobManager;
 
   @Override
-  protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+  protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
 
-    JobData data = getJobData(request);
+    RequestData data = getJobData(request);
+    ResponseData responseData = new ResponseData();
+
     if (data == null) {
-      writeResponse(response, SC_BAD_REQUEST, false, "Error processing request parameters.");
+      responseData.setMessage("Error processing request parameters.");
+      writeResponse(response, SC_BAD_REQUEST, responseData);
       return;
     }
     ResourceResolver rr = request.getResourceResolver();
@@ -83,14 +84,22 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       List<String[]> buckets = createBuckets(data);
       String tracking = createTrackingState(systemSession, data, rr.getUserID(), buckets);
       if (scheduleJobs(data, buckets, tracking)) {
-        writeResponse(response, SC_OK, true, "Successfully scheduled conversions.");
+        responseData.setSuccess(true);
+        responseData.setMessage("Successfully scheduled conversion job.");
+        responseData.setJob(tracking);
+        writeResponse(response, SC_OK, responseData);
       } else {
-        writeResponse(response, SC_INTERNAL_SERVER_ERROR, false, "Creating one of the the conversion jobs failed.");
+        responseData.setMessage("Creating one of the conversion jobs failed.");
+        writeResponse(response, SC_INTERNAL_SERVER_ERROR, responseData);
       }
     } catch (AccessDeniedException e) {
-      writeResponse(response, SC_FORBIDDEN, false,"Missing permissions for modifying a requested path.");
+      logger.error("Missing permissions on a path", e);
+      responseData.setMessage("Missing permissions for modifying a requested path.");
+      writeResponse(response, SC_FORBIDDEN, responseData);
     } catch (RepositoryException e) {
-      writeResponse(response, SC_INTERNAL_SERVER_ERROR, false, "Unable to schedule job(s), check logs for details");
+      logger.error("Repository error when creating job.", e);
+      responseData.setMessage("Unable to schedule job(s), check logs for details");
+      writeResponse(response, SC_INTERNAL_SERVER_ERROR, responseData);
     } finally {
       if (systemSession != null) {
         systemSession.logout();
@@ -98,10 +107,13 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     }
   }
 
-  // Pull the JobData from the request parameters
-  private JobData getJobData(SlingHttpServletRequest request) {
+  // Pull the RequestData from the request parameters
+  private RequestData getJobData(SlingHttpServletRequest request) {
     try {
-      return new ObjectMapper().readValue(request.getInputStream(), JobData.class);
+      String data = request.getParameter(PARAM_DATA);
+      if (StringUtils.isNotBlank(data)) {
+        return new ObjectMapper().readValue(data, RequestData.class);
+      }
     } catch (IOException e) {
       logger.error("Unable to parse job data from request: {}", e.getLocalizedMessage());
     }
@@ -112,7 +124,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   private void checkPermissions(Session session, String[] paths) throws AccessDeniedException {
     try {
       AccessControlManager acm = session.getAccessControlManager();
-      Privilege[] privs = new Privilege[]{ acm.privilegeFromName(Privilege.JCR_WRITE) };
+      Privilege[] privs = new Privilege[] { acm.privilegeFromName(Privilege.JCR_WRITE) };
       for (String path : paths) {
         if (!acm.hasPrivileges(path, privs)) {
           throw new AccessDeniedException(path);
@@ -125,16 +137,18 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
 
   }
 
-  private List<String[]> createBuckets(JobData jobData) {
+  private List<String[]> createBuckets(RequestData requestData) {
     // Don't over load jobs, split up the request into buckets
     List<String[]> buckets = new ArrayList<>();
-    String[] paths = jobData.getPaths();
-    int noOfBuckets = paths.length / MAX_PROCESS_PATHS;
-    if (noOfBuckets % MAX_PROCESS_PATHS != 0) {
-      noOfBuckets++;
+    String[] paths = requestData.getPaths();
+    int bucketCount = paths.length / MAX_PROCESS_PATHS;
+    if (bucketCount % MAX_PROCESS_PATHS != 0) {
+      bucketCount++;
     }
 
-    logger.warn("Processing {} paths exceeds the limit of {}, splitting it into {} distinct jobs.", paths.length, MAX_PROCESS_PATHS, noOfBuckets);
+    if (bucketCount > 1) {
+      logger.warn("Processing {} paths exceeds the limit of {}, splitting it into {} distinct jobs.", paths.length, MAX_PROCESS_PATHS, bucketCount);
+    }
     int offset = 0;
 
     while (offset < paths.length) {
@@ -150,9 +164,9 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   }
 
   // Create the tree of data for tracking the state of the job.
-  private String createTrackingState(Session session, JobData jobData, String userId, List<String[]> buckets) throws RepositoryException {
+  private String createTrackingState(Session session, RequestData requestData, String userId, List<String[]> buckets) throws RepositoryException {
     try {
-      Node tracking = createTrackingNode(session, jobData, userId);
+      Node tracking = createTrackingNode(session, requestData, userId);
       Node parent = tracking.addNode("buckets", JcrConstants.NT_UNSTRUCTURED);
       for (String[] bucket : buckets) {
         addBucketNode(session, parent, bucket);
@@ -167,19 +181,19 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   }
 
   // Create the parent node for tracking.
-  private Node createTrackingNode(Session session, JobData jobData, String userId) throws RepositoryException {
+  private Node createTrackingNode(Session session, RequestData requestData, String userId) throws RepositoryException {
     Calendar today = Calendar.getInstance();
     String path = String.format("%s/%s/%s",
         ConversionJob.JOB_DATA_LOCATION,
         new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
-        JcrUtil.createValidName(jobData.getName(), JcrUtil.HYPHEN_LABEL_CHAR_MAPPING, "-"));
+        JcrUtil.createValidName(requestData.getName(), JcrUtil.HYPHEN_LABEL_CHAR_MAPPING, "-"));
     Node node = JcrUtils.getOrCreateByPath(path, true, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
-    node.setProperty(PN_TITLE, jobData.getName());
-    node.setProperty(PN_TEMPLATE_RULES, jobData.getTemplateRules());
-    node.setProperty(PN_COMPONENT_RULES, jobData.getComponentRules());
-    node.setProperty(PN_POLICY_RULES, jobData.getPolicyRules());
+    node.setProperty(PN_TITLE, requestData.getName());
+    node.setProperty(PN_TEMPLATE_RULES, requestData.getTemplateRules());
+    node.setProperty(PN_COMPONENT_RULES, requestData.getComponentRules());
+    node.setProperty(PN_POLICY_RULES, requestData.getPolicyRules());
     node.setProperty(PN_INITIATOR, userId);
-    node.setProperty(PN_TYPE, jobData.getType().toString());
+    node.setProperty(PN_TYPE, requestData.getType().toString());
     return node;
   }
 
@@ -188,18 +202,18 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     bucket.setProperty(PN_PATHS, paths);
   }
 
-  private boolean scheduleJobs(JobData jobData, List<String[]> buckets, String trackingPath) {
-    
+  private boolean scheduleJobs(RequestData requestData, List<String[]> buckets, String trackingPath) {
+
     Map<String, Object> jobProperties;
-    for (String[] bucket: buckets) {
+    for (String[] bucket : buckets) {
       jobProperties = new HashMap<>();
       jobProperties.put(PN_TRACKING_PATH, trackingPath);
       jobProperties.put(PN_PATHS, bucket);
-      jobProperties.put(PN_TEMPLATE_RULES, jobData.getTemplateRules());
-      jobProperties.put(PN_COMPONENT_RULES, jobData.getComponentRules());
-      jobProperties.put(PN_POLICY_RULES, jobData.getPolicyRules());
+      jobProperties.put(PN_TEMPLATE_RULES, requestData.getTemplateRules());
+      jobProperties.put(PN_COMPONENT_RULES, requestData.getComponentRules());
+      jobProperties.put(PN_POLICY_RULES, requestData.getPolicyRules());
       String topic = null;
-      switch (jobData.getType()) {
+      switch (requestData.getType()) {
         case FULL:
           topic = FullConversionJobExecutor.JOB_TOPIC;
           break;
@@ -215,25 +229,29 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     return true;
   }
 
-  private void writeResponse(SlingHttpServletResponse response, int code, boolean success, String message) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode result = mapper.createObjectNode();
-    result.put("status", success ? "success" : "failure");
-    result.put("message", message);
+  private void writeResponse(SlingHttpServletResponse response, int code, ResponseData responseData) throws IOException {
     response.setStatus(code);
     response.setContentType("application/json");
-    response.getWriter().write(result.toString());
+    new ObjectMapper().writeValue(response.getOutputStream(), responseData);
   }
 
   @Getter
   @Setter
-  static final class JobData {
+  static final class RequestData {
     private String name;
     private String[] paths;
     private String[] templateRules;
     private String[] componentRules;
     private String[] policyRules;
     private Type type;
+  }
+
+  @Getter
+  @Setter
+  static final class ResponseData {
+    private boolean success;
+    private String message;
+    private String job;
   }
 
 }

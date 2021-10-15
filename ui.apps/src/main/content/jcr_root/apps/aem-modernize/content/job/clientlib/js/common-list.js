@@ -6,7 +6,7 @@
     $(".aem-modernize-collectionstatus").filter(function() {
       return $collection.is($(this).data("aemModernizeTarget"));
     }).each(function() {
-      let count = Math.max($collection[0].items.length, $("input[type=hidden][name=path]").length) - $collection.find(".empty-row").length;
+      let count = Math.max($collection[0].items.length, $("form.aem-modernize-job-form input[type=hidden][name=path]").length) - $collection.find(".empty-row").length;
       if (count === 0) {
         count = "0";
       }

@@ -23,8 +23,12 @@
             style="aligned">
         <granite:data jcr:primaryType="nt:unstructured"
                       aem-modernize-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.json')}"
-                      aem-modernize-rule-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.rules.json')}"
-                      aem-modernize-operation="COMPONENT"/>
+                      aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/view.html')}"
+                      aem-modernize-list-rules-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listrules.json')}"
+                      aem-modernize-list-children-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listchildren.json')}"
+                      aem-modernize-list-components-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listcomponents.json')}"
+                      aem-modernize-operation="COMPONENT"
+        />
         <items jcr:primaryType="nt:unstructured">
           <wizard jcr:primaryType="nt:unstructured"
                   cancelHref="${empty header.Referer ? &quot;/aem/start.html&quot; : header.Referer}"
@@ -143,6 +147,8 @@
                         variant="list"
                         layoutId="table"
                         skipEmptyRow="{Boolean}true">
+                    <granite:data jcr:primaryType="nt:unstructured"
+                                  empty-table-column-span="5"/>
                     <columns jcr:primaryType="nt:unstructured">
                       <select jcr:primaryType="nt:unstructured"
                               alignment="center"
@@ -151,6 +157,11 @@
                       <path jcr:primaryType="nt:unstructured"
                             jcr:title="Page"
                             sortable="{Boolean}true"/>
+                      <components jcr:primaryType="nt:unstructured"
+                                  jcr:title="Component Count"
+                                  sortable="{Boolean}false"
+                                  alignment="center"
+                                  fixedWidth="{Boolean}true"/>
                       <rules jcr:primaryType="nt:unstructured"
                              jcr:title="Rule Count"
                              sortable="{Boolean}false"

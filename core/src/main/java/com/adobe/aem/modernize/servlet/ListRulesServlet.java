@@ -39,7 +39,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
         SLING_SERVLET_RESOURCE_TYPES + "=aem-modernize/content/job/create",
         SLING_SERVLET_METHODS + "=GET",
         SLING_SERVLET_EXTENSIONS + "=json",
-        SLING_SERVLET_SELECTORS + "=rules"
+        SLING_SERVLET_SELECTORS + "=listrules"
     }
 )
 public class ListRulesServlet extends SlingSafeMethodsServlet {
@@ -150,5 +150,12 @@ public class ListRulesServlet extends SlingSafeMethodsServlet {
     private List<RuleInfo> policyRules = new ArrayList<>();
   }
 
-
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  static final class RuleInfo {
+    private String path;
+    private String title;
+  }
 }
