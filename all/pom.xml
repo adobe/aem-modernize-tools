@@ -22,7 +22,7 @@
     <!-- P A R E N T  P R O J E C T  D E S C R I P T I O N                      -->
     <!-- ====================================================================== -->
     <parent>
-        <groupId>com.adobe.cq</groupId>
+        <groupId>com.adobe.aem</groupId>
         <artifactId>aem-modernize-tools</artifactId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -49,30 +49,24 @@
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <group>com.adobe.cq</group>
+                    <group>com.adobe.aem</group>
                     <packageType>container</packageType>
                     <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
                     <skipSubPackageValidation>true</skipSubPackageValidation>
                     <embeddeds>
                         <embedded>
-                            <groupId>com.adobe.cq</groupId>
+                            <groupId>com.adobe.aem</groupId>
                             <artifactId>aem-modernize-tools.ui.apps</artifactId>
                             <type>zip</type>
                             <target>/apps/aem-modernize-packages/application/install</target>
                         </embedded>
                         <embedded>
-                            <groupId>com.adobe.cq</groupId>
+                            <groupId>com.adobe.aem</groupId>
                             <artifactId>aem-modernize-tools.core</artifactId>
                             <target>/apps/aem-modernize-packages/application/install</target>
                         </embedded>
                         <embedded>
-                            <groupId>com.adobe.cq</groupId>
-                            <artifactId>aem-modernize-tools.ui.content</artifactId>
-                            <type>zip</type>
-                            <target>/apps/aem-modernize-packages/application/install</target>
-                        </embedded>
-                        <embedded>
-                            <groupId>com.adobe.cq</groupId>
+                            <groupId>com.adobe.aem</groupId>
                             <artifactId>aem-modernize-tools.ui.config</artifactId>
                             <type>zip</type>
                             <target>/apps/aem-modernize-packages/application/install</target>
@@ -124,13 +118,13 @@
                             <classifier>java8</classifier>
                             <embeddeds>
                                 <embedded>
-                                    <groupId>com.adobe.cq</groupId>
+                                    <groupId>com.adobe.aem</groupId>
                                     <artifactId>aem-modernize-tools.ui.apps</artifactId>
                                     <type>zip</type>
                                     <target>/apps/aem-modernize-packages/application/install</target>
                                 </embedded>
                                 <embedded>
-                                    <groupId>com.adobe.cq</groupId>
+                                    <groupId>com.adobe.aem</groupId>
                                     <artifactId>aem-modernize-tools.core</artifactId>
                                     <classifier>java8</classifier>
                                     <target>/apps/aem-modernize-packages/application/install</target>
@@ -142,7 +136,7 @@
             </build>
             <dependencies>
                 <dependency>
-                    <groupId>com.adobe.cq</groupId>
+                    <groupId>com.adobe.aem</groupId>
                     <artifactId>aem-modernize-tools.core</artifactId>
                     <version>${project.version}</version>
                     <classifier>java8</classifier>
@@ -208,25 +202,19 @@
     <!-- ====================================================================== -->
     <dependencies>
         <dependency>
-            <groupId>com.adobe.cq</groupId>
+            <groupId>com.adobe.aem</groupId>
             <artifactId>aem-modernize-tools.core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.adobe.cq</groupId>
+            <groupId>com.adobe.aem</groupId>
             <artifactId>aem-modernize-tools.ui.apps</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.adobe.cq</groupId>
+            <groupId>com.adobe.aem</groupId>
             <artifactId>aem-modernize-tools.ui.config</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.cq</groupId>
-            <artifactId>aem-modernize-tools.ui.content</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>

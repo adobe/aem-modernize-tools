@@ -2,6 +2,7 @@ package com.adobe.aem.modernize.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -12,6 +13,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.design.PoliciesImportRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
@@ -23,27 +25,24 @@ import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
-import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
 public class FullConversionJobExecutorTest {
 
-  private static String[] paths;
-  private static String[] templateRules;
-  private static String[] componentRules;
-  private static String[] policyRules;
-
+  private static final String rootJobPath =ConversionJob.JOB_DATA_LOCATION + "/job/full";
+  private static final String bucketPath = rootJobPath + "/buckets/bucket0";
+  private static final int pathCount = 3;
+  private static final int pageCount = 2;
   private static final String version = "987654321";
 
   private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
-  private FullConversionJobExecutor executor  = new FullConversionJobExecutor();
+  private FullConversionJobExecutor executor = new FullConversionJobExecutor();
 
   @Mocked
   private StructureRewriteRuleService structureService;
@@ -60,17 +59,8 @@ public class FullConversionJobExecutorTest {
   @Mocked
   private JobExecutionContext jobExecutionContext;
 
-
   @Mocked
   private Resource resource;
-
-  @BeforeAll
-  public static void beforeAll() {
-    paths = new String[]{ "/content/test/first-page", "/content/test/second-page" };
-    templateRules = new String[]{ "/path/to/first/template/rule", "/path/to/second/template/rule" };
-    componentRules = new String[]{ "/path/to/first/component/rule", "/path/to/second/component/rule" };
-    policyRules = new String[]{ "/path/to/first/policy/rule", "/path/to/second/policy/rule" };
-  }
 
   @BeforeEach
   public void beforeEach() {
@@ -78,30 +68,28 @@ public class FullConversionJobExecutorTest {
     context.registerService(PoliciesImportRuleService.class, policyService);
     context.registerService(ComponentRewriteRuleService.class, componentService);
     context.registerInjectActivateService(executor);
-    context.load().json("/job/executor-first-page.json", "/content/test/first-page");
-    context.load().json("/job/executor-second-page.json", "/content/test/second-page");
-    context.load().json("/job/job-data.json", ConversionJob.JOB_DATA_LOCATION + "/job/full");
+    context.load().json("/job/page-content.json", "/content/test");
+    context.load().json("/job/full-job-data.json", rootJobPath);
+    context.load().json("/job/component-job-data.json", ConversionJob.JOB_DATA_LOCATION + "/job/component");
   }
 
   @Test
   public void testPathsNotPage() throws Exception {
+    final String path = ConversionJob.JOB_DATA_LOCATION + "/job/component/buckets/bucket0";
     new Expectations() {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = new String[]{ "/content/test/first-page/jcr:content/component", "/content/test/second-page/jcr:content/component" };
       job.getProperty(PN_REPROCESS, false);
       result = false;
-      jobExecutionContext.initProgress(paths.length * 2, -1);
+      jobExecutionContext.initProgress(pathCount * 2, -1);
     }};
 
-    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
+    ConversionJobBucket bucket = context.resourceResolver().getResource(path).adaptTo(ConversionJobBucket.class);
+    executor.doProcess(job, jobExecutionContext, bucket);
   }
 
   @Test
   public <P extends PageManager> void testPreparePageFails() throws Exception {
     new Expectations() {{
-      jobExecutionContext.initProgress(paths.length * 2, -1);
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
+      jobExecutionContext.initProgress(pathCount * 2, -1);
       job.getProperty(PN_REPROCESS, false);
       result = false;
     }};
@@ -111,7 +99,8 @@ public class FullConversionJobExecutorTest {
         throw new WCMException("Failed");
       }
     };
-    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
+    ConversionJobBucket bucket = context.resourceResolver().getResource(bucketPath).adaptTo(ConversionJobBucket.class);
+    executor.doProcess(job, jobExecutionContext, bucket);
   }
 
   @Test
@@ -119,25 +108,17 @@ public class FullConversionJobExecutorTest {
 
     final List<String> revisions = new ArrayList<>();
     new Expectations() {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
-      job.getProperty(PN_TEMPLATE_RULES, String[].class);
-      result = templateRules;
-      job.getProperty(PN_COMPONENT_RULES, String[].class);
-      result = componentRules;
-      job.getProperty(PN_POLICY_RULES, String[].class);
-      result = policyRules;
       job.getProperty(PN_REPROCESS, false);
       result = false;
-      jobExecutionContext.initProgress(paths.length * 2, -1);
+      jobExecutionContext.initProgress(pathCount * 2, -1);
       jobExecutionContext.incrementProgressCount(1);
-      times = paths.length * 2;
-      policyService.apply(withNotNull(), policyRules, true, false);
-      times = paths.length;
-      structureService.apply(withNotNull(), templateRules);
-      times = paths.length;
-      componentService.apply(withNotNull(), componentRules, true);
-      times = paths.length;
+      times = 5;
+      policyService.apply(withNotNull(), withNotNull(), true, false);
+      times = pageCount;
+      structureService.apply(withNotNull(), withNotNull());
+      times = pageCount;
+      componentService.apply(withNotNull(), withNotNull(), true);
+      times = pageCount;
       revision.getId();
       result = version;
     }};
@@ -145,17 +126,17 @@ public class FullConversionJobExecutorTest {
       @Mock
       public Revision createRevision(Page page, String label, String comment) throws WCMException {
         revisions.add(page.getPath());
-          return revision;
+        return revision;
       }
     };
 
-    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
-    ValueMap vm;
-    for (String path : paths) {
-      vm = context.resourceResolver().getResource(path + "/jcr:content").getValueMap();
-      assertEquals(version, vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
-    }
-    assertEquals(paths.length, revisions.size(), "Revision call count.");
+    ConversionJobBucket bucket = context.resourceResolver().getResource(bucketPath).adaptTo(ConversionJobBucket.class);
+    executor.doProcess(job, jobExecutionContext, bucket);
+    ValueMap vm = context.resourceResolver().getResource("/content/test/first-page/jcr:content").getValueMap();
+    assertEquals(version, vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
+    vm = context.resourceResolver().getResource("/content/test/second-page/jcr:content").getValueMap();
+    assertEquals(version, vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
+    assertEquals(2, revisions.size(), "Revision call count.");
   }
 
   @Test
@@ -163,25 +144,17 @@ public class FullConversionJobExecutorTest {
     final List<String> revisions = new ArrayList<>();
     final List<String> restored = new ArrayList<>();
     new Expectations() {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
-      job.getProperty(PN_TEMPLATE_RULES, String[].class);
-      result = templateRules;
-      job.getProperty(PN_COMPONENT_RULES, String[].class);
-      result = componentRules;
-      job.getProperty(PN_POLICY_RULES, String[].class);
-      result = policyRules;
       job.getProperty(PN_REPROCESS, false);
       result = true;
-      jobExecutionContext.initProgress(paths.length * 2, -1);
+      jobExecutionContext.initProgress(pathCount * 2, -1);
       jobExecutionContext.incrementProgressCount(1);
-      times = paths.length * 2;
-      policyService.apply(withNotNull(), policyRules, true, true);
-      times = paths.length;
-      structureService.apply(withNotNull(), templateRules);
-      times = paths.length;
-      componentService.apply(withNotNull(), componentRules, true);
-      times = paths.length;
+      times = 5;
+      policyService.apply(withNotNull(), withNotNull(), true, true);
+      times = pageCount;
+      structureService.apply(withNotNull(), withNotNull());
+      times = pageCount;
+      componentService.apply(withNotNull(), withNotNull(), true);
+      times = pageCount;
       revision.getId();
       result = version;
     }};
@@ -199,7 +172,9 @@ public class FullConversionJobExecutorTest {
         return revision;
       }
     };
-    executor.doProcess(job, jobExecutionContext, context.resourceResolver());
+
+    ConversionJobBucket bucket = context.resourceResolver().getResource(bucketPath).adaptTo(ConversionJobBucket.class);
+    executor.doProcess(job, jobExecutionContext, bucket);
 
     ValueMap vm = context.resourceResolver().getResource("/content/test/first-page/jcr:content").getValueMap();
     assertEquals("1234567890", vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
@@ -207,7 +182,7 @@ public class FullConversionJobExecutorTest {
     assertEquals("987654321", vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
 
     assertEquals(1, restored.size(), "Restore page call count");
-    assertEquals(paths.length, revisions.size(), "Revision call count");
+    assertEquals(2, revisions.size(), "Revision call count");
   }
 
 }

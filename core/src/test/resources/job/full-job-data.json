@@ -1,0 +1,26 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Test",
+  "type": "FULL",
+  "componentRules": [
+    "/var/aem-modernize/rules/component/first",
+    "/var/aem-modernize/rules/component/second"
+  ],
+  "policyRules": [
+    "/var/aem-modernize/rules/policy/first",
+    "/var/aem-modernize/rules/policy/second"
+  ],
+  "templateRules": [
+    "/var/aem-modernize/rules/template/first",
+    "/var/aem-modernize/rules/template/second"
+  ],
+  "buckets": {
+    "bucket0": {
+      "paths": [
+        "/content/test/first-page",
+        "/content/test/second-page",
+        "/content/test/not-found-page"
+      ]
+    }
+  }
+}

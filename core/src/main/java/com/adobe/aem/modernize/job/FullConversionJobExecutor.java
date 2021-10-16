@@ -2,6 +2,7 @@ package com.adobe.aem.modernize.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
@@ -21,7 +22,6 @@ import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
-import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Designer;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -53,31 +53,62 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   private ResourceResolverFactory resourceResolverFactory;
 
   @Override
-  protected void doProcess(Job job, JobExecutionContext context, ResourceResolver resourceResolver) throws RewriteException, PersistenceException {
-    String[] paths = job.getProperty(PN_PATHS, String[].class);
-
+  protected void doProcess(Job job, JobExecutionContext context, ConversionJobBucket bucket) {
     final boolean reprocess = job.getProperty(PN_REPROCESS, false);
-    Designer designer = resourceResolver.adaptTo(Designer.class);
+    Resource resource = bucket.getResource();
+    ResourceResolver rr = resource.getResourceResolver();
+
+    Set<String> policyRules = getPolicyRules(bucket);
+    Set<String> templateRules = getTemplateRules(bucket);
+    Set<String> componentRules = getComponentRules(bucket);
+
+    ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
+    String[] paths = mvm.get(PN_PATHS, String[].class);
+
+    Designer designer = rr.adaptTo(Designer.class);
     context.initProgress(paths.length * 2, -1);
 
-    String[] preparedPaths = preparePages(context, resourceResolver, paths, reprocess);
+    List<String> preparedPaths = preparePages(context, bucket, reprocess);
     for (String path : preparedPaths) {
-      Page root = resourceResolver.getResource(path).adaptTo(Page.class);
-      processDesign(context, designer.getDesign(root), job, reprocess);
-      processPage(context, root, job, reprocess);
-      processComponents(context, root.getContentResource(), job);
-      context.incrementProgressCount(1);
+      Page root = rr.getResource(path).adaptTo(Page.class);
+      try {
+        if (policyRules.isEmpty()) {
+          context.log("No policy rules found, skipping skipping policy import.");
+        } else {
+          policyService.apply(designer.getDesign(root), policyRules, true, reprocess);
+        }
+
+        if (templateRules.isEmpty()) {
+          context.log("No template rules found, skipping structure conversion.");
+        } else {
+          structureService.apply(root, templateRules);
+        }
+
+        if (componentRules.isEmpty()) {
+          context.log("No component rules found, skipping skipping component conversion.");
+        } else {
+          componentService.apply(root.getContentResource(), componentRules, true);
+        }
+        context.incrementProgressCount(1);
+      } catch (RewriteException e) {
+        logger.error("Conversion resulted in an error", e);
+        bucket.getFailed().add(path);
+      }
     }
   }
 
-  private String[] preparePages(JobExecutionContext context, ResourceResolver resourceResolver, String[] paths, boolean reprocess) {
-    List<String> processed = new ArrayList<>(paths.length);
-    PageManager pm = resourceResolver.adaptTo(PageManager.class);
+  private List<String> preparePages(JobExecutionContext context, ConversionJobBucket bucket, boolean reprocess) {
+
+    List<String> paths = bucket.getPaths();
+    ResourceResolver rr = bucket.getResource().getResourceResolver();
+    List<String> processed = new ArrayList<>(paths.size());
+    PageManager pm = rr.adaptTo(PageManager.class);
     for (String path : paths) {
       Page page = pm.getPage(path);
       if (page == null) {
         context.log("Path [{}] does not resolve to a Page, removing from list.", path);
         context.incrementProgressCount(1);
+        bucket.getNotFound().add(path);
         continue;
       }
 
@@ -93,52 +124,16 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
           }
         }
         mvm.put(PN_PRE_MODERNIZE_VERSION, version);
-        resourceResolver.commit();
+        rr.commit();
         processed.add(path);
         context.incrementProgressCount(1);
       } catch (WCMException | PersistenceException e) {
         logger.error("Error occurred trying to create or restore a page version", e);
         context.log("Could not prepare page [{}], skipping.", page.getPath());
+        bucket.getFailed().add(path);
       }
     }
-    return processed.toArray(new String[] {});
-  }
-
-  /*
-    Import the policies using the rules.
-   */
-  private void processDesign(JobExecutionContext context, Design design, Job job, boolean reprocess) {
-
-    final String[] rules = job.getProperty(PN_POLICY_RULES, String[].class);
-    if (rules == null || rules.length == 0) {
-      context.log("No policy rules found, skipping skipping policy import.");
-    } else {
-      policyService.apply(design, rules, true, reprocess);
-    }
-  }
-
-  /*
-    Process the resource according to the provided rules.
-   */
-  private void processPage(JobExecutionContext context, Page page, Job job, boolean reprocess) {
-    final String[] rules = job.getProperty(PN_TEMPLATE_RULES, String[].class);
-    if (rules == null || rules.length == 0) {
-      context.log("No template rules found, skipping structure conversion.");
-    } else {
-      structureService.apply(page, rules);
-    }
-  }
-
-  /*
-    Process the resource using the Component rules.
-   */
-  private void processComponents(JobExecutionContext context, Resource root, Job job) throws RewriteException {
-    final String[] rules = job.getProperty(PN_COMPONENT_RULES, String[].class);
-    if (rules == null || rules.length == 0) {
-      context.log("No component rules found, skipping skipping component conversion.");
-    } else {
-      componentService.apply(root, rules, true);
-    }
+    return processed;
   }
 
   @Override

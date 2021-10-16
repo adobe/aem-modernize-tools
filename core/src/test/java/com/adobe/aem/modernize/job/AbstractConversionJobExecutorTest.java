@@ -18,6 +18,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -35,7 +36,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SlingContextExtension.class)
 public class AbstractConversionJobExecutorTest {
 
-  private static String[] paths;
   private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
   @Mocked
   private Job job;
@@ -49,14 +49,9 @@ public class AbstractConversionJobExecutorTest {
   @Mocked
   private JobExecutionResult executionResult;
 
-  @BeforeAll
-  public static void beforeAll() {
-    paths = new String[] { "/content/test/first-page", "/content/test/second-page" };
-  }
-
   @BeforeEach
   public void beforeEach() {
-    context.load().json("/job/job-data.json", ConversionJob.JOB_DATA_LOCATION + "/job");
+    context.load().json("/job/component-job-data.json", ConversionJob.JOB_DATA_LOCATION + "/job");
   }
 
   private void setupResult(boolean success) {
@@ -91,7 +86,7 @@ public class AbstractConversionJobExecutorTest {
     };
     new Expectations() {{
       job.getProperty(PN_TRACKING_PATH, String.class);
-      result = ConversionJob.JOB_DATA_LOCATION + "/job";
+      result = ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0";
     }};
 
     JobExecutor executor = new NoOpJobExecutor();
@@ -128,7 +123,7 @@ public class AbstractConversionJobExecutorTest {
     };
     new Expectations() {{
       job.getProperty(PN_TRACKING_PATH, String.class);
-      result = ConversionJob.JOB_DATA_LOCATION + "/job";
+      result = ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0";
       job.getId();
       result = "JobId";
     }};
@@ -142,7 +137,7 @@ public class AbstractConversionJobExecutorTest {
   public void testSavesJobData() {
     new Expectations() {{
       job.getProperty(PN_TRACKING_PATH, String.class);
-      result = ConversionJob.JOB_DATA_LOCATION + "/job";
+      result = ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0";
       job.getId();
       result = "JobId";
     }};
@@ -152,33 +147,12 @@ public class AbstractConversionJobExecutorTest {
 
     assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
 
-    ValueMap vm = context.resourceResolver().getResource(ConversionJob.JOB_DATA_LOCATION + "/job").getValueMap();
+    ValueMap vm = context.resourceResolver().getResource(ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0").getValueMap();
     assertEquals("JobId", vm.get(PN_JOB_ID, String.class), "Job Id saved");
-  }
-
-  @Test
-  public <R extends ResourceResolver> void testDoProcessException() throws Exception {
-
-    NoOpJobExecutor executor = new NoOpJobExecutor();
-    context.registerInjectActivateService(executor);
-
-    new MockUp<R>() {
-      @Mock
-      public void revert() {
-      }
-    };
-
-    new Expectations(executor) {{
-      job.getProperty(PN_TRACKING_PATH, String.class);
-      result = ConversionJob.JOB_DATA_LOCATION + "/job";
-      job.getId();
-      result = "JobId";
-      executor.doProcess(job, jobExecutionContext, withInstanceOf(Resource.class));
-      result = new RewriteException("Exception");
-    }};
-
-    setupResult(false);
-    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
+    vm = context.resourceResolver().getResource(ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0").getValueMap();
+    assertEquals("/content/test/first-page", vm.get("success", String[].class)[0], "Success saved");
+    assertEquals("/content/test/second-page", vm.get("failed", String[].class)[0], "Failed saved");
+    assertEquals("/content/test/page-not-found", vm.get("notFound", String[].class)[0], "Not Found saved");
   }
 
   @Component(service = { JobExecutor.class })
@@ -188,7 +162,10 @@ public class AbstractConversionJobExecutorTest {
     private ResourceResolverFactory resourceResolverFactory;
 
     @Override
-    protected void doProcess(Job job, JobExecutionContext context, Resource tracking) {
+    protected void doProcess(Job job, JobExecutionContext context, ConversionJobBucket bucket) {
+      bucket.getSuccess().add("/content/test/first-page");
+      bucket.getFailed().add("/content/test/second-page");
+      bucket.getNotFound().add("/content/test/page-not-found");
     }
 
     @Override

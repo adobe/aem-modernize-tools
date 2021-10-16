@@ -3,7 +3,6 @@ package com.adobe.aem.modernize.component.job;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
@@ -12,19 +11,16 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
 public class ComponentJobExecutorTest {
-
-  private static String[] paths;
-  private static String[] componentRules;
 
   private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
@@ -44,7 +40,7 @@ public class ComponentJobExecutorTest {
     context.registerService(ComponentRewriteRuleService.class, componentService);
     context.registerInjectActivateService(executor);
     context.load().json("/job/page-content.json", "/content/test");
-    context.load().json("/job/job-data.json", "/var/aem-modernize/job-data/component");
+    context.load().json("/job/component-job-data.json", "/var/aem-modernize/job-data/component");
 
   }
 
@@ -59,22 +55,17 @@ public class ComponentJobExecutorTest {
       times = 2;
     }};
 
-
     Resource tracking = context.resourceResolver().getResource(jobPath);
-    executor.doProcess(job, jobExecutionContext, tracking);
+    ConversionJobBucket bucket = tracking.adaptTo(ConversionJobBucket.class);
+    executor.doProcess(job, jobExecutionContext, bucket);
     tracking.getResourceResolver().commit();
-    tracking = context.resourceResolver().getResource(jobPath);
-    ValueMap vm = tracking.adaptTo(ValueMap.class);
+    assertEquals(2, bucket.getSuccess().size(), "Failed count");
+    assertEquals("/content/test/first-page/jcr:content/component", bucket.getSuccess().get(0), "Success path");
+    assertEquals("/content/test/second-page/jcr:content/component", bucket.getSuccess().get(1), "Success path");
 
-    String[] paths = vm.get(PN_SUCCESS, String[].class);
-    assertEquals(2, paths.length, "Success count");
-    assertEquals("/content/test/first-page/jcr:content/component", paths[0], "Success path");
-    assertEquals("/content/test/second-page/jcr:content/component", paths[1], "Success path");
-    paths = vm.get(PN_NOT_FOUND, String[].class);
-    assertEquals(1, paths.length, "NotFound count");
-    assertEquals("/content/test/not-found-page/jcr:content/component", paths[0], "Not Found path");
+    assertEquals(1, bucket.getNotFound().size(), "NotFound count");
+    assertEquals("/content/test/not-found-page/jcr:content/component", bucket.getNotFound().get(0), "Not Found path");
   }
-
 
   @Test
   public void testDoProcessFailures() throws Exception {
@@ -88,19 +79,16 @@ public class ComponentJobExecutorTest {
       times = 2;
     }};
 
-
     Resource tracking = context.resourceResolver().getResource(jobPath);
-    executor.doProcess(job, jobExecutionContext, tracking);
+    ConversionJobBucket bucket = tracking.adaptTo(ConversionJobBucket.class);
+    executor.doProcess(job, jobExecutionContext, bucket);
     tracking.getResourceResolver().commit();
-    tracking = context.resourceResolver().getResource(jobPath);
-    ValueMap vm = tracking.adaptTo(ValueMap.class);
 
-    String[] paths = vm.get(PN_FAILED, String[].class);
-    assertEquals(2, paths.length, "Failed count");
-    assertEquals("/content/test/first-page/jcr:content/component", paths[0], "Failed path");
-    assertEquals("/content/test/second-page/jcr:content/component", paths[1], "Failure path");
-    paths = vm.get(PN_NOT_FOUND, String[].class);
-    assertEquals(1, paths.length, "NotFound count");
-    assertEquals("/content/test/not-found-page/jcr:content/component", paths[0], "Not Found path");
+    assertEquals(2, bucket.getFailed().size(), "Failed count");
+    assertEquals("/content/test/first-page/jcr:content/component", bucket.getFailed().get(0), "Failed path");
+    assertEquals("/content/test/second-page/jcr:content/component", bucket.getFailed().get(1), "Failure path");
+
+    assertEquals(1, bucket.getNotFound().size(), "NotFound count");
+    assertEquals("/content/test/not-found-page/jcr:content/component", bucket.getNotFound().get(0), "Not Found path");
   }
 }

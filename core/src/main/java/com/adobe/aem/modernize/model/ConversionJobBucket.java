@@ -1,19 +1,24 @@
 package com.adobe.aem.modernize.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Named;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.Optional;
 import org.apache.sling.models.annotations.Required;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Model(
     adaptables = Resource.class
 )
 @Getter
+@Setter
 public class ConversionJobBucket {
   public static final String RESOURCE_TYPE = "aem-modernize/components/job/bucket";
   public static final String PN_JOB_ID = "jobId";
@@ -22,9 +27,13 @@ public class ConversionJobBucket {
   public static final String PN_FAILED = "failed";
   public static final String PN_NOT_FOUND = "notFound";
 
+  @Self
+  @Required
+  private Resource resource;
+
   @ValueMapValue
   @Named(PN_JOB_ID)
-  @Required
+  @Optional
   private String jobId;
 
   @ValueMapValue
@@ -34,18 +43,18 @@ public class ConversionJobBucket {
 
   @ValueMapValue
   @Named(PN_SUCCESS)
-  @Required
-  private List<String> success;
+  @Optional
+  private List<String> success = new ArrayList<>();
 
   @ValueMapValue
   @Named(PN_FAILED)
-  @Required
-  private List<String> failed;
+  @Optional
+  private List<String> failed = new ArrayList<>();
 
   @ValueMapValue
   @Named(PN_NOT_FOUND)
-  @Required
-  private List<String> notMatched;
+  @Optional
+  private List<String> notFound = new ArrayList<>();
 
 
 }
