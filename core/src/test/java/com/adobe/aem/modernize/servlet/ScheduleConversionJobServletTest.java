@@ -22,6 +22,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
+import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,19 +73,19 @@ public class ScheduleConversionJobServletTest {
     for (int i = 0; i <= 500; i++) {
       list.add("/content/other/path" + i);
     }
-    requestData.setPaths(list.toArray(new String[]{}));
+    requestData.setPaths(list.toArray(new String[] {}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/template");
-    requestData.setTemplateRules(list.toArray(new String[]{}));
+    requestData.setTemplateRules(list.toArray(new String[] {}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/component");
-    requestData.setComponentRules(list.toArray(new String[]{}));
+    requestData.setComponentRules(list.toArray(new String[] {}));
 
     list = new ArrayList<>();
     list.add("/apps/site/rules/policy");
-    requestData.setPolicyRules(list.toArray(new String[]{}));
+    requestData.setPolicyRules(list.toArray(new String[] {}));
     return requestData;
   }
 
@@ -219,7 +220,6 @@ public class ScheduleConversionJobServletTest {
         new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
         "test-job");
 
-
     assertEquals(SC_OK, response.getStatus(), "Correct response code.");
     assertTrue(result.isSuccess(), "Correct result status.");
     assertNotNull(result.getMessage(), "Message was set.");
@@ -318,11 +318,6 @@ public class ScheduleConversionJobServletTest {
 
     assertEquals(2, jobProperties.size(), "Number of jobs created.");
     Map<String, Object> jobProps = jobProperties.get(0);
-    assertNotNull(jobProps.get(PN_PATHS), "Job paths are set.");
-    assertEquals(500, ((String[]) jobProps.get(PN_PATHS)).length, "Number of paths correct on first job.");
-    assertNotNull(jobProps.get(ConversionJob.PN_TEMPLATE_RULES), "Job has template rules.");
-    assertNotNull(jobProps.get(ConversionJob.PN_COMPONENT_RULES), "Job has component rules.");
-    assertNotNull(jobProps.get(ConversionJob.PN_POLICY_RULES), "Job has policy rules.");
-    assertNotNull(jobProps.get(ConversionJob.PN_TRACKING_PATH), "Job has tracking node path.");
+    assertEquals(path + "/buckets/bucket", jobProps.get(AbstractConversionJobExecutor.PN_TRACKING_PATH).toString(), "Job has tracking node path.");
   }
 }

@@ -8,6 +8,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
+import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
+import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import lombok.Getter;
 
 @Model(
@@ -25,7 +27,6 @@ public class ConversionJob {
   public static final String PN_COMPONENT_RULES = "componentRules";
   public static final String PN_POLICY_RULES = "policyRules";
   public static final String PN_INITIATOR = "startedBy";
-  public static final String PN_TRACKING_PATH = "tracking";
   public static final String PN_REPROCESS = "reprocess";
   public static final String PN_PRE_MODERNIZE_VERSION = "premodernizeVersion";
   public static final String PN_TYPE = "type";
@@ -40,13 +41,23 @@ public class ConversionJob {
   public Type getType() {
     return Type.FULL;
   }
-  
+
   public enum Type {
-    FULL,
-    COMPONENT,
-    PAGE,
-    POLICY
+
+    FULL(FullConversionJobExecutor.JOB_TOPIC),
+    COMPONENT(ComponentJobExecutor.JOB_TOPIC),
+    PAGE(""),
+    POLICY("");
+
+    private String topic;
+
+    Type(String topic) {
+      this.topic = topic;
+    }
+
+    public String getTopic() {
+      return this.topic;
+    }
   }
-  
-  
+
 }

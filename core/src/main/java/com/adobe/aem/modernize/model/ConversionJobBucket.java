@@ -20,7 +20,7 @@ public class ConversionJobBucket {
   public static final String PN_PATHS = "paths";
   public static final String PN_SUCCESS = "success";
   public static final String PN_FAILED = "failed";
-  public static final String PN_NOT_MATCHED = "notMatched";
+  public static final String PN_NOT_FOUND = "notFound";
 
   @ValueMapValue
   @Named(PN_JOB_ID)
@@ -43,7 +43,7 @@ public class ConversionJobBucket {
   private List<String> failed;
 
   @ValueMapValue
-  @Named(PN_NOT_MATCHED)
+  @Named(PN_NOT_FOUND)
   @Required
   private List<String> notMatched;
 

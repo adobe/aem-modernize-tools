@@ -48,7 +48,7 @@ public interface ComponentRewriteRuleService {
    * @param deep     {@code true} to recurse into the tree
    * @throws RewriteException if any errors occur when applying the rules
    */
-  void apply(@NotNull final Resource resource, @NotNull final String[] rules, boolean deep) throws RewriteException;
+  void apply(@NotNull final Resource resource, @NotNull final Set<String> rules, boolean deep) throws RewriteException;
 
   /**
    * Lists all resource paths that match any rules of which this service is aware.

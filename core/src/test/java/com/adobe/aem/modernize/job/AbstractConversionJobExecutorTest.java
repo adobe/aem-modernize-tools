@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ValueMap;
@@ -17,7 +18,6 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.adobe.aem.modernize.model.ConversionJobBucket;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -28,16 +28,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.job.AbstractConversionJobExecutor.*;
 import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
 public class AbstractConversionJobExecutorTest {
 
-  private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
   private static String[] paths;
-
+  private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
   @Mocked
   private Job job;
 
@@ -76,15 +75,14 @@ public class AbstractConversionJobExecutorTest {
   }
 
   @Test
-  public void testMissingJobData() {
+  public void testMissingTrackingPath() {
     JobExecutor executor = new NoOpJobExecutor();
     setupResult(false);
     assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
   }
 
   @Test
-  public <R extends ResourceResolverFactory> void testLoginFails() throws Exception {
-
+  public <R extends ResourceResolverFactory> void testLoginFails() {
     new MockUp<R>() {
       @Mock
       public ResourceResolver getServiceResourceResolver(Map<String, Object> authenticationInfo) throws LoginException {
@@ -92,8 +90,8 @@ public class AbstractConversionJobExecutorTest {
       }
     };
     new Expectations() {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
+      job.getProperty(PN_TRACKING_PATH, String.class);
+      result = ConversionJob.JOB_DATA_LOCATION + "/job";
     }};
 
     JobExecutor executor = new NoOpJobExecutor();
@@ -103,7 +101,20 @@ public class AbstractConversionJobExecutorTest {
   }
 
   @Test
-  public <R extends ResourceResolver> void testCommitFails() throws Exception {
+  public <R extends ResourceResolverFactory> void testTrackingNotFound() {
+    new Expectations() {{
+      job.getProperty(PN_TRACKING_PATH, String.class);
+      result = "/path/to/job/does/not/exist";
+    }};
+
+    JobExecutor executor = new NoOpJobExecutor();
+    context.registerInjectActivateService(executor);
+    setupResult(false);
+    assertEquals(executionResult, executor.process(job, jobExecutionContext), "Result was created.");
+  }
+
+  @Test
+  public <R extends ResourceResolver> void testCommitFails() {
     new MockUp<R>() {
       @Mock
       public void commit() throws PersistenceException {
@@ -116,8 +127,6 @@ public class AbstractConversionJobExecutorTest {
       }
     };
     new Expectations() {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
       job.getProperty(PN_TRACKING_PATH, String.class);
       result = ConversionJob.JOB_DATA_LOCATION + "/job";
       job.getId();
@@ -132,8 +141,6 @@ public class AbstractConversionJobExecutorTest {
   @Test
   public void testSavesJobData() {
     new Expectations() {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
       job.getProperty(PN_TRACKING_PATH, String.class);
       result = ConversionJob.JOB_DATA_LOCATION + "/job";
       job.getId();
@@ -151,22 +158,22 @@ public class AbstractConversionJobExecutorTest {
 
   @Test
   public <R extends ResourceResolver> void testDoProcessException() throws Exception {
+
     NoOpJobExecutor executor = new NoOpJobExecutor();
     context.registerInjectActivateService(executor);
 
     new MockUp<R>() {
       @Mock
-      public void revert() {}
+      public void revert() {
+      }
     };
 
     new Expectations(executor) {{
-      job.getProperty(PN_PATHS, String[].class);
-      result = paths;
       job.getProperty(PN_TRACKING_PATH, String.class);
       result = ConversionJob.JOB_DATA_LOCATION + "/job";
       job.getId();
       result = "JobId";
-      executor.doProcess(job, jobExecutionContext, withInstanceOf(ResourceResolver.class));
+      executor.doProcess(job, jobExecutionContext, withInstanceOf(Resource.class));
       result = new RewriteException("Exception");
     }};
 
@@ -181,7 +188,8 @@ public class AbstractConversionJobExecutorTest {
     private ResourceResolverFactory resourceResolverFactory;
 
     @Override
-    protected void doProcess(Job job, JobExecutionContext context, ResourceResolver resourceResolver) throws RewriteException, PersistenceException {}
+    protected void doProcess(Job job, JobExecutionContext context, Resource tracking) {
+    }
 
     @Override
     protected ResourceResolverFactory getResourceResolverFactory() {

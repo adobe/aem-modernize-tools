@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.security.AccessControlManager;
@@ -27,6 +29,7 @@ import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
 
 import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
+import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.day.cq.commons.jcr.JcrUtil;
@@ -58,6 +61,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   private static final String PARAM_DATA = "data";
   private static final int MAX_PROCESS_PATHS = 500;
 
+  private static final String NN_BUCKETS = "buckets";
+
   @Reference
   private SlingRepository repository;
 
@@ -83,7 +88,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       systemSession = repository.loginService(SERVICE_NAME, null);
       List<String[]> buckets = createBuckets(data);
       String tracking = createTrackingState(systemSession, data, rr.getUserID(), buckets);
-      if (scheduleJobs(data, buckets, tracking)) {
+      if (scheduleJobs(systemSession, data.getType(), tracking)) {
         responseData.setSuccess(true);
         responseData.setMessage("Successfully scheduled conversion job.");
         responseData.setJob(tracking);
@@ -167,7 +172,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   private String createTrackingState(Session session, RequestData requestData, String userId, List<String[]> buckets) throws RepositoryException {
     try {
       Node tracking = createTrackingNode(session, requestData, userId);
-      Node parent = tracking.addNode("buckets", JcrConstants.NT_UNSTRUCTURED);
+      Node parent = tracking.addNode(NN_BUCKETS, JcrConstants.NT_UNSTRUCTURED);
       for (String[] bucket : buckets) {
         addBucketNode(session, parent, bucket);
       }
@@ -202,27 +207,17 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     bucket.setProperty(PN_PATHS, paths);
   }
 
-  private boolean scheduleJobs(RequestData requestData, List<String[]> buckets, String trackingPath) {
+  private boolean scheduleJobs(Session session, Type type, String trackingNode) throws RepositoryException {
 
+    Node tracking = session.getNode(trackingNode);
+    Node buckets = tracking.getNode(NN_BUCKETS);
     Map<String, Object> jobProperties;
-    for (String[] bucket : buckets) {
+    NodeIterator it = buckets.getNodes();
+    while (it.hasNext()) {
       jobProperties = new HashMap<>();
-      jobProperties.put(PN_TRACKING_PATH, trackingPath);
-      jobProperties.put(PN_PATHS, bucket);
-      jobProperties.put(PN_TEMPLATE_RULES, requestData.getTemplateRules());
-      jobProperties.put(PN_COMPONENT_RULES, requestData.getComponentRules());
-      jobProperties.put(PN_POLICY_RULES, requestData.getPolicyRules());
-      String topic = null;
-      switch (requestData.getType()) {
-        case FULL:
-          topic = FullConversionJobExecutor.JOB_TOPIC;
-          break;
-        case COMPONENT:
-          topic = ComponentJobExecutor.JOB_TOPIC;
-          break;
-      }
-      if (jobManager.addJob(topic, jobProperties) == null) {
-        logger.error("Unable to create job for topic: {}", topic);
+      jobProperties.put(AbstractConversionJobExecutor.PN_TRACKING_PATH, it.nextNode().getPath());
+      if (jobManager.addJob(type.getTopic(), jobProperties) == null) {
+        logger.error("Unable to create job for topic: {}", type.getTopic());
         return false;
       }
     }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.event.jobs.Job;
@@ -13,29 +14,36 @@ import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.model.ConversionJobBucket;
+import org.eclipse.jetty.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 public abstract class AbstractConversionJobExecutor implements JobExecutor {
 
+  public static final String PN_TRACKING_PATH = "tracking";
   protected final Logger logger = LoggerFactory.getLogger(getClass());
 
   private static final String SERVICE_NAME = "convert-content";
 
   @Override
   public JobExecutionResult process(Job job, JobExecutionContext context) {
-    String[] paths = job.getProperty(PN_PATHS, String[].class);
-    if (paths == null || paths.length == 0) {
+    String trackingPath = job.getProperty(PN_TRACKING_PATH, String.class);
+    if (StringUtil.isBlank(trackingPath)) {
       return context.result().message("Invalid job state, no paths specified to process.").cancelled();
     }
     ResourceResolver resourceResolver = null;
     try {
       resourceResolver = login();
-      updateTracking(job, resourceResolver);
-      doProcess(job, context, resourceResolver);
+      Resource tracking = resourceResolver.getResource(trackingPath);
+      if (tracking == null) {
+        context.log("No tracking path found for required job details.");
+        logger.warn("No tracking path found for required job details.");
+        return context.result().message("No tracking path found for required job details.").cancelled();
+      }
+      updateTracking(job, tracking);
+      doProcess(job, context, tracking);
       resourceResolver.commit();
       return context.result().message("Successfully processed conversion job.").succeeded();
     } catch (LoginException e) {
@@ -61,15 +69,17 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     return getResourceResolverFactory().getServiceResourceResolver(Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, SERVICE_NAME));
   }
 
-  private void updateTracking(Job job, ResourceResolver resourceResolver) throws PersistenceException {
-    String trackingPath = job.getProperty(PN_TRACKING_PATH, String.class);
-    ModifiableValueMap mvm = resourceResolver.getResource(trackingPath).adaptTo(ModifiableValueMap.class);
+  /*
+    Set this JobID onto the job/bucket details node.
+   */
+  private void updateTracking(Job job, Resource tracking) throws PersistenceException {
+    ModifiableValueMap mvm = tracking.adaptTo(ModifiableValueMap.class);
     mvm.put(PN_JOB_ID, job.getId());
-    resourceResolver.commit();
+    tracking.getResourceResolver().commit();;
   }
 
 
-  protected abstract void doProcess(Job job, JobExecutionContext context, ResourceResolver resourceResolver) throws RewriteException, PersistenceException;
+  protected abstract void doProcess(@NotNull Job job, @NotNull JobExecutionContext context, @NotNull Resource tracking) throws RewriteException, PersistenceException;
 
   protected abstract ResourceResolverFactory getResourceResolverFactory();
 }
