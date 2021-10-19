@@ -21,7 +21,7 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.MockHit;
-import com.adobe.aem.modernize.model.ComponentJob;
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.granite.ui.components.ExpressionResolver;
 import com.adobe.granite.ui.components.ds.DataSource;
 import com.day.cq.search.PredicateGroup;
@@ -76,8 +76,9 @@ public class ConversionJobDataSourceTest {
   @BeforeAll
   public static void beforeAll() {
     Calendar today = Calendar.getInstance();
-    jobDataPath = String.format("%s/%d/%d/%d",
-        ComponentJob.JOB_DATA_LOCATION,
+    jobDataPath = String.format("%s/%s/%d/%d/%d",
+        ConversionJob.JOB_DATA_LOCATION,
+        ConversionJob.Type.FULL.name().toLowerCase(),
         today.get(Calendar.YEAR),
         today.get(Calendar.MONTH),
         today.get(Calendar.DAY_OF_MONTH));
@@ -249,20 +250,23 @@ public class ConversionJobDataSourceTest {
     DataSource ds = (DataSource) request.getAttribute(DataSource.class.getName());
     Iterator<Resource> it = ds.iterator();
     ValueMap vm = it.next().adaptTo(ValueMap.class);
+    assertEquals(jobDataPath + "/geodemo-components0", vm.get("path"), "Path set");
     assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
     assertFalse(vm.get("multi", Boolean.class), "Multi value");
-    assertEquals("QUEUED", vm.get("status", String.class), "Status value");
+    assertEquals("WAITING", vm.get("status", String.class), "Status value");
     assertEquals("info", vm.get("statusClass", String.class), "Status value");
     assertEquals("clock", vm.get("icon", String.class), "Status value");
 
     vm = it.next().adaptTo(ValueMap.class);
+    assertEquals(jobDataPath + "/geodemo-components1", vm.get("path"), "Path set");
     assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
     assertTrue(vm.get("multi", Boolean.class), "Multi value");
-    assertEquals("ERROR", vm.get("status", String.class), "Status value");
+    assertEquals("FAILED", vm.get("status", String.class), "Status value");
     assertEquals("error", vm.get("statusClass", String.class), "Status value");
     assertEquals("closeCircle", vm.get("icon", String.class), "Status value");
 
     vm = it.next().adaptTo(ValueMap.class);
+    assertEquals(jobDataPath + "/geodemo-components2", vm.get("path"), "Path set");
     assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
     assertFalse(vm.get("multi", Boolean.class), "Multi value");
     assertEquals("ACTIVE", vm.get("status", String.class), "Status value");
@@ -271,11 +275,12 @@ public class ConversionJobDataSourceTest {
 
 
     vm = it.next().adaptTo(ValueMap.class);
+    assertEquals(jobDataPath + "/geodemo-components3", vm.get("path"), "Path set");
     assertEquals("GeoDemo Components", vm.get("title", String.class), "Title value.");
     assertFalse(vm.get("multi", Boolean.class), "Multi value");
-    assertEquals("unknown", vm.get("status", String.class), "Status value");
-    assertEquals("info", vm.get("statusClass", String.class), "Status value");
-    assertEquals("helpCircle", vm.get("icon", String.class), "Status value");
+    assertEquals("FAILED", vm.get("status", String.class), "Status value");
+    assertEquals("error", vm.get("statusClass", String.class), "Status value");
+    assertEquals("closeCircle", vm.get("icon", String.class), "Status value");
 
     assertTrue(closeCalled[0], "Query RR was closed");
 

@@ -12,11 +12,10 @@
     "selectionMode": false,
     "src": "/apps/aem-modernize/content/component/views/card.html",
     "stateId": "shell.collectionpage",
-    "path": "/var/aem-modernize/job-data/component",
+    "path": "/var/aem-modernize/job-data/full",
     "itemResourceType": "aem-modernize/components/job/component/card",
     "limit": 10,
     "datasource": {
-      "jobType": "aem-modernize/components/job/component",
       "limit": "${empty requestPathInfo.selectors[1] ? &quot;10&quot; : requestPathInfo.selectors[1]}",
       "offset": "${requestPathInfo.selectors[0]}"
     }
@@ -54,7 +53,7 @@
     "selectionMode": false,
     "src": "/apps/aem-modernize/content/component/views/card.html",
     "stateId": "shell.collectionpage",
-    "path": "/var/aem-modernize/job-data/component",
+    "path": "/var/aem-modernize/job-data/full",
     "limit": 10,
     "datasource": {
       "offset": "${requestPathInfo.selectors[0]}",
@@ -74,10 +73,9 @@
     "selectionMode": false,
     "src": "/apps/aem-modernize/content/component/views/card.html",
     "stateId": "shell.collectionpage",
-    "path": "/var/aem-modernize/job-data/component",
+    "path": "/var/aem-modernize/job-data/full",
     "limit": 10,
     "datasource": {
-      "jobType": "aem-modernize/components/job/component",
       "offset": "${requestPathInfo.selectors[0]}",
       "limit": "${empty requestPathInfo.selectors[1] ? &quot;10&quot; : requestPathInfo.selectors[1]}"
     }
@@ -100,7 +98,6 @@
     "itemResourceType": "aem-modernize/components/job/component/card",
     "limit": 20,
     "datasource": {
-      "jobType": "aem-modernize/components/job/component",
       "offset": "${requestPathInfo.selectors[0]}",
       "limit": "${empty requestPathInfo.selectors[1] ? &quot;20&quot; : requestPathInfo.selectors[1]}"
     }

@@ -58,16 +58,6 @@ import static org.apache.sling.event.jobs.Job.*;
 )
 public class ConversionJobDataSource extends SlingSafeMethodsServlet {
 
-  private static final List<JobState> priority = Arrays.asList(
-      JobState.ERROR,
-      JobState.DROPPED,
-      JobState.GIVEN_UP,
-      JobState.STOPPED,
-      JobState.ACTIVE,
-      JobState.QUEUED,
-      JobState.SUCCEEDED
-  );
-
   private final static Logger logger = LoggerFactory.getLogger(ConversionJobDataSource.class);
   @Reference
   private ExpressionResolver expressionResolver;
@@ -100,15 +90,10 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     }
 
     ValueMap dvm = resource.getChild("datasource").getValueMap();
-    String jobType = dvm.get("jobType", String.class);
-    if (StringUtils.isBlank(jobType)) {
-      logger.warn("DataSource job resource type was not specified.");
-      return;
-    }
 
     Integer offset = expressionResolver.resolve(dvm.get("offset", String.class), request.getLocale(), Integer.class, request);
     Integer limit = expressionResolver.resolve(dvm.get("limit", String.class), request.getLocale(), Integer.class, request);
-    List<Resource> jobs = findJobs(rr, searchRoot, jobType, offset, limit);
+    List<Resource> jobs = findJobs(rr, searchRoot, offset, limit);
 
     if (!jobs.isEmpty()) {
       DataSource ds = buildDataSource(request.getResourceResolver(), jobs, resourceType);
@@ -116,7 +101,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     }
   }
 
-  private List<Resource> findJobs(ResourceResolver resourceResolver, Resource root, String type, Integer offset, Integer limit) {
+  private List<Resource> findJobs(ResourceResolver resourceResolver, Resource root, Integer offset, Integer limit) {
     List<Resource> results = new ArrayList<>();
     PredicateGroup predicates = new PredicateGroup();
 
@@ -128,7 +113,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     // Resource Type
     predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
     predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
-    predicate.set(JcrPropertyPredicateEvaluator.VALUE, type);
+    predicate.set(JcrPropertyPredicateEvaluator.VALUE, ConversionJob.RESOURCE_TYPE);
     predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EQUALS);
     predicates.add(predicate);
 
@@ -168,70 +153,48 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
       Map<String, Object> vm = new HashMap<>();
       vm.put("multi", cj.getBuckets().size() > 1);
       vm.put("title", cj.getTitle());
+      vm.put("path", r.getPath());
 
-      Job job = getJob(cj);
-
-      if (job != null) {
-        switch (job.getJobState()) {
-          case ERROR:
-            vm.put("statusClass", "error");
-            vm.put("icon", "closeCircle");
-            break;
-          case QUEUED:
-            vm.put("statusClass", "info");
-            vm.put("icon", "clock");
-            break;
-          case DROPPED:
-          case STOPPED:
-          case GIVEN_UP:
-            vm.put("statusClass", "warn");
-            vm.put("icon", "alert");
-            break;
-          case ACTIVE:
-            vm.put("statusClass", "info");
-            vm.put("icon", "clockCheck");
-            break;
-          case SUCCEEDED:
-            vm.put("statusClass", "success");
-            vm.put("icon", "checkCircle");
-        }
-        vm.put("status", job.getJobState().toString());
-        vm.put("statusInt", priority.indexOf(job.getJobState()));
-        Calendar finished = job.getFinishedDate();
-        if (finished != null) {
-          vm.put("finishedMs", finished.getTimeInMillis());
-          vm.put("finished", finished.toInstant());
-        } else {
-          vm.put("finishedMs", 0);
-          vm.put("finished", "");
-        }
+      ConversionJob.Status status = cj.getStatus();
+      switch (status) {
+        case FAILED:
+          vm.put("statusClass", "error");
+          vm.put("icon", "closeCircle");
+          break;
+        case WAITING:
+          vm.put("statusClass", "info");
+          vm.put("icon", "clock");
+          break;
+        case ACTIVE:
+          vm.put("statusClass", "info");
+          vm.put("icon", "clockCheck");
+          break;
+        case SUCCESS:
+          vm.put("statusClass", "success");
+          vm.put("icon", "checkCircle");
+          break;
+        case WARN:
+          vm.put("statusClass", "warn");
+          vm.put("icon", "alert");
+          break;
+        default:
+          vm.put("statusClass", "info");
+          vm.put("icon", "helpCircle");
+      }
+      vm.put("status", status.name());
+      vm.put("statusInt", status.ordinal());
+      Calendar finished =  cj.getFinished();
+      if (finished != null) {
+        vm.put("finishedMs", finished.getTimeInMillis());
+        vm.put("finished", finished.toInstant());
       } else {
-        vm.put("status", "unknown");
-        vm.put("icon", "helpCircle");
-        vm.put("statusClass", "info");
         vm.put("finishedMs", 0);
         vm.put("finished", "");
       }
-
       return new ValueMapResource(resourceResolver, r.getPath(), resourceType, new ValueMapDecorator(vm));
     }).collect(Collectors.toList());
     return new SimpleDataSource(entries.iterator());
   }
 
-  private Job getJob(ConversionJob conversionJob) {
-    Job job = null;
-    for (ConversionJobBucket bucket : conversionJob.getBuckets()) {
-      String id = bucket.getJobId();
-      Job j = jobManager.getJobById(id);
 
-      if (j != null) {
-        if (job == null) {
-          job = j;
-        } else if (priority.indexOf(j.getJobState()) < priority.indexOf(job.getJobState())) {
-          job = j;
-        }
-      }
-    }
-    return job;
-  }
 }

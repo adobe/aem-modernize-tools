@@ -1,6 +1,7 @@
 package com.adobe.aem.modernize.job;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import org.eclipse.jetty.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -38,9 +40,10 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
       return context.result().message("Invalid job state, no paths specified to process.").cancelled();
     }
     ResourceResolver resourceResolver = null;
+    Resource tracking = null;
     try {
       resourceResolver = login();
-      Resource tracking = resourceResolver.getResource(trackingPath);
+      tracking = resourceResolver.getResource(trackingPath);
       if (tracking == null) {
         context.log("No tracking path found for required job details.");
         logger.warn("No tracking path found for required job details.");
@@ -56,6 +59,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
       updateTracking(job, tracking);
       doProcess(job, context, bucket);
       updateBucket(bucket);
+      logFinish(tracking);
       resourceResolver.commit();
       return context.result().message("Successfully processed conversion job.").succeeded();
     } catch (LoginException e) {
@@ -66,6 +70,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
       context.log("Error when trying to update the requested content.", e.getLocalizedMessage());
       logger.error("Unable to make changes to repository.", e);
       resourceResolver.revert();
+      attemptTrackingUpdate(tracking);
       return context.result().message("Error when trying to save the changes.").cancelled();
     } finally {
       if (resourceResolver != null && resourceResolver.isLive()) {
@@ -87,6 +92,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   private void updateTracking(Job job, Resource tracking) throws PersistenceException {
     ModifiableValueMap mvm = tracking.adaptTo(ModifiableValueMap.class);
     mvm.put(PN_JOB_ID, job.getId());
+    mvm.put(PN_STARTED, job.getProcessingStarted().getTime());
     tracking.getResourceResolver().commit();;
   }
 
@@ -98,6 +104,31 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     mvm.put(PN_SUCCESS, bucket.getSuccess().toArray(new String[] {}));
     mvm.put(PN_FAILED, bucket.getFailed().toArray(new String[] {}));
     mvm.put(PN_NOT_FOUND, bucket.getNotFound().toArray(new String[] {}));
+    mvm.put(ConversionJobBucket.PN_FINISHED, Calendar.getInstance().getTime());
+    mvm.put(PN_JOB_STATUS, Status.SUCCESS.name());
+  }
+
+  /*
+    Set the finish time on the root node.
+   */
+  private void logFinish(Resource tracking) {
+    ModifiableValueMap mvm = tracking.getParent().getParent().adaptTo(ModifiableValueMap.class);
+    mvm.put(ConversionJob.PN_FINISHED, Calendar.getInstance().getTime());
+  }
+
+  /*
+    Last ditch attempt to save tracking status for job when a rollback occurs.
+   */
+  private void attemptTrackingUpdate(Resource tracking) {
+    if (tracking != null) {
+      try {
+        ModifiableValueMap mvm = tracking.adaptTo(ModifiableValueMap.class);
+        mvm.put(PN_JOB_STATUS, Status.FAILED.name());
+        tracking.getResourceResolver().commit();
+      } catch (PersistenceException e) {
+        logger.error("Unable to save job status as {} on tracking node [{}}", Status.FAILED.name(), tracking.getPath());
+      }
+    }
   }
 
   @NotNull

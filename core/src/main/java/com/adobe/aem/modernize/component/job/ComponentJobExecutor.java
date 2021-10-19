@@ -1,10 +1,8 @@
 package com.adobe.aem.modernize.component.job;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -20,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.component.job.ComponentJobExecutor.*;
-import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @Component(
     service = { JobExecutor.class },

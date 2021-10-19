@@ -1,5 +1,7 @@
 package com.adobe.aem.modernize.job;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.sling.api.resource.LoginException;
@@ -110,6 +112,7 @@ public class AbstractConversionJobExecutorTest {
 
   @Test
   public <R extends ResourceResolver> void testCommitFails() {
+
     new MockUp<R>() {
       @Mock
       public void commit() throws PersistenceException {
@@ -126,6 +129,8 @@ public class AbstractConversionJobExecutorTest {
       result = ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0";
       job.getId();
       result = "JobId";
+      job.getProcessingStarted();
+      result = Calendar.getInstance();
     }};
     JobExecutor executor = new NoOpJobExecutor();
     context.registerInjectActivateService(executor);
@@ -140,6 +145,8 @@ public class AbstractConversionJobExecutorTest {
       result = ConversionJob.JOB_DATA_LOCATION + "/job/buckets/bucket0";
       job.getId();
       result = "JobId";
+      job.getProcessingStarted();
+      result = Calendar.getInstance();
     }};
     setupResult(true);
     JobExecutor executor = new NoOpJobExecutor();
@@ -153,6 +160,11 @@ public class AbstractConversionJobExecutorTest {
     assertEquals("/content/test/first-page", vm.get("success", String[].class)[0], "Success saved");
     assertEquals("/content/test/second-page", vm.get("failed", String[].class)[0], "Failed saved");
     assertEquals("/content/test/page-not-found", vm.get("notFound", String[].class)[0], "Not Found saved");
+    assertNotNull(vm.get("started", Date.class), "Bucket Start time set");
+    assertNotNull(vm.get("finished", Date.class), "Bucket Finished time set");
+
+    vm = context.resourceResolver().getResource(ConversionJob.JOB_DATA_LOCATION + "/job").getValueMap();
+    assertNotNull(vm.get("finished", Date.class), "Aggregate finished time set");
   }
 
   @Component(service = { JobExecutor.class })
