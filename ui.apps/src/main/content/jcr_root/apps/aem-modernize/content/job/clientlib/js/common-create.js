@@ -179,7 +179,7 @@
 
     #showError = (item) => {
       if (item.path) {
-        if (!item.hasPermission) {
+        if (item.hasPermission === false) {
           this.#ui.prompt(
             Granite.I18n.get("Error"),
             Granite.I18n.get("You do not have permission to convert that content."),

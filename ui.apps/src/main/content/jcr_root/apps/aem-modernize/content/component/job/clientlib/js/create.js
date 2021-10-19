@@ -33,8 +33,8 @@
 
       const $row = $(
         '<tr is="coral-table-row" itemprop="item" class="foundation-collection-item" data-foundation-collection-item-id="' + data.path + '">' +
-          '<td is="coral-table-cell" class="select" alignment="center">' +
-            '<coral-checkbox coral-table-rowselect></coral-checkbox>' +
+          '<td is="coral-table-cell" class="select" alignment="center" coral-table-rowselect>' +
+            '<coral-checkbox></coral-checkbox>' +
           '</td>' +
           '<td is="coral-table-cell" class="foundation-collection-item-title" alignment="column" value="' + data.title + '">' +
             '<span>' + data.title + '</span><div class="foundation-layout-util-subtletext">' + data.path + '</div>' +

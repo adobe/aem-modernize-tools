@@ -3,6 +3,6 @@
           jcr:mixinTypes="[rep:AccessControllable]"
           jcr:primaryType="nt:unstructured"
           jcr:title="Component Conversion"
-          href="/apps/aem-modernize/content/component.html"
+          href="/mnt/overlay/aem-modernize/content/component/job/list.html"
           icon="viewGrid"
           id="aem-modernize-tools-component"/>
