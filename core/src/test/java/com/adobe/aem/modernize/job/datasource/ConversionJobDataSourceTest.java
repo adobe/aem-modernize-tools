@@ -46,6 +46,7 @@ public class ConversionJobDataSourceTest {
   private static String jobDataPath;
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
+
   public ConversionJobDataSource dataSource = new ConversionJobDataSource();
 
   @Mocked
@@ -86,8 +87,8 @@ public class ConversionJobDataSourceTest {
 
   @BeforeEach
   public void beforeEach() {
-    context.load().json("/job/datasource/test-component-job.json", jobDataPath);
-    context.load().json("/job/datasource/test-component-view.json", componentViewsPath);
+    context.load().json("/job/datasource/test-component-jobs.json", jobDataPath);
+    context.load().json("/job/datasource/test-job-list-view.json", componentViewsPath);
     context.registerService(JobManager.class, jobManager);
     context.registerService(ExpressionResolver.class, expressionResolver);
     context.registerService(QueryBuilder.class, queryBuilder);

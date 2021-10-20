@@ -62,48 +62,51 @@ public class ConversionJob {
   @Optional
   private Calendar finished;
 
-
   @Inject
   private List<ConversionJobBucket> buckets;
+
+  private Status status;
 
   public Type getType() {
     return Type.FULL;
   }
 
   public Status getStatus() {
-    Job priorityJob = getPriorityJob();
-    Status status = Status.SUCCESS;
-    if (priorityJob != null) {
-      switch (priorityJob.getJobState()) {
-        case ERROR:
-        case DROPPED:
-        case STOPPED:
-        case GIVEN_UP:
-          status = Status.FAILED;
-          break;
-        case SUCCEEDED:
-          status = Status.SUCCESS;
-          break;
-        case ACTIVE:
-          status = Status.ACTIVE;
-          break;
-        case QUEUED:
-          status = Status.WAITING;
-          break;
-        default:
-          status = Status.WARN;
-          break;
-      }
-    } else {
+    if (status == null) {
+      Job priorityJob = getPriorityJob();
+      status = Status.SUCCESS;
+      if (priorityJob != null) {
+        switch (priorityJob.getJobState()) {
+          case ERROR:
+          case DROPPED:
+          case STOPPED:
+          case GIVEN_UP:
+            status = Status.FAILED;
+            break;
+          case SUCCEEDED:
+            status = Status.SUCCESS;
+            break;
+          case ACTIVE:
+            status = Status.ACTIVE;
+            break;
+          case QUEUED:
+            status = Status.WAITING;
+            break;
+          default:
+            status = Status.WARN;
+            break;
+        }
+      } else {
 
-      for (ConversionJobBucket bucket : getBuckets()) {
-        Status bucketStatus = bucket.getStatus();
-        if (bucketStatus == Status.FAILED) { // Any failed bucket sets overall status.
-          status = Status.FAILED;
-          break;
-        } else {
-          // In case of unknown, priority over Success.
-          status = bucketStatus == Status.WARN ? bucketStatus : status;
+        for (ConversionJobBucket bucket : getBuckets()) {
+          Status bucketStatus = bucket.getStatus();
+          if (bucketStatus == Status.FAILED) { // Any failed bucket sets overall status.
+            status = Status.FAILED;
+            break;
+          } else {
+            // In case of unknown, priority over Success.
+            status = bucketStatus == Status.WARN ? bucketStatus : status;
+          }
         }
       }
     }

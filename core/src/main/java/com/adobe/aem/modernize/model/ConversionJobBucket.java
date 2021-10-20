@@ -72,23 +72,27 @@ public class ConversionJobBucket {
   @Optional
   private Calendar finished;
 
+  private ConversionJob.Status status;
+
   public ConversionJob.Status getStatus() {
-    if (!failed.isEmpty()) {
-      return ConversionJob.Status.FAILED;
-    } else if (!notFound.isEmpty()) {
-      return ConversionJob.Status.WARN;
-    }
-
-    ValueMap vm = resource.getValueMap();
-    String status = vm.get(PN_JOB_STATUS, String.class);
-    try {
-      if (StringUtil.isNotBlank(status)) {
-        return ConversionJob.Status.valueOf(status);
+    if (status == null) {
+      status = ConversionJob.Status.SUCCESS;
+      if (!failed.isEmpty()) {
+        status = ConversionJob.Status.FAILED;
+      } else if (!notFound.isEmpty()) {
+        status = ConversionJob.Status.WARN;
       }
-    } catch (IllegalArgumentException e) {
-      // Do nothing;
-    }
 
-    return ConversionJob.Status.UNKNOWN;
+      ValueMap vm = resource.getValueMap();
+      String str = vm.get(PN_JOB_STATUS, String.class);
+      try {
+        if (StringUtil.isNotBlank(str)) {
+          status = ConversionJob.Status.valueOf(str);
+        }
+      } catch (IllegalArgumentException e) {
+        // Do nothing;
+      }
+    }
+    return status;
   }
 }

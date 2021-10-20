@@ -2,7 +2,6 @@ package com.adobe.aem.modernize.job.datasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +20,9 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
-import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.JobManager;
 
 import com.adobe.aem.modernize.model.ConversionJob;
-import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.granite.ui.components.ExpressionResolver;
 import com.adobe.granite.ui.components.ds.DataSource;
 import com.adobe.granite.ui.components.ds.SimpleDataSource;
@@ -44,7 +41,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
-import static org.apache.sling.event.jobs.Job.*;
 
 /**
  * Returns a list of component job data stored in the `/var` directory.
@@ -58,7 +54,7 @@ import static org.apache.sling.event.jobs.Job.*;
 )
 public class ConversionJobDataSource extends SlingSafeMethodsServlet {
 
-  private final static Logger logger = LoggerFactory.getLogger(ConversionJobDataSource.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConversionJobDataSource.class);
   @Reference
   private ExpressionResolver expressionResolver;
   @Reference
@@ -96,7 +92,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     List<Resource> jobs = findJobs(rr, searchRoot, offset, limit);
 
     if (!jobs.isEmpty()) {
-      DataSource ds = buildDataSource(request.getResourceResolver(), jobs, resourceType);
+      DataSource ds = buildDataSource(rr, jobs, resourceType);
       request.setAttribute(DataSource.class.getName(), ds);
     }
   }
