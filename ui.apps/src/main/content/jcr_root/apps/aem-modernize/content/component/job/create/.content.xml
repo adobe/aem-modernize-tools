@@ -23,7 +23,7 @@
             style="aligned">
         <granite:data jcr:primaryType="nt:unstructured"
                       aem-modernize-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.json')}"
-                      aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/view.html')}"
+                      aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/job/view.html')}"
                       aem-modernize-list-rules-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listrules.json')}"
                       aem-modernize-list-children-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listchildren.json')}"
                       aem-modernize-list-components-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listcomponents.json')}"
