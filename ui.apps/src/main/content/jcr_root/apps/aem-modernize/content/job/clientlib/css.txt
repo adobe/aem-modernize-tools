@@ -1,4 +1,6 @@
 #base=css
 
 common.css
-common-list.css
+navpanel.css
+list.css
+

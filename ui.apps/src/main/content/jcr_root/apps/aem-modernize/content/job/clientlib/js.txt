@@ -1,5 +1,6 @@
 #base=js
 
 namespace.js
-common-list.js
-common-create.js
+navpanel.js
+list.js
+create.js

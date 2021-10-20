@@ -3,12 +3,76 @@
           xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
           xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
           jcr:primaryType="nt:unstructured"
-          modeGroup="aem-modernize-job-view"
-          sling:resourceSuperType="granite/ui/components/shell/collectionpage">
+          jcr:title="AEM Modernize Tools | Conversion Job Detail"
+          sling:resourceType="granite/ui/components/shell/collectionpage"
+          consoleId="aem-modernize-job-view-detail"
+          modeGroup="aem-modernize-job-collection"
+          targetCollection=".aem-modernize-job-bucket-collection">
   <head jcr:primaryType="nt:unstructured">
     <clientlibs
         jcr:primaryType="nt:unstructured"
         sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
-        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin]"/>
+        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common]"/>
   </head>
+  <actions jcr:primaryType="nt:unstructured">
+    <primary jcr:primaryType="nt:unstructured"/>
+    <secondary  jcr:primaryType="nt:unstructured"/>
+  </actions>
+  <title jcr:primaryType="nt:unstructured"
+         text="AEM Modernization Job Details"
+         sling:resourceType="granite/ui/components/coral/foundation/text"/>
+  <rails jcr:primaryType="nt:unstructured">
+    <navigation jcr:primaryType="nt:unstructured"
+                jcr:title="Job (Bucket) List"
+                sling:resourceType="granite/ui/components/coral/foundation/panel/railpanel"
+                granite:class="cq-rail-navigation"
+                granite:id="aem-modernization-job-navigation"
+                active="{Boolean}true">
+      <items jcr:primaryType="nt:unstructured">
+        <navpanel jcr:primaryType="nt:unstructured"
+                  sling:resourceType="aem-modernize/content/job/view/navpanel"
+                  id="aem-modernize-job-view-navigation-panel"
+                  orientation="vertical"
+                  size="L">
+        </navpanel>
+      </items>
+    </navigation>
+  </rails>
+  <views jcr:primaryType="nt:unstructured">
+    <list jcr:primaryType="nt:unstructured"
+          jcr:title="List View"
+          sling:resourceType="granite/ui/components/coral/foundation/table"
+          granite:rel="aem-modernize-job-bucket-collection"
+          draggable="{Boolean}false"
+          icon="viewList"
+          layoutId="list"
+          modeGroup="aem-modernize-job-bucket-collection"
+          selectionCount="none"
+          path="${requestPathInfo.suffix}"
+          bucket="${empty param.bucket ? &quot;0&quot; : param.bucket}"
+          src="${requestPathInfo.resourcePath}{.offset,limit}.html${requestPathInfo.suffix}?${querystring}"
+          itemResourceType="aem-modernize/components/job/bucket/item"
+          sortMode="local"
+          limit="{Long}50">
+      <datasource jcr:primaryType="nt:unstructured"
+                  limit="${empty requestPathInfo.selectors[1] ? &quot;51&quot; : requestPathInfo.selectors[1]}"
+                  offset="${requestPathInfo.selectors[0]}"
+                  sling:resourceType="aem-modernize/components/job/bucket/datasource"/>
+      <columns jcr:primaryType="nt:unstructured">
+        <path jcr:primaryType="nt:unstructured"
+              jcr:title="Path"
+              sortType="alphanumeric"
+              sortable="{Boolean}true"/>
+        <status jcr:primaryType="nt:unstructured"
+                jcr:title="Status"
+                sortType="alphanumeric"
+                sortable="{Boolean}true"/>
+        <icon jcr:primaryType="nt:unstructured"
+                alignment="center"
+                fixedWidth="{Boolean}true"
+                sortable="{Boolean}false"/>
+
+      </columns>
+    </list>
+  </views>
 </jcr:root>

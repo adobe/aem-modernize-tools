@@ -1,0 +1,16 @@
+
+coral-tab.error coral-icon {
+  color: #fa7d73;
+}
+
+coral-tab.warn coral-icon  {
+  color: #fad782;
+}
+
+coral-tab.success coral-icon{
+  color: #b3da8a;
+}
+
+coral-tab.info coral-icon{
+  color: #696969;
+}

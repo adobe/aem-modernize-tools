@@ -19,7 +19,7 @@
     <secondary jcr:primaryType="nt:unstructured">
       <create jcr:primaryType="nt:unstructured"
               sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
-              href="/apps/aem-modernize/content/component/job/create.html"
+              href="/mnt/overlay/aem-modernize/content/component/job/create.html"
               text="Create"
               variant="primary"/>
     </secondary>
@@ -67,9 +67,6 @@
                   offset="${requestPathInfo.selectors[0]}"
                   sling:resourceType="aem-modernize/components/job/datasource"/>
       <columns jcr:primaryType="nt:unstructured">
-        <select jcr:primaryType="nt:unstructured"
-                alignment="center"
-                fixedWidth="{Boolean}true" />
         <name jcr:primaryType="nt:unstructured"
               jcr:title="Name"
               sortType="alphanumeric"
@@ -85,7 +82,8 @@
               sortable="{Boolean}true"/>
         <multi jcr:primaryType="nt:unstructured"
                jcr:title="Multi-Bucket"
-               alignment="right"
+               alignment="center"
+
                sortable="{Boolean}false"/>
       </columns>
     </list>

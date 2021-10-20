@@ -1,12 +1,9 @@
 <tr is="coral-table-row"
-    class="foundation-collection-item"
+    class="foundation-collection-item foundation-collection-navigator"
     title="${properties.title}"
-    data-viewdetailpath=""
     data-multi="${properties.multi}"
+    data-foundation-collection-navigator-href="/mnt/overlay/aem-modernize/content/job/view.html${properties.path}"
     data-foundation-collection-item-id="${properties.path}">
-  <td is="coral-table-cell" class="select" alignment="center" coral-table-rowselect>
-
-  </td>
   <td is="coral-table-cell">${properties.title}</td>
   <td is="coral-table-cell" value="${properties.statusInt}">
     <coral-icon icon="${properties.icon}" class="mediumIcon ${properties.statusClass}" ></coral-icon>
