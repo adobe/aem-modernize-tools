@@ -238,7 +238,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
       matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
-      result = Collections.singleton("/content/test/all/serviceTest");
+      result = Collections.singleton("/content/test/all/jcr:content/serviceTest");
       notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.emptySet();
@@ -246,8 +246,8 @@ public class ComponentRewriteRuleServiceImplTest {
 
     Resource root = context.resourceResolver().getResource("/content/test/all");
     Set<String> paths = componentRewriteRuleService.findResources(root);
-    assertTrue(paths.contains("/content/test/all/serviceTest"));
-    paths.remove("/content/test/all/serviceTest");
+    assertTrue(paths.contains("/content/test/all/jcr:content/serviceTest"));
+    paths.remove("/content/test/all/jcr:content/serviceTest");
     assertTrue(paths.isEmpty(), "Paths content");
     assertTrue(closeCalled[0], "Query RR was closed");
   }
@@ -279,37 +279,37 @@ public class ComponentRewriteRuleServiceImplTest {
 
       matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
-      result = Collections.singleton("/content/test/all/serviceTest");
+      result = Collections.singleton("/content/test/all/jcr:content/serviceTest");
       notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
       times = 1;
       result = Collections.emptySet();
     }};
 
-    Resource root = context.resourceResolver().getResource("/content/test/all");
+    Resource root = context.resourceResolver().getResource("/content/test/all/jcr:content");
     Set<String> paths = componentRewriteRuleService.findResources(root);
 
-    assertTrue(paths.contains("/content/test/all/simple"), "Simple rule");
-    paths.remove("/content/test/all/simple");
-    assertTrue(paths.contains("/content/test/all/copyChildren"), "Copy children rule");
-    paths.remove("/content/test/all/copyChildren");
-    assertTrue(paths.contains("/content/test/all/copyChildrenOrder"), "Copy children order rule");
-    paths.remove("/content/test/all/copyChildrenOrder");
-    assertTrue(paths.contains("/content/test/all/mapProperties"), "Map properties rule");
-    paths.remove("/content/test/all/mapProperties");
-    assertTrue(paths.contains("/content/test/all/rewriteOptional"), "Rewrite Optional rule");
-    paths.remove("/content/test/all/rewriteOptional");
-    assertTrue(paths.contains("/content/test/all/rewriteRanking"), "Ranking rule");
-    paths.remove("/content/test/all/rewriteRanking");
-    assertTrue(paths.contains("/content/test/all/rewriteMapChildren"), "Rewrite map children rule");
-    paths.remove("/content/test/all/rewriteMapChildren");
-    assertTrue(paths.contains("/content/test/all/rewriteFinal"), "Rewrite final rule");
-    paths.remove("/content/test/all/rewriteFinal");
-    assertTrue(paths.contains("/content/test/all/rewriteFinalOnReplacement"), "Rewrite final on replacement node rule.");
-    paths.remove("/content/test/all/rewriteFinalOnReplacement");
-    assertTrue(paths.contains("/content/test/all/rewriteProperties"), "Rewrite properties rule");
-    paths.remove("/content/test/all/rewriteProperties");
-    assertTrue(paths.contains("/content/test/all/serviceTest"), "Service rule");
-    paths.remove("/content/test/all/serviceTest");
+    assertTrue(paths.contains("/content/test/all/jcr:content/simple"), "Simple rule");
+    paths.remove("/content/test/all/jcr:content/simple");
+    assertTrue(paths.contains("/content/test/all/jcr:content/copyChildren"), "Copy children rule");
+    paths.remove("/content/test/all/jcr:content/copyChildren");
+    assertTrue(paths.contains("/content/test/all/jcr:content/copyChildrenOrder"), "Copy children order rule");
+    paths.remove("/content/test/all/jcr:content/copyChildrenOrder");
+    assertTrue(paths.contains("/content/test/all/jcr:content/mapProperties"), "Map properties rule");
+    paths.remove("/content/test/all/jcr:content/mapProperties");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteOptional"), "Rewrite Optional rule");
+    paths.remove("/content/test/all/jcr:content/rewriteOptional");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteRanking"), "Ranking rule");
+    paths.remove("/content/test/all/jcr:content/rewriteRanking");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteMapChildren"), "Rewrite map children rule");
+    paths.remove("/content/test/all/jcr:content/rewriteMapChildren");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteFinal"), "Rewrite final rule");
+    paths.remove("/content/test/all/jcr:content/rewriteFinal");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteFinalOnReplacement"), "Rewrite final on replacement node rule.");
+    paths.remove("/content/test/all/jcr:content/rewriteFinalOnReplacement");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteProperties"), "Rewrite properties rule");
+    paths.remove("/content/test/all/jcr:content/rewriteProperties");
+    assertTrue(paths.contains("/content/test/all/jcr:content/serviceTest"), "Service rule");
+    paths.remove("/content/test/all/jcr:content/serviceTest");
     assertTrue(paths.isEmpty(), "Rule count");
 
     assertEquals(2, closeCalled[0], "Query RR was closed");
@@ -378,7 +378,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
   private List<Hit> buildComponentHits() {
     List<Hit> hits = new ArrayList<>();
-    Resource ruleParent = context.resourceResolver().getResource("/content/test/all");
+    Resource ruleParent = context.resourceResolver().getResource("/content/test/all/jcr:content");
     for (Resource child : ruleParent.getChildren()) {
       hits.add(new MockHit(child));
     }
