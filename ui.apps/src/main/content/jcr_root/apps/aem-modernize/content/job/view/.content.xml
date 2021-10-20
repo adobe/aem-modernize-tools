@@ -14,13 +14,9 @@
         sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
         categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common]"/>
   </head>
-  <actions jcr:primaryType="nt:unstructured">
-    <primary jcr:primaryType="nt:unstructured"/>
-    <secondary  jcr:primaryType="nt:unstructured"/>
-  </actions>
   <title jcr:primaryType="nt:unstructured"
          text="AEM Modernization Job Details"
-         sling:resourceType="granite/ui/components/coral/foundation/text"/>
+         sling:resourceType="aem-modernize/components/job/title"/>
   <rails jcr:primaryType="nt:unstructured">
     <navigation jcr:primaryType="nt:unstructured"
                 jcr:title="Job (Bucket) List"
@@ -47,7 +43,8 @@
           icon="viewList"
           layoutId="list"
           modeGroup="aem-modernize-job-bucket-collection"
-          selectionCount="none"
+          selectionMode="none"
+          selectionCount="single"
           path="${requestPathInfo.suffix}"
           bucket="${empty param.bucket ? &quot;0&quot; : param.bucket}"
           src="${requestPathInfo.resourcePath}{.offset,limit}.html${requestPathInfo.suffix}?${querystring}"

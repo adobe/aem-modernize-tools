@@ -27,8 +27,7 @@
                       aem-modernize-list-rules-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listrules.json')}"
                       aem-modernize-list-children-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listchildren.json')}"
                       aem-modernize-list-components-url="${granite:url('/mnt/overlay/aem-modernize/content/component/job/create.listcomponents.json')}"
-                      aem-modernize-operation="COMPONENT"
-        />
+                      aem-modernize-operation="COMPONENT" />
         <items jcr:primaryType="nt:unstructured">
           <wizard jcr:primaryType="nt:unstructured"
                   cancelHref="${empty header.Referer ? &quot;/aem/start.html&quot; : header.Referer}"

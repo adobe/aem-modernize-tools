@@ -6,13 +6,9 @@
     data-sly-use.job="${'com.adobe.aem.modernize.model.ConversionJobNavItem' @ path=request.requestPathInfo.suffix}"
     data-sly-list.bucket="${job.navBuckets}">
 
-  <coral-tab data-sly-test="${bucket.selected}" class="${bucket.statusClass}" icon="${bucket.icon}" id="bucket-${bucketList.index}" selected=""
+  <coral-tab data-sly-attribute.selected="${bucket.selected}"
+      class="${bucket.statusClass}" icon="${bucket.icon}" id="bucket-${bucketList.index}"
       data-href="/mnt/overlay/aem-modernize/content/job/view.html${request.requestPathInfo.suffix}?bucket=${bucketList.index}">
     Bucket ${bucketList.count} (${bucket.count} Items)
   </coral-tab>
-  <coral-tab data-sly-test="${!bucket.selected}" class="${bucket.statusClass}" icon="${bucket.icon}" id="bucket-${bucketList.index}" ${bucket.selected}
-      data-href="/mnt/overlay/aem-modernize/content/job/view.html${request.requestPathInfo.suffix}?bucket=${bucketList.index}">
-    Bucket ${bucketList.count} (${bucket.count} Items)
-  </coral-tab>
-
 </coral-tablist>
