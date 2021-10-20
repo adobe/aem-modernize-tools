@@ -188,8 +188,9 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   // Create the parent node for tracking.
   private Node createTrackingNode(Session session, RequestData requestData, String userId) throws RepositoryException {
     Calendar today = Calendar.getInstance();
-    String path = String.format("%s/%s/%s",
+    String path = String.format("%s/%s/%s/%s",
         ConversionJob.JOB_DATA_LOCATION,
+        requestData.getType().name().toLowerCase(),
         new SimpleDateFormat("yyyy/MM/dd").format(today.getTime()),
         JcrUtil.createValidName(requestData.getName(), JcrUtil.HYPHEN_LABEL_CHAR_MAPPING, "-"));
     Node node = JcrUtils.getOrCreateByPath(path, true, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);

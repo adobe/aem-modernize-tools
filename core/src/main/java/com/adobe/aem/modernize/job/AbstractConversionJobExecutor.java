@@ -58,8 +58,9 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
 
       updateTracking(job, tracking);
       doProcess(job, context, bucket);
-      updateBucket(bucket);
-      logFinish(tracking);
+      Calendar finished = Calendar.getInstance();
+      updateBucket(bucket, finished);
+      logFinish(tracking, finished);
       resourceResolver.commit();
       return context.result().message("Successfully processed conversion job.").succeeded();
     } catch (LoginException e) {
@@ -92,28 +93,28 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   private void updateTracking(Job job, Resource tracking) throws PersistenceException {
     ModifiableValueMap mvm = tracking.adaptTo(ModifiableValueMap.class);
     mvm.put(PN_JOB_ID, job.getId());
-    mvm.put(PN_STARTED, job.getProcessingStarted().getTime());
+    mvm.put(PN_STARTED, job.getProcessingStarted());
     tracking.getResourceResolver().commit();;
   }
 
   /*
     Update the bucket path processing details.
    */
-  private void updateBucket(ConversionJobBucket bucket) {
+  private void updateBucket(ConversionJobBucket bucket, Calendar finished) {
     ModifiableValueMap mvm = bucket.getResource().adaptTo(ModifiableValueMap.class);
     mvm.put(PN_SUCCESS, bucket.getSuccess().toArray(new String[] {}));
     mvm.put(PN_FAILED, bucket.getFailed().toArray(new String[] {}));
     mvm.put(PN_NOT_FOUND, bucket.getNotFound().toArray(new String[] {}));
-    mvm.put(ConversionJobBucket.PN_FINISHED, Calendar.getInstance().getTime());
+    mvm.put(ConversionJobBucket.PN_FINISHED, finished);
     mvm.put(PN_JOB_STATUS, Status.SUCCESS.name());
   }
 
   /*
     Set the finish time on the root node.
    */
-  private void logFinish(Resource tracking) {
+  private void logFinish(Resource tracking, Calendar finished) {
     ModifiableValueMap mvm = tracking.getParent().getParent().adaptTo(ModifiableValueMap.class);
-    mvm.put(ConversionJob.PN_FINISHED, Calendar.getInstance().getTime());
+    mvm.put(ConversionJob.PN_FINISHED, finished);
   }
 
   /*

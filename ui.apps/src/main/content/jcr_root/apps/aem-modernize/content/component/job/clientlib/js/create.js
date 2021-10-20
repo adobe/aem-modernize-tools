@@ -83,7 +83,7 @@
         }
         const url = this.$getForm().data("aemModernizeListRulesUrl");
         $.getJSON(url, params, (data) => {
-          item.componentRules = data.rules.componentRules;
+          item.componentRules = data.rules;
           resolve(item);
         }).fail(() => {
           reject(item);
@@ -134,6 +134,17 @@
           }
         });
       }
+    }
+
+    getFormData($form) {
+      const data = super.getFormData($form);
+      data.paths = [].concat.apply([], $("input[type='hidden'][name='path']").map((idx, item) => {
+        return item.value;
+      }));
+      data.componentRules = [].concat.apply([], $("input[type='hidden'][name='componentRules']").map((idx, item) => {
+        return item.value;
+      }));
+      return data;
     }
   }
 

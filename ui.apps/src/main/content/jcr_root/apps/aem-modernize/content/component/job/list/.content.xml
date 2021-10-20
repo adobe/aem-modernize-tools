@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
           xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-          xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
           jcr:primaryType="nt:unstructured"
           jcr:title="AEM Modernize Tools | Component Conversion Jobs"
           sling:resourceType="granite/ui/components/shell/collectionpage"
+          cq:defaultView="html"
           consoleId="aem-modernize-component-job-list"
           modeGroup="aem-modernize-job-collection"
           currentView="${state[&quot;shell.collectionpage.layoutId&quot;].string}"
@@ -38,7 +39,7 @@
           modeGroup="aem-modernize-job-collection"
           path="/var/aem-modernize/job-data/component"
           src="/apps/aem-modernize/content/component/job/list/views/card{.offset,limit}.html"
-          itemResourceType="aem-modernize/components/job/component/card"
+          itemResourceType="aem-modernize/components/job/card/card"
           stateId="shell.collectionpage"
           limit="{Long}20">
       <datasource jcr:primaryType="nt:unstructured"
@@ -58,7 +59,7 @@
           modeGroup="aem-modernize-job-collection"
           path="/var/aem-modernize/job-data/component"
           src="/apps/aem-modernize/content/component/job/list/views/list{.offset,limit}.html"
-          itemResourceType="aem-modernize/components/job/component/listitem"
+          itemResourceType="aem-modernize/components/job/listitem"
           stateId="shell.collectionpage"
           sortMode="local"
           limit="{Long}40">
@@ -83,7 +84,6 @@
         <multi jcr:primaryType="nt:unstructured"
                jcr:title="Multi-Bucket"
                alignment="center"
-
                sortable="{Boolean}false"/>
       </columns>
     </list>

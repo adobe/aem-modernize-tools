@@ -3,7 +3,7 @@
 
   class CreateJobForm {
 
-    static #NO_CONTENT = Granite.I18n.get("There is no item.");
+    static #NO_CONTENT = Granite.I18n.get("There are no items.");
     static #EMPTY_ROW = '<tr is="coral-table-row" class="empty-row"><td is="coral-table-cell" alignment="center">' + CreateJobForm.#NO_CONTENT + '</td></tr>';
 
     #ui;
@@ -75,6 +75,13 @@
     addHidden(item) {}
 
     removeHidden($row) {}
+
+    getFormData($form) {
+      return {
+        name: $form.find("input[name='name']")[0].value,
+        type: this.operation
+      }
+    }
 
     // Private Methods
 
@@ -345,18 +352,7 @@
         e.preventDefault();
 
 
-        const formData = {
-          name: this.#$form.find("input[name='name']")[0].value,
-          paths: [].concat.apply([], $("input[type='hidden'][name='path']").map((idx, item) => {
-            return item.value;
-          })),
-          templateRules: [],
-          policyRules: [],
-          componentRules: [].concat.apply([], $("input[type='hidden'][name='componentRule']").map((idx, item) => {
-            return item.value;
-          })),
-          type: _this.operation
-        }
+        const formData = _this.getFormData(this.#$form);
         this.#ui.prompt(
           Granite.I18n.get("Convert Pages"),
           Granite.I18n.get("You are about to submit {0} page(s) for conversion. Are you sure?", formData.paths.length, "The current selection count"),
@@ -374,7 +370,7 @@
 
       });
 
-      Coral.commons.ready(_this.#$wizard[0], () => {
+      Coral.commons.ready(this.#$wizard[0], () => {
         _this.#refreshPageList();
         _this.#paginate()
       });
