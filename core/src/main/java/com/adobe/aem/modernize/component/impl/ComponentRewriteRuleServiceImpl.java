@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -117,16 +118,36 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
       if (deep) {
         new TreeRewriter(rewrites).rewrite(node);
       } else {
-        for (RewriteRule rule : rewrites) {
-          if (rule.matches(node)) {
-            rule.applyTo(node, new HashSet<>());
-            break;
-          }
-        }
+        applyTo(rewrites, node);
       }
     } catch (RepositoryException e) {
       logger.error("Error occurred while trying to perform a rewrite operation.", e);
       throw new RewriteException("Repository exception while performing rewrite operation.", e);
+    }
+  }
+
+  private void applyTo(List<RewriteRule> rewrites, Node node) throws RepositoryException, RewriteException {
+    String nodeName = node.getName();
+    String nextName = null;
+    Node parent = node.getParent();
+    if (parent.getPrimaryNodeType().hasOrderableChildNodes()) {
+      // Need to figure out where in the parent's order we are.
+      NodeIterator siblings = node.getParent().getNodes();
+      while (siblings.hasNext()) {
+        if (siblings.nextNode().getName().equals(nodeName)) {
+          nextName = siblings.nextNode().getName();
+          break;
+        }
+      }
+    }
+    for (RewriteRule rule : rewrites) {
+      if (rule.matches(node)) {
+        rule.applyTo(node, new HashSet<>());
+        break;
+      }
+    }
+    if (nextName != null) {
+      parent.orderBefore(nodeName, nextName);
     }
   }
 
