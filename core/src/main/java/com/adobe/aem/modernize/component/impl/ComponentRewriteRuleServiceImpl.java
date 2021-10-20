@@ -134,7 +134,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
       // Need to figure out where in the parent's order we are.
       NodeIterator siblings = node.getParent().getNodes();
       while (siblings.hasNext()) {
-        if (siblings.nextNode().getName().equals(nodeName)) {
+        if (siblings.nextNode().getName().equals(nodeName) && siblings.hasNext()) {
           nextName = siblings.nextNode().getName();
           break;
         }
