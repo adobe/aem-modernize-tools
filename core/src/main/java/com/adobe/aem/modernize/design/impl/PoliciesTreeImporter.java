@@ -18,32 +18,29 @@
  */
 package com.adobe.aem.modernize.design.impl;
 
-import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.design.PoliciesImportRule;
-import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.designer.Style;
-import com.day.text.Text;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.impl.PolicyConstants;
+import com.adobe.aem.modernize.policy.PolicyImportRule;
+import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.designer.Style;
+import com.day.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import static com.adobe.aem.modernize.design.impl.PoliciesImportUtils.PN_IMPORTED;
 
 class PoliciesTreeImporter {
 
@@ -52,9 +49,9 @@ class PoliciesTreeImporter {
     private static final String PN_POLICY_RESOURCE_TYPE = "policyResourceType";
 
     // TODO: add support for rewrite rules
-    private List<PoliciesImportRule> rules;
+    private List<PolicyImportRule> rules;
 
-    PoliciesTreeImporter(List<PoliciesImportRule> rules) {
+    PoliciesTreeImporter(List<PolicyImportRule> rules) {
         this.rules = rules;
     }
 
@@ -66,8 +63,8 @@ class PoliciesTreeImporter {
         Node styleNode = resolver.getResource(style.getPath()).adaptTo(Node.class);
         // Identify which rule applies.
 
-        PoliciesImportRule matchedRule = null;
-        for (PoliciesImportRule rule : rules) {
+        PolicyImportRule matchedRule = null;
+        for (PolicyImportRule rule : rules) {
             if (rule.matches(styleNode)) {
                 matchedRule = rule;
                 break;
@@ -80,7 +77,7 @@ class PoliciesTreeImporter {
 
 
         // Get resource type
-        String resourceType = matchedRule.getReplacementSlingResourceType();
+        String resourceType = null; //matchedRule.getReplacementSlingResourceType();
         if (StringUtils.isEmpty(resourceType)) {
             throw new RewriteException("Unable to get resource type from matched rule: " + matchedRule.toString());
         }
@@ -108,17 +105,17 @@ class PoliciesTreeImporter {
 
             Node updated = matchedRule.applyTo(policy.adaptTo(Node.class), new HashSet<>());
             updated.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY,
-                    PoliciesImportRule.POLICY_RESOURCE_TYPE);
+                    PolicyConstants.POLICY_RESOURCE_TYPE);
 
             updated.setProperty(PN_POLICY_RESOURCE_TYPE, resourceType);
             updated.setProperty(NameConstants.PN_TITLE, "Imported (" + style.getCell().getPath() + ")");
             updated.setProperty(NameConstants.PN_DESCRIPTION, "Imported from " + style.getPath());
 
-            // Mark previous style as "imported"
-            Resource old = resolver.getResource(style.getPath());
-            if (old != null) {
-                old.adaptTo(ModifiableValueMap.class).put(PN_IMPORTED, policy.getPath());
-            }
+//            // Mark previous style as "imported"
+//            Resource old = resolver.getResource(style.getPath());
+//            if (old != null) {
+//                old.adaptTo(ModifiableValueMap.class).put(PN_IMPORTED, policy.getPath());
+//            }
 
             // Save
             resolver.commit();

@@ -1,0 +1,69 @@
+{
+  "jcr:primaryType": "cq:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "wcm/core/components/designer",
+    "homepage": {
+      "jcr:primaryType": "nt:unstructured",
+      "image": {
+        "jcr:primaryType": "nt:unstructured",
+        "maxHeight": "270",
+        "maxWidth": "700"
+      },
+      "textimage": {
+        "jcr:primaryType": "nt:unstructured",
+        "maxHeight": "270",
+        "maxWidth": "700",
+        "image_styles": "image_left\tLeft aligned\r\nimage_right\tRight aligned"
+      },
+      "text": {
+        "jcr:primaryType": "nt:unstructured",
+        "cq:styles": {
+          "jcr:primaryType": "nt:unstructured",
+          "textsize": {
+            "jcr:primaryType": "nt:unstructured",
+            "defaultValue": "normal",
+            "title": "Text Size",
+            "small": {
+              "jcr:primaryType": "nt:unstructured",
+              "text": "Small"
+            },
+            "normal": {
+              "jcr:primaryType": "nt:unstructured",
+              "text": "Normal"
+            },
+            "large": {
+              "jcr:primaryType": "nt:unstructured",
+              "text": "Large"
+            }
+          }
+        }
+      },
+      "title": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:lastModifiedBy": "admin",
+        "defaultType": "extralarge",
+        "jcr:lastModified": "Wed Aug 25 2010 17:55:33 GMT+0200",
+        "sling:resourceType": "geometrixx/components/title"
+      },
+      "par": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/parsys",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "geometrixx/components/title"
+        }
+      },
+      "rightpar": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/iparsys",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "geometrixx/components/title"
+        }
+      }
+    }
+  }
+}

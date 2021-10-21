@@ -2,7 +2,6 @@ package com.adobe.aem.modernize.job;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -11,7 +10,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.design.PoliciesImportRuleService;
+import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
@@ -48,7 +47,7 @@ public class FullConversionJobExecutorTest {
   private StructureRewriteRuleService structureService;
 
   @Mocked
-  private PoliciesImportRuleService policyService;
+  private PolicyImportRuleService policyService;
 
   @Mocked
   private ComponentRewriteRuleService componentService;
@@ -65,7 +64,7 @@ public class FullConversionJobExecutorTest {
   @BeforeEach
   public void beforeEach() {
     context.registerService(StructureRewriteRuleService.class, structureService);
-    context.registerService(PoliciesImportRuleService.class, policyService);
+    context.registerService(PolicyImportRuleService.class, policyService);
     context.registerService(ComponentRewriteRuleService.class, componentService);
     context.registerInjectActivateService(executor);
     context.load().json("/job/page-content.json", "/content/test");

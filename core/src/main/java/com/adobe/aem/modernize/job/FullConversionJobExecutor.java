@@ -16,7 +16,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.design.PoliciesImportRuleService;
+import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
@@ -41,7 +41,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   public static final String VERSION_DESC = "Version of content before the modernization process was performed.";
 
   @Reference
-  private PoliciesImportRuleService policyService;
+  private PolicyImportRuleService policyService;
 
   @Reference
   private StructureRewriteRuleService structureService;

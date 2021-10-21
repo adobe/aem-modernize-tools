@@ -24,36 +24,26 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
-import com.adobe.aem.modernize.design.PoliciesImportRule;
-import com.adobe.aem.modernize.impl.AbstractNodeBasedRewriteRule;
+import com.adobe.aem.modernize.policy.PolicyImportRule;
+import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 
-/**
- * An rule that rewrites a tree based on a given node structure. The node structure follows all
- * of the rules as found in {@link AbstractNodeBasedRewriteRule}.
- */
-public class NodeBasedPoliciesImportRule extends AbstractNodeBasedRewriteRule implements PoliciesImportRule {
+public class NodeBasedPoliciesImportRule extends NodeBasedRewriteRule implements PolicyImportRule {
 
-    public NodeBasedPoliciesImportRule(Node ruleNode) {
+    public NodeBasedPoliciesImportRule(Node ruleNode) throws RepositoryException {
         super(ruleNode);
     }
 
-    @Override
-    protected void doAdditionalApplyTo(Node root, Node copy, Node replacementNode) {
-        // No custom logic here.
-        return;
-    }
 
     public Set<String> getPatternSlingResourceTypes() throws RepositoryException {
         Set<String> types = new HashSet<>();
 
-        if (!getRuleNode().hasNode("patterns")) {
+        if (!rule.hasNode("patterns")) {
             return types;
         }
 
-        NodeIterator patterns = getRuleNode().getNode("patterns").getNodes();
+        NodeIterator patterns = rule.getNode("patterns").getNodes();
         while (patterns.hasNext()) {
             Node pnode = patterns.nextNode();
             if (pnode.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
@@ -65,7 +55,7 @@ public class NodeBasedPoliciesImportRule extends AbstractNodeBasedRewriteRule im
 
 
     public String getReplacementSlingResourceType() throws RepositoryException {
-        Node replacement = getRuleNode().getNode("replacement");
+        Node replacement = rule.getNode("replacement");
         if (replacement.hasNodes()) {
             replacement = replacement.getNodes().nextNode();
             if (replacement.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {

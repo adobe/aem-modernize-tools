@@ -33,7 +33,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Adobe.
  **************************************************************************/
-package com.adobe.aem.modernize.design;
+package com.adobe.aem.modernize.policy;
 
 import com.adobe.aem.modernize.rule.RewriteRule;
 
@@ -43,22 +43,7 @@ import java.util.Set;
 /**
  * Interface for services that implement a Design rewrite rule.
  */
-public interface PoliciesImportRule extends RewriteRule {
+public interface PolicyImportRule extends RewriteRule {
 
-    String POLICY_RESOURCE_TYPE = "wcm/core/components/policy/policy";
-
-    /**
-     * Returns a set of all <code>sling:resourceType</code> values specified in the <i>pattern</i> properties.
-     * @return set of all resource types
-     * @throws RepositoryException when any repository operation error occurs
-     */
-    Set<String> getPatternSlingResourceTypes() throws RepositoryException;
-
-    /**
-     * The replacement <code>sling:resourceType</code> specified on the replacement node.
-     * @return replacement slingResourceType
-     * @throws RepositoryException when any repository operation error occurs
-     */
-    String getReplacementSlingResourceType() throws RepositoryException;
 
 }

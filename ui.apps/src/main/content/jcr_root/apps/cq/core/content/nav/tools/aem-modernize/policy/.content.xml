@@ -3,6 +3,6 @@
       jcr:mixinTypes="[rep:AccessControllable]"
       jcr:primaryType="nt:unstructured"
       jcr:title="Policies Importer"
-      href="/apps/aem-modernize/content/design.html"
-      id="aem-modernize-tools-design"
-      target="_blank"/>
+      href="/mnt/overlay/aem-modernize/content/policy/job/list.html"
+      id="aem-modernize-tools-policy"
+      icon="import"/>

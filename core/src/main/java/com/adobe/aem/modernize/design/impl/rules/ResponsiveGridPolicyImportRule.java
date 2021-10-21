@@ -32,12 +32,11 @@ import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.design.PoliciesImportRule;
-import com.adobe.aem.modernize.impl.RewriteUtils;
+import com.adobe.aem.modernize.impl.PolicyConstants;
+import com.adobe.aem.modernize.policy.PolicyImportRule;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,10 +47,10 @@ import org.slf4j.LoggerFactory;
  * Creates a root responsive layout component and moves all children nodes (e.g. components) to this container.
  */
 @Component(
-    service = { PoliciesImportRule.class },
+    service = { PolicyImportRule.class },
     property = { "service.ranking=1" }
 )
-public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
+public class ResponsiveGridPolicyImportRule implements PolicyImportRule {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponsiveGridPolicyImportRule.class);
 
@@ -67,20 +66,25 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
 
     private int ranking = Integer.MAX_VALUE;
     private String id = this.getClass().getName();
-
-    @Override
-    public Set<String> getPatternSlingResourceTypes() throws RepositoryException {
-        return new HashSet<>(patternSlingResourceTypes);
-    }
-
-    @Override
-    public String getReplacementSlingResourceType() throws RepositoryException {
-        return RewriteUtils.RESPONSIVE_GRID_RES_TYPE;
-    }
+//
+//    @Override
+//    public Set<String> getPatternSlingResourceTypes() throws RepositoryException {
+//        return new HashSet<>(patternSlingResourceTypes);
+//    }
+//
+//    @Override
+//    public String getReplacementSlingResourceType() throws RepositoryException {
+//        return RewriteUtils.RESPONSIVE_GRID_RES_TYPE;
+//    }
 
     @Override
     public String getId() {
         return this.id;
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
     }
 
     @Override
@@ -99,8 +103,8 @@ public class ResponsiveGridPolicyImportRule implements PoliciesImportRule {
     }
 
     @Override
-    public Node applyTo(Node root, Set<Node> finalNodes) throws RewriteException, RepositoryException {
-        root.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, POLICY_RESOURCE_TYPE);
+    public Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException {
+        root.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, PolicyConstants.POLICY_RESOURCE_TYPE);
         return root;
     }
 

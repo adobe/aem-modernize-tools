@@ -17,20 +17,20 @@
  *
  */
 
-package com.adobe.aem.modernize.design;
+package com.adobe.aem.modernize.policy;
 
-import java.util.List;
 import java.util.Set;
-import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
+import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.wcm.api.designer.Design;
 import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ProviderType;
 
-public interface PoliciesImportRuleService {
-
+@ProviderType
+public interface PolicyImportRuleService {
 
     /**
      * Applies the indicated rules to the provided resource. If {@code deep} is set, rules will be applied recursively.
@@ -48,8 +48,27 @@ public interface PoliciesImportRuleService {
      * @param deep {@code true} to recurse into the tree
      * @param overwrite {@code true} to overwrite existing modernization
      */
-    void apply(@NotNull final Design design, @NotNull final String[] rules, boolean deep, boolean overwrite);
+    void apply(@NotNull final Design design, @NotNull final Set<String> rules, boolean deep, boolean overwrite);
 
-    List<PoliciesImportRule> getRules(ResourceResolver resolver) throws RepositoryException;
-    Set<String> getSlingResourceTypes(ResourceResolver resolver) throws RepositoryException;
+    /**
+     * Lists all resource paths that match any rules of which this service is aware.
+     * <p>
+     * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
+     *
+     * @param resource Resource for the root of the search
+     * @return list of paths that match rules or empty set if none found or an error occurs
+     */
+    @NotNull
+    Set<String> findResources(@NotNull Resource resource);
+
+    /**
+     * Lists all rules that may apply to the specified {@code sling:resourceType}.
+     * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
+     *
+     * @param resourceResolver ResourceResolver for searching
+     * @param slingResourceType the {@code sling:resourceType}(s) to check
+     * @return list of rules by path or PID
+     */
+    @NotNull
+    Set<RewriteRule> listRules(@NotNull ResourceResolver resourceResolver, String... slingResourceType);
 }
