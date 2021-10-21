@@ -23,11 +23,12 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.adobe.aem.modernize.RewriteException;
+import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ConsumerType;
 
-public interface RewriteRule {
+@ConsumerType
+public interface RewriteRule extends Comparable<RewriteRule> {
 
     /**
      * Returns the unique identifier for this Rule.
@@ -75,6 +76,11 @@ public interface RewriteRule {
     Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException;
 
     default int getRanking() { return Integer.MAX_VALUE; }
+
+    @Override
+    default int compareTo(@NotNull RewriteRule o) {
+        return Integer.compare(this.getRanking(), o.getRanking());
+    }
 
     class Comparator implements java.util.Comparator<RewriteRule> {
         @Override

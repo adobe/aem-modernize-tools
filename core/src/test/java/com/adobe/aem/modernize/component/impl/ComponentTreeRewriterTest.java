@@ -1,7 +1,6 @@
-package com.adobe.aem.modernize.impl;
+package com.adobe.aem.modernize.component.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -15,9 +14,8 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
-import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.component.impl.ComponentTreeRewriter;
 import com.adobe.aem.modernize.rule.RewriteRule;
-import mockit.MockUp;
 import mockit.Mocked;
 import mockit.Expectations;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
-public class TreeRewriterTest {
+public class ComponentTreeRewriterTest {
 
 
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
@@ -54,7 +52,7 @@ public class TreeRewriterTest {
 
     context.load().json("/rewrite/test-ordered.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
-    new TreeRewriter(rules).rewrite(root);
+    new ComponentTreeRewriter(rules).rewrite(root);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");
@@ -85,7 +83,7 @@ public class TreeRewriterTest {
 
     context.load().json("/rewrite/test-final.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/final").adaptTo(Node.class);
-    new TreeRewriter(rules).rewrite(root);
+    new ComponentTreeRewriter(rules).rewrite(root);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");

@@ -19,7 +19,6 @@
 
 package com.adobe.aem.modernize.component;
 
-import java.util.List;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
@@ -28,10 +27,12 @@ import org.apache.sling.api.resource.ResourceResolver;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides a mechanism for listing all configured rules either via Nodes or custom implementations.
  */
+@ProviderType
 public interface ComponentRewriteRuleService {
 
   /**

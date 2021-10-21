@@ -25,11 +25,13 @@ import org.apache.sling.api.resource.Resource;
 
 import com.adobe.aem.modernize.rule.RewriteRule;
 import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Interface for services that implement a component rewrite rule. A rewrite rule matches certain subtrees of the
  * component tree (usually corresponding to one component) and rewrites (i.e. modifies or replaces) them.
  */
+@ConsumerType
 public interface ComponentRewriteRule extends RewriteRule {
 
   /**

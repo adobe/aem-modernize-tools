@@ -1,4 +1,4 @@
-package com.adobe.aem.modernize.impl;
+package com.adobe.aem.modernize.component.impl;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -19,13 +19,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Performs deep rewrites based on specified rules.
  */
-public class TreeRewriter {
+public class ComponentTreeRewriter {
 
-  private static final Logger logger = LoggerFactory.getLogger(TreeRewriter.class);
+  private static final Logger logger = LoggerFactory.getLogger(ComponentTreeRewriter.class);
 
   private final List<RewriteRule> rules;
 
-  public TreeRewriter(@NotNull List<RewriteRule> rules) {
+  public ComponentTreeRewriter(@NotNull List<RewriteRule> rules) {
     this.rules = rules;
   }
 

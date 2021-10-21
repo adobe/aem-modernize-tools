@@ -45,7 +45,6 @@ import org.apache.sling.commons.osgi.RankedServices;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.impl.TreeRewriter;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import com.day.cq.search.Predicate;
@@ -116,7 +115,7 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
     Node node = resource.adaptTo(Node.class);
     try {
       if (deep) {
-        new TreeRewriter(rewrites).rewrite(node);
+        new ComponentTreeRewriter(rewrites).rewrite(node);
       } else {
         applyTo(rewrites, node);
       }

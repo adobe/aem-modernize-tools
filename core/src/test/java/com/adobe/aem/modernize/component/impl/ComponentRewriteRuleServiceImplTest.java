@@ -43,7 +43,6 @@ import com.adobe.aem.modernize.MockHit;
 import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.impl.TreeRewriter;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import com.day.cq.search.PredicateGroup;
@@ -157,7 +156,7 @@ public class ComponentRewriteRuleServiceImplTest {
         "com.adobe.aem.modernize.component.ComponentRewriteRuleFound",
         "/apps/aem-modernize/component/rules/rewriteOptional"
     ));
-    new MockUp<TreeRewriter>() {
+    new MockUp<ComponentTreeRewriter>() {
       @Mock
       public void $init(List<RewriteRule> rules) {
         called[0] = true;
@@ -177,8 +176,8 @@ public class ComponentRewriteRuleServiceImplTest {
     }};
     Resource resource = context.resourceResolver().getResource("/content/test/deep/parent");
     componentRewriteRuleService.apply(resource, rules, true);
-    assertTrue(called[0], "TreeRewriter instantiated");
-    assertTrue(called[1], "TreeRewriter called");
+    assertTrue(called[0], "ComponentTreeRewriter instantiated");
+    assertTrue(called[1], "ComponentTreeRewriter called");
   }
 
   @Test
