@@ -217,5 +217,32 @@
         }
       }
     }
+  },
+  "aggregate": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "titlePattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/copyChildrenOrder"
+        },
+        "textPattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/mapProperties"
+        },
+        "imagePattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/rewriteOptional"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "teaser": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+      }
+    }
   }
 }

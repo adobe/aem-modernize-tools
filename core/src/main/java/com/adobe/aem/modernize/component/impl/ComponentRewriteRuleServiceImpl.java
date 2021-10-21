@@ -128,16 +128,19 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
 
   private void applyTo(List<RewriteRule> rewrites, Node node) throws RepositoryException, RewriteException {
     String nodeName = node.getName();
-    String nextName = null;
+    String prevName = null;
     Node parent = node.getParent();
-    if (parent.getPrimaryNodeType().hasOrderableChildNodes()) {
+    boolean isOrdered = parent.getPrimaryNodeType().hasOrderableChildNodes();
+    if (isOrdered) {
       // Need to figure out where in the parent's order we are.
-      NodeIterator siblings = node.getParent().getNodes();
+      NodeIterator siblings = parent.getNodes();
       while (siblings.hasNext()) {
-        if (siblings.nextNode().getName().equals(nodeName) && siblings.hasNext()) {
-          nextName = siblings.nextNode().getName();
+        Node sibling = siblings.nextNode();
+        // Stop when we find ourself in list. Prev will either be set, or not.
+        if (sibling.getName().equals(nodeName)) {
           break;
         }
+        prevName = sibling.getName();
       }
     }
     for (RewriteRule rule : rewrites) {
@@ -146,8 +149,18 @@ public class ComponentRewriteRuleServiceImpl implements ComponentRewriteRuleServ
         break;
       }
     }
-    if (nextName != null) {
-      parent.orderBefore(nodeName, nextName);
+    // Previous not set - we should be first in the order - if previous and first item in list, we're the only child.
+    if (isOrdered && prevName == null) {
+      String nextName = parent.getNodes().nextNode().getName();
+      if (!nextName.equals(nodeName)) {
+        parent.orderBefore(nodeName, nextName);
+      }
+    } else {
+      NodeIterator siblings = parent.getNodes();
+      while (!siblings.nextNode().getName().equals(prevName)) {
+        // There has to be a better way to skip through a parent's children nodes.
+      }
+      parent.orderBefore(nodeName, siblings.nextNode().getName());
     }
   }
 
