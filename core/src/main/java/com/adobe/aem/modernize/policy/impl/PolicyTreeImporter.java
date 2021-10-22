@@ -16,7 +16,7 @@
  * limitations under the License.
  *
  */
-package com.adobe.aem.modernize.design.impl;
+package com.adobe.aem.modernize.policy.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,23 +36,33 @@ import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.impl.PolicyConstants;
 import com.adobe.aem.modernize.policy.PolicyImportRule;
+import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Style;
 import com.day.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class PoliciesTreeImporter {
+class PolicyTreeImporter {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(PoliciesTreeImporter.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(PolicyTreeImporter.class);
 
     private static final String PN_POLICY_RESOURCE_TYPE = "policyResourceType";
 
-    // TODO: add support for rewrite rules
-    private List<PolicyImportRule> rules;
+    private final Design dest;
+    private final List<RewriteRule> rules;
+    private final boolean overwrite;
 
-    PoliciesTreeImporter(List<PolicyImportRule> rules) {
+
+    PolicyTreeImporter(Design destination, List<RewriteRule> rules, boolean overwrite) {
+        this.dest = destination;
         this.rules = rules;
+        this.overwrite = overwrite;
+    }
+
+    Style importStyles(Style root) {
+        return root;
     }
 
     String importStyleAsPolicy(ResourceResolver resolver, Style style, String targetPath) throws RewriteException, RepositoryException {
@@ -63,8 +73,8 @@ class PoliciesTreeImporter {
         Node styleNode = resolver.getResource(style.getPath()).adaptTo(Node.class);
         // Identify which rule applies.
 
-        PolicyImportRule matchedRule = null;
-        for (PolicyImportRule rule : rules) {
+        RewriteRule matchedRule = null;
+        for (RewriteRule rule : rules) {
             if (rule.matches(styleNode)) {
                 matchedRule = rule;
                 break;

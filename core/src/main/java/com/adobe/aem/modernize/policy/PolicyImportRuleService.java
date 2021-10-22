@@ -21,19 +21,21 @@ package com.adobe.aem.modernize.policy;
 
 import java.util.Set;
 
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-
-import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.rule.RewriteRuleService;
 import com.day.cq.wcm.api.designer.Design;
+import com.day.cq.wcm.api.designer.Style;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 @ProviderType
-public interface PolicyImportRuleService {
+public interface PolicyImportRuleService extends RewriteRuleService {
+
+    String PN_IMPORTED = "cq:imported";
 
     /**
-     * Applies the indicated rules to the provided resource. If {@code deep} is set, rules will be applied recursively.
+     * Applies the indicated rules to the provided Style. If {@code deep} is set, rules will be applied recursively.
+     * That is: if the Style reference is a page's root Style resource, all children styles will also be imported if {@code deep} is set.
      *
      * If {@code overwrite} is true, then any referenced existing Policy created from a Design will be overwritten with the rules applied. Otherwise, if a Policy has already been created from a Design, it will be ignored.
      *
@@ -43,32 +45,13 @@ public interface PolicyImportRuleService {
      *
      * Implementations decide how to handle rule paths which are invalid for their context.
      *
-     * @param design The Design from which to import Policies
+     * @param source The Style from which to read design configurations
+     * @param destination The Design into which the new policies will be created
      * @param rules the rules to apply
      * @param deep {@code true} to recurse into the tree
      * @param overwrite {@code true} to overwrite existing modernization
+     * @throws RewriteException if any errors occur when applying the rules
      */
-    void apply(@NotNull final Design design, @NotNull final Set<String> rules, boolean deep, boolean overwrite);
+    void apply(@NotNull Style source, @NotNull Design destination, @NotNull Set<String> rules, boolean deep, boolean overwrite) throws RewriteException;
 
-    /**
-     * Lists all resource paths that match any rules of which this service is aware.
-     * <p>
-     * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
-     *
-     * @param resource Resource for the root of the search
-     * @return list of paths that match rules or empty set if none found or an error occurs
-     */
-    @NotNull
-    Set<String> findResources(@NotNull Resource resource);
-
-    /**
-     * Lists all rules that may apply to the specified {@code sling:resourceType}.
-     * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
-     *
-     * @param resourceResolver ResourceResolver for searching
-     * @param slingResourceType the {@code sling:resourceType}(s) to check
-     * @return list of rules by path or PID
-     */
-    @NotNull
-    Set<RewriteRule> listRules(@NotNull ResourceResolver resourceResolver, String... slingResourceType);
 }

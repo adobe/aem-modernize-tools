@@ -1,0 +1,12 @@
+{
+  "jcr:primaryType": "sling:Folder",
+  "settings": {
+    "jcr:primaryType": "slingFolder",
+    "wcm": {
+      "jcr:primaryType": "cq:Page",
+      "policies": {
+        "jcr:primaryType": "cq:Page"
+      }
+    }
+  }
+}

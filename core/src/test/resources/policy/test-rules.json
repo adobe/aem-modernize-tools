@@ -1,3 +1,45 @@
 {
-  "jcr:primaryType": "sling:OrderedFolder"
+  "jcr:primaryType": "sling:OrderedFolder",
+  "simple": {
+    "jcr:title": "Title Policy Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geometrixx/components/title",
+        "defaultType": "small"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "allowedTypes": "[h1,h2,h3]",
+        "type": "h3",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "rewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteOptional",
+        "items": {
+          "jcr:primaryType": "nt:unstructured",
+          "cq:rewriteOptional": true
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteOptional": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  }
 }
