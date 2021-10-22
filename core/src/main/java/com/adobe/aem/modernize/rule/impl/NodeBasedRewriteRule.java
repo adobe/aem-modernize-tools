@@ -49,6 +49,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   private final String id;
   private final String title;
   private Integer ranking;
+  private final boolean aggregate;
 
   /**
    * Creates a new RewriteRule referencing the specified path.
@@ -59,6 +60,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     this.rule = node;
     this.id = node.getPath();
     this.title = node.hasProperty(NameConstants.PN_TITLE) ? node.getProperty(NameConstants.PN_TITLE).getString() : this.id;
+    this.aggregate = rule.hasNode(NN_AGGREGATE);
   }
 
   @Override
@@ -98,7 +100,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
 
     if (rule.hasNode(NN_PATTERNS)) {
       return matchesPattern(root);
-    } else if (isAggregate()) {
+    } else if (aggregate) {
       return matchesAggregate(root);
     }
     return false;
@@ -138,7 +140,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     Node source;
 
     String tmpName = JcrUtil.createValidChildName(parent, "tmp-" + System.currentTimeMillis());
-    if (isAggregate()) {
+    if (aggregate) {
       source = parent;
       // Used in potential aggregate use case
       patternNodeNames = createPatternNodeMapping(parent, tmpName);
@@ -185,7 +187,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     }
 
     // Remove the nodes - aggregate were consolidated to one.
-    if (isAggregate()) {
+    if (aggregate) {
       for (String name : patternNodeNames.values()) {
         parent.getNode(name).remove();
       }
@@ -196,12 +198,8 @@ public class NodeBasedRewriteRule implements RewriteRule {
     return updated;
   }
 
-  private boolean isAggregate() throws RepositoryException {
-    return rule.hasNode(NN_AGGREGATE);
-  }
-
   private void processRemovals(Node root) throws RepositoryException {
-    if (isAggregate()) {
+    if (aggregate) {
       // Aggregate patterns match
       NodeIterator patterns = rule.getNode(NN_AGGREGATE).getNode(NN_PATTERNS).getNodes();
       Node parent = root.getParent();
@@ -230,7 +228,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   }
 
   /*
-    Creates a map of pattern node names to the name of the node it mached
+    Creates a map of pattern node names to the name of the node it matched
    */
   private Map<String, String> createPatternNodeMapping(Node parent, String newName) throws RepositoryException {
     Map<String, String> mapping = new HashMap<>();
@@ -413,7 +411,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
     for (Value value : values) {
       String reference = value.getString();
 
-      if (isAggregate()) {
+      if (aggregate) {
         Matcher patternMatcher = PATTERN_NODE_PATTERN.matcher(reference);
         while (patternMatcher.find()) {
           String name = patternMappings.get(patternMatcher.group(1));

@@ -22,7 +22,9 @@ import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
+import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Designer;
+import com.day.cq.wcm.api.designer.Style;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
@@ -57,25 +59,27 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
     final boolean reprocess = job.getProperty(PN_REPROCESS, false);
     Resource resource = bucket.getResource();
     ResourceResolver rr = resource.getResourceResolver();
+    Designer designer = rr.adaptTo(Designer.class);
 
-    Set<String> policyRules = getPolicyRules(bucket);
     Set<String> templateRules = getTemplateRules(bucket);
+    Set<String> policyRules = getPolicyRules(bucket);
+    Design dest = getTargetDesign(designer, bucket);
     Set<String> componentRules = getComponentRules(bucket);
 
     ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
     String[] paths = mvm.get(PN_PATHS, String[].class);
 
-    Designer designer = rr.adaptTo(Designer.class);
     context.initProgress(paths.length * 2, -1);
 
     List<String> preparedPaths = preparePages(context, bucket, reprocess);
     for (String path : preparedPaths) {
       Page root = rr.getResource(path).adaptTo(Page.class);
       try {
-        if (policyRules.isEmpty()) {
-          context.log("No policy rules found, skipping skipping policy import.");
+        if (policyRules.isEmpty() || dest == null) {
+          context.log("No policy rules or target found, skipping skipping policy import.");
         } else {
-          policyService.apply(designer.getDesign(root), policyRules, true, reprocess);
+          Style src = designer.getStyle(root.getContentResource());
+          policyService.apply(src, dest, policyRules, true, reprocess);
         }
 
         if (templateRules.isEmpty()) {

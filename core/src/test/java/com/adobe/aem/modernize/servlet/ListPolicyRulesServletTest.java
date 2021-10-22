@@ -18,6 +18,7 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.rule.RewriteRuleMapping;
 import com.day.cq.wcm.api.designer.Style;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,7 +87,7 @@ public class ListPolicyRulesServletTest {
 
     // Path not page
     params = new HashMap<>();
-    params.put("path", CONTENT_PATH + "/notapage" );
+    params.put("path", CONTENT_PATH + "/notapage");
     request.setParameterMap(params);
 
     servlet.doGet(request, response);
@@ -109,11 +110,11 @@ public class ListPolicyRulesServletTest {
     params.put("path", path);
     request.setParameterMap(params);
 
-    final Set<String> resources = Collections.emptySet();
+    final Set<RewriteRuleMapping> mappings = Collections.emptySet();
     final List<Resource> capture = new ArrayList<>();
     new Expectations() {{
-      importRuleService.findResources(withCapture(capture));
-      result = resources;
+      importRuleService.find(withCapture(capture));
+      result = mappings;
     }};
 
     new MockUp<S>() {
@@ -148,16 +149,16 @@ public class ListPolicyRulesServletTest {
     params.put("path", path);
     request.setParameterMap(params);
 
-    final Set<String> resources = new HashSet<>();
-    resources.add(DESIGN_PATH + "/jcr:content/homepage/par/title");
+    final Set<String> paths = new HashSet<>();
+    paths.add(DESIGN_PATH + "/jcr:content/homepage/par/title");
 
     final Set<RewriteRule> rules = new HashSet<>();
     rules.add(new MockRule("/apps/rules/policy/title"));
 
     final List<Resource> capture = new ArrayList<>();
     new Expectations() {{
-      importRuleService.findResources(withCapture(capture));
-      result = resources;
+      importRuleService.find(withCapture(capture));
+      result = paths;
       importRuleService.listRules(withInstanceOf(ResourceResolver.class), withNotNull());
       result = rules;
     }};

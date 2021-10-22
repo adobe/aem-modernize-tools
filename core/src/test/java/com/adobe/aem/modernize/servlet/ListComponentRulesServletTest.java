@@ -106,7 +106,7 @@ public class ListComponentRulesServletTest {
     final Set<String> resources = Collections.emptySet();
     final List<Resource> capture = new ArrayList<>();
     new Expectations() {{
-      componentRewriteRuleService.findResources(withCapture(capture));
+      componentRewriteRuleService.find(withCapture(capture));
       result = resources;
     }};
 
@@ -145,7 +145,7 @@ public class ListComponentRulesServletTest {
 
     final List<Resource> capture = new ArrayList<>();
     new Expectations() {{
-      componentRewriteRuleService.findResources(withCapture(capture));
+      componentRewriteRuleService.find(withCapture(capture));
       result = resources;
       componentRewriteRuleService.listRules(withInstanceOf(ResourceResolver.class), withNotNull());
       result = rules;

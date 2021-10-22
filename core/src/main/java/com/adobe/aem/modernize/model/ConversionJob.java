@@ -47,6 +47,7 @@ public class ConversionJob {
   public static final String PN_TEMPLATE_RULES = "templateRules";
   public static final String PN_COMPONENT_RULES = "componentRules";
   public static final String PN_POLICY_RULES = "policyRules";
+  public static final String PN_CONF_PATH = "confPath";
   public static final String PN_INITIATOR = "startedBy";
   public static final String PN_REPROCESS = "reprocess";
   public static final String PN_PRE_MODERNIZE_VERSION = "premodernizeVersion";

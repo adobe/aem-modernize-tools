@@ -3,9 +3,6 @@ package com.adobe.aem.modernize.servlet;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
@@ -19,8 +16,6 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.ListPageVisitor;
-import com.adobe.aem.modernize.rule.RewriteRule;
-import com.day.cq.wcm.api.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;

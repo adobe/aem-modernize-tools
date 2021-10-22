@@ -33,7 +33,7 @@ public class ListComponentRulesServlet extends AbstractListRulesServlet {
   protected Set<String> getResourceTypes(Page page) {
     Resource resource = page.getContentResource();
     final ResourceResolver rr = resource.getResourceResolver();
-    Set<String> paths = rewriteRuleService.findResources(resource);
+    Set<String> paths = rewriteRuleService.find(resource);
     return paths.stream().map(p -> {
       Resource r = rr.getResource(p);
       String type = null;

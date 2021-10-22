@@ -19,8 +19,11 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
+import com.day.cq.wcm.api.designer.Design;
+import com.day.cq.wcm.api.designer.Designer;
 import org.eclipse.jetty.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
@@ -135,6 +138,20 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   @NotNull
   protected Set<String> getPolicyRules(ConversionJobBucket bucket) {
     return getRules(bucket, PN_POLICY_RULES);
+  }
+
+  @Nullable
+  protected Design getTargetDesign(Designer designer, ConversionJobBucket bucket) {
+    Resource parent = bucket.getResource().getParent();
+    if (parent == null) {
+      return null;
+    }
+    parent = parent.getParent();
+    if (parent == null) {
+      return null;
+    }
+    String target = parent.getValueMap().get(PN_CONF_PATH, String.class);
+    return designer.getDesign(target);
   }
 
   @NotNull

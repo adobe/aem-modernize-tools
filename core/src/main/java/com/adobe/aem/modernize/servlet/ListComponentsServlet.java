@@ -60,7 +60,7 @@ public class ListComponentsServlet extends SlingSafeMethodsServlet {
       resource = resource.adaptTo(Page.class).getContentResource();
     }
 
-    Set<String> paths = componentRewriteRuleService.findResources(resource);
+    Set<String> paths = componentRewriteRuleService.find(resource);
     writeResponse(response, SC_OK, paths);
   }
 

@@ -320,7 +320,7 @@ public class NodeBasedRewriteRuleTest {
 
   @Test
   public void testReplacementRewriteFinalApplyTo() throws Exception {
-    final String nodePath = "/replacementRewriteFinal";
+    final String nodePath = "/rewriteFinalOnReplacement";
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
     RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + nodePath).adaptTo(Node.class));

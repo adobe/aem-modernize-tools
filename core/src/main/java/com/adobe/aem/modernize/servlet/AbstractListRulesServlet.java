@@ -3,7 +3,6 @@ package com.adobe.aem.modernize.servlet;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;

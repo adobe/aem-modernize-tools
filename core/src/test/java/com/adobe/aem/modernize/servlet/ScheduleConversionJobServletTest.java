@@ -33,7 +33,6 @@ import mockit.Tested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.BundleContext;
-import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 import static org.apache.sling.api.SlingHttpServletResponse.*;
 import static org.junit.jupiter.api.Assertions.*;
 

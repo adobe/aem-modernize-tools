@@ -14,13 +14,11 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
-import com.adobe.aem.modernize.component.impl.ComponentTreeRewriter;
 import com.adobe.aem.modernize.rule.RewriteRule;
-import mockit.Mocked;
 import mockit.Expectations;
+import mockit.Mocked;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)

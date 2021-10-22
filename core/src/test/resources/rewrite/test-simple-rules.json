@@ -248,7 +248,7 @@
       }
     }
   },
-  "replacementRewriteFinal": {
+  "rewriteFinalOnReplacement": {
     "jcr:primaryType": "nt:unstructured",
     "patterns": {
       "jcr:primaryType": "nt:unstructured",

@@ -22,10 +22,9 @@ package com.adobe.aem.modernize.component;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.rule.RewriteRuleService;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -33,7 +32,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * Provides a mechanism for listing all configured rules either via Nodes or custom implementations.
  */
 @ProviderType
-public interface ComponentRewriteRuleService {
+public interface ComponentRewriteRuleService extends RewriteRuleService {
 
   /**
    * Applies the indicated rules to the provided resource. If {@code deep} is set, rules will be applied recursively.
@@ -49,27 +48,7 @@ public interface ComponentRewriteRuleService {
    * @param deep     {@code true} to recurse into the tree
    * @throws RewriteException if any errors occur when applying the rules
    */
+  // TODO: Consider returning list of paths that were processed for reporting
   void apply(@NotNull final Resource resource, @NotNull final Set<String> rules, boolean deep) throws RewriteException;
 
-  /**
-   * Lists all resource paths that match any rules of which this service is aware.
-   * <p>
-   * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
-   *
-   * @param resource Resource for the root of the search
-   * @return list of paths that match rules or empty set if none found or an error occurs
-   */
-  @NotNull
-  Set<String> findResources(Resource resource);
-
-  /**
-   * Lists all rules that may apply to the specified {@code sling:resourceType}.
-   * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
-   *
-   * @param resourceResolver ResourceResolver for searching
-   * @param slingResourceType the {@code sling:resourceType}(s) to check
-   * @return list of rules by path or PID
-   */
-  @NotNull
-  Set<RewriteRule> listRules(ResourceResolver resourceResolver, String... slingResourceType);
 }

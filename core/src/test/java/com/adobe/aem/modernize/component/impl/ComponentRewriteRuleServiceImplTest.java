@@ -21,7 +21,6 @@ package com.adobe.aem.modernize.component.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,27 +28,17 @@ import java.util.Map;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
-import com.adobe.aem.modernize.MockHit;
-import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
-import com.day.cq.search.PredicateGroup;
-import com.day.cq.search.Query;
-import com.day.cq.search.QueryBuilder;
-import com.day.cq.search.result.Hit;
-import com.day.cq.search.result.SearchResult;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -66,7 +55,8 @@ public class ComponentRewriteRuleServiceImplTest {
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
   private final String[] RULE_PATHS = new String[] { "/apps/aem-modernize/component/rules", "/apps/customer/component/rules" };
-  private ComponentRewriteRuleService componentRewriteRuleService = new ComponentRewriteRuleServiceImpl();
+  private static final String FOUND_SERVICE_ID = "com.adobe.aem.modernize.component.ComponentRewriteRuleFound";
+  private final ComponentRewriteRuleService componentRewriteRuleService = new ComponentRewriteRuleServiceImpl();
 
   @Mocked
   private ComponentRewriteRule matchedRewriteRule;
@@ -74,8 +64,6 @@ public class ComponentRewriteRuleServiceImplTest {
   @Mocked
   private ComponentRewriteRule notMatchedRewriteRule;
 
-  @Mocked
-  private QueryBuilder queryBuilder;
 
   @BeforeEach
   public void beforeEach() {
@@ -92,7 +80,6 @@ public class ComponentRewriteRuleServiceImplTest {
 
     context.registerService(ComponentRewriteRule.class, notMatchedRewriteRule);
     context.registerService(ComponentRewriteRule.class, matchedRewriteRule);
-    context.registerService(QueryBuilder.class, queryBuilder);
     context.registerInjectActivateService(componentRewriteRuleService, props);
   }
 
@@ -108,6 +95,7 @@ public class ComponentRewriteRuleServiceImplTest {
     ));
 
     final int[] callCounts = { 0, 0 };
+    final boolean[] returns = { false, true};
     new MockUp<NodeBasedRewriteRule>() {
 
       private List<String> paths = new ArrayList<>();
@@ -120,7 +108,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
       @Mock
       public boolean matches(Node root) throws RepositoryException {
-        return !StringUtils.equals(paths.get(callCounts[0]++), "/apps/aem-modernize/component/rules/rewriteOptional");
+        return returns[callCounts[0]++];
       }
 
       @Mock
@@ -137,7 +125,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
     new Expectations() {{
       matchedRewriteRule.getId();
-      result = "com.adobe.aem.modernize.component.ComponentRewriteRuleFound";
+      result = FOUND_SERVICE_ID;
     }};
     Resource resource = context.resourceResolver().getResource("/content/test/shallow/simple");
     componentRewriteRuleService.apply(resource, rules, false);
@@ -172,7 +160,7 @@ public class ComponentRewriteRuleServiceImplTest {
     };
     new Expectations() {{
       matchedRewriteRule.getId();
-      result = "com.adobe.aem.modernize.component.ComponentRewriteRuleFound";
+      result = FOUND_SERVICE_ID;
     }};
     Resource resource = context.resourceResolver().getResource("/content/test/deep/parent");
     componentRewriteRuleService.apply(resource, rules, true);
@@ -180,216 +168,4 @@ public class ComponentRewriteRuleServiceImplTest {
     assertTrue(called[1], "ComponentTreeRewriter called");
   }
 
-  @Test
-  public <R extends ResourceResolver> void testFindRulesQueryFails(
-      @Mocked Query query,
-      @Mocked SearchResult searchResult
-  ) throws Exception {
-    new Expectations() {{
-      queryBuilder.createQuery(withInstanceOf(PredicateGroup.class), withInstanceOf(Session.class));
-      result = query;
-      times = 1;
-      query.getResult();
-      result = searchResult;
-      times = 1;
-      searchResult.getHits();
-      result = new RepositoryException("Error");
-
-      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
-      times = 1;
-      result = Collections.singleton("/content/test/all/serviceTest");
-      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
-      times = 1;
-      result = Collections.emptySet();
-    }};
-
-    Resource root = context.resourceResolver().getResource("/content/test/all");
-    Set<String> paths = componentRewriteRuleService.findResources(root);
-    assertTrue(paths.contains("/content/test/all/serviceTest"));
-    paths.remove("/content/test/all/serviceTest");
-    assertTrue(paths.isEmpty(), "Paths content");
-  }
-
-  @Test
-  public <R extends ResourceResolver> void testFindPagesQueryFails(
-      @Mocked Query query,
-      @Mocked SearchResult searchResult
-  ) throws Exception {
-
-    final boolean[] closeCalled = { false };
-
-    new MockUp<R>() {
-      @Mock
-      public void close() {
-        closeCalled[0] = true;
-      }
-    };
-    new Expectations() {{
-      queryBuilder.createQuery(withInstanceOf(PredicateGroup.class), withInstanceOf(Session.class));
-      result = query;
-      times = 2;
-      query.getResult();
-      result = searchResult;
-      times = 2;
-      searchResult.getHits();
-      result = buildRuleHits();
-      result = new RepositoryException("Error");
-
-      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
-      times = 1;
-      result = Collections.singleton("/content/test/all/jcr:content/serviceTest");
-      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
-      times = 1;
-      result = Collections.emptySet();
-    }};
-
-    Resource root = context.resourceResolver().getResource("/content/test/all");
-    Set<String> paths = componentRewriteRuleService.findResources(root);
-    assertTrue(paths.contains("/content/test/all/jcr:content/serviceTest"));
-    paths.remove("/content/test/all/jcr:content/serviceTest");
-    assertTrue(paths.isEmpty(), "Paths content");
-    assertTrue(closeCalled[0], "Query RR was closed");
-  }
-
-  @Test
-  public <R extends ResourceResolver> void testFind(
-      @Mocked Query query,
-      @Mocked SearchResult searchResult
-  ) throws Exception {
-
-    final int[] closeCalled = { 0 };
-
-    new MockUp<R>() {
-      @Mock
-      public void close() {
-        closeCalled[0]++;
-      }
-    };
-
-    new Expectations() {{
-      queryBuilder.createQuery(withInstanceOf(PredicateGroup.class), withInstanceOf(Session.class));
-      result = query;
-      times = 2;
-      query.getResult();
-      result = searchResult;
-      times = 2;
-      searchResult.getHits();
-      returns(buildRuleHits(), buildComponentHits());
-
-      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
-      times = 1;
-      result = Collections.singleton("/content/test/all/jcr:content/serviceTest");
-      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
-      times = 1;
-      result = Collections.emptySet();
-    }};
-
-    Resource root = context.resourceResolver().getResource("/content/test/all/jcr:content");
-    Set<String> paths = componentRewriteRuleService.findResources(root);
-
-    assertTrue(paths.contains("/content/test/all/jcr:content/simple"), "Simple rule");
-    paths.remove("/content/test/all/jcr:content/simple");
-    assertTrue(paths.contains("/content/test/all/jcr:content/copyChildren"), "Copy children rule");
-    paths.remove("/content/test/all/jcr:content/copyChildren");
-    assertTrue(paths.contains("/content/test/all/jcr:content/copyChildrenOrder"), "Copy children order rule");
-    paths.remove("/content/test/all/jcr:content/copyChildrenOrder");
-    assertTrue(paths.contains("/content/test/all/jcr:content/mapProperties"), "Map properties rule");
-    paths.remove("/content/test/all/jcr:content/mapProperties");
-    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteOptional"), "Rewrite Optional rule");
-    paths.remove("/content/test/all/jcr:content/rewriteOptional");
-    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteRanking"), "Ranking rule");
-    paths.remove("/content/test/all/jcr:content/rewriteRanking");
-    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteMapChildren"), "Rewrite map children rule");
-    paths.remove("/content/test/all/jcr:content/rewriteMapChildren");
-    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteFinal"), "Rewrite final rule");
-    paths.remove("/content/test/all/jcr:content/rewriteFinal");
-    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteFinalOnReplacement"), "Rewrite final on replacement node rule.");
-    paths.remove("/content/test/all/jcr:content/rewriteFinalOnReplacement");
-    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteProperties"), "Rewrite properties rule");
-    paths.remove("/content/test/all/jcr:content/rewriteProperties");
-    assertTrue(paths.contains("/content/test/all/jcr:content/serviceTest"), "Service rule");
-    paths.remove("/content/test/all/jcr:content/serviceTest");
-    assertTrue(paths.isEmpty(), "Rule count");
-
-    assertEquals(2, closeCalled[0], "Query RR was closed");
-  }
-
-  @Test
-  public <R extends ResourceResolver> void testListRules(
-      @Mocked Query query,
-      @Mocked SearchResult searchResult
-  ) throws Exception {
-    final int[] closeCalled = { 0 };
-
-    new MockUp<R>() {
-      @Mock
-      public void close() {
-        closeCalled[0]++;
-      }
-    };
-
-    final String[] foundRuleList = new String[] {
-        "/apps/aem-modernize/component/rules/simple/patterns/simple",
-        "/apps/aem-modernize/component/rules/copyChildren/patterns/copyChildren"
-    };
-
-    final String[] resourceTypes = new String[] {
-        "aem-modernize/components/simple",
-        "aem-modernize/components/copyChildren",
-        "aem-modenrize/components/service"
-    };
-
-    new Expectations() {{
-      queryBuilder.createQuery(withInstanceOf(PredicateGroup.class), withInstanceOf(Session.class));
-      result = query;
-      query.getResult();
-      result = searchResult;
-      searchResult.getHits();
-      result = listRulesAsHits(foundRuleList);
-      matchedRewriteRule.hasPattern(resourceTypes);
-      result = true;
-      notMatchedRewriteRule.hasPattern(resourceTypes);
-      result = false;
-    }};
-    Set<RewriteRule> rules = componentRewriteRuleService.listRules(context.resourceResolver(), resourceTypes);
-
-    assertEquals(3, rules.size(), "Rule path count");
-    assertTrue(rules.contains(new MockRule("/apps/aem-modernize/component/rules/simple")), "simple rule returned");
-    assertTrue(rules.contains(new MockRule("/apps/aem-modernize/component/rules/copyChildren")), "copyChildren rule returned");
-    assertTrue(rules.contains(matchedRewriteRule), "Service rule returned");
-    assertEquals(1, closeCalled[0], "Query RR was closed");
-
-  }
-
-  private List<Hit> buildRuleHits() throws Exception {
-    List<Hit> hits = new ArrayList<>();
-    ResourceResolver rr = context.resourceResolver();
-    for (String path : RULE_PATHS) {
-      Resource ruleParent = rr.getResource(path);
-      for (Node node : new TreeTraverser(ruleParent.adaptTo(Node.class))) {
-        if (node.hasProperty(ResourceResolver.PROPERTY_RESOURCE_TYPE)) {
-          hits.add(new MockHit(rr.getResource(node.getPath())));
-        }
-      }
-    }
-    return hits;
-  }
-
-  private List<Hit> buildComponentHits() {
-    List<Hit> hits = new ArrayList<>();
-    Resource ruleParent = context.resourceResolver().getResource("/content/test/all/jcr:content");
-    for (Resource child : ruleParent.getChildren()) {
-      hits.add(new MockHit(child));
-    }
-    return hits;
-  }
-
-  private List<Hit> listRulesAsHits(String... paths) {
-    List<Hit> hits = new ArrayList<>();
-    ResourceResolver rr = context.resourceResolver();
-    for (String path : paths) {
-      hits.add(new MockHit(rr.getResource(path)));
-    }
-    return hits;
-  }
 }

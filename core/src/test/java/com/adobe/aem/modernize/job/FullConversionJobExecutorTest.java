@@ -10,9 +10,9 @@ import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
+import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(AemContextExtension.class)
 public class FullConversionJobExecutorTest {
 
-  private static final String rootJobPath =ConversionJob.JOB_DATA_LOCATION + "/job/full";
+  private static final String rootJobPath = ConversionJob.JOB_DATA_LOCATION + "/job/full";
   private static final String bucketPath = rootJobPath + "/buckets/bucket0";
   private static final int pathCount = 3;
   private static final int pageCount = 2;
@@ -112,7 +112,7 @@ public class FullConversionJobExecutorTest {
       jobExecutionContext.initProgress(pathCount * 2, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = 5;
-      policyService.apply(withNotNull(), withNotNull(), true, false);
+      policyService.apply(withNotNull(), withNotNull(), withNotNull(), true, false);
       times = pageCount;
       structureService.apply(withNotNull(), withNotNull());
       times = pageCount;
@@ -148,7 +148,7 @@ public class FullConversionJobExecutorTest {
       jobExecutionContext.initProgress(pathCount * 2, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = 5;
-      policyService.apply(withNotNull(), withNotNull(), true, true);
+      policyService.apply(withNotNull(), withNotNull(), withNotNull(), true, true);
       times = pageCount;
       structureService.apply(withNotNull(), withNotNull());
       times = pageCount;

@@ -3,7 +3,6 @@ package com.adobe.aem.modernize.servlet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +13,6 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -76,7 +74,7 @@ public class ListComponentsServletTest {
     List<Resource> capture = new ArrayList<>();
 
     new Expectations() {{
-      componentRewriteRuleService.findResources(withCapture(capture));
+      componentRewriteRuleService.find(withCapture(capture));
       result = paths;
     }};
 
@@ -106,7 +104,7 @@ public class ListComponentsServletTest {
     List<Resource> capture = new ArrayList<>();
 
     new Expectations() {{
-      componentRewriteRuleService.findResources(withCapture(capture));
+      componentRewriteRuleService.find(withCapture(capture));
       result = paths;
     }};
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.jcr.AccessDeniedException;
@@ -28,9 +27,7 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
 
-import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
-import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;

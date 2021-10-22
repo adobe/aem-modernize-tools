@@ -61,6 +61,8 @@ public interface RewriteRule extends Comparable<RewriteRule> {
      * to the parent of <code>root</code>. In the latter case, the implementation is responsible for removing the
      * original subtree (without saving).</p>
      *
+     * <p>Repository modifications are made but not saved.</p>
+     *
      * <p>Rewrite rules must not rewrite trees in a circular fashion, as this might lead to infinite loops.</p>
      *
      * <p>Optionally, the implementation can indicate which nodes of the resulting tree are final and therefore

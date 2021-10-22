@@ -41,7 +41,7 @@ public class ListPolicyRulesServlet extends AbstractListRulesServlet {
     if (styleResource == null) {
       return Collections.emptySet();
     }
-    return importRuleService.findResources(styleResource);
+    return importRuleService.find(styleResource);
 
   }
 
