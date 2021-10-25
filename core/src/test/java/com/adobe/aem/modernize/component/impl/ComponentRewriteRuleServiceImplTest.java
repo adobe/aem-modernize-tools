@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
@@ -136,7 +135,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
   @Test
   public void testDeepApply() throws Exception {
-    final boolean[] called = { false, false };
+    final boolean[] called = { false };
     Set<String> rules = new HashSet<>(Arrays.asList(
         "/apps/aem-modernize/component/rules/simple",
         "/apps/aem-modernize/component/rules/not-found",
@@ -145,16 +144,12 @@ public class ComponentRewriteRuleServiceImplTest {
         "/apps/aem-modernize/component/rules/rewriteOptional"
     ));
     new MockUp<ComponentTreeRewriter>() {
-      @Mock
-      public void $init(List<RewriteRule> rules) {
-        called[0] = true;
-        assertNotNull(rules);
-      }
 
       @Mock
-      public Node rewrite(Node root) {
-        called[1] = true;
+      public Node rewrite(Node root, List<RewriteRule> rules) {
+        called[0] = true;
         assertNotNull(root);
+        assertNotNull(rules);
         return root;
       }
     };
@@ -164,8 +159,7 @@ public class ComponentRewriteRuleServiceImplTest {
     }};
     Resource resource = context.resourceResolver().getResource("/content/test/deep/parent");
     componentRewriteRuleService.apply(resource, rules, true);
-    assertTrue(called[0], "ComponentTreeRewriter instantiated");
-    assertTrue(called[1], "ComponentTreeRewriter called");
+    assertTrue(called[0], "TreeRewriteProcessor called");
   }
 
 }

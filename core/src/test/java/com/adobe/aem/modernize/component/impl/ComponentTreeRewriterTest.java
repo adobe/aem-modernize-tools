@@ -24,15 +24,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SlingContextExtension.class)
 public class ComponentTreeRewriterTest {
 
-
+  // Oak needed to verify order preservation.
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
-
 
   @Mocked
   private RewriteRule simpleRule;
-
-  @Mocked
-  private RewriteRule addsFinal;
 
 
   @Test
@@ -50,7 +46,7 @@ public class ComponentTreeRewriterTest {
 
     context.load().json("/rewrite/test-ordered.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
-    new ComponentTreeRewriter(rules).rewrite(root);
+    ComponentTreeRewriter.rewrite(root, rules);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");
@@ -81,7 +77,7 @@ public class ComponentTreeRewriterTest {
 
     context.load().json("/rewrite/test-final.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/final").adaptTo(Node.class);
-    new ComponentTreeRewriter(rules).rewrite(root);
+    ComponentTreeRewriter.rewrite(root, rules);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");
@@ -114,9 +110,7 @@ public class ComponentTreeRewriterTest {
 
     @Override
     public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException {
-      if (StringUtils.equals(root.getPath(), path)) {
-        finalPaths.add(root.getPath());
-      }
+      finalPaths.add(root.getPath());
       return root;
     }
   }

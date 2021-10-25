@@ -13,6 +13,7 @@ import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,6 @@ public class ComponentTreeRewriter {
 
   private static final Logger logger = LoggerFactory.getLogger(ComponentTreeRewriter.class);
 
-  private final List<RewriteRule> rules;
-
-  public ComponentTreeRewriter(@NotNull List<RewriteRule> rules) {
-    this.rules = rules;
-  }
-
   /**
    * Rewrites the specified tree according to the provided set of rules. Rules are applied according to {@link TreeTraverser} order.
    *
@@ -37,11 +32,13 @@ public class ComponentTreeRewriter {
    * An exception is thrown if any error occurs terminating the rewrite at that location in the traversal. Changes are not reverted.
    *
    * @param root The root of the tree to be rewritten
+   * @param rules The list of rules to apply to the tree
    * @return the root node of the rewritten tree, or null if it was removed
    * @throws RewriteException if the rewrite operation fails
    * @throws RepositoryException if there is a problem with the repository
    */
-  public Node rewrite(Node root) throws RewriteException, RepositoryException {
+  @Nullable
+  static Node rewrite(@NotNull Node root, @NotNull List<RewriteRule> rules) throws RewriteException, RepositoryException {
     String rootPath = root.getPath();
     logger.debug("Rewriting content tree rooted at: {}", rootPath);
     long tick = System.currentTimeMillis();
