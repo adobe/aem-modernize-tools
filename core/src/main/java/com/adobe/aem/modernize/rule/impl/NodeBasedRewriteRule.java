@@ -18,6 +18,7 @@ import javax.jcr.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.jackrabbit.oak.commons.PathUtils;
+import org.apache.sling.api.resource.ResourceResolver;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;

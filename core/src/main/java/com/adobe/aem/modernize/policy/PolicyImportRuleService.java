@@ -31,8 +31,6 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface PolicyImportRuleService extends RewriteRuleService {
 
-    String PN_IMPORTED = "cq:imported";
-
     /**
      * Applies the indicated rules to the provided Style. If {@code deep} is set, rules will be applied recursively.
      * That is: if the Style reference is a page's root Style resource, all children styles will also be imported if {@code deep} is set.

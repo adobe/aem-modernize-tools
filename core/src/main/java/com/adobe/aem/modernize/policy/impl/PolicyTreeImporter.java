@@ -18,126 +18,97 @@
  */
 package com.adobe.aem.modernize.policy.impl;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
+import org.apache.jackrabbit.commons.JcrUtils;
+import org.apache.jackrabbit.commons.flat.TreeTraverser;
+import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
-import com.adobe.aem.modernize.impl.PolicyConstants;
-import com.adobe.aem.modernize.policy.PolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
+import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.designer.Design;
-import com.day.cq.wcm.api.designer.Style;
-import com.day.text.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 class PolicyTreeImporter {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(PolicyTreeImporter.class);
+  static final String POLICY_RESOURCE_TYPE = "wcm/core/components/policy/policy";
+  static final String PN_IMPORTED = "cq:imported";
 
-    private static final String PN_POLICY_RESOURCE_TYPE = "policyResourceType";
+  static final String POLICY_REL_PATH = "settings/wcm/policies";
+  static final String NN_POLICY = "policy";
 
-    private final Design dest;
-    private final List<RewriteRule> rules;
-    private final boolean overwrite;
-
-
-    PolicyTreeImporter(Design destination, List<RewriteRule> rules, boolean overwrite) {
-        this.dest = destination;
-        this.rules = rules;
-        this.overwrite = overwrite;
-    }
-
-    Style importStyles(Style root) {
-        return root;
-    }
-
-    String importStyleAsPolicy(ResourceResolver resolver, Style style, String targetPath) throws RewriteException, RepositoryException {
-        LOGGER.debug("Importing style {} as a policy under {}", style.getPath(), targetPath);
-
-        long tick = System.currentTimeMillis();
-
-        Node styleNode = resolver.getResource(style.getPath()).adaptTo(Node.class);
-        // Identify which rule applies.
-
-        RewriteRule matchedRule = null;
+  @NotNull
+  static void importStyles(Node root, Design dest, List<RewriteRule> rules, boolean overwrite) throws RewriteException, RepositoryException{
+    Iterator<Node> iterator = new TreeTraverser(root).iterator();
+    Set<String> finalPaths = new HashSet<>();
+    while (iterator.hasNext()) {
+      Node node = iterator.next();
+      String origPath = node.getPath();
+      if (finalPaths.contains(origPath)) {
+        continue;
+      }
+      if (overwrite || !node.hasProperty(PN_IMPORTED)) {
         for (RewriteRule rule : rules) {
-            if (rule.matches(styleNode)) {
-                matchedRule = rule;
-                break;
-            }
+          if (rule.matches(node)) {
+            importStyle(node, dest, rule, finalPaths);
+          }
         }
-
-        if (matchedRule == null) {
-            throw new RewriteException("No matched rule for the specified style definition.");
-        }
-
-
-        // Get resource type
-        String resourceType = null; //matchedRule.getReplacementSlingResourceType();
-        if (StringUtils.isEmpty(resourceType)) {
-            throw new RewriteException("Unable to get resource type from matched rule: " + matchedRule.toString());
-        }
-
-        for (String s : resolver.getSearchPath()) {
-            if (resourceType.startsWith(s)) {
-                resourceType = resourceType.replaceFirst(s, "");
-                break;
-            }
-        }
-
-        // Determine parent path for policy based on the resource type of the component style
-        String parentPath = Text.makeCanonicalPath(targetPath + "/" + resourceType);
-
-        try {
-            // Create intermediate structure if required
-            Resource parent = ResourceUtil.getOrCreateResource(resolver, parentPath, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, false);
-
-            // Create policy
-            Map<String, Object> properties = new HashMap<>(style);
-            Resource policy = resolver.create(parent, ResourceUtil.createUniqueChildName(parent, "policy"), properties);
-
-
-            // Now, update it based on the rule configuration:
-
-            Node updated = matchedRule.applyTo(policy.adaptTo(Node.class), new HashSet<>());
-            updated.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY,
-                    PolicyConstants.POLICY_RESOURCE_TYPE);
-
-            updated.setProperty(PN_POLICY_RESOURCE_TYPE, resourceType);
-            updated.setProperty(NameConstants.PN_TITLE, "Imported (" + style.getCell().getPath() + ")");
-            updated.setProperty(NameConstants.PN_DESCRIPTION, "Imported from " + style.getPath());
-
-//            // Mark previous style as "imported"
-//            Resource old = resolver.getResource(style.getPath());
-//            if (old != null) {
-//                old.adaptTo(ModifiableValueMap.class).put(PN_IMPORTED, policy.getPath());
-//            }
-
-            // Save
-            resolver.commit();
-
-            long tack = System.currentTimeMillis();
-            LOGGER.debug("Imported style {} as {} in {} ms", style.getPath(), policy.getPath(), tack - tick);
-            return updated.getPath();
-
-        } catch (PersistenceException e) {
-            resolver.revert();
-            throw new RewriteException("Unable to import policy " + style.getPath() + " into " + targetPath, e);
-        }
+      }
     }
+  }
 
+  @NotNull
+  static Node importStyle(@NotNull Node node, @NotNull Design dest, @NotNull RewriteRule rule, @NotNull Set<String> finalPaths) throws RepositoryException, RewriteException {
+    String origPath = node.getPath();
+    Session session = node.getSession();
+    Node result = rule.applyTo(node, finalPaths);
+
+    // Rule may delete original.
+    if (session.itemExists(origPath)) {
+      Node orig = session.getNode(origPath);
+      orig.setProperty(PN_IMPORTED, result.getPath());
+    }
+    if (!result.hasProperty(NameConstants.PN_TITLE)) {
+      result.setProperty(NameConstants.PN_TITLE, String.format("Imported (%s)", origPath));
+    }
+    if (!result.hasProperty(NameConstants.PN_DESCRIPTION)) {
+      result.setProperty(NameConstants.PN_DESCRIPTION, String.format("Imported from: %s", origPath));
+    }
+    return moveTo(result, dest);
+  }
+
+  /*
+   * Moves the updated Design Style to the Conf destination.
+   */
+  private static Node moveTo(@NotNull Node source, @NotNull Design dest) throws RepositoryException {
+    ResourceResolver rr = dest.getContentResource().getResourceResolver();
+
+    String resourceType = source.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
+    if (resourceType.startsWith("/")) {
+      for (String s : rr.getSearchPath()) {
+        if (resourceType.startsWith(s)) {
+          resourceType = resourceType.replaceFirst(s, "");
+          break;
+        }
+      }
+    }
+    String path = PathUtils.concat(dest.getPath(), POLICY_REL_PATH, resourceType);
+    Node parent = JcrUtils.getOrCreateByPath(path, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, source.getSession(), false);
+    String name = JcrUtil.createValidChildName(parent, NN_POLICY);
+    Node policy = JcrUtil.copy(source, parent, name);
+    policy.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, POLICY_RESOURCE_TYPE);
+    source.remove();
+    return policy;
+  }
 }

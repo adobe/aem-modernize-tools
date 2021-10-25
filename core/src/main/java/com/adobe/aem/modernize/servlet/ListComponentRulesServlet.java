@@ -8,6 +8,7 @@ import javax.servlet.Servlet;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.day.cq.wcm.api.Page;
@@ -38,7 +39,7 @@ public class ListComponentRulesServlet extends AbstractListRulesServlet {
       Resource r = rr.getResource(p);
       String type = null;
       if (r != null) {
-        type = r.getValueMap().get(ResourceResolver.PROPERTY_RESOURCE_TYPE, String.class);
+        type = r.getValueMap().get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class);
       }
       return type;
     }).filter(Objects::nonNull).collect(Collectors.toSet());

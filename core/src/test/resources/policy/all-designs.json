@@ -28,7 +28,9 @@
         "title": {
           "jcr:primaryType": "nt:unstructured",
           "defaultType": "small",
-          "sling:resourceType": "geometrixx/components/title"
+          "sling:resourceType": "geometrixx/components/title",
+          "jcr:title": "Title Policy",
+          "jcr:description": "Title Policy Description"
         }
       }
     }

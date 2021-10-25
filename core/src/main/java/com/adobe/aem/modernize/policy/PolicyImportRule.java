@@ -36,7 +36,6 @@
 package com.adobe.aem.modernize.policy;
 
 import com.adobe.aem.modernize.rule.ServiceBasedRewriteRule;
-import com.day.cq.wcm.api.designer.Design;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
@@ -44,14 +43,5 @@ import org.osgi.annotation.versioning.ConsumerType;
  */
 @ConsumerType
 public interface PolicyImportRule extends ServiceBasedRewriteRule {
-
-  /**
-   * This method is used by services consuming this rule to set the root Policy location before the RewriteRules are applied.
-   *
-   * This method may be called at any time before the {@link #applyTo} method is called.
-   *
-   * @param destination the Design in which to save the new Policies
-   */
-  void setTargetDesign(Design destination);
 
 }

@@ -26,7 +26,6 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.commons.osgi.Order;
@@ -54,6 +53,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.adobe.aem.modernize.policy.impl.PolicyTreeImporter.*;
+
 @Component(
     service = { PolicyImportRuleService.class },
     reference = {
@@ -80,21 +81,21 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
   private Config config;
 
   @Override
-  public void apply(@NotNull Style style, @NotNull Design dest, @NotNull Set<String> rules, boolean deep, boolean overwrite) throws RewriteException {
+  public void apply(@NotNull Style source, @NotNull Design dest, @NotNull Set<String> rulePaths, boolean deep, boolean overwrite) throws RewriteException {
     ResourceResolver rr = dest.getContentResource().getResourceResolver();
-    List<RewriteRule> rewrites = create(rr, rules);
-    Resource src = rr.getResource(style.getPath());
+    List<RewriteRule> rules = create(rr, rulePaths);
+    Resource src = rr.getResource(source.getPath());
+    Node node = src.adaptTo(Node.class);
+
     try {
       if (deep) {
-        new PolicyTreeImporter(dest, rewrites, overwrite).importStyles(style);
+        importStyles(node, dest, rules, overwrite);
       } else {
-        Node node = src.adaptTo(Node.class);
         if (overwrite || !node.hasProperty(PN_IMPORTED)) {
-          node = applyTo(rewrites, dest, node);
-          if (node != null) {
-            markImported(rr.getResource(src.getPath()), node.getPath());
-            ModifiableValueMap mvm = src.adaptTo(ModifiableValueMap.class);
-            mvm.put(PN_IMPORTED, node.getPath());
+          for (RewriteRule rule : rules) {
+            if (rule.matches(node)) {
+              importStyle(node, dest, rule, new HashSet<>());
+            }
           }
         }
       }
@@ -125,28 +126,6 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
     return null;
   }
 
-  /*
-    Apply the rule, returns true if it was applied.
-   */
-  private Node applyTo(List<RewriteRule> rewrites, Design dest, Node node) throws RepositoryException, RewriteException {
-    for (RewriteRule rule : rewrites) {
-      if (rule.matches(node)) {
-        if (rule instanceof PolicyImportRule) {
-          ((PolicyImportRule) rule).setTargetDesign(dest);
-        } else if (rule instanceof NodeBasedPolicyImportRule) {
-          ((NodeBasedPolicyImportRule) rule).setTargetDesign(dest);
-        } else {
-          logger.warn("Unknown Rule type in Policy Import service:  {}", rule.getId());
-          continue;
-        }
-        return rule.applyTo(node, new HashSet<>());
-      }
-    }
-    return null;
-  }
-
-  private void markImported(Resource source, String dest) throws RepositoryException {
-  }
 
   @SuppressWarnings("unused")
   public void bindRule(PolicyImportRule rule, Map<String, Object> properties) {

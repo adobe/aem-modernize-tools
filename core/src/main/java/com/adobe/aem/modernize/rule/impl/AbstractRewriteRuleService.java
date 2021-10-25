@@ -18,6 +18,7 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.RewriteRuleService;
@@ -116,7 +117,7 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
     predicates.add(predicate);
 
     predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
-    predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+    predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY);
     int i = 0;
     for (String type : types) {
       predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);
@@ -155,7 +156,7 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
       pg.add(predicate);
 
       predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
-      predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+      predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY);
       int i = 0;
       for (String type : slingResourceTypes) {
         predicate.set(String.format("%d_%s", i++, JcrPropertyPredicateEvaluator.VALUE), type);

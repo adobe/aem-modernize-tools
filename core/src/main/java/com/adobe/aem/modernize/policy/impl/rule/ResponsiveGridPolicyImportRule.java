@@ -28,12 +28,15 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.impl.PolicyConstants;
 import com.adobe.aem.modernize.policy.PolicyImportRule;
+import com.day.cq.wcm.api.designer.Design;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -46,10 +49,7 @@ import org.slf4j.LoggerFactory;
  * Removes the <code>cq:designPath</code> property, as it is unnecessary on Editable Templates
  * Creates a root responsive layout component and moves all children nodes (e.g. components) to this container.
  */
-@Component(
-    service = { PolicyImportRule.class },
-    property = { "service.ranking=1" }
-)
+// TODO: Rewrite this to understand changes based on referenced components
 public class ResponsiveGridPolicyImportRule implements PolicyImportRule {
 
     private static final Logger logger = LoggerFactory.getLogger(ResponsiveGridPolicyImportRule.class);
@@ -76,6 +76,21 @@ public class ResponsiveGridPolicyImportRule implements PolicyImportRule {
 //    public String getReplacementSlingResourceType() throws RepositoryException {
 //        return RewriteUtils.RESPONSIVE_GRID_RES_TYPE;
 //    }
+
+    @Override
+    public void setTargetDesign(Design destination) {
+
+    }
+
+    @Override
+    public @NotNull Set<String> findMatches(@NotNull Resource resource) {
+        return null;
+    }
+
+    @Override
+    public @NotNull boolean hasPattern(@NotNull String... slingResourceTypes) {
+        return false;
+    }
 
     @Override
     public String getId() {

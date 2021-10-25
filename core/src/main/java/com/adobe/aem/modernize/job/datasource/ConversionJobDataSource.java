@@ -21,6 +21,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.event.jobs.JobManager;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.granite.ui.components.ExpressionResolver;
@@ -108,7 +109,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
 
     // Resource Type
     predicate = new Predicate(JcrPropertyPredicateEvaluator.PROPERTY);
-    predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, ResourceResolver.PROPERTY_RESOURCE_TYPE);
+    predicate.set(JcrPropertyPredicateEvaluator.PROPERTY, JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY);
     predicate.set(JcrPropertyPredicateEvaluator.VALUE, ConversionJob.RESOURCE_TYPE);
     predicate.set(JcrPropertyPredicateEvaluator.OPERATION, JcrPropertyPredicateEvaluator.OP_EQUALS);
     predicates.add(predicate);
