@@ -97,7 +97,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     ModifiableValueMap mvm = tracking.adaptTo(ModifiableValueMap.class);
     mvm.put(PN_JOB_ID, job.getId());
     mvm.put(PN_STARTED, job.getProcessingStarted());
-    tracking.getResourceResolver().commit();;
+    tracking.getResourceResolver().commit();
   }
 
   /*

@@ -35,6 +35,11 @@
  **************************************************************************/
 package com.adobe.aem.modernize.policy;
 
+import java.util.Set;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.ServiceBasedRewriteRule;
 import org.osgi.annotation.versioning.ConsumerType;
 
@@ -44,4 +49,17 @@ import org.osgi.annotation.versioning.ConsumerType;
 @ConsumerType
 public interface PolicyImportRule extends ServiceBasedRewriteRule {
 
+  /**
+   * <p>Applies this rule to the subtree rooted at the specified <code>root</code> node.
+   *
+   * Implementations create a new Node to return, leaving original intact. All other rules of {@link com.adobe.aem.modernize.rule.RewriteRule#applyTo} should be adhered to.
+   *
+   * @param root The root of the subtree to be rewritten
+   * @param finalPaths list of nodes paths which should not be updated after this method completes
+   * @return the root node of the rewritten tree, or null if it was removed
+   * @throws RewriteException if the rewrite operation failed or cannot be completed
+   * @throws RepositoryException if the node updates cannot be saved
+   */
+  @Override
+  Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException;
 }

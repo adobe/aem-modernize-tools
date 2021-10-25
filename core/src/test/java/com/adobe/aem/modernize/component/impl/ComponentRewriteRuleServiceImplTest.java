@@ -97,7 +97,7 @@ public class ComponentRewriteRuleServiceImplTest {
     final boolean[] returns = { false, true};
     new MockUp<NodeBasedRewriteRule>() {
 
-      private List<String> paths = new ArrayList<>();
+      private final List<String> paths = new ArrayList<>();
 
       @Mock
       public void $init(@NotNull Node node) throws RepositoryException {

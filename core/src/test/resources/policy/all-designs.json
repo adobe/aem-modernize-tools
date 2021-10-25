@@ -15,6 +15,9 @@
       "par": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "foundation/components/parsys",
+        "components": [
+          "geometrixx/components/title"
+        ],
         "title": {
           "cq:imported": "/conf/test/imported",
           "jcr:primaryType": "nt:unstructured",

@@ -88,7 +88,7 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
           return rule;
         })
         .filter(Objects::nonNull)
-        .sorted(new RewriteRule.Comparator())
+        .sorted()
         .collect(Collectors.toList());
 
   }

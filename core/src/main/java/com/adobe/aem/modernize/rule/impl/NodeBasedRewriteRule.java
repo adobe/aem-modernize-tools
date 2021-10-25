@@ -45,7 +45,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   private static final Pattern PATTERN_NODE_PATTERN = Pattern.compile("\\[pattern:(.*)\\]");
 
   // pattern that matches the regex for mapped properties: ${<path>}
-  private static final Pattern MAPPED_PATTERN = Pattern.compile("^(\\!{0,1})\\$\\{(\'.*?\'|.*?)(:(.+))?\\}$");
+  private static final Pattern MAPPED_PATTERN = Pattern.compile("^(\\!{0,1})\\$\\{('.*?'|.*?)(:(.+))?\\}$");
   protected final Node rule;
   private final String id;
   private final String title;
@@ -429,7 +429,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
         deleteProperty = true;
         String path = matcher.group(2);
         // unwrap quoted property paths
-        path = StringUtils.removeStart(StringUtils.stripEnd(path, "\'"), "\'");
+        path = StringUtils.removeStart(StringUtils.stripEnd(path, "'"), "'");
         if (original.hasProperty(path)) {
           // replace property by mapped value in the original tree
           Property originalProperty = original.getProperty(path);
@@ -576,9 +576,9 @@ public class NodeBasedRewriteRule implements RewriteRule {
    */
   private static class TreeStructure {
 
-    private List<String> copyChildrenPaths = new ArrayList<>();
-    private Map<String, Map<String, String>> mappings = new HashMap<>();
-    private Map<String, String> ordering = new HashMap<>();
+    private final List<String> copyChildrenPaths = new ArrayList<>();
+    private final Map<String, Map<String, String>> mappings = new HashMap<>();
+    private final Map<String, String> ordering = new HashMap<>();
 
     /*
       Track which nodes need their children copied

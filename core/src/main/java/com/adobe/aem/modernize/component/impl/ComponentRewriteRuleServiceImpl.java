@@ -19,7 +19,6 @@
 
 package com.adobe.aem.modernize.component.impl;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +37,7 @@ import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.AbstractRewriteRuleService;
-import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;

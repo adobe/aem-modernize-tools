@@ -24,7 +24,7 @@ public class ComponentJobExecutorTest {
 
   private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
-  private ComponentJobExecutor executor = new ComponentJobExecutor();
+  private final ComponentJobExecutor executor = new ComponentJobExecutor();
 
   @Mocked
   private ComponentRewriteRuleService componentService;

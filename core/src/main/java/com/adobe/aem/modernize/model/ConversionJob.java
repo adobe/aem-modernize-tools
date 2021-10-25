@@ -138,7 +138,7 @@ public class ConversionJob {
     PAGE(""),
     POLICY("");
 
-    private String topic;
+    private final String topic;
 
     Type(String topic) {
       this.topic = topic;

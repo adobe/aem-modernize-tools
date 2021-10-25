@@ -41,7 +41,7 @@ public class FullConversionJobExecutorTest {
 
   private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
-  private FullConversionJobExecutor executor = new FullConversionJobExecutor();
+  private final FullConversionJobExecutor executor = new FullConversionJobExecutor();
 
   @Mocked
   private StructureRewriteRuleService structureService;

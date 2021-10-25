@@ -24,7 +24,7 @@ public class ComponentRewriteRuleServiceOakTest {
   private final String[] RULE_PATHS = new String[] { "/apps/aem-modernize/component/rules", "/apps/customer/component/rules" };
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
 
-  private ComponentRewriteRuleService componentRewriteRuleService = new ComponentRewriteRuleServiceImpl();
+  private final ComponentRewriteRuleService componentRewriteRuleService = new ComponentRewriteRuleServiceImpl();
 
   @BeforeEach
   public void beforeEach() {

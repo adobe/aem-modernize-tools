@@ -49,7 +49,7 @@ public class AbstractRewriteRuleServiceTest {
   private QueryBuilder queryBuilder;
 
 
-  private TestRewriteRuleService rewriteRuleService = new TestRewriteRuleService();
+  private final TestRewriteRuleService rewriteRuleService = new TestRewriteRuleService();
 
   @BeforeEach
   protected void beforeEach() {
