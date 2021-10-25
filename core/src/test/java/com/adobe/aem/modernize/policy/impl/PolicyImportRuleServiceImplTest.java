@@ -18,6 +18,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.policy.PolicyImportRule;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
+import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.wcm.api.designer.Cell;
 import com.day.cq.wcm.api.designer.Design;

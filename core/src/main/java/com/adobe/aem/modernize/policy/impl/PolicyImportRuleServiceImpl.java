@@ -34,6 +34,7 @@ import org.apache.sling.commons.osgi.RankedServices;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.policy.PolicyImportRule;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
+import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.AbstractRewriteRuleService;
 import com.day.cq.wcm.api.designer.Design;
