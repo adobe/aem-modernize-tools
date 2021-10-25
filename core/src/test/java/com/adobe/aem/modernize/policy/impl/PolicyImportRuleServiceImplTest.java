@@ -124,7 +124,7 @@ public class PolicyImportRuleServiceImplTest {
       result = context.resourceResolver().getResource(CONF_PATH);
     }};
 
-    Style source = new MockStyle(context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/title"));
+    Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/title");
     policyImportRuleService.apply(source, dest, rules, false, false);
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
@@ -179,7 +179,7 @@ public class PolicyImportRuleServiceImplTest {
       result = context.resourceResolver().getResource(CONF_PATH);
     }};
 
-    Style source = new MockStyle(context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title"));
+    Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title");
     policyImportRuleService.apply(source, dest, rules, false, true);
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
@@ -232,7 +232,7 @@ public class PolicyImportRuleServiceImplTest {
       result = context.resourceResolver().getResource(CONF_PATH);
     }};
 
-    Style source = new MockStyle(context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title"));
+    Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title");
     policyImportRuleService.apply(source, dest, rules, false, false);
     assertEquals(0, callCounts[0], "Correct number of matched called.");
     assertEquals(0, callCounts[1], "Correct number of apply called.");
@@ -266,51 +266,9 @@ public class PolicyImportRuleServiceImplTest {
       dest.getContentResource();
       result = context.resourceResolver().getResource(CONF_PATH);
     }};
-    Style src = new MockStyle(context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage"));
-    policyImportRuleService.apply(src, dest, rules, true, false);
+    Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage");
+    policyImportRuleService.apply(source, dest, rules, true, false);
   }
 
-
-  private static class MockStyle implements Style {
-
-    @Delegate
-    private final ValueMap props;
-    private final Resource resource;
-
-    MockStyle(Resource resource) {
-      this.resource = resource;
-      this.props = resource.adaptTo(ValueMap.class);
-    }
-
-    @Override
-    public Design getDesign() {
-      return null;
-    }
-
-    @Override
-    public String getPath() {
-      return resource.getPath();
-    }
-
-    @Override
-    public Cell getCell() {
-      return null;
-    }
-
-    @Override
-    public Resource getDefiningResource(String s) {
-      return null;
-    }
-
-    @Override
-    public String getDefiningPath(String s) {
-      return null;
-    }
-
-    @Override
-    public Style getSubStyle(String s) {
-      return null;
-    }
-  }
 }
 

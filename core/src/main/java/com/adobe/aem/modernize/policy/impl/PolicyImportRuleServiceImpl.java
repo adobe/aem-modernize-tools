@@ -38,7 +38,6 @@ import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.AbstractRewriteRuleService;
 import com.day.cq.wcm.api.designer.Design;
-import com.day.cq.wcm.api.designer.Style;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
@@ -53,7 +52,6 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import static com.adobe.aem.modernize.policy.impl.PolicyTreeImporter.*;
 
 @Component(
@@ -82,10 +80,9 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
   private Config config;
 
   @Override
-  public void apply(@NotNull Style source, @NotNull Design dest, @NotNull Set<String> rulePaths, boolean deep, boolean overwrite) throws RewriteException {
+  public void apply(@NotNull Resource src, @NotNull Design dest, @NotNull Set<String> rulePaths, boolean deep, boolean overwrite) throws RewriteException {
     ResourceResolver rr = dest.getContentResource().getResourceResolver();
     List<RewriteRule> rules = create(rr, rulePaths);
-    Resource src = rr.getResource(source.getPath());
     Node node = src.adaptTo(Node.class);
 
     try {

@@ -12,10 +12,12 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
+import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
@@ -133,6 +135,19 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
         logger.error("Unable to save job status as {} on tracking node [{}}", Status.FAILED.name(), tracking.getPath());
       }
     }
+  }
+
+  protected boolean isOverwrite(ConversionJobBucket bucket) {
+    Resource parent = bucket.getResource().getParent();
+    if (parent == null) {
+      return false;
+    }
+    parent = parent.getParent();
+    if (parent == null) {
+      return false;
+    }
+    ValueMap vm = parent.getValueMap();
+    return Boolean.TRUE.equals(vm.get(PN_OVERWRITE, Boolean.class));
   }
 
   @NotNull

@@ -9,6 +9,7 @@ import javax.inject.Named;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.JobManager;
+import org.apache.sling.models.annotations.Default;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.Optional;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
@@ -16,6 +17,7 @@ import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
+import com.adobe.aem.modernize.policy.job.PolicyJobExecutor;
 import lombok.Getter;
 import org.osgi.service.component.annotations.Reference;
 
@@ -44,6 +46,7 @@ public class ConversionJob {
   public static final String JOB_DATA_LOCATION = "/var/aem-modernize/job-data";
 
   public static final String PN_TITLE = "jcr:title";
+  public static final String PN_OVERWRITE = "overwrite";
   public static final String PN_TEMPLATE_RULES = "templateRules";
   public static final String PN_COMPONENT_RULES = "componentRules";
   public static final String PN_POLICY_RULES = "policyRules";
@@ -55,8 +58,18 @@ public class ConversionJob {
   public static final String PN_FINISHED = "finished";
 
   @ValueMapValue
-  @Named(ConversionJob.PN_TITLE)
+  @Named(PN_TITLE)
   private String title;
+
+  @ValueMapValue
+  @Named(PN_OVERWRITE)
+  @Optional
+  private boolean overwrite;
+
+  @ValueMapValue
+  @Named(PN_CONF_PATH)
+  @Optional
+  private String confPath;
 
   @ValueMapValue
   @Named(PN_FINISHED)
@@ -65,6 +78,7 @@ public class ConversionJob {
 
   @Inject
   private List<ConversionJobBucket> buckets;
+
 
   private Status status;
 
@@ -136,7 +150,7 @@ public class ConversionJob {
     FULL(FullConversionJobExecutor.JOB_TOPIC),
     COMPONENT(ComponentJobExecutor.JOB_TOPIC),
     PAGE(""),
-    POLICY("");
+    POLICY(PolicyJobExecutor.JOB_TOPIC);
 
     private final String topic;
 

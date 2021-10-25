@@ -1,0 +1,45 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "overwrite" : {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Test",
+    "type": "POLICY",
+    "overwrite": true,
+    "componentRules": [],
+    "policyRules": [
+      "/var/aem-modernize/rules/policy/first",
+      "/var/aem-modernize/rules/policy/second"
+    ],
+    "templateRules": [],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/etc/designs/test/jcr:content/homepage/par",
+          "/etc/designs/test/jcr:content/homepage/title",
+          "/etc/designs/test/jcr:content/homepage/component-not-found"
+        ]
+      }
+    }
+  },
+  "donotoverwrite" : {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Test",
+    "type": "POLICY",
+    "overwrite": false,
+    "componentRules": [],
+    "policyRules": [
+      "/var/aem-modernize/rules/policy/first",
+      "/var/aem-modernize/rules/policy/second"
+    ],
+    "templateRules": [],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/etc/designs/test/jcr:content/homepage/par",
+          "/etc/designs/test/jcr:content/homepage/title",
+          "/etc/designs/test/jcr:content/homepage/component-not-found"
+        ]
+      }
+    }
+  }
+}

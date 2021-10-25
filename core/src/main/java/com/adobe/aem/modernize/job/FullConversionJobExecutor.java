@@ -78,7 +78,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         if (policyRules.isEmpty() || dest == null) {
           context.log("No policy rules or target found, skipping skipping policy import.");
         } else {
-          Style src = designer.getStyle(root.getContentResource());
+          Resource src = root.getContentResource();
           policyService.apply(src, dest, policyRules, true, reprocess);
         }
 
