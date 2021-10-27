@@ -59,11 +59,10 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
     final boolean reprocess = job.getProperty(PN_REPROCESS, false);
     Resource resource = bucket.getResource();
     ResourceResolver rr = resource.getResourceResolver();
-    Designer designer = rr.adaptTo(Designer.class);
 
     Set<String> templateRules = getTemplateRules(bucket);
     Set<String> policyRules = getPolicyRules(bucket);
-    Design dest = getTargetDesign(designer, bucket);
+    String dest = getTargetConfPath(bucket);
     Set<String> componentRules = getComponentRules(bucket);
 
     ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);

@@ -1,20 +1,24 @@
 package com.adobe.aem.modernize.servlet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
-import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.day.cq.wcm.api.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import mockit.Injectable;
+import mockit.Expectations;
 import mockit.Tested;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +26,13 @@ import static javax.servlet.http.HttpServletResponse.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
-public class ListChildrenServletTest {
+public class AbstractListConversionPathsServletTest {
+
   private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
-  @Injectable
-  private ComponentRewriteRuleService componentRewriteRuleService;
-
   @Tested
-  private ListChildrenServlet servlet;
+  private MockListPathsServlet servlet;
+
 
   @BeforeEach
   protected void beforeEach() {
@@ -60,26 +63,26 @@ public class ListChildrenServletTest {
   }
 
   @Test
-  public void testDoGetDirect() throws Exception {
+  public void pathNotPage() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(context.resourceResolver(), context.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
+    Set<String> paths = new HashSet<>();
+    paths.add("/content/test/jcr:content/simple");
+    paths.add("/content/test/jcr:content/copyChildren");
+    List<Resource> capture = new ArrayList<>();
+
     Map<String, Object> params = new HashMap<>();
-    params.put("path", "/content/test");
-    params.put("direct", "true");
+    params.put("path", "/content/test/jcr:content");
     request.setParameterMap(params);
 
     servlet.doGet(request, response);
-    assertEquals(SC_OK, response.getStatus(), "Request Status");
-
-    JsonNode json = new ObjectMapper().readTree(response.getOutputAsString());
-    assertEquals(1, json.get("total").asInt(), "Correct total");
-    JsonNode path = json.get("paths").elements().next();
-    assertEquals("/content/test/products", path.asText(), "Path set");
+    assertEquals(SC_BAD_REQUEST, response.getStatus(), "Request Status");
   }
+
 
   @Test
-  public void testDoGetDepth() throws Exception {
+  public void testDoGetSuccess() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(context.resourceResolver(), context.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
@@ -88,20 +91,21 @@ public class ListChildrenServletTest {
     request.setParameterMap(params);
 
     servlet.doGet(request, response);
-    assertEquals(SC_OK, response.getStatus(), "Request Status");
 
-    JsonNode json = new ObjectMapper().readTree(response.getOutputAsString());
-    assertEquals(4, json.get("total").asInt(), "Correct total");
-    Iterator<JsonNode> paths = json.get("paths").elements();
-    while (paths.hasNext()) {
-      JsonNode path = paths.next();
-      String p = path.asText();
-      if (!p.equals("/content/test/products") &&
-          !p.equals("/content/test/products/square") &&
-          !p.equals("/content/test/products/triangle") &&
-          !p.equals("/content/test/products/circle")) {
-        fail("Path matched");
-      }
+    assertEquals(SC_OK, response.getStatus(), "Request Status");
+    ListComponentsServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ListComponentsServlet.ResponseData.class);
+    assertEquals(1, result.getTotal(), "Correct number of components");
+    assertTrue( result.getPaths().contains("/content/test"), "Test output correct");
+  }
+
+  private static class MockListPathsServlet extends AbstractListConversionPathsServlet {
+    @Override
+    protected @NotNull List<String> listPaths(@NotNull Map<String, String[]> params, @NotNull Page page) {
+      List<String> paths = new ArrayList<>();
+      paths.add("/content/test");
+      return paths;
     }
   }
+
+
 }

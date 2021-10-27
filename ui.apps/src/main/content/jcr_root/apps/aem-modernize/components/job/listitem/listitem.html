@@ -2,12 +2,14 @@
     class="foundation-collection-item foundation-collection-navigator"
     title="${properties.title}"
     data-multi="${properties.multi}"
-    data-foundation-collection-navigator-href="/mnt/overlay/aem-modernize/content/job/view.html${properties.path}"
+    data-foundation-collection-navigator-href="${properties.detailViewUrl}${properties.path}"
     data-foundation-collection-item-id="${properties.path}">
   <td is="coral-table-cell">${properties.title}</td>
   <td is="coral-table-cell" value="${properties.statusInt}">
-    <coral-icon icon="${properties.icon}" class="mediumIcon ${properties.statusClass}" ></coral-icon>
-    Status: ${properties.status}
+    <div class="mediumIcon ${properties.statusClass} status">
+      <coral-icon icon="${properties.icon}" size="M"></coral-icon>
+    </div>
+    <div class="status">Status: ${properties.status}</div>
   </td>
   <td is="coral-table-cell" value="${properties.finishedMs}">
     <foundation-time value="${properties.finished}"></foundation-time>
@@ -16,4 +18,3 @@
     <coral-icon data-sly-test="${properties.multi}" icon="check" class="darkText" size="XS"></coral-icon>
   </td>
 </tr>
-

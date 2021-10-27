@@ -37,7 +37,7 @@
       return this.#$wizard;
     }
 
-    checkPermissions(item) {
+    checkPagePermissions(item) {
       return new Promise((resolve, reject) => {
         const url = Granite.HTTP.externalize(item.path + ".permissions.json");
         $.getJSON(url, {"privileges": "rep:write"}, (data) => {
@@ -66,15 +66,23 @@
       });
     }
 
-    getRules(item){
+    getRules(item) {
       return new Promise((resolve) => {
         resolve(item);
       });
     }
 
-    addHidden(item) {}
+    addHidden(item) {
+    }
 
-    removeHidden($row) {}
+    removeHidden($row) {
+    }
+
+    checkPermissionPromises() {
+      return new Promise((resolve) => {
+        resolve();
+      });
+    }
 
     getFormData($form) {
       return {
@@ -186,7 +194,7 @@
 
     #showError = (item) => {
       if (item.path) {
-        if (item.hasPermission === false) {
+        if (item.hasPermission !== true) {
           this.#ui.prompt(
             Granite.I18n.get("Error"),
             Granite.I18n.get("You do not have permission to convert that content."),
@@ -240,9 +248,9 @@
 
     #scheduleJob = (data) => {
       const _this = this;
-      this.#ui.wait();
-      const url = this.#$form.data("aemModernizeUrl");
+      _this.#ui.wait();
 
+      const url = this.#$form.data("aemModernizeUrl");
       $.ajax({
         url: url,
         method: "POST",
@@ -252,7 +260,7 @@
           const messenger = $(window).adaptTo("foundation-util-messenger");
           messenger.put(null, json.message, "success");
           _this.#ui.clearWait();
-          location.href = Granite.HTTP.externalize(this.#$form.data("aemModernizeJobViewUrl")+ json.job);
+          location.href = Granite.HTTP.externalize(this.#$form.data("aemModernizeJobViewUrl") + json.job);
         },
         error: (xhr, status, error) => {
           _this.#ui.clearWait();
@@ -350,24 +358,36 @@
       this.#$form.on("submit", (e) => {
         e.stopPropagation();
         e.preventDefault();
+        _this.#ui.wait();
 
+        const promises = _this.checkPermissionPromises();
 
-        const formData = _this.getFormData(this.#$form);
-        this.#ui.prompt(
-          Granite.I18n.get("Convert Pages"),
-          Granite.I18n.get("You are about to submit {0} page(s) for conversion. Are you sure?", formData.paths.length, "The current selection count"),
-          "warn",
-          [
-            {id: "no", text: Granite.I18n.get("Cancel")},
-            {id: "yes", text: Granite.I18n.get("Convert"), warning: true}
-          ],
-          (id) => {
-            if (id === "yes") {
-              this.#scheduleJob(formData);
+        Promise.all(promises).then(() => {
+          const formData = _this.getFormData(this.#$form);
+          _this.#ui.clearWait();
+          this.#ui.prompt(
+            Granite.I18n.get("Convert Pages"),
+            Granite.I18n.get("You are about to submit {0} items(s) for conversion. Are you sure?", formData.paths.length, "The current selection count"),
+            "warn",
+            [
+              {id: "no", text: Granite.I18n.get("Cancel")},
+              {id: "yes", text: Granite.I18n.get("Convert"), warning: true}
+            ],
+            (id) => {
+              if (id === "yes") {
+                this.#scheduleJob(formData);
+              }
             }
-          }
-        );
-
+          );
+        }).catch(() => {
+          _this.#ui.clearWait();
+          _this.#ui.prompt(
+            Granite.I18n.get("Error"),
+            Granite.I18n.get("You do not have permission to one or more items in this job description."),
+            "error",
+            [{id: "no-permissions", text: Granite.I18n.get("Ok")}]
+          );
+        });
       });
 
       Coral.commons.ready(this.#$wizard[0], () => {

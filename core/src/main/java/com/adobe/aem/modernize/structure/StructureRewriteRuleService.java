@@ -46,7 +46,7 @@ public interface StructureRewriteRuleService {
    * @param page  the page for applying rules
    * @param rules the rules to apply
    */
-  void apply(@NotNull final Page page, @NotNull final String[] rules);
+  void apply(@NotNull final Page page, @NotNull final Set<String> rules);
 
   /**
    * Lists all the cq:template properties identified by the patterns.

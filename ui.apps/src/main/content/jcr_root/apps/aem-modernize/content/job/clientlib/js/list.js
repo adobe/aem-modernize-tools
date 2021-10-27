@@ -10,7 +10,7 @@
       if (count === 0) {
         count = "0";
       }
-      const content = Granite.I18n.get("{0} page(s)", count, "The current selection count");
+      const content = Granite.I18n.get("{0} conversions(s)", count, "The current selection count");
       $(this).html(content);
     });
 

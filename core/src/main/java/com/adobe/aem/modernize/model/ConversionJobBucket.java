@@ -76,11 +76,13 @@ public class ConversionJobBucket {
 
   public ConversionJob.Status getStatus() {
     if (status == null) {
-      status = ConversionJob.Status.SUCCESS;
+      status = ConversionJob.Status.UNKNOWN;
       if (!failed.isEmpty()) {
         status = ConversionJob.Status.FAILED;
       } else if (!notFound.isEmpty()) {
         status = ConversionJob.Status.WARN;
+      } else if (!success.isEmpty()) {
+        status = ConversionJob.Status.SUCCESS;
       }
 
       ValueMap vm = resource.getValueMap();

@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
@@ -25,6 +26,7 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -41,7 +43,7 @@ public class ScheduleConversionJobServletTest {
 
   private static final String JOB_TITLE = "Test Job";
 
-  private final SlingContext slingContext = new SlingContext(ResourceResolverType.JCR_MOCK);
+  private final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
   @Mocked
   private BundleContext bundleContext;
 
@@ -158,6 +160,50 @@ public class ScheduleConversionJobServletTest {
   }
 
   @Test
+  public void noPermissionDesign() {
+    fail("Not Implemented");
+  }
+
+  @Test
+  public void noPermissionConf() throws Exception {
+    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
+    MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
+    ScheduleConversionJobServlet.RequestData requestData = new ScheduleConversionJobServlet.RequestData();
+    List<String> list = new ArrayList<>();
+    requestData.setName(JOB_TITLE);
+    list.add("/content/test/path");
+    list.add("/content/other/path");
+    requestData.setPaths(list.toArray(new String[] {}));
+    requestData.setConfPath("/conf/test");
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
+
+    new Expectations() {{
+      resourceResolver.adaptTo(Session.class);
+      result = session;
+      session.getAccessControlManager();
+      result = accessControlManager;
+      accessControlManager.hasPrivileges("/content/test/path", withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/content/other/path", withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/conf/test", withInstanceOf(Privilege[].class));
+      result = false;
+    }};
+
+    servlet.doPost(request, response);
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
+
+    assertEquals(SC_FORBIDDEN, response.getStatus(), "Response status code");
+    assertFalse(result.isSuccess(), "Response status");
+    assertNotNull(result.getMessage(), "Response message");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
+  }
+
+
+  @Test
   public void testUnableToLoginService() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
@@ -190,7 +236,7 @@ public class ScheduleConversionJobServletTest {
   public void testTrackingState() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
+    Session serviceSession = context.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
     ScheduleConversionJobServlet.RequestData requestData = buildJobData();
@@ -232,18 +278,22 @@ public class ScheduleConversionJobServletTest {
     assertTrue(serviceSession.nodeExists(path), "Tracking node was created.");
     assertTrue(serviceSession.nodeExists(path + "/buckets/bucket"), "Bucket 1 was created");
     assertTrue(serviceSession.nodeExists(path + "/buckets/bucket0"), "Bucket 2 was created");
+    assertEquals(ConversionJob.RESOURCE_TYPE, serviceSession.getProperty(path + "/" + JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(), "Resource type was set");
     assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJob.PN_TITLE).getString(), "Title was set");
     assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJob.PN_INITIATOR).getString(), "Initiated by was set");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_TEMPLATE_RULES), "Template rules were set.");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_COMPONENT_RULES), "Component rules were set.");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_POLICY_RULES), "Policy rules were set.");
+
+    assertEquals(ConversionJobBucket.RESOURCE_TYPE, serviceSession.getProperty(path + "/buckets/bucket/" + JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(), "Bucket Resource type was set");
+    assertEquals(ConversionJobBucket.RESOURCE_TYPE, serviceSession.getProperty(path + "/buckets/bucket0/" + JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(), "Bucket Resource type was set");
   }
 
   @Test
   public void testJobSchedulingFails() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
+    Session serviceSession = context.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
     ScheduleConversionJobServlet.RequestData requestData = buildJobData();
@@ -278,7 +328,7 @@ public class ScheduleConversionJobServletTest {
   public void testFullJobScheduling() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-    Session serviceSession = slingContext.resourceResolver().adaptTo(Session.class);
+    Session serviceSession = context.resourceResolver().adaptTo(Session.class);
     String userId = "TestUser";
 
     List<Map<String, Object>> jobProperties = new ArrayList<>();

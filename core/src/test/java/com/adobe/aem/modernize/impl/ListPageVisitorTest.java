@@ -16,19 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(AemContextExtension.class)
 public class ListPageVisitorTest {
 
-  private final AemContext aemContext = new AemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
   @Tested
   private ListPageVisitor visitor;
 
   @BeforeEach
   protected void beforeEach() {
-    aemContext.load().json("/servlet/page-content.json", "/content/test");
+    context.load().json("/servlet/page-content.json", "/content/test");
   }
 
   @Test
   public void testVisit() {
-    Resource r = aemContext.resourceResolver().getResource("/content/test");
+    Resource r = context.resourceResolver().getResource("/content/test");
     visitor.accept(r);
     List<String> paths = visitor.getPaths();
     assertTrue(paths.contains("/content/test"), "Contains root page");
@@ -41,7 +41,7 @@ public class ListPageVisitorTest {
 
   @Test
   public void testVisitDepth() {
-    Resource r = aemContext.resourceResolver().getResource("/content/test");
+    Resource r = context.resourceResolver().getResource("/content/test");
     ListPageVisitor visitor = new ListPageVisitor(3);
     visitor.accept(r);
     List<String> paths = visitor.getPaths();

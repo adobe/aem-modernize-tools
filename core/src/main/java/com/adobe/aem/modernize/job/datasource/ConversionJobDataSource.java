@@ -80,6 +80,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
       return;
     }
 
+    String detailViewUrl = vm.get("detailViewUrl", String.class);
     String resourceType = vm.get("itemResourceType", String.class);
     if (StringUtils.isBlank(resourceType)) {
       logger.warn("Job data item resource type was not specified.");
@@ -93,7 +94,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     List<Resource> jobs = findJobs(rr, searchRoot, offset, limit);
 
     if (!jobs.isEmpty()) {
-      DataSource ds = buildDataSource(rr, jobs, resourceType);
+      DataSource ds = buildDataSource(rr, jobs, resourceType, detailViewUrl);
       request.setAttribute(DataSource.class.getName(), ds);
     }
   }
@@ -144,13 +145,14 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
     return results;
   }
 
-  private DataSource buildDataSource(ResourceResolver resourceResolver, List<Resource> jobs, final String resourceType) {
+  private DataSource buildDataSource(ResourceResolver resourceResolver, List<Resource> jobs, final String resourceType, final String detailViewUrl) {
     List<Resource> entries = jobs.stream().map(r -> {
       ConversionJob cj = r.adaptTo(ConversionJob.class);
       Map<String, Object> vm = new HashMap<>();
       vm.put("multi", cj.getBuckets().size() > 1);
       vm.put("title", cj.getTitle());
       vm.put("path", r.getPath());
+      vm.put("detailViewUrl", detailViewUrl);
 
       ConversionJob.Status status = cj.getStatus();
       switch (status) {

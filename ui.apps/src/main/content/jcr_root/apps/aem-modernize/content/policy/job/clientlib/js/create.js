@@ -58,9 +58,10 @@
 
     populateItem(item = {}) {
       return new Promise((resolve, reject) => {
-        const url = this.$getForm().data("aemModernizeListPoliciesUrl");
+        const url = this.$getForm().data("aemModernizeListDesignsUrl");
+        const include = this.$getForm().find("input[name='includeSuperTypes']").is(":checked");
         if (item.path) {
-          $.getJSON(url, {path: item.path}, (data) => {
+          $.getJSON(url, {path: item.path, includeSuperTypes: include}, (data) => {
             item.policyPaths = data.paths;
             resolve(item);
           }).fail(() => {
@@ -70,23 +71,65 @@
           item.policyPaths = [];
           resolve(item);
         }
-      }).then(this.checkPermissions)
+      }).then(this.checkDesignPermissions)
         .then(this.getPageData)
         .then(this.getRules);
     }
 
+    checkDesignPermissions(item) {
+      const promises = []
+      item.policyPaths.forEach((p) => {
+        promises.push(
+          new Promise((resolve, reject) => {
+            const url = Granite.HTTP.externalize(p + ".permissions.json");
+            $.getJSON(url, {"privileges": "rep:write"}, (data) => {
+              if (data.hasOwnProperty("rep:write") && data["rep:write"]) {
+                resolve(item);
+              } else {
+                reject(item);
+              }
+            }).fail(() => {
+              reject(item)
+            });
+          })
+        );
+      })
+      return Promise.all(promises)
+        .then((all) => {
+          return new Promise((resolve) => {
+            all[0].hasPermission = true
+            resolve(all[0]);
+          });
+
+        }).catch((item) => {
+          return new Promise((resolve, reject) => {
+            item.hasPermission = false;
+            reject(item);
+          });
+        });
+    }
+
+
     getRules = (item) => {
       return new Promise((resolve, reject) => {
+        if (item.policyPaths.length === 0) {
+          resolve(item);
+          return;
+        }
         const params = {
-          path: item.path,
-          operation: this.operation
+          path: item.policyPaths
         }
         const url = this.$getForm().data("aemModernizeListRulesUrl");
-        $.getJSON(url, params, (data) => {
-          item.policyRules = data.rules.policyRules;
-          resolve(item);
-        }).fail(() => {
-          reject(item);
+        $.ajax({
+          url: url,
+          method: "POST",
+          data: params,
+          success: (data) => {
+            item.policyRules = data.rules;
+            resolve(item);
+          }, error: (xhr, status, error) => {
+            reject(item);
+          }
         });
       });
     }
@@ -136,19 +179,45 @@
       }
     }
 
+    checkPermissionPromises() {
+      const promises = [];
+      promises.push(this.#checkConfPermissions());
+      return promises;
+    }
+
     getFormData($form) {
       const data = super.getFormData($form);
       data.paths = [].concat.apply([], $("input[type='hidden'][name='path']").map((idx, item) => {
         return item.value;
       }));
-      data.policyRules = [].concat.apply([], $("input[type='hidden'][name='policyRules']").map((idx, item) => {
+      data.policyRules = [].concat.apply([], $("input[type='hidden'][name='policyRule']").map((idx, item) => {
         return item.value;
       }));
+      data.confPath = $("input[name='confPath']").val();
+      data.overwrite = $("input[name='overwrite']").is(":checked");
+      return data;
+    }
+
+    #checkConfPermissions = () => {
+      return new Promise((resolve, reject) => {
+        const conf = $("input[name='confPath']").val();
+        const url = Granite.HTTP.externalize(conf + ".permissions.json");
+        $.getJSON(url, {"privileges": "rep:write"}, (data) => {
+          if (data.hasOwnProperty("rep:write") && data["rep:write"]) {
+            resolve();
+          } else {
+            reject();
+          }
+        }).fail(() => {
+          reject()
+        });
+      })
     }
   }
 
   $(function() {
     form = new CreatePolicyJobForm();
+
   });
 
 })(document, AemModernize);

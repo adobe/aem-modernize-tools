@@ -1,7 +1,7 @@
 /*
  * AEM Modernize Tools
  *
- * Copyright (c) 2019 Adobe
+ * Copyright (c) 2021 Adobe
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,6 @@
  * limitations under the License.
  *
  */
-.aem-PoliciesImporter-designPath,
-.cq-cloudconfig-configpathbrowser foundation-autocomplete {
-    width: 380px;
-}
+@org.osgi.annotation.versioning.Version("2.0.0")
+package com.adobe.aem.modernize.model;
 
-.aem-PoliciesImporter-infoText {
-    line-height: 38px;
-}
-
-.aem-PoliciesImporter-importPolicies {
-    margin-right: 1rem;
-}

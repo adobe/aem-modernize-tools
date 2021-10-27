@@ -8,7 +8,7 @@
 
   <coral-tab data-sly-attribute.selected="${bucket.selected}"
       class="${bucket.statusClass}" icon="${bucket.icon}" id="bucket-${bucketList.index}"
-      data-href="/mnt/overlay/aem-modernize/content/job/view.html${request.requestPathInfo.suffix}?bucket=${bucketList.index}">
+      data-href="${properties.viewUrl}${request.requestPathInfo.suffix}?bucket=${bucketList.index}">
     Bucket ${bucketList.count} (${bucket.count} Items)
   </coral-tab>
 </coral-tablist>

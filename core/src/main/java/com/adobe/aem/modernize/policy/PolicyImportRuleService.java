@@ -25,7 +25,6 @@ import org.apache.sling.api.resource.Resource;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRuleService;
-import com.day.cq.wcm.api.designer.Design;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -45,12 +44,12 @@ public interface PolicyImportRuleService extends RewriteRuleService {
      * Implementations decide how to handle rule paths which are invalid for their context.
      *
      * @param source The Resource Style from which to read design configurations
-     * @param destination The Design into which the new policies will be created
+     * @param confRoot The {@code /conf} root path into which the new policies will be created
      * @param rules the rules to apply
      * @param deep {@code true} to recurse into the tree
      * @param overwrite {@code true} to overwrite existing modernization
      * @throws RewriteException if any errors occur when applying the rules
      */
-    void apply(@NotNull Resource source, @NotNull Design destination, @NotNull Set<String> rules, boolean deep, boolean overwrite) throws RewriteException;
+    void apply(@NotNull Resource source, @NotNull String confRoot, @NotNull Set<String> rules, boolean deep, boolean overwrite) throws RewriteException;
 
 }

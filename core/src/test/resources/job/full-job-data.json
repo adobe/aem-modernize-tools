@@ -2,6 +2,7 @@
   "jcr:primaryType": "nt:unstructured",
   "jcr:title": "Test",
   "type": "FULL",
+  "confPath": "/conf/test",
   "componentRules": [
     "/var/aem-modernize/rules/component/first",
     "/var/aem-modernize/rules/component/second"

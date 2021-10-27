@@ -67,6 +67,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
       updateBucket(bucket, finished);
       logFinish(tracking, finished);
       resourceResolver.commit();
+      // TODO: Save job state on Bucket for reporting (jobs get removed)
       return context.result().message("Successfully processed conversion job.").succeeded();
     } catch (LoginException e) {
       context.log("Unable to log in using service user: {}", e.getLocalizedMessage());
@@ -156,7 +157,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   }
 
   @Nullable
-  protected Design getTargetDesign(Designer designer, ConversionJobBucket bucket) {
+  protected String getTargetConfPath(ConversionJobBucket bucket) {
     Resource parent = bucket.getResource().getParent();
     if (parent == null) {
       return null;
@@ -165,8 +166,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     if (parent == null) {
       return null;
     }
-    String target = parent.getValueMap().get(PN_CONF_PATH, String.class);
-    return designer.getDesign(target);
+    return parent.getValueMap().get(PN_CONF_PATH, String.class);
   }
 
   @NotNull

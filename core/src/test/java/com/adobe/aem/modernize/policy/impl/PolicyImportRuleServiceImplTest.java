@@ -55,9 +55,6 @@ public class PolicyImportRuleServiceImplTest {
   @Mocked
   private PolicyImportRule notMatchedImportRule;
 
-  @Mocked
-  private Design dest;
-
   @BeforeEach
   public void beforeEach() {
     for (String path : RULE_PATHS) {
@@ -118,14 +115,10 @@ public class PolicyImportRuleServiceImplTest {
     new Expectations() {{
       matchedImportRule.getId();
       result = FOUND_SERVICE_ID;
-      dest.getPath();
-      result = CONF_PATH;
-      dest.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
     }};
 
     Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/title");
-    policyImportRuleService.apply(source, dest, rules, false, false);
+    policyImportRuleService.apply(source, CONF_PATH, rules, false, false);
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
   }
@@ -173,14 +166,10 @@ public class PolicyImportRuleServiceImplTest {
     new Expectations() {{
       matchedImportRule.getId();
       result = FOUND_SERVICE_ID;
-      dest.getPath();
-      result = CONF_PATH;
-      dest.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
     }};
 
     Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title");
-    policyImportRuleService.apply(source, dest, rules, false, true);
+    policyImportRuleService.apply(source, CONF_PATH, rules, false, true);
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
   }
@@ -228,12 +217,10 @@ public class PolicyImportRuleServiceImplTest {
     new Expectations() {{
       matchedImportRule.getId();
       result = FOUND_SERVICE_ID;
-      dest.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
     }};
 
     Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title");
-    policyImportRuleService.apply(source, dest, rules, false, false);
+    policyImportRuleService.apply(source, CONF_PATH, rules, false, false);
     assertEquals(0, callCounts[0], "Correct number of matched called.");
     assertEquals(0, callCounts[1], "Correct number of apply called.");
   }
@@ -263,11 +250,9 @@ public class PolicyImportRuleServiceImplTest {
     new Expectations() {{
       matchedImportRule.getId();
       result = FOUND_SERVICE_ID;
-      dest.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
     }};
     Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage");
-    policyImportRuleService.apply(source, dest, rules, true, false);
+    policyImportRuleService.apply(source, CONF_PATH, rules, true, false);
   }
 
 }

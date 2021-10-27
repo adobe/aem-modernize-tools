@@ -26,9 +26,11 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.event.jobs.JobManager;
 import org.apache.sling.jcr.api.SlingRepository;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
+import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -80,7 +82,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     ResourceResolver rr = request.getResourceResolver();
     Session systemSession = null;
     try {
-      checkPermissions(rr.adaptTo(Session.class), data.getPaths());
+      checkPermissions(rr.adaptTo(Session.class), data);
 
       systemSession = repository.loginService(SERVICE_NAME, null);
       List<String[]> buckets = createBuckets(data);
@@ -123,14 +125,17 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   }
 
   // TODO: Add Logic for checking write permissions in /conf and /etc
-  private void checkPermissions(Session session, String[] paths) throws AccessDeniedException {
+  private void checkPermissions(Session session, RequestData data) throws AccessDeniedException {
     try {
       AccessControlManager acm = session.getAccessControlManager();
       Privilege[] privs = new Privilege[] { acm.privilegeFromName(Privilege.JCR_WRITE) };
-      for (String path : paths) {
+      for (String path : data.getPaths()) {
         if (!acm.hasPrivileges(path, privs)) {
           throw new AccessDeniedException(path);
         }
+      }
+      if (!acm.hasPrivileges(data.getConfPath(), privs)) {
+        throw new AccessDeniedException(data.getConfPath());
       }
     } catch (RepositoryException e) {
       logger.error("Unable to check permissions: {}", e.getLocalizedMessage());
@@ -195,14 +200,18 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     node.setProperty(PN_TEMPLATE_RULES, requestData.getTemplateRules());
     node.setProperty(PN_COMPONENT_RULES, requestData.getComponentRules());
     node.setProperty(PN_POLICY_RULES, requestData.getPolicyRules());
-    node.setProperty(PN_INITIATOR, userId);
     node.setProperty(PN_TYPE, requestData.getType().toString());
+    node.setProperty(PN_CONF_PATH, requestData.getConfPath());
+    node.setProperty(PN_OVERWRITE, requestData.isOverwrite());
+    node.setProperty(PN_INITIATOR, userId);
+    node.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, ConversionJob.RESOURCE_TYPE);
     return node;
   }
 
   private void addBucketNode(Session session, Node parent, String[] paths) throws RepositoryException {
     Node bucket = JcrUtil.createUniqueNode(parent, "bucket", JcrConstants.NT_UNSTRUCTURED, session);
     bucket.setProperty(PN_PATHS, paths);
+    bucket.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, ConversionJobBucket.RESOURCE_TYPE);
   }
 
   private boolean scheduleJobs(Session session, Type type, String trackingNode) throws RepositoryException {
@@ -236,6 +245,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     private String[] templateRules;
     private String[] componentRules;
     private String[] policyRules;
+    private String confPath;
+    private boolean overwrite;
     private Type type;
   }
 

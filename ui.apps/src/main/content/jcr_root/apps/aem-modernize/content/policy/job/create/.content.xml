@@ -23,10 +23,10 @@
             style="aligned">
         <granite:data jcr:primaryType="nt:unstructured"
                       aem-modernize-url="${granite:url('/mnt/overlay/aem-modernize/content/policy/job/create.json')}"
-                      aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/job/view.html')}"
+                      aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/policy/job/view.html')}"
                       aem-modernize-list-rules-url="${granite:url('/mnt/overlay/aem-modernize/content/policy/job/create.listrules.policy.json')}"
-                      aem-modernize-list-policies-url="${granite:url('/mnt/overlay/aem-modernize/content/policy/job/create.listpolicies.json')}"
-                      aem-modernize-operation="POLICY" />
+                      aem-modernize-list-designs-url="${granite:url('/mnt/overlay/aem-modernize/content/policy/job/create.listdesigns.json')}"
+                      aem-modernize-operation="POLICY"/>
         <items jcr:primaryType="nt:unstructured">
           <wizard jcr:primaryType="nt:unstructured"
                   cancelHref="${empty header.Referer ? &quot;/aem/start.html&quot; : header.Referer}"
@@ -65,8 +65,7 @@
                                   jcr:title="Configuration"
                                   sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                   margin="{Boolean}true"
-                                  maximized="{Boolean}true"
-                                  >
+                                  maximized="{Boolean}true">
                             <items jcr:primaryType="nt:unstructured">
                               <name jcr:primaryType="nt:unstructured"
                                     sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
@@ -74,11 +73,26 @@
                                     fieldLabel="Job Name"
                                     required="{Boolean}true"/>
                               <confPath jcr:primaryType="nt:unstructured"
-                                    sling:resourceType="cq/cloudconfig/components/admin/configpathbrowser"
-                                    activeSelectionCount="single"
-                                    name="confPath"
-                                    fieldLabel="Configuration Path"
-                                    required="{Boolean}true"/>
+                                        sling:resourceType="cq/cloudconfig/components/admin/configpathbrowser"
+                                        activeSelectionCount="single"
+                                        name="confPath"
+                                        fieldLabel="Configuration Path"
+                                        required="{Boolean}true"
+                                        validation="aem.modernize.conf.write" />
+                              <includeSuper jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                                            checked="{Boolean}true"
+                                            name="includeSuperTypes"
+                                            value="true"
+                                            text="Include Super Types?"
+                                            fieldDescription="Select this to search page the ancestors for design configurations to import."/>
+                              <overwrite jcr:primaryType="nt:unstructured"
+                                         sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                                         checked="{Boolean}false"
+                                         name="overwrite"
+                                         value="{Boolean}true"
+                                         text="Overwrite Existing?"
+                                         fieldDescription="Select this to reimport designs already converted to policies."/>
                             </items>
                           </config>
                         </items>
@@ -163,10 +177,10 @@
                             jcr:title="Page"
                             sortable="{Boolean}true"/>
                       <policies jcr:primaryType="nt:unstructured"
-                                  jcr:title="Policy Count"
-                                  sortable="{Boolean}false"
-                                  alignment="center"
-                                  fixedWidth="{Boolean}true"/>
+                                jcr:title="Policy Count"
+                                sortable="{Boolean}false"
+                                alignment="center"
+                                fixedWidth="{Boolean}true"/>
                       <rules jcr:primaryType="nt:unstructured"
                              jcr:title="Rule Count"
                              sortable="{Boolean}false"

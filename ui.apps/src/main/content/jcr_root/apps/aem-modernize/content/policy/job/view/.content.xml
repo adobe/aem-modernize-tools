@@ -3,7 +3,7 @@
           xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
           xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
           jcr:primaryType="nt:unstructured"
-          jcr:title="AEM Modernize Tools | Conversion Job Detail"
+          jcr:title="AEM Modernize Tools | Policy Import Job Detail"
           sling:resourceType="granite/ui/components/shell/collectionpage"
           cq:defaultView="html"
           consoleId="aem-modernize-job-view-detail"
@@ -16,7 +16,7 @@
         categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common]"/>
   </head>
   <title jcr:primaryType="nt:unstructured"
-         text="AEM Modernization Job Details"
+         text="Policy Import Job Details"
          sling:resourceType="aem-modernize/components/job/title"/>
   <rails jcr:primaryType="nt:unstructured">
     <navigation jcr:primaryType="nt:unstructured"
@@ -27,7 +27,8 @@
                 active="{Boolean}true">
       <items jcr:primaryType="nt:unstructured">
         <navpanel jcr:primaryType="nt:unstructured"
-                  sling:resourceType="aem-modernize/content/job/view/navpanel"
+                  sling:resourceType="aem-modernize/components/job/view/navpanel"
+                  viewUrl="/mnt/overlay/aem-modernize/content/policy/job/view.html"
                   id="aem-modernize-job-view-navigation-panel"
                   orientation="vertical"
                   size="L">
@@ -35,6 +36,15 @@
       </items>
     </navigation>
   </rails>
+  <actions jcr:primaryType="nt:unstructured">
+    <secondary jcr:primaryType="nt:unstructured">
+      <return jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
+              href="${granite:url('/mnt/overlay/aem-modernize/content/policy/job/list.html')}"
+              text="Return to List"
+              variant="quiet"/>
+    </secondary>
+  </actions>
   <views jcr:primaryType="nt:unstructured">
     <list jcr:primaryType="nt:unstructured"
           jcr:title="List View"
@@ -66,9 +76,9 @@
                 sortType="alphanumeric"
                 sortable="{Boolean}true"/>
         <icon jcr:primaryType="nt:unstructured"
-                alignment="center"
-                fixedWidth="{Boolean}true"
-                sortable="{Boolean}false"/>
+              alignment="center"
+              fixedWidth="{Boolean}true"
+              sortable="{Boolean}false"/>
 
       </columns>
     </list>

@@ -10,11 +10,13 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.rule.RewriteRule;
+import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.designer.Design;
 import mockit.Expectations;
@@ -31,9 +33,6 @@ public class PolicyTreeImporterTest {
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
   private static final String CONF_PATH = "/conf/test";
-  
-  @Mocked
-  private Design design;
 
   @Mocked
   private RewriteRule mockRule;
@@ -53,22 +52,20 @@ public class PolicyTreeImporterTest {
     rules.add(new FinalRewriteRule("/etc/designs/test/jcr:content/homepage/rightpar"));
 
     new Expectations() {{
-      design.getPath();
-      result = CONF_PATH;
-      design.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
       mockRule.matches(withCapture(nodes));
     }};
 
-    Node root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage").adaptTo(Node.class);
+    ResourceResolver rr = context.resourceResolver();
+    Resource root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage");
 
-    PolicyTreeImporter.importStyles(root, design, rules, false);
+    PolicyTreeImporter.importStyles(root, CONF_PATH, rules, false);
 
     assertEquals(4, nodes.size(), "Node matches call count");
     for (Node n : nodes) {
       assertNotEquals("/etc/designs/test/jcr:content/homepage/rightpar/title", n.getPath(), "Final path check");
     }
-    Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "foundation/components/iparsys/policy"));
+    String policyPath = PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "foundation/components/iparsys/policy");
+    Resource policy = context.resourceResolver().getResource(policyPath);
     assertNotNull(policy, "Policy copied");
     assertEquals(POLICY_RESOURCE_TYPE, policy.getResourceType(), "Policy resource type.");
   }
@@ -82,24 +79,23 @@ public class PolicyTreeImporterTest {
     rules.add(new MappedRewriteRile("/etc/designs/test/jcr:content/homepage/par/title"));
 
     new Expectations() {{
-      design.getPath();
-      result = CONF_PATH;
-      design.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
       mockRule.matches(withCapture(nodes));
     }};
 
-    Node root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage").adaptTo(Node.class);
+    Resource root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage");
 
-    PolicyTreeImporter.importStyles(root, design, rules, true);
+    PolicyTreeImporter.importStyles(root, CONF_PATH, rules, true);
 
-    Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "geometrixx/components/title/policy"));
+    String policyPath = PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "geometrixx/components/title/policy");
+    Resource policy = context.resourceResolver().getResource(policyPath);
     assertNotNull(policy, "Policy copied");
     assertEquals(POLICY_RESOURCE_TYPE, policy.getResourceType(), "Policy resource type.");
     Node written = policy.adaptTo(Node.class);
     assertEquals("Imported (/etc/designs/test/jcr:content/homepage/par/title)", written.getProperty(NameConstants.PN_TITLE).getString(), "Title set");
     assertEquals("Imported from: /etc/designs/test/jcr:content/homepage/par/title", written.getProperty(NameConstants.PN_DESCRIPTION).getString(), "Title set");
     assertEquals(6, nodes.size(), "Node matches call count");
+    Node original = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage/par/title").adaptTo(Node.class);
+    assertEquals(policyPath, original.getProperty(PN_IMPORTED).getString(), "Imported property set.");
   }
 
   @Test
@@ -111,16 +107,12 @@ public class PolicyTreeImporterTest {
     rules.add(new MappedRewriteRile("/etc/designs/test/jcr:content/homepage/rightpar/title"));
 
     new Expectations() {{
-      design.getPath();
-      result = CONF_PATH;
-      design.getContentResource();
-      result = context.resourceResolver().getResource(CONF_PATH);
       mockRule.matches(withCapture(nodes));
     }};
 
-    Node root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage").adaptTo(Node.class);
+    Resource root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage");
 
-    PolicyTreeImporter.importStyles(root, design, rules, false);
+    PolicyTreeImporter.importStyles(root, CONF_PATH, rules, false);
 
     Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "geometrixx/components/title/policy"));
     assertNotNull(policy, "Policy copied");
@@ -141,8 +133,8 @@ public class PolicyTreeImporterTest {
       mockRule.matches(withCapture(nodes));
     }};
 
-    Node root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage").adaptTo(Node.class);
-    PolicyTreeImporter.importStyles(root, design, rules, false);
+    Resource root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage");
+    PolicyTreeImporter.importStyles(root, CONF_PATH, rules, false);
 
     assertEquals(5, nodes.size(), "Node matches call count");
     for (Node n : nodes) {
@@ -162,8 +154,8 @@ public class PolicyTreeImporterTest {
       mockRule.matches(withCapture(nodes));
     }};
 
-    Node root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage").adaptTo(Node.class);
-    PolicyTreeImporter.importStyles(root, design, rules, true);
+    Resource root = context.resourceResolver().getResource("/etc/designs/test/jcr:content/homepage");
+    PolicyTreeImporter.importStyles(root, CONF_PATH, rules, true);
 
     assertEquals(6, nodes.size(), "Node matches call count");
 
@@ -228,7 +220,7 @@ public class PolicyTreeImporterTest {
 
     @Override
     public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException {
-      return root;
+      return JcrUtil.copy(root, root.getParent(), "copyOfNode");
     }
   }
 }

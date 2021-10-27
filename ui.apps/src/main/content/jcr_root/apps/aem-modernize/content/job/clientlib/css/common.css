@@ -16,50 +16,55 @@
   word-wrap: normal;
 }
 
-coral-icon.smallIcon {
+div.smallIcon {
   padding: .9375rem;
   background-color: #bbb;
   margin-right: .5rem
 }
 
-coral-icon.mediumIcon {
+td div.status {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+div.mediumIcon {
   font-size: 1rem;
   margin-right: 1rem;
 }
 
-coral-icon.smallIcon {
+div.smallIcon {
   color: #fff;
 }
 
-coral-icon.error {
+div.error {
   color: #fa7d73;
 }
 
-coral-icon.errorBackground {
+div.errorBackground {
   background-color: #fa7d73;
 }
 
-coral-icon.warn {
+div.warn {
   color: #fad782;
 }
 
-coral-icon.warnBackground {
+div.warnBackground {
   background-color: #fad782;
 }
 
-coral-icon.success {
+div.success {
   color: #b3da8a;
 }
 
-coral-icon.successBackground {
+div.successBackground {
   background-color: #b3da8a;
 }
 
-coral-icon.info {
+div.info {
   color: #696969;
 }
 
-coral-icon.infoBackground {
+div.infoBackground {
   background-color: #696969;
 }
 

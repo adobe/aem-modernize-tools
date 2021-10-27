@@ -2,7 +2,9 @@
   <td is="coral-table-cell">${properties.path}</td>
   <td is="coral-table-cell" value="${properties.status}">${properties.status}</td>
   <td is="coral-table-cell">
-    <coral-icon icon="${properties.icon}" class="mediumIcon ${properties.statusClass}" ></coral-icon>
+    <div class="mediumIcon ${properties.statusClass}">
+      <coral-icon icon="${properties.icon}" ></coral-icon>
+    </div>
   </td>
 </tr>
 

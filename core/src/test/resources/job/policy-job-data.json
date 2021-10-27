@@ -4,6 +4,7 @@
     "jcr:primaryType": "nt:unstructured",
     "jcr:title": "Test",
     "type": "POLICY",
+    "confPath": "/conf/test",
     "overwrite": true,
     "componentRules": [],
     "policyRules": [
@@ -25,6 +26,7 @@
     "jcr:primaryType": "nt:unstructured",
     "jcr:title": "Test",
     "type": "POLICY",
+    "confPath": "/conf/test",
     "overwrite": false,
     "componentRules": [],
     "policyRules": [

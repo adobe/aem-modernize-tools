@@ -80,19 +80,19 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
   private Config config;
 
   @Override
-  public void apply(@NotNull Resource src, @NotNull Design dest, @NotNull Set<String> rulePaths, boolean deep, boolean overwrite) throws RewriteException {
-    ResourceResolver rr = dest.getContentResource().getResourceResolver();
+  public void apply(@NotNull Resource src, @NotNull String dest, @NotNull Set<String> rulePaths, boolean deep, boolean overwrite) throws RewriteException {
+    ResourceResolver rr = src.getResourceResolver();
     List<RewriteRule> rules = create(rr, rulePaths);
-    Node node = src.adaptTo(Node.class);
 
     try {
       if (deep) {
-        importStyles(node, dest, rules, overwrite);
+        importStyles(src, dest, rules, overwrite);
       } else {
+        Node node = src.adaptTo(Node.class);
         if (overwrite || !node.hasProperty(PN_IMPORTED)) {
           for (RewriteRule rule : rules) {
             if (rule.matches(node)) {
-              importStyle(node, dest, rule, new HashSet<>());
+              importStyle(rr, node, dest, rule, new HashSet<>());
             }
           }
         }
@@ -143,7 +143,7 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
   }
 
   @ObjectClassDefinition(
-      name = "Policy Import Rule Service",
+      name = "AEM Modernization Tools - Policy Import Rule Service",
       description = "Manages operations for performing policy-level import for Modernization tasks."
   )
   @interface Config {

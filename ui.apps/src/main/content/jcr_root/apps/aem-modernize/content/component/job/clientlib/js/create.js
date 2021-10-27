@@ -70,7 +70,7 @@
           item.componentPaths = [];
           resolve(item);
         }
-      }).then(this.checkPermissions)
+      }).then(this.checkPagePermissions)
         .then(this.getPageData)
         .then(this.getRules);
     }
@@ -78,15 +78,19 @@
     getRules = (item) => {
       return new Promise((resolve, reject) => {
         const params = {
-          path: item.path,
-          operation: this.operation
+          path: item.componentPaths
         }
         const url = this.$getForm().data("aemModernizeListRulesUrl");
-        $.getJSON(url, params, (data) => {
-          item.componentRules = data.rules;
-          resolve(item);
-        }).fail(() => {
-          reject(item);
+        $.ajax({
+          url: url,
+          method: "POST",
+          data: params,
+          success: (data) => {
+            item.componentRules = data.rules;
+            resolve(item);
+          }, error: (xhr, status, error) => {
+            reject(item);
+          }
         });
       });
     }
@@ -141,7 +145,7 @@
       data.paths = [].concat.apply([], $("input[type='hidden'][name='path']").map((idx, item) => {
         return item.value;
       }));
-      data.componentRules = [].concat.apply([], $("input[type='hidden'][name='componentRules']").map((idx, item) => {
+      data.componentRules = [].concat.apply([], $("input[type='hidden'][name='componentRule']").map((idx, item) => {
         return item.value;
       }));
       return data;

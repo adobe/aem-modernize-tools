@@ -19,7 +19,7 @@ import com.day.cq.wcm.api.designer.Designer;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.component.job.ComponentJobExecutor.*;
+import static com.adobe.aem.modernize.policy.job.PolicyJobExecutor.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -49,8 +49,7 @@ public class PolicyJobExecutor extends AbstractConversionJobExecutor {
       return;
     }
     ResourceResolver rr = resource.getResourceResolver();
-    Designer designer = rr.adaptTo(Designer.class);
-    Design target = getTargetDesign(designer, bucket);
+    String target = getTargetConfPath(bucket);
     if (target == null) {
       context.log("No target Conf design specified, skipping policy import.");
       return;

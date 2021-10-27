@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
 public class ListComponentsServletTest {
-  private final AemContext aemContext = new AemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
   @Injectable
   private ComponentRewriteRuleService componentRewriteRuleService;
@@ -37,65 +37,12 @@ public class ListComponentsServletTest {
 
   @BeforeEach
   protected void beforeEach() {
-    aemContext.load().json("/servlet/page-content.json", "/content/test");
+    context.load().json("/servlet/page-content.json", "/content/test");
   }
 
   @Test
-  public void invalidJobData() throws Exception {
-    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(aemContext.resourceResolver(), aemContext.bundleContext());
-    MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-
-    // No Path
-    servlet.doGet(request, response);
-    assertEquals(SC_BAD_REQUEST, response.getStatus(), "Request Status");
-  }
-
-  @Test
-  public void invalidPath() throws Exception {
-    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(aemContext.resourceResolver(), aemContext.bundleContext());
-    MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-
-    Map<String, Object> params = new HashMap<>();
-    params.put("path", "/content/does/not/exist");
-    request.setParameterMap(params);
-
-    servlet.doGet(request, response);
-    assertEquals(SC_BAD_REQUEST, response.getStatus(), "Request Status");
-  }
-
-  @Test
-  public void pathNotPage() throws Exception {
-    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(aemContext.resourceResolver(), aemContext.bundleContext());
-    MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
-
-    Set<String> paths = new HashSet<>();
-    paths.add("/content/test/jcr:content/simple");
-    paths.add("/content/test/jcr:content/copyChildren");
-    List<Resource> capture = new ArrayList<>();
-
-    new Expectations() {{
-      componentRewriteRuleService.find(withCapture(capture));
-      result = paths;
-    }};
-
-    Map<String, Object> params = new HashMap<>();
-    params.put("path", "/content/test/jcr:content");
-    request.setParameterMap(params);
-
-    servlet.doGet(request, response);
-
-    assertEquals("/content/test/jcr:content", capture.get(0).getPath(), "Resource search path");
-    assertEquals(SC_OK, response.getStatus(), "Request Status");
-    ListComponentsServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ListComponentsServlet.ResponseData.class);
-    assertEquals(2, result.getTotal(), "Correct number of components");
-    assertTrue( result.getPaths().contains("/content/test/jcr:content/simple"), "Simple component node");
-    assertTrue( result.getPaths().contains("/content/test/jcr:content/copyChildren"), "CopyChildren component node");
-  }
-
-
-  @Test
-  public void testDoGetDirect() throws Exception {
-    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(aemContext.resourceResolver(), aemContext.bundleContext());
+  public void testDoGetSuccess() throws Exception {
+    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(context.resourceResolver(), context.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
     Set<String> paths = new HashSet<>();
@@ -116,7 +63,7 @@ public class ListComponentsServletTest {
 
     assertEquals("/content/test/jcr:content", capture.get(0).getPath(), "Resource search path");
     assertEquals(SC_OK, response.getStatus(), "Request Status");
-    ListComponentsServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ListComponentsServlet.ResponseData.class);
+    AbstractListConversionPathsServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), AbstractListConversionPathsServlet.ResponseData.class);
     assertEquals(2, result.getTotal(), "Correct number of components");
     assertTrue( result.getPaths().contains("/content/test/jcr:content/simple"), "Simple component node");
     assertTrue( result.getPaths().contains("/content/test/jcr:content/copyChildren"), "CopyChildren component node");

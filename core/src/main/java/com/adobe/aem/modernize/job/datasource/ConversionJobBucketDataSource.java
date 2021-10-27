@@ -90,10 +90,15 @@ public class ConversionJobBucketDataSource extends SlingSafeMethodsServlet {
         vm.put("status", "Not Found");
         vm.put("statusClass", "warn");
         vm.put("icon", "alert");
-      } else {
+      } else if (bucket.getSuccess().contains(p)) {
         vm.put("status", "Success");
         vm.put("statusClass", "success");
         vm.put("icon", "checkCircle");
+      } else {
+        vm.put("status", "Unknown");
+        vm.put("statusClass", "unknown");
+        vm.put("icon", "helpCircle");
+
       }
       return new ValueMapResource(rr, p, ITEM_RESOURCE_TYPE, new ValueMapDecorator(vm));
     }).collect(Collectors.toList());
