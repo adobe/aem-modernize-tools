@@ -21,6 +21,7 @@ import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.designer.Design;
 import mockit.Expectations;
 import mockit.Mocked;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -184,12 +185,12 @@ public class PolicyTreeImporterTest {
     }
 
     @Override
-    public boolean matches(Node root) throws RepositoryException {
+    public boolean matches(@NotNull Node root) throws RepositoryException {
       return root.getPath().equals(path);
     }
 
     @Override
-    public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException {
+    public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException {
       NodeIterator it = root.getNodes();
       finalPaths.add(path);
       while (it.hasNext()) {
@@ -214,12 +215,12 @@ public class PolicyTreeImporterTest {
     }
 
     @Override
-    public boolean matches(Node root) throws RepositoryException {
+    public boolean matches(@NotNull Node root) throws RepositoryException {
       return root.getPath().equals(srcPath);
     }
 
     @Override
-    public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException {
+    public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException {
       return JcrUtil.copy(root, root.getParent(), "copyOfNode");
     }
   }

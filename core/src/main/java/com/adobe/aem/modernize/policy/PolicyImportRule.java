@@ -41,6 +41,8 @@ import javax.jcr.RepositoryException;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.ServiceBasedRewriteRule;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
@@ -60,6 +62,7 @@ public interface PolicyImportRule extends ServiceBasedRewriteRule {
    * @throws RewriteException if the rewrite operation failed or cannot be completed
    * @throws RepositoryException if the node updates cannot be saved
    */
+  @Nullable
   @Override
-  Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException;
+  Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RewriteException, RepositoryException;
 }

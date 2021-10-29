@@ -5,6 +5,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.adobe.aem.modernize.rule.RewriteRule;
+import org.jetbrains.annotations.NotNull;
 
 public class MockRule implements RewriteRule {
 
@@ -20,12 +21,12 @@ public class MockRule implements RewriteRule {
   }
 
   @Override
-  public boolean matches(Node root) throws RepositoryException {
+  public boolean matches(@NotNull Node root) throws RepositoryException {
     return false;
   }
 
   @Override
-  public Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException {
+  public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RewriteException, RepositoryException {
     return null;
   }
 

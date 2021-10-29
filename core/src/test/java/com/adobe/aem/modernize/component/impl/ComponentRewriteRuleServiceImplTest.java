@@ -106,12 +106,12 @@ public class ComponentRewriteRuleServiceImplTest {
       }
 
       @Mock
-      public boolean matches(Node root) throws RepositoryException {
+      public boolean matches(@NotNull Node root) throws RepositoryException {
         return returns[callCounts[0]++];
       }
 
       @Mock
-      public Node applyTo(Node root, Set<Node> finalNodes) throws RepositoryException {
+      public Node applyTo(@NotNull Node root, @NotNull Set<Node> finalNodes) throws RepositoryException {
         callCounts[1]++;
         return root;
       }

@@ -78,9 +78,18 @@
         "map-property-negation": "!${./map-property-2}",
         "map-property-default": "${./map-property-unknown:default}",
         "map-property-default-quoted": "${'./prefix:map-property-unknown':default}",
-        "map-property-multiple": ["${./map-property-unknown}", "${./map-property-1}"],
-        "map-property-multiple-default": ["${./map-property-unknown}", "${./map-property-unknown:default}"],
-        "map-property-multiple-negation": ["${./map-property-unknown}", "!${./map-property-2}"]
+        "map-property-multiple": [
+          "${./map-property-unknown}",
+          "${./map-property-1}"
+        ],
+        "map-property-multiple-default": [
+          "${./map-property-unknown}",
+          "${./map-property-unknown:default}"
+        ],
+        "map-property-multiple-negation": [
+          "${./map-property-unknown}",
+          "!${./map-property-2}"
+        ]
       }
     }
   },
@@ -106,7 +115,7 @@
     }
   },
   "rewriteRanking": {
-    "cq:rewriteRanking" : "3",
+    "cq:rewriteRanking": "3",
     "jcr:primaryType": "nt:unstructured",
     "patterns": {
       "jcr:primaryType": "nt:unstructured",
@@ -209,11 +218,25 @@
         "rewrite-boolean": "${./rewrite-boolean}",
         "cq:rewriteProperties": {
           "jcr:primaryType": "nt:unstructured",
-          "rewrite-remove-prefix": ["(?:prefix-)(.+)", "$1"],
-          "rewrite-remove-suffix": ["(.+)(?:-suffix)", "$1"],
-          "rewrite-concat-tokens": ["(.+)(?:-separator-)(.+)", "$1$2"],
-          "rewrite-single-operand": ["(?:prefix-)(.+)"],
-          "rewrite-boolean": ["(.+)", "edited-$1"]
+          "rewrite-remove-prefix": [
+            "(?:prefix-)(.+)",
+            "$1"
+          ],
+          "rewrite-remove-suffix": [
+            "(.+)(?:-suffix)",
+            "$1"
+          ],
+          "rewrite-concat-tokens": [
+            "(.+)(?:-separator-)(.+)",
+            "$1$2"
+          ],
+          "rewrite-single-operand": [
+            "(?:prefix-)(.+)"
+          ],
+          "rewrite-boolean": [
+            "(.+)",
+            "edited-$1"
+          ]
         }
       }
     }
@@ -242,6 +265,43 @@
       "teaser": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+      }
+    }
+  },
+  "parsys": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "parsys": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/parsys"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "container": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geodemo/components/container",
+        "layout": "responsiveGrid",
+        "cq:copyChildren": true
+      }
+    }
+  },
+  "geoText": {
+    "jcr:title": "Simple Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geometrixx/components/text"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geodemo/components/content/text"
       }
     }
   }

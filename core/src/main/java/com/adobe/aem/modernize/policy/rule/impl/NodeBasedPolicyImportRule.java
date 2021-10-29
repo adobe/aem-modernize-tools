@@ -9,6 +9,8 @@ import org.apache.jackrabbit.commons.JcrUtils;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /*
   Policy import rule based on JCR structure. Differentiated from the base NodeBasedRewriteRule as this copies the original
@@ -20,8 +22,9 @@ public class NodeBasedPolicyImportRule extends NodeBasedRewriteRule {
     super(node);
   }
 
+  @Nullable
   @Override
-  public Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException {
+  public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RewriteException, RepositoryException {
     Node parent = root.getParent();
     String name = JcrUtil.createValidChildName(parent, root.getName());
     Node newRoot = JcrUtil.copy(root, parent, name);

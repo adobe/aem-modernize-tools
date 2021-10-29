@@ -25,6 +25,7 @@ import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +93,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   }
 
   @Override
-  public boolean matches(Node root) throws RepositoryException {
+  public boolean matches(@NotNull Node root) throws RepositoryException {
 
     // Need some kind of replacement, or it is an invalid rule.
     if (!rule.hasNode(NN_REPLACEMENT)) {
@@ -107,8 +108,9 @@ public class NodeBasedRewriteRule implements RewriteRule {
     return false;
   }
 
+  @Nullable
   @Override
-  public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException, RewriteException {
+  public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException, RewriteException {
     // check if the 'replacement' node exists
     if (!rule.hasNode(NN_REPLACEMENT)) {
       throw new RewriteException("The replacement node was removed between matching check and request to update.");
@@ -300,7 +302,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
   /*
     Compares the node against the pattern, deep match
    */
-  private boolean matches(Node node, Node pattern) throws RepositoryException {
+  private boolean matches(@NotNull Node node, Node pattern) throws RepositoryException {
 
     // Check primary Node types
     if (!StringUtils.equals(node.getPrimaryNodeType().getName(), pattern.getPrimaryNodeType().getName())) {

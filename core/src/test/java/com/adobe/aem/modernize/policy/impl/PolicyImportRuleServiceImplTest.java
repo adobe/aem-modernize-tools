@@ -12,7 +12,6 @@ import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -20,12 +19,9 @@ import com.adobe.aem.modernize.policy.PolicyImportRule;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
-import com.day.cq.wcm.api.designer.Cell;
-import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Style;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import lombok.experimental.Delegate;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -38,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
 public class PolicyImportRuleServiceImplTest {
-
 
   private static final String CONF_PATH = "/conf/test";
   private static final String FOUND_SERVICE_ID = "com.adobe.aem.modernize.policy.PolicyImportRuleFound";
@@ -83,7 +78,7 @@ public class PolicyImportRuleServiceImplTest {
     ));
 
     final int[] callCounts = { 0, 0 };
-    final boolean[] returns = { false, true};
+    final boolean[] returns = { false, true };
     new MockUp<NodeBasedPolicyImportRule>() {
 
       private final List<String> paths = new ArrayList<>();
@@ -95,12 +90,12 @@ public class PolicyImportRuleServiceImplTest {
       }
 
       @Mock
-      public boolean matches(Node root) {
+      public boolean matches(@NotNull Node root) {
         return returns[callCounts[0]++];
       }
 
       @Mock
-      public Node applyTo(Node root, Set<Node> finalNodes) {
+      public Node applyTo(@NotNull Node root, @NotNull Set<Node> finalNodes) {
         callCounts[1]++;
         return root;
       }
@@ -110,7 +105,6 @@ public class PolicyImportRuleServiceImplTest {
         return Integer.MAX_VALUE;
       }
     };
-
 
     new Expectations() {{
       matchedImportRule.getId();
@@ -134,7 +128,7 @@ public class PolicyImportRuleServiceImplTest {
     ));
 
     final int[] callCounts = { 0, 0 };
-    final boolean[] returns = { false, true};
+    final boolean[] returns = { false, true };
     new MockUp<NodeBasedPolicyImportRule>() {
 
       private final List<String> paths = new ArrayList<>();
@@ -146,12 +140,12 @@ public class PolicyImportRuleServiceImplTest {
       }
 
       @Mock
-      public boolean matches(Node root) {
+      public boolean matches(@NotNull Node root) {
         return returns[callCounts[0]++];
       }
 
       @Mock
-      public Node applyTo(Node root, Set<Node> finalNodes) {
+      public Node applyTo(@NotNull Node root, @NotNull Set<Node> finalNodes) {
         callCounts[1]++;
         return root;
       }
@@ -161,7 +155,6 @@ public class PolicyImportRuleServiceImplTest {
         return Integer.MAX_VALUE;
       }
     };
-
 
     new Expectations() {{
       matchedImportRule.getId();
@@ -185,7 +178,7 @@ public class PolicyImportRuleServiceImplTest {
     ));
 
     final int[] callCounts = { 0, 0 };
-    final boolean[] returns = { false, true};
+    final boolean[] returns = { false, true };
     new MockUp<NodeBasedPolicyImportRule>() {
 
       private final List<String> paths = new ArrayList<>();
@@ -197,12 +190,12 @@ public class PolicyImportRuleServiceImplTest {
       }
 
       @Mock
-      public boolean matches(Node root) {
+      public boolean matches(@NotNull Node root) {
         return returns[callCounts[0]++];
       }
 
       @Mock
-      public Node applyTo(Node root, Set<Node> finalNodes) {
+      public Node applyTo(@NotNull Node root, @NotNull Set<Node> finalNodes) {
         callCounts[1]++;
         return root;
       }
@@ -212,7 +205,6 @@ public class PolicyImportRuleServiceImplTest {
         return Integer.MAX_VALUE;
       }
     };
-
 
     new Expectations() {{
       matchedImportRule.getId();

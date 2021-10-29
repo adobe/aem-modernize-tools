@@ -52,6 +52,7 @@ public class ComponentTreeRewriter {
       TreeTraverser traverser = new TreeTraverser(startNode);
       Iterator<Node> iterator = traverser.iterator();
       logger.debug("Starting new pre-order tree traversal at root: {}", startNode.getPath());
+
       while (iterator.hasNext()) {
         Node node = iterator.next();
 
@@ -80,11 +81,10 @@ public class ComponentTreeRewriter {
               startNode = result;
             }
             matched = true;
-            // Only one rule is allowed to match.
+            // Only one rule is allowed to match, start back at top of tree due to deletes and rewrites.
             break;
           }
         }
-
       }
     } while (matched && startNode != null);
 

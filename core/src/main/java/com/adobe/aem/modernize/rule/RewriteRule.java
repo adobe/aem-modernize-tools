@@ -25,6 +25,7 @@ import javax.jcr.RepositoryException;
 
 import com.adobe.aem.modernize.RewriteException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 @ConsumerType
@@ -53,7 +54,7 @@ public interface RewriteRule extends Comparable<RewriteRule> {
      * @return true if this rule applies, false otherwise
      * @throws RepositoryException if reading the repository fails
      */
-    boolean matches(Node root) throws RepositoryException;
+    boolean matches(@NotNull Node root) throws RepositoryException;
 
     /**
      * <p>Applies this rule to the subtree rooted at the specified <code>root</code> node. The implementation of this
@@ -75,7 +76,8 @@ public interface RewriteRule extends Comparable<RewriteRule> {
      * @throws RewriteException if the rewrite operation failed or cannot be completed
      * @throws RepositoryException if the node updates cannot be saved
      */
-    Node applyTo(Node root, Set<String> finalPaths) throws RewriteException, RepositoryException;
+    @Nullable
+    Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RewriteException, RepositoryException;
 
     default int getRanking() { return Integer.MAX_VALUE; }
 

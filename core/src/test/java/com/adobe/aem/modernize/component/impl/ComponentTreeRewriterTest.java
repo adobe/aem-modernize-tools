@@ -17,6 +17,7 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import mockit.Expectations;
 import mockit.Mocked;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,7 +102,7 @@ public class ComponentTreeRewriterTest {
     }
 
     @Override
-    public boolean matches(Node root) throws RepositoryException {
+    public boolean matches(@NotNull Node root) throws RepositoryException {
       if (StringUtils.equals(root.getPath(), path)) {
         invoked++;
       }
@@ -109,7 +110,7 @@ public class ComponentTreeRewriterTest {
     }
 
     @Override
-    public Node applyTo(Node root, Set<String> finalPaths) throws RepositoryException {
+    public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException {
       finalPaths.add(root.getPath());
       return root;
     }
