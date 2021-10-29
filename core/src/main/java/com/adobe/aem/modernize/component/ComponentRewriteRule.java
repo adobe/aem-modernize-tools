@@ -18,14 +18,7 @@
  */
 package com.adobe.aem.modernize.component;
 
-import java.util.Set;
-import javax.jcr.RepositoryException;
-
-import org.apache.sling.api.resource.Resource;
-
-import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.ServiceBasedRewriteRule;
-import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**

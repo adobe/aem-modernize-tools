@@ -17,12 +17,9 @@ import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
-import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
-import com.day.cq.wcm.api.designer.Design;
-import com.day.cq.wcm.api.designer.Designer;
 import org.eclipse.jetty.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

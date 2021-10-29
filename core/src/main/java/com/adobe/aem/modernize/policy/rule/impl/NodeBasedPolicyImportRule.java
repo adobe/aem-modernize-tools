@@ -4,8 +4,6 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.jackrabbit.commons.JcrUtils;
-
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;

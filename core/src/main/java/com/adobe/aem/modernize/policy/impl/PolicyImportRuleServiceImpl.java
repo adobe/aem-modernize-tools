@@ -37,7 +37,6 @@ import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.AbstractRewriteRuleService;
-import com.day.cq.wcm.api.designer.Design;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;

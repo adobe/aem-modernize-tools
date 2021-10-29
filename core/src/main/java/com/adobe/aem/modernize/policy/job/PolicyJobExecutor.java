@@ -14,8 +14,6 @@ import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
-import com.day.cq.wcm.api.designer.Design;
-import com.day.cq.wcm.api.designer.Designer;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
