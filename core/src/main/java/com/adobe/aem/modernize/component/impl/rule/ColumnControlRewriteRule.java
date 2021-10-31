@@ -26,9 +26,12 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.jcr.Node;
@@ -95,6 +98,9 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   private static final String PROP_CONTAINER_TYPE = "CONTAINER";
   private static final String NN_HINT = "container";
   private static final String PN_LAYOUT = "layout";
+  private static final String PN_BEHAVIOR = "behavior";
+
+  private static final String PROP_NEWLINE = "newline";
 
 
   private final Map<String, long[]> widths = new HashMap<>();
@@ -105,7 +111,6 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   private String columnControlResourceType = PROP_RESOURCE_TYPE_DEFAULT;
   private String containerResourceType;
   private String layout;
-
 
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
@@ -139,14 +144,12 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     new AbstractResourceVisitor() {
       @Override
       protected void visit(@NotNull Resource resource) {
-
-        Iterator<Resource> children = resource.listChildren();
-        while(children.hasNext()) {
-          Resource child = children.next();
-          if (StringUtils.equals(columnControlResourceType, child.getResourceType()) &&
-              StringUtils.equals(layout, child.getValueMap().get(PN_LAYOUT, String.class))) {
+        try {
+          if (matches(resource.adaptTo(Node.class))) {
             paths.add(resource.getPath());
           }
+        } catch (RepositoryException e) {
+          // No nothing; errors don't find matches.
         }
       }
     }.accept(resource);
@@ -237,24 +240,98 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   }
 
   private Node processResponsiveGrid(Node root) throws RepositoryException {
+
+    Function<List<Queue<String>>, Boolean> empty = (queues) -> {
+      Queue<String> found = queues.stream().filter(q -> !q.isEmpty()).findFirst().orElse(null);
+      return found == null;
+    };
+
+    Queue<String> order = new LinkedList<>();
+
+    List<Queue<String>> columnContents = getColumnContent(root);
+
+    // Sort the nodes onto the parent using responsive grid settings.
+    Node child;
     NodeIterator siblings = root.getNodes();
-    Node node = findFirstColumn(siblings);
-    node.remove(); // Remove starting column.
+
+    do {
+      child = siblings.nextNode();
+      if (isColumnNode(child)) {
+        child.remove();
+        break;
+      }
+      order.add(child.getName());
+    } while (siblings.hasNext());
+
+    boolean offset = false;
+    boolean newline = false;
+    while (!empty.apply(columnContents) && siblings.hasNext()) {
+      for (int c = 0; c < columnContents.size(); c++) {
+        Queue<String> column = columnContents.get(c);
+        if (c == 0 && column.isEmpty()) {
+          offset = true;
+          continue;
+
+        } else if (c != 0 && column.isEmpty()) {
+          newline = true;
+          continue;
+        }
+        Node node = root.getNode(column.remove());
+        addResponsive(node, c, newline, offset);
+        order.add(node.getName());
+        child = siblings.nextNode();
+        if (isColumnNode(child)) {
+          child.remove();
+          siblings.nextNode();
+        }
+        offset = false;
+        newline = false;
+      }
+    }
+
+    // Move remaining non column content to the end, preserve the order.
+    while(siblings.hasNext()) {
+      child = siblings.nextNode();
+      if (isColumnNode(child)) {
+        child.remove();
+        continue;
+      }
+      order.add(child.getName());
+    }
+
+    while (!order.isEmpty()) {
+      root.orderBefore(order.remove(), null);
+    }
+
+    return root;
+  }
+
+  private List<Queue<String>> getColumnContent(Node root) throws RepositoryException {
+    List<Queue<String>> columnContents = new ArrayList<>();
+    NodeIterator siblings = root.getNodes();
+    findFirstColumn(siblings);
     int i = 0;
     do {
+      Queue<String> nodeNames = new LinkedList<>();
+      columnContents.add(nodeNames);
       while (siblings.hasNext()) {
-        node = siblings.nextNode();
+        Node node = siblings.nextNode();
         if (StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString())) {
           // Node is now the next column break;
-          node.remove();  // Remove the columns when we find it, this ensures the end column gets deleted too.
           break;
         }
-        addResponsive(node, i);
+        nodeNames.add(node.getName());
       }
       i++;
     } while (i < columns);
+    return columnContents;
+  }
 
-    return root;
+  private boolean isColumnNode(Node node) throws RepositoryException {
+    if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
+      return false;
+    }
+    return StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString());
   }
 
   private Node processContainer(Node root, Set<String> finalPaths) throws RepositoryException {
@@ -269,7 +346,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
       String name = JcrUtil.createValidChildName(root, NN_HINT);
       Node container = root.addNode(name, NT_UNSTRUCTURED);
       container.setProperty(SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
-      addResponsive(container, i);
+      addResponsive(container, i, false,false);
       finalPaths.add(container.getPath());
 
       // Added the container, remove the column break;
@@ -295,12 +372,22 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     return root;
   }
 
-  private void addResponsive(Node node, int index) throws RepositoryException {
+  private void addResponsive(Node node, int index, boolean isNewline, boolean isOffset) throws RepositoryException {
     Node responsive = node.addNode(NN_RESPONSIVE_CONFIG, NT_UNSTRUCTURED);
     for (String key : widths.keySet()) {
       Node entry = responsive.addNode(key, NT_UNSTRUCTURED);
-      entry.setProperty(PN_OFFSET, "0");
-      entry.setProperty(PN_WIDTH, widths.get(key)[index]);
+      long width = widths.get(key)[index];
+      entry.setProperty(PN_WIDTH, Long.toString(width));
+      long offset = 0;
+      if (isOffset && index != 0) {
+        for (int i = 0; i < index; i++) {
+          offset += widths.get(key)[i];
+        }
+      }
+      entry.setProperty(PN_OFFSET, Long.toString(offset));
+      if (isNewline) {
+        entry.setProperty(PN_BEHAVIOR, PROP_NEWLINE);
+      }
     }
   }
 

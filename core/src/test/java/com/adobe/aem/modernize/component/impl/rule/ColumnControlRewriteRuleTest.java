@@ -36,13 +36,13 @@ public class ColumnControlRewriteRuleTest {
       Node responsive = node.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
       Node responsiveEntry = responsive.getNode("default");
       assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
-      assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Width set");
+      assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
       responsiveEntry = responsive.getNode("tablet");
       assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
-      assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Width set");
+      assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
       responsiveEntry = responsive.getNode("phone");
       assertEquals("12", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
-      assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Width set");
+      assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
   }
 
   @BeforeEach
@@ -99,7 +99,14 @@ public class ColumnControlRewriteRuleTest {
   }
   
   @Test
-  public void findMatches() {
+  public <R extends ResourceResolverFactory> void findMatches() {
+
+    new MockUp<R>() {
+      @Mock
+      public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
+        return context.resourceResolver();
+      }
+    };
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
     Resource root = context.resourceResolver().getResource("/content/test");
     final Map<String, Object> props = new HashMap<>();
@@ -108,9 +115,10 @@ public class ColumnControlRewriteRuleTest {
     context.registerInjectActivateService(rule, props);
 
     Set<String> matched = rule.findMatches(root);
-    assertEquals(2, matched.size(), "Found count");
+    assertEquals(3, matched.size(), "Found count");
     assertTrue(matched.contains("/content/test/matches/jcr:content/par"));
-    assertTrue(matched.contains("/content/test/parentNotResponsiveGrid/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/extraFirstColumn/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/extraSecondColumn/jcr:content/par"));
   }
 
   @Test
@@ -156,7 +164,7 @@ public class ColumnControlRewriteRuleTest {
   }
 
   @Test
-  public  <R extends ResourceResolverFactory>  void responsiveGrid() throws Exception {
+  public  <R extends ResourceResolverFactory>  void responsiveGridEqual() throws Exception {
 
     new MockUp<R>() {
       @Mock
@@ -185,28 +193,344 @@ public class ColumnControlRewriteRuleTest {
     NodeIterator siblings = node.getNodes();
     assertEquals("title", siblings.nextNode().getName(), "Node Order preserved");
     Node item = siblings.nextNode();
-    assertEquals("image_1", item.getName(), "Node Order Preserved");
+    assertEquals("image_1", item.getName(), "Node Order Correct");
     checkResponsive(item);
     item = siblings.nextNode();
-    assertEquals("title_1", item.getName(), "Node Order Preserved");
+    assertEquals("image_0", item.getName(), "Node Order Correct");
     checkResponsive(item);
     item = siblings.nextNode();
-    assertEquals("text_1", item.getName(), "Node Order Preserved");
+    assertEquals("title_1", item.getName(), "Node Order Correct");
     checkResponsive(item);
     item = siblings.nextNode();
-    assertEquals("image_0", item.getName(), "Node Order Preserved");
+    assertEquals("title_2", item.getName(), "Node Order Correct");
     checkResponsive(item);
     item = siblings.nextNode();
-    assertEquals("title_2", item.getName(), "Node Order Preserved");
+    assertEquals("text_1", item.getName(), "Node Order Correct");
     checkResponsive(item);
     item = siblings.nextNode();
-    assertEquals("text_0", item.getName(), "Node Order Preserved");
+    assertEquals("text_0", item.getName(), "Node Order Correct");
     checkResponsive(item);
     item = siblings.nextNode();
-
     assertEquals("image", item.getName(), "Node Order preserved");
     assertFalse(siblings.hasNext(), "No more nodes.");
 
+  }
+
+  @Test
+  public  <R extends ResourceResolverFactory>  void responsiveGridExtraFirst() throws Exception {
+
+    new MockUp<R>() {
+      @Mock
+      public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
+        return context.resourceResolver();
+      }
+    };
+
+    ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
+    final Map<String, Object> props = new HashMap<>();
+    props.put("layout.value", "2;cq-colctrl-lt0");
+    props.put("column.widths", new String[] {  "default=[3,3]", "tablet=[6,6]", "phone=[12,12]" });
+    props.put("container.resourceType", "geodemo/components/container");
+    context.registerInjectActivateService(rule, props);
+
+    Node node = context.resourceResolver().getResource("/content/test/extraFirstColumn/jcr:content/par").adaptTo(Node.class);
+    assertTrue(rule.matches(node), "Match before run");
+
+    Set<String> finalPaths = new HashSet<>();
+    Session session = node.getSession();
+
+    rule.applyTo(node, finalPaths);
+    session.save();
+    assertTrue(finalPaths.isEmpty(), "No final paths set.");
+
+    NodeIterator siblings = node.getNodes();
+    assertEquals("title", siblings.nextNode().getName(), "Node Order preserved");
+    Node item = siblings.nextNode();
+    assertEquals("image_1", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("image_0", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("title_1", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("title_2", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("text_1", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("text_0", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("text_extra0", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    item = siblings.nextNode();
+    assertEquals("text_extra1", item.getName(), "Node Order Correct");
+    checkResponsive(item);
+    assertEquals("newline", item.getProperty("cq:responsive/default/behavior").getString(), "Behavior correct.");
+
+
+    item = siblings.nextNode();
+    assertEquals("image", item.getName(), "Node Order preserved");
+    assertFalse(siblings.hasNext(), "No more nodes.");
+  }
+
+  @Test
+  public  <R extends ResourceResolverFactory>  void responsiveGridExtraSecond() throws Exception {
+
+    new MockUp<R>() {
+      @Mock
+      public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
+        return context.resourceResolver();
+      }
+    };
+
+    ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
+    final Map<String, Object> props = new HashMap<>();
+    props.put("layout.value", "2;cq-colctrl-lt0");
+    props.put("column.widths", new String[] {  "default=[6,6]", "tablet=[6,6]", "phone=[6,6]" });
+    props.put("container.resourceType", "geodemo/components/container");
+    context.registerInjectActivateService(rule, props);
+
+    Node node = context.resourceResolver().getResource("/content/test/extraSecondColumn/jcr:content/par").adaptTo(Node.class);
+    assertTrue(rule.matches(node), "Match before run");
+
+    Set<String> finalPaths = new HashSet<>();
+    Session session = node.getSession();
+
+    rule.applyTo(node, finalPaths);
+    session.save();
+    assertTrue(finalPaths.isEmpty(), "No final paths set.");
+
+    NodeIterator siblings = node.getNodes();
+    assertEquals("title", siblings.nextNode().getName(), "Node Order preserved");
+    Node item = siblings.nextNode();
+    assertEquals("image_1", item.getName(), "Node Order Correct");
+    Node responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    Node responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("image_0", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("title_1", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("title_2", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_1", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_0", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+
+    item = siblings.nextNode();
+    assertEquals("text_extra0", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("6", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("6", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("6", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+
+    item = siblings.nextNode();
+    assertEquals("text_extra1", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("6", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("6", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("6", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("6", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+
+    item = siblings.nextNode();
+    assertEquals("image", item.getName(), "Node Order preserved");
+    assertFalse(siblings.hasNext(), "No more nodes.");
+  }
+
+
+  @Test
+  public  <R extends ResourceResolverFactory>  void responsiveGridExtraMiddle() throws Exception {
+
+    new MockUp<R>() {
+      @Mock
+      public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
+        return context.resourceResolver();
+      }
+    };
+
+    ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
+    final Map<String, Object> props = new HashMap<>();
+    props.put("layout.value", "4;cq-colctrl-lt0");
+    props.put("column.widths", new String[] {  "default=[3,3,3,3]", "tablet=[3,3,3,3]", "phone=[3,3,3,3]" });
+    props.put("container.resourceType", "geodemo/components/container");
+    context.registerInjectActivateService(rule, props);
+
+    Node node = context.resourceResolver().getResource("/content/test/extraMiddleColumns/jcr:content/par").adaptTo(Node.class);
+    assertTrue(rule.matches(node), "Match before run");
+
+    Set<String> finalPaths = new HashSet<>();
+    Session session = node.getSession();
+
+    rule.applyTo(node, finalPaths);
+    session.save();
+    assertTrue(finalPaths.isEmpty(), "No final paths set.");
+
+    NodeIterator siblings = node.getNodes();
+    assertEquals("title", siblings.nextNode().getName(), "Node Order preserved");
+    Node item = siblings.nextNode();
+
+    assertEquals("text_0", item.getName(), "Node Order Correct");
+    Node responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    Node responsiveEntry = responsive.getNode("default");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_1", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_2", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_3", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("0", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_extra0", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("3", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("3", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("3", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+
+    item = siblings.nextNode();
+    assertEquals("text_extra1", item.getName(), "Node Order Correct");
+    responsive = item.getNode(NameConstants.NN_RESPONSIVE_CONFIG);
+    responsiveEntry = responsive.getNode("default");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("3", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("tablet");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("3", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    responsiveEntry = responsive.getNode("phone");
+    assertEquals("3", responsiveEntry.getProperty(PN_WIDTH).getString(), "Width set");
+    assertEquals("3", responsiveEntry.getProperty(PN_OFFSET).getString(), "Offset set");
+    assertEquals("newline", item.getProperty("cq:responsive/default/behavior").getString(), "Behavior correct.");
+
+    item = siblings.nextNode();
+    assertEquals("image", item.getName(), "Node Order preserved");
+    assertFalse(siblings.hasNext(), "No more nodes.");
   }
 
   @Test
