@@ -1,142 +1,72 @@
-/*
- * AEM Modernize Tools
- *
- * Copyright (c) 2019 Adobe
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.adobe.aem.modernize.structure.impl;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
-import javax.jcr.Session;
 
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.commons.testing.jcr.RepositoryUtil;
-import org.apache.sling.testing.mock.osgi.MockOsgi;
+import javax.jcr.Node;
+
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
 
-import com.adobe.aem.modernize.structure.PageStructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
-import com.adobe.aem.modernize.structure.impl.rules.ColumnControlRewriteRule;
-import com.adobe.aem.modernize.structure.impl.rules.PageRewriteRule;
-import com.adobe.aem.modernize.structure.impl.rules.ParsysRewriteRule;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.osgi.framework.BundleContext;
+import com.day.cq.wcm.api.Page;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import mockit.Expectations;
+import mockit.Mocked;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-
+@ExtendWith(AemContextExtension.class)
 public class StructureRewriteRuleServiceImplTest {
 
-    private static final String STATIC_HOME_TEMPLATE = "/apps/geometrixx/templates/homepage";
-    private static final String STATIC_PRODUCT_TEMPLATE = "/apps/geometrixx/templates/productpage";
-    private static final String EDITABLE_TEMPLATE = "/conf/geodemo/settings/wcm/templates/geometrixx-demo-home-page";
-    private static final String SLING_RESOURCE_TYPE = "geodemo/components/structure/page";
+  public final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
-    private static final String LAYOUT_VALUE = "2;cq-colctrl-lt0";
-    private static final String[] COLUMN_WIDTHS = {"6", "6"};
+  private final StructureRewriteRuleService service = new StructureRewriteRuleServiceImpl();
 
-    private StructureRewriteRuleService structureRewriteRuleService;
+  @Mocked
+  private StructureRewriteRule matchedRewriteRule;
 
-    @Rule
-    public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
+  @Mocked
+  private StructureRewriteRule notMatchedRewriteRule;
 
-    private BundleContext bundleContext;
+  @BeforeEach
+  public void beforeEach() {
 
-    List<StructureRewriteRule> rules = new ArrayList<>();
+    context.load().json("/structure/page-content.json", "/content/test");
 
+    context.registerService(StructureRewriteRule.class, matchedRewriteRule);
+    context.registerService(StructureRewriteRule.class, notMatchedRewriteRule);
+    context.registerInjectActivateService(service, new HashMap<>());
+  }
 
-    @Before
-    public void setUp() throws Exception {
-        ResourceResolver resolver = context.resourceResolver();
-        Session adminSession = resolver.adaptTo(Session.class);
-        RepositoryUtil.registerNodeType(adminSession,
-                getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
+  @Test
+  public void apply() throws Exception {
 
-        // register conversion service
-        structureRewriteRuleService = context.registerService(StructureRewriteRuleService.class,
-                new StructureRewriteRuleServiceImpl());
+    new Expectations() {{
+      matchedRewriteRule.getId();
+      result = "MatchedStructureRewriteRule";
+      notMatchedRewriteRule.getId();
+      result = "NotMatchedStructureRewriteRule";
+      matchedRewriteRule.getRanking();
+      result = 10;
+      notMatchedRewriteRule.getRanking();
+      result = 5;
+      notMatchedRewriteRule.matches(withInstanceOf(Node.class));
+      result = false;
+      matchedRewriteRule.matches(withInstanceOf(Node.class));
+      result = true;
+      matchedRewriteRule.applyTo(withInstanceOf(Node.class), withInstanceOf(Set.class));
+    }};
 
-        bundleContext = MockOsgi.newBundleContext();
+    Page page = context.resourceResolver().getResource("/content/test/matches").adaptTo(Page.class);
 
-        StructureRewriteRule rule = new PageRewriteRule();
-        HashMap<String, Object> props = new HashMap<>();
-        props.put("static.template", STATIC_HOME_TEMPLATE);
-        props.put("editable.template", EDITABLE_TEMPLATE);
-        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
-        context.registerInjectActivateService(rule, props);
-        rules.add(rule);
+    Set<String> rules = new HashSet<>();
+    rules.add("MatchedStructureRewriteRule");
+    rules.add("NotMatchedStructureRewriteRule");
+    service.apply(page, rules);
 
-        rule = new PageRewriteRule();
-        props = new HashMap<>();
-        props.put("static.template", STATIC_PRODUCT_TEMPLATE);
-        props.put("sling.resourceType", SLING_RESOURCE_TYPE);
-        props.put("editable.template", "/conf/geodemo/settings/wcm/templates/geometrixx-demo-product-page");
-        context.registerInjectActivateService(rule, props);
-        rules.add(rule);
-
-        rule = new ParsysRewriteRule();
-        props = new HashMap<>();
-        context.registerInjectActivateService(rule, props);
-        rules.add(rule);
-
-        rule = new ColumnControlRewriteRule();
-        props = new HashMap<>();
-        props.put("layout.value", LAYOUT_VALUE);
-        props.put("column.widths", COLUMN_WIDTHS);
-        context.registerInjectActivateService(rule, props);
-        rules.add(rule);
-
-        // inject dependencies
-        MockOsgi.injectServices(structureRewriteRuleService, bundleContext);
-
-    }
-
-    @Test
-    public void testGetTemplate() {
-
-        Set<String> templates = structureRewriteRuleService.getTemplates();
-        assertEquals(2, templates.size());
-        assertTrue(templates.contains(STATIC_HOME_TEMPLATE));
-        assertTrue(templates.contains(STATIC_PRODUCT_TEMPLATE));
-    }
-
-    @Test
-    public void testGetRules() throws Exception {
-        List<StructureRewriteRule> rules = structureRewriteRuleService.getRules(null);
-        assertNotNull(rules);
-        assertFalse(rules.isEmpty());
-        assertEquals(4, rules.size());
-        Iterator<StructureRewriteRule> it = rules.iterator();
-        StructureRewriteRule rule = it.next();
-        assertTrue(rule instanceof PageStructureRewriteRule);
-        rule = it.next();
-        assertTrue(rule instanceof PageStructureRewriteRule);
-        rule = it.next();
-        assertTrue(rule instanceof ParsysRewriteRule);
-        rule = it.next();
-        assertTrue(rule instanceof ColumnControlRewriteRule);
-
-    }
+  }
 }

@@ -19,6 +19,8 @@
 
 package com.adobe.aem.modernize.policy.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -102,14 +104,15 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
     }
   }
 
+  @NotNull
   @Override
-  protected String[] getSearchPaths() {
-    return config.search_paths();
+  protected List<String> getSearchPaths() {
+    return Arrays.asList(config.search_paths());
   }
 
   @Override
-  protected List<PolicyImportRule> getServiceRules() {
-    return rules.getList();
+  protected @NotNull List<PolicyImportRule> getServiceRules() {
+    return Collections.unmodifiableList(rules.getList());
   }
 
   @Override

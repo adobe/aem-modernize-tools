@@ -21,17 +21,20 @@ package com.adobe.aem.modernize.structure.impl;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
 
-import com.adobe.aem.modernize.structure.PageStructureRewriteRule;
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.rule.impl.AbstractRewriteRuleService;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
@@ -56,75 +59,59 @@ import org.slf4j.LoggerFactory;
             policyOption = ReferencePolicyOption.GREEDY,
             bind = "bindRule",
             unbind = "unbindRule"
-        ),
-        @Reference(
-            name = "pageRule",
-            service = PageStructureRewriteRule.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            policyOption = ReferencePolicyOption.GREEDY,
-            bind = "bindPageRule",
-            unbind = "unbindPageRule"
         )
     }
 )
-public class StructureRewriteRuleServiceImpl implements StructureRewriteRuleService {
+public class StructureRewriteRuleServiceImpl extends AbstractRewriteRuleService<StructureRewriteRule> implements StructureRewriteRuleService {
 
-    private Logger logger = LoggerFactory.getLogger(StructureRewriteRuleServiceImpl.class);
+  private final Logger logger = LoggerFactory.getLogger(StructureRewriteRuleServiceImpl.class);
 
-    /**
-     * Keeps track of OSGi services implementing structure rewrite rules
-     */
+  /**
+   * Keeps track of OSGi services implementing structure rewrite rules
+   */
+  private final RankedServices<StructureRewriteRule> rules = new RankedServices<>(Order.ASCENDING);
 
-    private List<StructureRewriteRule> rules = Collections.synchronizedList(new LinkedList<>());
+  @SuppressWarnings("unused")
+  public void bindRule(StructureRewriteRule rule, Map<String, Object> properties) {
+    rules.bind(rule, properties);
+  }
 
-    /**
-     * Keeps track of OSGi services implementing structure rewrite rules
-     */
-    private List<PageStructureRewriteRule> pageRules = Collections.synchronizedList(new LinkedList<>());
+  @SuppressWarnings("unused")
+  public void unbindRule(StructureRewriteRule rule, Map<String, Object> properties) {
+    rules.unbind(rule, properties);
+  }
 
-
-    @SuppressWarnings("unused")
-    public void bindRule(StructureRewriteRule rule) {
-        rules.add(rule);
+  @Override
+  public void apply(@NotNull Page page, @NotNull Set<String> rules) throws RewriteException {
+    Resource pageContent = page.getContentResource();
+    if (pageContent == null) {
+      logger.warn("Request to rewrite a page with no content: {}", page.getPath());
+      return;
     }
+    ResourceResolver rr = pageContent.getResourceResolver();
+    List<RewriteRule> rewrites = create(rr, rules);
 
-    @SuppressWarnings("unused")
-    public void unbindRule(StructureRewriteRule rule) {
-        rules.remove(rule);
-    }
-
-    @SuppressWarnings("unused")
-    public void bindPageRule(PageStructureRewriteRule rule) {
-        pageRules.add(rule);
-    }
-
-    @SuppressWarnings("unused")
-    public void unbindPageRule(PageStructureRewriteRule rule) {
-        pageRules.remove(rule);
-    }
-
-    @Override
-    public void apply(@NotNull Page page, @NotNull String[] rules) {
-    }
-
-    @Override
-    public Set<String> getTemplates() {
-        Set<String> templates = new HashSet<>(pageRules.size());
-        for (PageStructureRewriteRule r : pageRules) {
-            templates.add(r.getStaticTemplate());
+    Node node = pageContent.adaptTo(Node.class);
+    try {
+      for (RewriteRule rule : rewrites) {
+        if (rule.matches(node)) {
+          rule.applyTo(node, new HashSet<>());
         }
-        return templates;
+      }
+    } catch (RepositoryException e) {
+      logger.error("Error occurred while trying to perform a rewrite operation.", e);
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
     }
+  }
 
-    @Override
-    public List<StructureRewriteRule> getRules(ResourceResolver resolver) {
-        List<StructureRewriteRule> rulesCopy = new LinkedList<>();
-        Iterator<StructureRewriteRule> it = rules.iterator();
-        while (it.hasNext()) {
-            rulesCopy.add(it.next());
-        }
+  @NotNull
+  @Override
+  protected List<String> getSearchPaths() {
+    return Collections.emptyList();
+  }
 
-        return rulesCopy;
-    }
+  @Override
+  protected @NotNull List<StructureRewriteRule> getServiceRules() {
+    return Collections.unmodifiableList(rules.getList());
+  }
 }

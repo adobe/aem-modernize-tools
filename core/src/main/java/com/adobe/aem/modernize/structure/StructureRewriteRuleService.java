@@ -19,20 +19,17 @@
 
 package com.adobe.aem.modernize.structure;
 
-import java.util.List;
 import java.util.Set;
-import javax.jcr.RepositoryException;
 
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-
+import com.adobe.aem.modernize.RewriteException;
+import com.adobe.aem.modernize.rule.RewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides a mechanism for listing all the configured rules either via Nodes or custom implementations.
  */
-public interface StructureRewriteRuleService {
+public interface StructureRewriteRuleService extends RewriteRuleService {
 
   /**
    * Applies the indicated rules to the provided resource. In the event more than one rule applies to the resource, they are applied in priority order.
@@ -44,17 +41,8 @@ public interface StructureRewriteRuleService {
    * Implementations decide how to handle rule paths which are invalid for their context.
    *
    * @param page  the page for applying rules
-   * @param rules the rules to apply
+   * @param rules set of potential matching rule ids
    */
-  void apply(@NotNull final Page page, @NotNull final Set<String> rules);
+  void apply(@NotNull final Page page, @NotNull final Set<String> rules) throws RewriteException;
 
-  /**
-   * Lists all the cq:template properties identified by the patterns.
-   *
-   * @return set of templates which this service will process
-   */
-  Set<String> getTemplates();
-
-  // TODO: REmove this
-  List<StructureRewriteRule> getRules(ResourceResolver resolver) throws RepositoryException;
 }

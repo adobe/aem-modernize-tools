@@ -19,6 +19,8 @@
 
 package com.adobe.aem.modernize.component.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -94,14 +96,16 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
     }
   }
 
+  @NotNull
   @Override
-  protected String[] getSearchPaths() {
-    return config.search_paths();
+  protected List<String> getSearchPaths() {
+    return Arrays.asList(config.search_paths());
   }
 
+  @NotNull
   @Override
   protected List<ComponentRewriteRule> getServiceRules() {
-    return rules.getList();
+    return Collections.unmodifiableList(rules.getList());
   }
 
   private void applyTo(List<RewriteRule> rewrites, Node node) throws RepositoryException, RewriteException {

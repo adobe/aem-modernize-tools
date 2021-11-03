@@ -56,14 +56,14 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
   }
 
   @NotNull
-  protected abstract String[] getSearchPaths();
+  protected abstract List<String> getSearchPaths();
 
   @Nullable
   protected RewriteRule getNodeRule(@NotNull Node node) {
     try {
       return new NodeBasedRewriteRule(node);
     } catch (RepositoryException e) {
-      logger.error("Unable to create  PolicyImportRule", e);
+      logger.error("Unable to create NodeBasedRewriteRule", e);
     }
     return null;
   }
@@ -73,9 +73,9 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
 
 
   protected List<RewriteRule> create(ResourceResolver rr, Set<String> rules) {
-    List<String> searchPaths = Arrays.asList(getSearchPaths());
+    List<String> searchPaths = getSearchPaths();
 
-    return rules.stream().map(id -> {
+    List<RewriteRule> rewrites =  rules.stream().map(id -> {
           RewriteRule rule = null;
           if (PathUtils.isAbsolute(id)) {
             Resource r = rr.getResource(id);
@@ -88,9 +88,9 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
           return rule;
         })
         .filter(Objects::nonNull)
-        .sorted()
         .collect(Collectors.toList());
-
+    rewrites.sort(new RewriteRule.Comparator());
+    return rewrites;
   }
 
   private Set<String> findByNodeRules(Resource resource) {

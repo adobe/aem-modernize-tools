@@ -1,6 +1,7 @@
 package com.adobe.aem.modernize.rule.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -336,13 +338,14 @@ public class AbstractRewriteRuleServiceTest {
   }
 
   private class TestRewriteRuleService extends AbstractRewriteRuleService<ServiceBasedRewriteRule> {
+    @NotNull
     @Override
-    protected String[] getSearchPaths() {
-      return RULE_PATHS;
+    protected List<String> getSearchPaths() {
+      return Arrays.asList(RULE_PATHS);
     }
 
     @Override
-    protected List<ServiceBasedRewriteRule> getServiceRules() {
+    protected @NotNull List<ServiceBasedRewriteRule> getServiceRules() {
       List<ServiceBasedRewriteRule> rules = new ArrayList<>();
       rules.add(matchedRewriteRule);
       rules.add(notMatchedRewriteRule);

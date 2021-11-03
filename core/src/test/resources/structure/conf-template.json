@@ -1,0 +1,10 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "structure": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:primaryType": "cq:PageContent",
+      "sling:resourceType": "aem-modernize/components/homepage"
+    }
+  }
+}
