@@ -86,12 +86,14 @@ public class ListComponentRulesServletTest {
     assertTrue(ruleInfos.hasNext(), "Component Rule list populated");
 
     JsonNode ri = ruleInfos.next();
-    assertEquals(RULE_PATH + "/simple", ri.get("title").textValue());
-    assertEquals(RULE_PATH + "/simple", ri.get("path").textValue());
+    assertEquals(RULE_PATH + "/simple", ri.get("title").textValue(), "Rule title");
+    assertEquals(RULE_PATH + "/simple", ri.get("id").textValue(), "Rule id");
 
     ri = ruleInfos.next();
-    assertEquals(RULE_PATH + "/copyChildren", ri.get("title").textValue());
-    assertEquals(RULE_PATH + "/copyChildren", ri.get("path").textValue());
+    assertEquals(RULE_PATH + "/copyChildren", ri.get("title").textValue(), "Rule title");
+    assertEquals(RULE_PATH + "/copyChildren", ri.get("id").textValue(), "Rule id");
+
+    assertFalse(ruleInfos.hasNext(), "RuleInfo length");
 
   }
 }

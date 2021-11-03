@@ -19,7 +19,6 @@
 
 package com.adobe.aem.modernize.structure.impl.rule;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
@@ -30,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -92,6 +90,7 @@ public class PageRewriteRule implements StructureRewriteRule {
   private Map<String, List<String>> componentOrdering = new HashMap<>();
   private Map<String, String> componentRenamed;
   private List<String> componentsToRemove;
+  private String slingResourceType;
 
   @Override
   public String getTitle() {
@@ -145,8 +144,7 @@ public class PageRewriteRule implements StructureRewriteRule {
 
     Property template = pageContent.getProperty(NN_TEMPLATE);
     template.setValue(editableTemplate);
-    String resourceType = getResourceType(pageContent.getSession());
-    pageContent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, resourceType);
+    pageContent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, slingResourceType);
 
     Node container = pageContent.addNode(NN_ROOT_CONTAINER, JcrConstants.NT_UNSTRUCTURED);
     container.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
@@ -163,17 +161,27 @@ public class PageRewriteRule implements StructureRewriteRule {
     return this.ranking;
   }
 
-  private String getResourceType(Session session) throws RewriteException, RepositoryException {
+  @Override
+  public @NotNull Set<String> findMatches(@NotNull Resource resource) {
+    Set<String> match = new HashSet<>();
+    Page page = resource.adaptTo(Page.class);
+    if (page == null) {
+      return match;
+    }
+    Resource content = page.getContentResource();
+    if (content == null) {
+      return match;
+    }
+    ValueMap vm = content.getValueMap();
+    if (StringUtils.equals(staticTemplate, vm.get(PN_TEMPLATE, String.class))) {
+      match.add(resource.getPath());
+    }
+    return match;
+  }
 
-    String path = PathUtils.concat(editableTemplate, "structure", "jcr:content");
-    if (!session.nodeExists(path)) {
-      throw new RewriteException(String.format("Unable to find Editable Template: {}", editableTemplate));
-    }
-    Node structure = session.getNode(path);
-    if (!structure.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
-      throw new RewriteException(String.format("Unable to find sling:resourceType on template structure: {}", path));
-    }
-    return structure.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
+  @Override
+  public boolean hasPattern(@NotNull String... slingResourceTypes) {
+    return Arrays.asList(slingResourceTypes).contains(slingResourceType);
   }
 
   // This will list any intermediate nodes as needed by the order or rename logic.
@@ -246,29 +254,6 @@ public class PageRewriteRule implements StructureRewriteRule {
     }
   }
 
-  @Override
-  public @NotNull Set<String> findMatches(@NotNull Resource resource) {
-    Set<String> match = new HashSet<>();
-    Page page = resource.adaptTo(Page.class);
-    if (page == null) {
-      return match;
-    }
-    Resource content = page.getContentResource();
-    if (content == null) {
-      return match;
-    }
-    ValueMap vm = content.getValueMap();
-    if (StringUtils.equals(staticTemplate, vm.get(PN_TEMPLATE, String.class))) {
-      match.add(resource.getPath());
-    }
-    return match;
-  }
-
-  @Override
-  public boolean hasPattern(@NotNull String... slingResourceTypes) {
-    return false;
-  }
-
   private void orderNodes(Node pageContent) throws RepositoryException {
     for (Map.Entry<String, List<String>> entry : componentOrdering.entrySet()) {
       // Find the list of all the children in this container
@@ -303,6 +288,12 @@ public class PageRewriteRule implements StructureRewriteRule {
     if (StringUtils.isBlank(staticTemplate)) {
       throw new ConfigurationException("static.template", "Static template is required.");
     }
+
+    slingResourceType = config.sling_resourceType();
+    if (StringUtils.isBlank(slingResourceType)) {
+      throw new ConfigurationException("sling.resourceType", "Sling Resource Type is required.");
+    }
+
 
     editableTemplate = config.editable_template();
     if (StringUtils.isBlank(editableTemplate)) {
@@ -357,6 +348,7 @@ public class PageRewriteRule implements StructureRewriteRule {
         }
       }
     }
+
   }
 
   @ObjectClassDefinition(
@@ -369,6 +361,12 @@ public class PageRewriteRule implements StructureRewriteRule {
         description = "The static template which will be updated by this Page Rewrite Rule"
     )
     String static_template();
+
+    @AttributeDefinition(
+        name = "Sling Resource Type",
+        description = "The resource type to match on a page for this rule to apply."
+    )
+    String sling_resourceType();
 
     @AttributeDefinition(
         name = "Editable Template",

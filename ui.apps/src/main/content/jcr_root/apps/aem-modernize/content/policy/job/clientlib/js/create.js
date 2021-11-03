@@ -26,7 +26,7 @@
         const $div = $("<div>").addClass("aem-modernize-rule-item");
         let $span = $("<span>").addClass("aem-modernize-rule-title").text(rule.title);
         $div.append($span[0]);
-        $span = $("<span>").addClass("aem-modernize-rule-id").attr("data-rule-id", rule.path).text(rule.path);
+        $span = $("<span>").addClass("aem-modernize-rule-id").attr("data-rule-id", rule.id).text(rule.id);
         $div.append($span[0]);
         $ruleList.append($div[0]);
       });
@@ -144,8 +144,8 @@
       });
 
       item.policyRules.forEach((rule) => {
-        if ($wizard.find("input[type='hidden'][name='policyRule'][value='" + rule.path + "']").length === 0) {
-          const $hidden = $('<input type="hidden">').attr("name", "policyRule").attr("data-path", rule.path).attr("value", rule.path);
+        if ($wizard.find("input[type='hidden'][name='policyRule'][value='" + rule.id + "']").length === 0) {
+          const $hidden = $('<input type="hidden">').attr("name", "policyRule").attr("value", rule.id);
           $wizard.append($hidden);
         }
       });

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          jcr:primaryType="nt:unstructured"
+          jcr:title="AEM Modernize Tools | Page Structure Conversion"
+          sling:resourceType="granite/ui/components/shell/collectionpage"
+          consoleId="aem-modernize-structure-job-list"
+          modeGroup="aem-modernize-job-collection"
+          currentView="${state[&quot;shell.collectionpage.layoutId&quot;].string}"
+          targetCollection=".aem-modernize-job-collection">
+  <head jcr:primaryType="nt:unstructured">
+    <clientlibs
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
+        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common]"/>
+  </head>
+  <actions jcr:primaryType="nt:unstructured">
+    <secondary jcr:primaryType="nt:unstructured">
+      <create jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
+              href="/mnt/overlay/aem-modernize/content/structure/job/create.html"
+              text="Create"
+              variant="primary"/>
+    </secondary>
+  </actions>
+  <title jcr:primaryType="nt:unstructured"
+         text="Page Structure Conversion Jobs"
+         sling:resourceType="granite/ui/components/coral/foundation/text"/>
+  <views jcr:primaryType="nt:unstructured">
+    <card jcr:primaryType="nt:unstructured"
+          jcr:title="Card View"
+          sling:resourceType="granite/ui/components/coral/foundation/masonry"
+          granite:rel="aem-modernize-job-collection"
+          selectionCount="single"
+          selectionMode="none"
+          icon="viewCard"
+          layoutId="card"
+          modeGroup="aem-modernize-job-collection"
+          path="/var/aem-modernize/job-data/structure"
+          src="/apps/aem-modernize/content/structure/job/list/views/card{.offset,limit}.html"
+          detailViewUrl="/mnt/overlay/aem-modernize/content/structure/job/view.html"
+          itemResourceType="aem-modernize/components/job/card"
+          stateId="shell.collectionpage"
+          limit="{Long}20">
+      <datasource jcr:primaryType="nt:unstructured"
+                  limit="${empty requestPathInfo.selectors[1] ? &quot;21&quot; : requestPathInfo.selectors[1]}"
+                  offset="${requestPathInfo.selectors[0]}"
+                  sling:resourceType="aem-modernize/components/job/datasource"/>
+    </card>
+    <list jcr:primaryType="nt:unstructured"
+          jcr:title="List View"
+          sling:resourceType="granite/ui/components/coral/foundation/table"
+          granite:rel="aem-modernize-job-collection"
+          selectionCount="single"
+          selectionMode="none"
+          draggable="{Boolean}false"
+          icon="viewList"
+          layoutId="list"
+          modeGroup="aem-modernize-job-collection"
+          path="/var/aem-modernize/job-data/structure"
+          src="/apps/aem-modernize/content/structure/job/list/views/list{.offset,limit}.html"
+          detailViewUrl="/mnt/overlay/aem-modernize/content/structure/job/view.html"
+          itemResourceType="aem-modernize/components/job/listitem"
+          stateId="shell.collectionpage"
+          sortMode="local"
+          limit="{Long}40">
+      <datasource jcr:primaryType="nt:unstructured"
+                  limit="${empty requestPathInfo.selectors[1] ? &quot;41&quot; : requestPathInfo.selectors[1]}"
+                  offset="${requestPathInfo.selectors[0]}"
+                  sling:resourceType="aem-modernize/components/job/datasource"/>
+      <columns jcr:primaryType="nt:unstructured">
+        <name jcr:primaryType="nt:unstructured"
+              jcr:title="Name"
+              sortType="alphanumeric"
+              sortable="{Boolean}true"/>
+        <status jcr:primaryType="nt:unstructured"
+                jcr:title="Job Status"
+                sortType="number"
+                sortable="{Boolean}true"/>
+        <date jcr:primaryType="nt:unstructured"
+              jcr:title="Execution Date"
+              sortType="date"
+              alignment="center"
+              sortable="{Boolean}true"/>
+        <multi jcr:primaryType="nt:unstructured"
+               jcr:title="Multi-Bucket"
+               alignment="center"
+               fixedWidth="{Boolean}true"
+               sortable="{Boolean}false"/>
+      </columns>
+    </list>
+  </views>
+</jcr:root>

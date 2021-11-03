@@ -14,6 +14,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
+import com.adobe.aem.modernize.rule.RewriteRuleService;
 import com.adobe.aem.modernize.servlet.RuleInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Value;
@@ -22,7 +23,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 
 public abstract class AbstractListRulesServlet extends SlingAllMethodsServlet {
 
-  private static final String PARAM_PATH = "path";
+  protected static final String PARAM_PATH = "path";
 
   @Override
   protected void doPost(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws IOException {
@@ -51,7 +52,7 @@ public abstract class AbstractListRulesServlet extends SlingAllMethodsServlet {
       writeResponse(response, SC_OK, true, "No paths to process.", null);
       return;
     }
-    writeResponse(response, SC_OK, true, "", getRules(rr, resourceTypes));
+    writeResponse(response, SC_OK, true, "", getRules(request, resourceTypes));
   }
 
   private void writeResponse(SlingHttpServletResponse response, int code, boolean success, String message, List<RuleInfo> rules) throws IOException {
@@ -61,7 +62,15 @@ public abstract class AbstractListRulesServlet extends SlingAllMethodsServlet {
   }
 
   @NotNull
-  protected abstract List<RuleInfo> getRules(@NotNull final ResourceResolver rr, @NotNull Set<String> resourceTypes);
+  protected List<RuleInfo> getRules(final @NotNull SlingHttpServletRequest request, @NotNull Set<String> resourceTypes) {
+    ResourceResolver rr = request.getResourceResolver();
+    return getRewriteRuleService().listRules(rr, resourceTypes.toArray(new String[] {})).stream()
+        .map(r -> new RuleInfo(r.getId(), r.getTitle()))
+        .collect(Collectors.toList());
+  }
+
+  @NotNull
+  protected abstract RewriteRuleService getRewriteRuleService();
 
   @Value
   static class ResponseData {

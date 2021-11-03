@@ -3,7 +3,7 @@
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
     "jcr:title": "English",
-    "sling:resourceType": "geometrixx/components/homepage",
+    "sling:resourceType": "aem-modernize/components/homepage",
     "simple": {
       "jcr:primaryType": "nt:unstructured",
       "sling:resourceType": "aem-modernize/components/simple"
@@ -21,7 +21,7 @@
     "jcr:content": {
       "jcr:primaryType": "cq:PageContent",
       "jcr:title": "Products",
-      "sling:resourceType": "geometrixx/components/contentpage",
+      "sling:resourceType": "aem-modernize/components/contentpage",
       "simple": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "aem-modernize/components/simple"
@@ -36,7 +36,7 @@
       "jcr:content": {
         "jcr:primaryType": "cq:PageContent",
         "jcr:title": "Triangle",
-        "sling:resourceType": "geometrixx/components/contentpage",
+        "sling:resourceType": "aem-modernize/components/contentpage",
         "simple": {
           "jcr:primaryType": "nt:unstructured",
           "sling:resourceType": "aem-modernize/components/simple"
@@ -53,7 +53,7 @@
       "jcr:content": {
         "jcr:primaryType": "cq:PageContent",
         "jcr:title": "Square",
-        "sling:resourceType": "geometrixx/components/contentpage"
+        "sling:resourceType": "aem-modernize/components/contentpage"
       }
     },
     "circle": {
@@ -61,7 +61,7 @@
       "jcr:content": {
         "jcr:primaryType": "cq:PageContent",
         "jcr:title": "Circle",
-        "sling:resourceType": "geometrixx/components/contentpage"
+        "sling:resourceType": "aem-modernize/components/contentpage"
       }
     }
   }

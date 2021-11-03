@@ -18,6 +18,7 @@ import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.policy.job.PolicyJobExecutor;
+import com.adobe.aem.modernize.structure.job.PageStructureJobExecutor;
 import lombok.Getter;
 import org.osgi.service.component.annotations.Reference;
 
@@ -50,10 +51,11 @@ public class ConversionJob {
   public static final String PN_TEMPLATE_RULES = "templateRules";
   public static final String PN_COMPONENT_RULES = "componentRules";
   public static final String PN_POLICY_RULES = "policyRules";
+  public static final String PN_TARGET_PATH = "targetPath";
   public static final String PN_CONF_PATH = "confPath";
   public static final String PN_INITIATOR = "startedBy";
   public static final String PN_REPROCESS = "reprocess";
-  public static final String PN_PRE_MODERNIZE_VERSION = "premodernizeVersion";
+  public static final String PN_PRE_MODERNIZE_VERSION = "cq:premodernizeVersion";
   public static final String PN_TYPE = "type";
   public static final String PN_FINISHED = "finished";
 
@@ -149,7 +151,7 @@ public class ConversionJob {
 
     FULL(FullConversionJobExecutor.JOB_TOPIC),
     COMPONENT(ComponentJobExecutor.JOB_TOPIC),
-    PAGE(""),
+    STRUCTURE(PageStructureJobExecutor.JOB_TOPIC),
     POLICY(PolicyJobExecutor.JOB_TOPIC);
 
     private final String topic;

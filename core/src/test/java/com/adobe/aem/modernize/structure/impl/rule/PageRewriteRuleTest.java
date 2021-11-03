@@ -48,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PageRewriteRuleTest {
 
   private static final String STATIC_TEMPLATE = "/apps/aem-modernize/templates/homepage";
+  private static final String SLING_RESOURCE_TYPE = "aem-modernize/components/homepage";
   private static final String EDITABLE_TEMPLATE = "/conf/aem-modernize/settings/wcm/templates/aem-modernize-home-page";
   private static final String CONTAINER_RESOURCE_TYPE = "aem-modernize/components/container";
   private static final String[] ORDER = {
@@ -74,14 +75,22 @@ public class PageRewriteRuleTest {
     // No Static template
     assertThrows(RuntimeException.class, () -> context.registerInjectActivateService(new PageRewriteRule(), new HashMap<>()));
 
-    // No Editable Template
+    // No Sling Resource Type
     final Map<String, Object> props = new HashMap<>();
     props.put("static.template", STATIC_TEMPLATE);
     assertThrows(RuntimeException.class, () -> context.registerInjectActivateService(new PageRewriteRule(), props));
 
+    // No Editable Template
+    props.clear();
+    props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
+    assertThrows(RuntimeException.class, () -> context.registerInjectActivateService(new PageRewriteRule(), props));
+
+
     // No Container resource Type
     props.clear();
     props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
     assertThrows(RuntimeException.class, () -> context.registerInjectActivateService(new PageRewriteRule(), props));
 
@@ -89,6 +98,7 @@ public class PageRewriteRuleTest {
     final PageRewriteRule rule = new PageRewriteRule();
     props.clear();
     props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
     props.put("container.resourceType", CONTAINER_RESOURCE_TYPE);
     context.registerInjectActivateService(rule, props);
@@ -140,6 +150,7 @@ public class PageRewriteRuleTest {
     final PageRewriteRule rule = new PageRewriteRule();
     Map<String, Object> props = new HashMap<>();
     props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
     props.put("container.resourceType", CONTAINER_RESOURCE_TYPE);
     props.put("order.components", ORDER);
@@ -147,7 +158,8 @@ public class PageRewriteRuleTest {
     props.put("rename.components", RENAME);
     context.registerInjectActivateService(rule, props);
 
-    assertFalse(rule.hasPattern("Does not matter"), "No patters used in Page Rewrites.");
+    assertTrue(rule.hasPattern("aem-modernize/components/homepage"), "Pattern Found");
+    assertFalse(rule.hasPattern("aem-modernize/components/page"), "Pattern Not Found");
   }
 
   @Test
@@ -156,6 +168,7 @@ public class PageRewriteRuleTest {
     final PageRewriteRule rule = new PageRewriteRule();
     Map<String, Object> props = new HashMap<>();
     props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
     props.put("container.resourceType", CONTAINER_RESOURCE_TYPE);
     props.put("order.components", ORDER);
@@ -186,6 +199,7 @@ public class PageRewriteRuleTest {
     final PageRewriteRule rule = new PageRewriteRule();
     Map<String, Object> props = new HashMap<>();
     props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
     props.put("container.resourceType", CONTAINER_RESOURCE_TYPE);
     context.registerInjectActivateService(rule, props);
@@ -215,6 +229,7 @@ public class PageRewriteRuleTest {
     final PageRewriteRule rule = new PageRewriteRule();
     Map<String, Object> props = new HashMap<>();
     props.put("static.template", STATIC_TEMPLATE);
+    props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
     props.put("container.resourceType", CONTAINER_RESOURCE_TYPE);
     props.put("order.components", ORDER);

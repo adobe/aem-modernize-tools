@@ -209,11 +209,11 @@
 
     #paginate = () => {
       const _this = this;
-      var scrollContainer = this.#$table.children("[coral-table-scroll]");
+      const $scrollContainer = this.#$table.children("[coral-table-scroll]");
 
       const Paginator = $(window).adaptTo("foundation-util-paginator");
       const paginator = new Paginator({
-        el: scrollContainer,
+        el: $scrollContainer[0],
         limit: 30,
         hasNext: false,
         wait: (paginator) => {

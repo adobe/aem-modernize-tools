@@ -2,7 +2,6 @@ package com.adobe.aem.modernize.servlet.rule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
@@ -19,16 +17,12 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.rule.RewriteRule;
-import com.adobe.aem.modernize.rule.RewriteRuleMapping;
-import com.day.cq.wcm.api.designer.Style;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import mockit.Expectations;
 import mockit.Injectable;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Tested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(AemContextExtension.class)
 public class ListPolicyRulesServletTest {
 
-  private static final String RULE_PATH = "/apps/rules/policy";
   private static final String DESIGN_PATH = "/etc/design/policy";
 
   private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
@@ -90,8 +83,8 @@ public class ListPolicyRulesServletTest {
     assertTrue(ruleInfos.hasNext(), "Policy Rule list populated");
 
     JsonNode ri = ruleInfos.next();
-    assertEquals("/apps/rules/policy/title", ri.get("title").textValue());
-    assertEquals("/apps/rules/policy/title", ri.get("path").textValue());
+    assertEquals("/apps/rules/policy/title", ri.get("title").textValue(), "Rule title");
+    assertEquals("/apps/rules/policy/title", ri.get("id").textValue(), "Rule Id");
 
     assertFalse(ruleInfos.hasNext(), "RuleInfo length");
 

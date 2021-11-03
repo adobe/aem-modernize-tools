@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class RuleInfo {
-  String path;
+  String id;
   String title;
 }

@@ -52,7 +52,7 @@ public abstract class AbstractListConversionPathsServlet extends SlingSafeMethod
   }
 
   @NotNull
-  protected abstract  List<String> listPaths(@NotNull Map<String, String[]> requestParameters, @NotNull Page page);
+  protected abstract List<String> listPaths(@NotNull Map<String, String[]> requestParameters, @NotNull Page page);
 
   void writeResponse(SlingHttpServletResponse response, int code, List<String> paths) throws IOException {
     response.setStatus(code);

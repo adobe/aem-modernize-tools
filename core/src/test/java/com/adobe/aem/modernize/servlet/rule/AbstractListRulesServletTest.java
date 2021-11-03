@@ -2,16 +2,21 @@ package com.adobe.aem.modernize.servlet.rule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
+import com.adobe.aem.modernize.MockRule;
+import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.rule.RewriteRuleService;
 import com.adobe.aem.modernize.servlet.RuleInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -105,23 +110,32 @@ public class AbstractListRulesServletTest {
     assertTrue(ruleInfos.hasNext(), "Rule list populated");
 
     JsonNode ri = ruleInfos.next();
-    assertEquals("simple", ri.get("title").textValue());
-    assertEquals(RULE_PATH + "/simple", ri.get("path").textValue());
+    assertEquals(RULE_PATH + "/simple", ri.get("title").textValue());
+    assertEquals(RULE_PATH + "/simple", ri.get("id").textValue());
 
     ri = ruleInfos.next();
-    assertEquals("copyChildren", ri.get("title").textValue());
-    assertEquals(RULE_PATH + "/copyChildren", ri.get("path").textValue());
+    assertEquals(RULE_PATH + "/copyChildren", ri.get("title").textValue());
+    assertEquals(RULE_PATH + "/copyChildren", ri.get("id").textValue());
   }
 
   private class MockListRulesServlet extends AbstractListRulesServlet {
 
-    @NotNull
     @Override
-    protected List<RuleInfo> getRules(@NotNull ResourceResolver rr, @NotNull Set<String> resourceTypes) {
-      List<RuleInfo> rules = new ArrayList<>();
-      rules.add(new RuleInfo(RULE_PATH + "/simple", "simple"));
-      rules.add(new RuleInfo(RULE_PATH + "/copyChildren", "copyChildren"));
-      return rules;
+    protected @NotNull RewriteRuleService getRewriteRuleService() {
+      return new RewriteRuleService() {
+        @Override
+        public @NotNull Set<String> find(@NotNull Resource resource) {
+          return null;
+        }
+
+        @Override
+        public @NotNull Set<RewriteRule> listRules(@NotNull ResourceResolver resourceResolver, String... slingResourceType) {
+          Set<RewriteRule> rules = new HashSet<>();
+          rules.add(new MockRule(RULE_PATH + "/simple"));
+          rules.add(new MockRule(RULE_PATH + "/copyChildren"));
+          return rules;
+        }
+      };
     }
   }
 }

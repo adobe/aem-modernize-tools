@@ -82,7 +82,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     ResourceResolver rr = request.getResourceResolver();
     Session systemSession = null;
     try {
-      checkPermissions(rr.adaptTo(Session.class), data);
+      checkPermissions(rr, data);
 
       systemSession = repository.loginService(SERVICE_NAME, null);
       List<String[]> buckets = createBuckets(data);
@@ -125,8 +125,9 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
   }
 
   // TODO: Add Logic for checking write permissions in /conf and /etc
-  private void checkPermissions(Session session, RequestData data) throws AccessDeniedException {
+  private void checkPermissions(ResourceResolver rr, RequestData data) throws AccessDeniedException {
     try {
+      Session session = rr.adaptTo(Session.class);
       AccessControlManager acm = session.getAccessControlManager();
       Privilege[] privs = new Privilege[] { acm.privilegeFromName(Privilege.JCR_WRITE) };
       for (String path : data.getPaths()) {
@@ -134,9 +135,15 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
           throw new AccessDeniedException(path);
         }
       }
-      if (!acm.hasPrivileges(data.getConfPath(), privs)) {
+
+      if (StringUtils.isNotBlank(data.getConfPath()) && !acm.hasPrivileges(data.getConfPath(), privs)) {
         throw new AccessDeniedException(data.getConfPath());
       }
+
+      if (StringUtils.isNotBlank(data.getTargetPath()) && !acm.hasPrivileges(data.getTargetPath(), privs)) {
+        throw new AccessDeniedException(data.getTargetPath());
+      }
+
     } catch (RepositoryException e) {
       logger.error("Unable to check permissions: {}", e.getLocalizedMessage());
       throw new AccessDeniedException(e.getLocalizedMessage());
@@ -202,6 +209,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     node.setProperty(PN_POLICY_RULES, requestData.getPolicyRules());
     node.setProperty(PN_TYPE, requestData.getType().toString());
     node.setProperty(PN_CONF_PATH, requestData.getConfPath());
+    node.setProperty(PN_TARGET_PATH, requestData.getTargetPath());
+    node.setProperty(PN_REPROCESS, requestData.isReprocess());
     node.setProperty(PN_OVERWRITE, requestData.isOverwrite());
     node.setProperty(PN_INITIATOR, userId);
     node.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, ConversionJob.RESOURCE_TYPE);
@@ -246,7 +255,9 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     private String[] componentRules;
     private String[] policyRules;
     private String confPath;
+    private String targetPath;
     private boolean overwrite;
+    private boolean reprocess;
     private Type type;
   }
 

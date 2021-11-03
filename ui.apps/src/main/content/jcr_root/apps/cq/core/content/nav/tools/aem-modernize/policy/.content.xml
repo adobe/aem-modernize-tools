@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-      jcr:mixinTypes="[rep:AccessControllable]"
-      jcr:primaryType="nt:unstructured"
-      jcr:title="Policies Importer"
-      href="/mnt/overlay/aem-modernize/content/policy/job/list.html"
-      id="aem-modernize-tools-policy"
-      icon="import"/>
+          jcr:mixinTypes="[rep:AccessControllable]"
+          jcr:primaryType="nt:unstructured"
+          jcr:title="Policies Importer"
+          href="/mnt/overlay/aem-modernize/content/policy/job/list.html"
+          id="aem-modernize-tools-policy"
+          icon="import"/>
