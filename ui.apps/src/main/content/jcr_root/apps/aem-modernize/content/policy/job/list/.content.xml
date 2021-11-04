@@ -85,7 +85,7 @@
               sortable="{Boolean}true"/>
         <multi jcr:primaryType="nt:unstructured"
                jcr:title="Multi-Bucket"
-               alignment="center"
+               alignment="right"
                fixedWidth="{Boolean}true"
                sortable="{Boolean}false"/>
       </columns>

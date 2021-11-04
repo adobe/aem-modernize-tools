@@ -144,7 +144,8 @@ public class PageRewriteRule implements StructureRewriteRule {
 
     Property template = pageContent.getProperty(NN_TEMPLATE);
     template.setValue(editableTemplate);
-    pageContent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, slingResourceType);
+    String newResourceType = getResourceType(pageContent.getSession());
+    pageContent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, newResourceType);
 
     Node container = pageContent.addNode(NN_ROOT_CONTAINER, JcrConstants.NT_UNSTRUCTURED);
     container.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
@@ -182,6 +183,19 @@ public class PageRewriteRule implements StructureRewriteRule {
   @Override
   public boolean hasPattern(@NotNull String... slingResourceTypes) {
     return Arrays.asList(slingResourceTypes).contains(slingResourceType);
+  }
+
+  private String getResourceType(Session session) throws RewriteException, RepositoryException {
+
+    String path = PathUtils.concat(editableTemplate, "structure", "jcr:content");
+    if (!session.nodeExists(path)) {
+      throw new RewriteException(String.format("Unable to find Editable Template: {}", editableTemplate));
+    }
+    Node structure = session.getNode(path);
+    if (!structure.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
+      throw new RewriteException(String.format("Unable to find sling:resourceType on template structure: {}", path));
+    }
+    return structure.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
   }
 
   // This will list any intermediate nodes as needed by the order or rename logic.
@@ -231,7 +245,7 @@ public class PageRewriteRule implements StructureRewriteRule {
       String name = iterator.next();
       boolean found = false;
       for (Map.Entry<String, List<String>> entry : componentOrdering.entrySet()) {
-        if (entry.getValue().contains(name)) {
+        if (entry.getValue().contains(name) && !entry.getKey().equals(NN_ROOT_CONTAINER)) {
           String path = entry.getKey().replace(NN_ROOT_CONTAINER + "/", "");
           String[] tokens = path.split("/");
           Node parent = target;

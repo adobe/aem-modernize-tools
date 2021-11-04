@@ -129,7 +129,7 @@
         if (target === '') {
           resolve();
         } else {
-          const url = Granite.HTTP.externalize(conf + ".permissions.json");
+          const url = Granite.HTTP.externalize(target + ".permissions.json");
           $.getJSON(url, {"privileges": "rep:write"}, (data) => {
             if (data.hasOwnProperty("rep:write") && data["rep:write"]) {
               resolve();

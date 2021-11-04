@@ -4,7 +4,7 @@
     "jcr:primaryType": "cq:Page",
     "jcr:content": {
       "jcr:primaryType": "cq:PageContent",
-      "sling:resourceType": "aem-modernize/components/homepage"
+      "sling:resourceType": "aem-modernize/components/structure/homepage"
     }
   }
 }

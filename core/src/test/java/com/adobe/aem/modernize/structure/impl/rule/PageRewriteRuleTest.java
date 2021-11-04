@@ -53,7 +53,7 @@ public class PageRewriteRuleTest {
   private static final String CONTAINER_RESOURCE_TYPE = "aem-modernize/components/container";
   private static final String[] ORDER = {
       "container:header",
-      "container:title",
+      "title",
       "container",
       "container_12345",
       "another/nested:bar"
@@ -112,14 +112,14 @@ public class PageRewriteRuleTest {
     Map<String, List<String>> orderProp = (Map<String, List<String>>) f.get(rule);
 
     List<String> compList = orderProp.get(NN_ROOT_CONTAINER);
-    assertEquals(2, compList.size(), "Root container list");
-    assertEquals("container", compList.get(0), "Root container order");
-    assertEquals("container_12345", compList.get(1), "Root container order");
+    assertEquals(3, compList.size(), "Root container list");
+    assertEquals("title", compList.get(0), "Root container order");
+    assertEquals("container", compList.get(1), "Root container order");
+    assertEquals("container_12345", compList.get(2), "Root container order");
 
     compList = orderProp.get(PathUtils.concatRelativePaths(NN_ROOT_CONTAINER, "container"));
-    assertEquals(2, compList.size(), "Authorable container list");
+    assertEquals(1, compList.size(), "Authorable container list");
     assertEquals("header", compList.get(0), "Authorable container order");
-    assertEquals("title", compList.get(1), "Authorable container order");
 
     // Parses Removals
     props.put("remove.components", REMOVE);
@@ -244,7 +244,7 @@ public class PageRewriteRuleTest {
     Node rewrittenNode = rule.applyTo(node, finalNodes);
     assertFalse(rewrittenNode.hasProperty("cq:designPath"), "Design path removed");
     assertEquals(EDITABLE_TEMPLATE, rewrittenNode.getProperty("cq:template").getString(), "CQ Template property");
-    assertEquals("aem-modernize/components/homepage", rewrittenNode.getProperty("sling:resourceType").getString(), "Sling Resource Type");
+    assertEquals("aem-modernize/components/structure/homepage", rewrittenNode.getProperty("sling:resourceType").getString(), "Sling Resource Type");
 
     Node rootContainer = rewrittenNode.getNode("root");
     assertNotNull(rootContainer, "Root Container");
@@ -252,6 +252,7 @@ public class PageRewriteRuleTest {
 
     assertEquals(CONTAINER_RESOURCE_TYPE, rootContainer.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(), "Root container resource type");
     NodeIterator children = rootContainer.getNodes();
+    assertEquals("title", children.nextNode().getName(), "Root container node order");
     assertEquals("container", children.nextNode().getName(), "Root container node order");
     assertEquals("container_12345", children.nextNode().getName(), "Root container node order");
     assertEquals("movedToEnd", children.nextNode().getName(), "Root container node order.");
@@ -262,7 +263,6 @@ public class PageRewriteRuleTest {
     Node container = rootContainer.getNode("container");
     children = container.getNodes();
     assertEquals("header", children.nextNode().getName(), "Container node order");
-    assertEquals("title", children.nextNode().getName(), "Container node order");
     assertEquals("container", children.nextNode().getName(), "Container node order");
     assertFalse(children.hasNext(), "Container node order");
 
