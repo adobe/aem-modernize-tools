@@ -29,6 +29,8 @@ import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 public abstract class AbstractConversionJobExecutor implements JobExecutor {
+  public static final String VERSION_LABEL = "Pre-Modernization";
+  public static final String VERSION_DESC = "Version of content before the modernization process was performed.";
 
   public static final String PN_TRACKING_PATH = "tracking";
   protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -135,40 +137,61 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     }
   }
 
-  protected boolean isOverwrite(ConversionJobBucket bucket) {
+  @Nullable
+  protected ValueMap getTrackingInfo(ConversionJobBucket bucket) {
     Resource parent = bucket.getResource().getParent();
     if (parent == null) {
-      return false;
+      return null;
     }
     parent = parent.getParent();
     if (parent == null) {
+      return null;
+    }
+    return parent.getValueMap();
+  }
+
+  protected boolean isOverwrite(ConversionJobBucket bucket) {
+    ValueMap vm = getTrackingInfo(bucket);
+    if (vm == null) {
       return false;
     }
-    ValueMap vm = parent.getValueMap();
     return Boolean.TRUE.equals(vm.get(PN_OVERWRITE, Boolean.class));
   }
 
-  @NotNull
-  protected Set<String> getPolicyRules(ConversionJobBucket bucket) {
-    return getRules(bucket, PN_POLICY_RULES);
+  protected boolean isReprocess(ConversionJobBucket bucket) {
+    ValueMap vm = getTrackingInfo(bucket);
+    if (vm == null) {
+      return false;
+    }
+    return Boolean.TRUE.equals(vm.get(PN_REPROCESS, Boolean.class));
   }
 
   @Nullable
   protected String getTargetConfPath(ConversionJobBucket bucket) {
-    Resource parent = bucket.getResource().getParent();
-    if (parent == null) {
+    ValueMap vm = getTrackingInfo(bucket);
+    if (vm == null) {
       return null;
     }
-    parent = parent.getParent();
-    if (parent == null) {
+    return vm.get(PN_CONF_PATH, String.class);
+  }
+
+  @Nullable
+  protected String getTargetPath(ConversionJobBucket bucket) {
+    ValueMap vm = getTrackingInfo(bucket);
+    if (vm == null) {
       return null;
     }
-    return parent.getValueMap().get(PN_CONF_PATH, String.class);
+    return vm.get(PN_TARGET_PATH, String.class);
   }
 
   @NotNull
   protected Set<String> getTemplateRules(ConversionJobBucket bucket) {
     return getRules(bucket, PN_TEMPLATE_RULES);
+  }
+
+  @NotNull
+  protected Set<String> getPolicyRules(ConversionJobBucket bucket) {
+    return getRules(bucket, PN_POLICY_RULES);
   }
 
   @NotNull

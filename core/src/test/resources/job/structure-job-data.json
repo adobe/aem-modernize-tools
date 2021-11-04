@@ -1,0 +1,45 @@
+{
+  "noReprocess": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Test",
+    "type": "STRUCTURE",
+    "componentRules": [],
+    "policyRules": [],
+    "templateRules": [
+      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.first-page",
+      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.second-page"
+    ],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/content/test/first-page",
+          "/content/test/second-page",
+          "/content/test/not-found-page"
+        ]
+      }
+    }
+  },
+  "reprocess": {
+    "jcr:primaryType": "nt:unstructured",
+    "targetPath": "/content/newpath",
+    "reprocess": true,
+    "jcr:title": "Test",
+    "type": "STRUCTURE",
+    "componentRules": [],
+    "policyRules": [],
+    "templateRules": [
+      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.first-page",
+      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.second-page"
+    ],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/content/test/first-page",
+          "/content/test/second-page",
+          "/content/test/not-found-page"
+        ]
+      }
+    }
+  }
+}
+
