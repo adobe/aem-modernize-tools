@@ -37,7 +37,7 @@ public class PolicyJobExecutorTest {
   private JobExecutionContext jobExecutionContext;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.registerService(PolicyImportRuleService.class, policyService);
     context.registerInjectActivateService(executor);
     context.load().json("/job/design-content.json", "/etc/designs/test");

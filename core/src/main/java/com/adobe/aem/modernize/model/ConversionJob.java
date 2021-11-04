@@ -9,7 +9,6 @@ import javax.inject.Named;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.JobManager;
-import org.apache.sling.models.annotations.Default;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.Optional;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
@@ -20,7 +19,6 @@ import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.policy.job.PolicyJobExecutor;
 import com.adobe.aem.modernize.structure.job.PageStructureJobExecutor;
 import lombok.Getter;
-import org.osgi.service.component.annotations.Reference;
 
 @Model(
     adaptables = Resource.class,

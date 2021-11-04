@@ -22,7 +22,7 @@ public class ListPageVisitorTest {
   private ListPageVisitor visitor;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/servlet/page-content.json", "/content/test");
   }
 

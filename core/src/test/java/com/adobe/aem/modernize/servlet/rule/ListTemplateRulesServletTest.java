@@ -8,30 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 
 import com.adobe.aem.modernize.MockRule;
-import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
-import com.adobe.aem.modernize.structure.impl.StructureRewriteRuleServiceImpl;
 import com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule;
-import com.day.cq.wcm.api.Page;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.Revision;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import mockit.Expectations;
 import mockit.Injectable;
-import mockit.Mocked;
 import mockit.Tested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +43,7 @@ public class ListTemplateRulesServletTest {
   private ListTemplateRulesServlet servlet;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/servlet/page-content.json", "/content/test");
   }
 

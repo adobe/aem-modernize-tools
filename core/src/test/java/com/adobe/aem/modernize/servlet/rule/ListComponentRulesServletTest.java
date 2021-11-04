@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
@@ -45,7 +44,7 @@ public class ListComponentRulesServletTest {
   private ListComponentRulesServlet servlet;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/servlet/page-content.json", CONTENT_PATH);
   }
 

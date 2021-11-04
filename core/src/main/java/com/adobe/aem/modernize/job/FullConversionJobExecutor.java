@@ -25,7 +25,6 @@ import com.day.cq.wcm.api.WCMException;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.model.ConversionJob.*;
-import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -36,8 +35,6 @@ import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
 
   public static final String JOB_TOPIC = "com/adobe/aem/modernize/job/topic/convert/full";
-  public static final String VERSION_LABEL = "Pre-Modernization";
-  public static final String VERSION_DESC = "Version of content before the modernization process was performed.";
 
   @Reference
   private PolicyImportRuleService policyService;
@@ -53,7 +50,6 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
 
   @Override
   protected void doProcess(Job job, JobExecutionContext context, ConversionJobBucket bucket) {
-    final boolean reprocess = job.getProperty(PN_REPROCESS, false);
     Resource resource = bucket.getResource();
     ResourceResolver rr = resource.getResourceResolver();
 
@@ -62,11 +58,10 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
     String dest = getTargetConfPath(bucket);
     Set<String> componentRules = getComponentRules(bucket);
 
-    ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
-    String[] paths = mvm.get(PN_PATHS, String[].class);
+    List<String> paths = bucket.getPaths();
+    context.initProgress(paths.size(), -1);
 
-    context.initProgress(paths.length * 2, -1);
-
+    final boolean reprocess = isReprocess(bucket);
     List<String> preparedPaths = preparePages(context, bucket, reprocess);
     for (String path : preparedPaths) {
       Page root = rr.getResource(path).adaptTo(Page.class);

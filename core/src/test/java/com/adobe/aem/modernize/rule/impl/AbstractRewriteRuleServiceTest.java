@@ -54,7 +54,7 @@ public class AbstractRewriteRuleServiceTest {
   private final TestRewriteRuleService rewriteRuleService = new TestRewriteRuleService();
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/rewrite/test-simple-rules.json", "/content/rules/simple");
     context.load().json("/rewrite/test-aggregate-rules.json", "/content/rules/aggregate");
     context.load().json("/rewrite/test-simple-rules.json", "/apps/not-registered/rules");

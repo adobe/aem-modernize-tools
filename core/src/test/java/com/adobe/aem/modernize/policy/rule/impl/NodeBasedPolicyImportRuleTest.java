@@ -12,7 +12,6 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
@@ -23,7 +22,7 @@ public class NodeBasedPolicyImportRuleTest {
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/policy/test-rules.json", RULES_ROOT);
     context.load().json("/policy/all-designs.json", "/etc/designs/test");
   }

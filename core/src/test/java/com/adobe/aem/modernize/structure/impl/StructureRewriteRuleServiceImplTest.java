@@ -3,7 +3,6 @@ package com.adobe.aem.modernize.structure.impl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.jcr.Node;
 
 import org.apache.sling.testing.mock.sling.ResourceResolverType;

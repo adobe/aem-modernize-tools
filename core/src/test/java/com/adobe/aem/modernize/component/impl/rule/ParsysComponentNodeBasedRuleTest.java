@@ -13,7 +13,6 @@ import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
@@ -22,7 +21,7 @@ public class ParsysComponentNodeBasedRuleTest {
   public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/component/page-content.json", "/content/test");
     context.load().json("/component/test-rules.json", "/apps/aem-modernize/component/rules");
   }

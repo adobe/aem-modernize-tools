@@ -44,7 +44,7 @@ public class ListPolicyRulesServletTest {
   private ListPolicyRulesServlet servlet;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/servlet/design-content.json", DESIGN_PATH);
   }
 

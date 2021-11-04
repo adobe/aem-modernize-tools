@@ -4,7 +4,6 @@
     "jcr:content": {
       "jcr:primaryType": "cq:PageContent",
       "jcr:title": "Test Page",
-      "premodernizeVersion": "1234567890",
       "cq:designPath": "/etc/designs/first-site",
       "component": {
         "jcr:primaryType": "nt:unstructured",
@@ -16,6 +15,7 @@
   "second-page": {
     "jcr:primaryType": "cq:Page",
     "jcr:content": {
+      "cq:premodernizeVersion": "123456789",
       "jcr:primaryType": "cq:PageContent",
       "jcr:title": "Test Page",
       "cq:designPath": "/etc/designs/second-site",

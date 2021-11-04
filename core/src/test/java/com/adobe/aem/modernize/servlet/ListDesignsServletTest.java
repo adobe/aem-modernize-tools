@@ -60,7 +60,7 @@ public class ListDesignsServletTest {
   private ListDesignsServlet servlet;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/servlet/page-content.json", "/content/test");
     context.load().json("/servlet/design-content.json", "/etc/designs/test");
   }

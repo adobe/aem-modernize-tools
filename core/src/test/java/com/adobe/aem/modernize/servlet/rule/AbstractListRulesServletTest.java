@@ -1,10 +1,8 @@
 package com.adobe.aem.modernize.servlet.rule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,7 +15,6 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.RewriteRuleService;
-import com.adobe.aem.modernize.servlet.RuleInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -39,7 +36,7 @@ public class AbstractListRulesServletTest {
   private final MockListRulesServlet servlet = new MockListRulesServlet();
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/servlet/page-content.json", CONTENT_PATH);
   }
 

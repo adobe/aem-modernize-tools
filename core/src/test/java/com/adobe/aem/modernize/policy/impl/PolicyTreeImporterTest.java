@@ -18,16 +18,14 @@ import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.designer.Design;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.junit.jupiter.api.Assertions.*;
-
 import static com.adobe.aem.modernize.policy.impl.PolicyTreeImporter.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)
 public class PolicyTreeImporterTest {
@@ -39,7 +37,7 @@ public class PolicyTreeImporterTest {
   private RewriteRule mockRule;
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/policy/all-conf.json", CONF_PATH);
     context.load().json("/policy/all-designs.json", "/etc/designs/test");
   }

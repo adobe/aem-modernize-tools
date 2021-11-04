@@ -46,7 +46,7 @@ public class ColumnControlRewriteRuleTest {
   }
 
   @BeforeEach
-  protected void beforeEach() {
+  public void beforeEach() {
     context.load().json("/component/page-content.json", "/content/test");
     context.load().json("/component/code-content.json", "/apps");
   }

@@ -41,7 +41,6 @@ public class ComponentJobExecutorTest {
     context.registerInjectActivateService(executor);
     context.load().json("/job/page-content.json", "/content/test");
     context.load().json("/job/component-job-data.json", "/var/aem-modernize/job-data/component");
-
   }
 
   @Test
