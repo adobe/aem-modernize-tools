@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
 import static com.adobe.aem.modernize.policy.impl.PolicyTreeImporter.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,7 +64,7 @@ public class PolicyTreeImporterTest {
     for (Node n : nodes) {
       assertNotEquals("/etc/designs/test/jcr:content/homepage/rightpar/title", n.getPath(), "Final path check");
     }
-    String policyPath = PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "foundation/components/iparsys/policy");
+    String policyPath = PathUtils.concat(CONF_PATH, POLICY_REL_PATH, "foundation/components/iparsys/policy");
     Resource policy = context.resourceResolver().getResource(policyPath);
     assertNotNull(policy, "Policy copied");
     assertEquals(POLICY_RESOURCE_TYPE, policy.getResourceType(), "Policy resource type.");
@@ -85,7 +86,7 @@ public class PolicyTreeImporterTest {
 
     PolicyTreeImporter.importStyles(root, CONF_PATH, rules, true);
 
-    String policyPath = PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "geometrixx/components/title/policy");
+    String policyPath = PathUtils.concat(CONF_PATH, POLICY_REL_PATH, "geometrixx/components/title/policy");
     Resource policy = context.resourceResolver().getResource(policyPath);
     assertNotNull(policy, "Policy copied");
     assertEquals(POLICY_RESOURCE_TYPE, policy.getResourceType(), "Policy resource type.");
@@ -113,7 +114,7 @@ public class PolicyTreeImporterTest {
 
     PolicyTreeImporter.importStyles(root, CONF_PATH, rules, false);
 
-    Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "geometrixx/components/title/policy"));
+    Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, POLICY_REL_PATH, "geometrixx/components/title/policy"));
     assertNotNull(policy, "Policy copied");
     assertEquals(POLICY_RESOURCE_TYPE, policy.getResourceType(), "Policy resource type.");
     Node written = policy.adaptTo(Node.class);
@@ -139,7 +140,7 @@ public class PolicyTreeImporterTest {
     for (Node n : nodes) {
       assertNotEquals("/etc/designs/test/jcr:content/homepage/part/title", n.getPath(), "Imported path check");
     }
-    Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, PolicyTreeImporter.POLICY_REL_PATH, "geometrixx/components/title/policy"));
+    Resource policy = context.resourceResolver().getResource(PathUtils.concat(CONF_PATH, POLICY_REL_PATH, "geometrixx/components/title/policy"));
     assertNull(policy, "Policy not copied");
   }
 

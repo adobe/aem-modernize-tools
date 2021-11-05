@@ -142,7 +142,7 @@ public class PageRewriteRule implements StructureRewriteRule {
       }
     }
 
-    Property template = pageContent.getProperty(NN_TEMPLATE);
+    Property template = pageContent.getProperty(PN_TEMPLATE);
     template.setValue(editableTemplate);
     String newResourceType = getResourceType(pageContent.getSession());
     pageContent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, newResourceType);

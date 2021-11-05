@@ -62,7 +62,7 @@ public class PageStructureJobExecutorTest {
   }
 
   @Test
-  public void pathsNotPage() throws Exception {
+  public void pathsNotPage() {
     final String path = ConversionJob.JOB_DATA_LOCATION + "/component/buckets/bucket0";
     new Expectations() {{
       jobExecutionContext.initProgress(pathCount, -1);

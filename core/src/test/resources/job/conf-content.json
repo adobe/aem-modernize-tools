@@ -1,0 +1,49 @@
+{
+  "jcr:primaryType": "sling:Folder",
+  "settings": {
+    "jcr:primaryType": "sling:Folder",
+    "wcm": {
+      "jcr:primaryType": "cq:Page",
+      "templates": {
+        "jcr:primaryType": "cq:Page",
+        "homepage": {
+          "jcr:primaryType": "nt:unstructured",
+          "structure": {
+            "jcr:primaryType": "nt:unstructured",
+            "jcr:content": {
+              "jcr:primaryType": "nt:unstructured",
+              "sling:resourceType":"aem-modernize/components/structure/homepage"
+            }
+          },
+          "policies": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      },
+      "policies": {
+        "jcr:primaryType": "cq:Page",
+        "core": {
+          "jcr:primaryType": "nt:unstructured",
+          "wcm": {
+            "jcr:primaryType": "nt:unstructured",
+            "components": {
+              "jcr:primaryType": "nt:unstructured",
+              "title": {
+                "jcr:primaryType": "nt:unstructured",
+                "v2": {
+                  "jcr:primaryType": "nt:unstructured",
+                  "title": {
+                    "jcr:primaryType": "nt:unstructured",
+                    "policy_987654321": {
+                      "jcr:primaryType": "nt:unstructured"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

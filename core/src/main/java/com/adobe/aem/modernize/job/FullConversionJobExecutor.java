@@ -1,30 +1,38 @@
 package com.adobe.aem.modernize.job;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.oak.commons.PathUtils;
+import org.apache.sling.api.resource.AbstractResourceVisitor;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
+import com.adobe.aem.modernize.impl.RewriteUtils;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
+import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
+import com.day.cq.wcm.api.designer.Designer;
+import com.day.cq.wcm.api.designer.Style;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.model.ConversionJob.*;
+import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -35,6 +43,11 @@ import static com.adobe.aem.modernize.model.ConversionJob.*;
 public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
 
   public static final String JOB_TOPIC = "com/adobe/aem/modernize/job/topic/convert/full";
+
+  private static final String TMP_POLICY_PATH = "cq:policyPath";
+  private static final String POLICIES = "policies";
+  private static final String PN_POLICY = "cq:policy";
+  private static final String POLICY_MAPPING_RESOURCE_TYPE = "wcm/core/components/policies/mappings";
 
   @Reference
   private PolicyImportRuleService policyService;
@@ -50,89 +63,140 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
 
   @Override
   protected void doProcess(Job job, JobExecutionContext context, ConversionJobBucket bucket) {
+
+    final boolean reprocess = isReprocess(bucket);
+    String targetPath = getTargetPath(bucket);
+
     Resource resource = bucket.getResource();
     ResourceResolver rr = resource.getResourceResolver();
+    PageManager pm = rr.adaptTo(PageManager.class);
 
     Set<String> templateRules = getTemplateRules(bucket);
     Set<String> policyRules = getPolicyRules(bucket);
-    String dest = getTargetConfPath(bucket);
+    String confDest = getTargetConfPath(bucket);
     Set<String> componentRules = getComponentRules(bucket);
 
     List<String> paths = bucket.getPaths();
-    context.initProgress(paths.size(), -1);
+    Set<String> importedPolicies = new HashSet<>();
 
-    final boolean reprocess = isReprocess(bucket);
-    List<String> preparedPaths = preparePages(context, bucket, reprocess);
-    for (String path : preparedPaths) {
-      Page root = rr.getResource(path).adaptTo(Page.class);
+    context.initProgress(paths.size(), -1);
+    for (String path : paths) {
+      Page page = pm.getPage(path);
+      if (page == null) {
+        context.log("Path [{}] was not a page, skipping.", path);
+        bucket.getNotFound().add(path);
+        context.incrementProgressCount(1);
+        continue;
+      }
+
+      // Walk page's content tree and find all styles and import them
+      if (policyRules.isEmpty() || StringUtils.isBlank(confDest)) {
+        context.log("No policy rules or target found, skipping skipping policy import.");
+      } else {
+        importPolicies(page, confDest, policyRules, reprocess, importedPolicies);
+      }
+
       try {
-        if (policyRules.isEmpty() || dest == null) {
-          context.log("No policy rules or target found, skipping skipping policy import.");
-        } else {
-          Resource src = root.getContentResource();
-          policyService.apply(src, dest, policyRules, true, reprocess);
+        if (reprocess) {
+          page = RewriteUtils.restore(pm, page);
+        }
+        RewriteUtils.createVersion(pm, page);
+        if (StringUtils.isNotBlank(targetPath)) {
+          page = RewriteUtils.copyPage(pm, page, targetPath);
         }
 
         if (templateRules.isEmpty()) {
           context.log("No template rules found, skipping structure conversion.");
         } else {
-          structureService.apply(root, templateRules);
+          structureService.apply(page, templateRules);
         }
+
+        // Policies need to be applied before component processing - that will remove temp property.
+        applyPolicies(context, page, confDest);
 
         if (componentRules.isEmpty()) {
           context.log("No component rules found, skipping skipping component conversion.");
         } else {
-          componentService.apply(root.getContentResource(), componentRules, true);
+          componentService.apply(page.getContentResource(), componentRules, true);
         }
-        context.incrementProgressCount(1);
+
+        bucket.getSuccess().add(path);
+      } catch (WCMException e) {
+        logger.error("Error occurred while trying to manage page versions.", e);
+        bucket.getFailed().add(path);
       } catch (RewriteException e) {
         logger.error("Conversion resulted in an error", e);
         bucket.getFailed().add(path);
       }
+      context.incrementProgressCount(1);
     }
-  }
-
-  private List<String> preparePages(JobExecutionContext context, ConversionJobBucket bucket, boolean reprocess) {
-
-    List<String> paths = bucket.getPaths();
-    ResourceResolver rr = bucket.getResource().getResourceResolver();
-    List<String> processed = new ArrayList<>(paths.size());
-    PageManager pm = rr.adaptTo(PageManager.class);
-    for (String path : paths) {
-      Page page = pm.getPage(path);
-      if (page == null) {
-        context.log("Path [{}] does not resolve to a Page, removing from list.", path);
-        context.incrementProgressCount(1);
-        bucket.getNotFound().add(path);
-        continue;
-      }
-
-      try {
-        String version = pm.createRevision(page, VERSION_LABEL, VERSION_DESC).getId();
-        ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
-        // When reprocessing, restore to the previous version, and keep that id for future use.
-        if (reprocess) {
-          String prevVersion = mvm.get(PN_PRE_MODERNIZE_VERSION, String.class);
-          if (StringUtils.isNotBlank(prevVersion)) {
-            pm.restore(page.getPath(), prevVersion);
-            version = prevVersion;
-          }
-        }
-        mvm.put(PN_PRE_MODERNIZE_VERSION, version);
-        rr.commit();
-        processed.add(path);
-        context.incrementProgressCount(1);
-      } catch (WCMException | PersistenceException e) {
-        logger.error("Error occurred trying to create or restore a page version", e);
-        context.log("Could not prepare page [{}], skipping.", page.getPath());
-        bucket.getFailed().add(path);
-      }
-    }
-    return processed;
   }
 
   @Override
   protected ResourceResolverFactory getResourceResolverFactory() {
     return resourceResolverFactory;
   }
+
+  // Import any styles used by this page - set the new policy reference for later use.
+  private void importPolicies(Page page, String confDest, Set<String> rules, boolean reprocess, Set<String> imported) {
+
+    ResourceResolver rr = page.getContentResource().getResourceResolver();
+    Designer designer = rr.adaptTo(Designer.class);
+    new AbstractResourceVisitor() {
+      @Override
+      protected void visit(@NotNull Resource resource) {
+        Style style = designer.getStyle(resource);
+        if (style == null) {
+          return;
+        }
+        Resource styleRes = rr.getResource(style.getPath());
+        if (styleRes != null && !imported.contains(styleRes.getPath())) {
+          try {
+            policyService.apply(styleRes, confDest, rules, false, reprocess);
+            String policyPath = styleRes.getValueMap().get(PN_IMPORTED, String.class);
+            if (StringUtils.isNotBlank(policyPath)) {
+              ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
+              mvm.put(TMP_POLICY_PATH, policyPath);
+            }
+            imported.add(styleRes.getPath());
+          } catch (RewriteException e) {
+            logger.error("Unable to import style.", e);
+          }
+        }
+      }
+    }.accept(page.getContentResource());
+  }
+
+  private void applyPolicies(JobExecutionContext context, Page page, String confRoot) {
+    ResourceResolver rr = page.getContentResource().getResourceResolver();
+    String confPolicyRoot = PathUtils.concat(confRoot, POLICY_REL_PATH);
+    String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+    String templatePolicyRoot = PathUtils.concat(templatePath, POLICIES);
+    String pagePath = page.getPath();
+    new AbstractResourceVisitor() {
+      @Override
+      protected void visit(@NotNull Resource resource) {
+        ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
+        String policyPath = mvm.get(TMP_POLICY_PATH, String.class);
+        try {
+          if (StringUtils.isNotBlank(policyPath)) {
+            if (policyPath.startsWith(confPolicyRoot)) {
+              String policyRef = policyPath.replaceFirst(confPolicyRoot + "/", ""); // Strip off root
+              String compType = PathUtils.getParentPath(policyRef); // Get component type for applying mapping
+              String containerPath = PathUtils.getParentPath(resource.getPath()).replace(pagePath, templatePolicyRoot);
+              String mappingPath = PathUtils.concat(containerPath, compType);
+              Resource mapping = ResourceUtil.getOrCreateResource(rr, mappingPath, POLICY_MAPPING_RESOURCE_TYPE, null, false);
+              ModifiableValueMap mappingVm = mapping.adaptTo(ModifiableValueMap.class);
+              mappingVm.put(PN_POLICY, policyRef);
+            }
+            mvm.remove(TMP_POLICY_PATH);
+          }
+        } catch (PersistenceException e) {
+          logger.error("Unable to apply policy due to repository error.", e);
+          context.log("Unable to apply policy due to repository error: {}", e.getLocalizedMessage());
+        }
+      }
+    }.accept(page.getContentResource());
+  }
+
 }

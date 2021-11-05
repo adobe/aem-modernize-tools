@@ -29,8 +29,6 @@ import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static com.adobe.aem.modernize.model.ConversionJobBucket.*;
 
 public abstract class AbstractConversionJobExecutor implements JobExecutor {
-  public static final String VERSION_LABEL = "Pre-Modernization";
-  public static final String VERSION_DESC = "Version of content before the modernization process was performed.";
 
   public static final String PN_TRACKING_PATH = "tracking";
   protected final Logger logger = LoggerFactory.getLogger(getClass());

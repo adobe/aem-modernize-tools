@@ -1,27 +1,54 @@
 {
-  "jcr:primaryType": "nt:unstructured",
-  "jcr:title": "Test",
-  "type": "FULL",
-  "confPath": "/conf/test",
-  "componentRules": [
-    "/var/aem-modernize/rules/component/first",
-    "/var/aem-modernize/rules/component/second"
-  ],
-  "policyRules": [
-    "/var/aem-modernize/rules/policy/first",
-    "/var/aem-modernize/rules/policy/second"
-  ],
-  "templateRules": [
-    "/var/aem-modernize/rules/template/first",
-    "/var/aem-modernize/rules/template/second"
-  ],
-  "buckets": {
-    "bucket0": {
-      "paths": [
-        "/content/test/first-page",
-        "/content/test/second-page",
-        "/content/test/not-found-page"
-      ]
+  "noReprocess": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Test",
+    "type": "FULL",
+    "confPath": "/conf/test",
+    "componentRules": [
+      "/var/aem-modernize/rules/component/title"
+    ],
+    "policyRules": [
+      "/var/aem-modernize/rules/policy/smallTitle",
+      "/var/aem-modernize/rules/policy/extraLargeTitle"
+    ],
+    "templateRules": [
+      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule"
+    ],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/content/test/first-page",
+          "/content/test/second-page",
+          "/content/test/not-found-page"
+        ]
+      }
+    }
+  },
+  "reprocess": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Test",
+    "type": "FULL",
+    "confPath": "/conf/test",
+    "targetPath": "/content/newpath",
+    "reprocess": true,
+    "componentRules": [
+      "/var/aem-modernize/rules/component/title"
+    ],
+    "policyRules": [
+      "/var/aem-modernize/rules/policy/smallTitle",
+      "/var/aem-modernize/rules/policy/extraLargeTitle"
+    ],
+    "templateRules": [
+      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule"
+    ],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/content/test/first-page",
+          "/content/test/second-page",
+          "/content/test/not-found-page"
+        ]
+      }
     }
   }
 }

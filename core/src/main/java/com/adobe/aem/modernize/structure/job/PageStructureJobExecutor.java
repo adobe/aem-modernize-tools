@@ -1,12 +1,9 @@
 package com.adobe.aem.modernize.structure.job;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.oak.commons.PathUtils;
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.event.jobs.Job;
@@ -20,12 +17,10 @@ import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.Revision;
 import com.day.cq.wcm.api.WCMException;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.model.ConversionJob.*;
 import static com.adobe.aem.modernize.structure.job.PageStructureJobExecutor.*;
 
 @Component(
@@ -47,11 +42,13 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
   protected void doProcess(@NotNull Job job, @NotNull JobExecutionContext context, @NotNull ConversionJobBucket bucket) {
     boolean reprocess = isReprocess(bucket);
     String targetPath = getTargetPath(bucket);
-    context.initProgress(bucket.getPaths().size(), -1);
     ResourceResolver rr = bucket.getResource().getResourceResolver();
     PageManager pm = rr.adaptTo(PageManager.class);
-    for (String path : bucket.getPaths()) {
 
+    List<String> paths = bucket.getPaths();
+    context.initProgress(paths.size(), -1);
+
+    for (String path : paths) {
       Page page = pm.getPage(path);
       if (page == null) {
         context.log("Path [{}] was not a page, skipping.", path);
@@ -63,11 +60,11 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
       // If reprocessing, restore from the latest version
       try {
         if (reprocess) {
-          page = restore(pm, page);
+          page = RewriteUtils.restore(pm, page);
         }
-        createVersion(pm, page);
+        RewriteUtils.createVersion(pm, page);
         if (StringUtils.isNotBlank(targetPath)) {
-          page = copyPage(pm, page, targetPath);
+          page = RewriteUtils.copyPage(pm, page, targetPath);
         }
         Set<String> rules = getTemplateRules(bucket);
         structureService.apply(page, rules);
@@ -88,34 +85,5 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
     return resourceResolverFactory;
   }
 
-  private Page restore(PageManager pm, Page page) throws WCMException {
-    String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
-    if (StringUtils.isNotBlank(version)) {
-      page = pm.restore(page.getPath(), version);
-      ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
-      mvm.put(PN_PRE_MODERNIZE_VERSION, version);
-    }
-    return page;
-  }
-
-  private void createVersion(PageManager pm, Page page) throws WCMException {
-    String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
-    if (StringUtils.isBlank(version)) {
-      String date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS").format(new Date());
-      String label = String.format("%s - %s", VERSION_LABEL, date);
-      Revision revision = pm.createRevision(page, label, VERSION_DESC);
-      ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
-      mvm.put(PN_PRE_MODERNIZE_VERSION, revision.getId());
-    }
-  }
-
-  private Page copyPage(PageManager pm, Page source, String targetRoot) throws WCMException, RewriteException {
-    String target = RewriteUtils.calcNewPath(source.getPath(), targetRoot);
-    Page page = pm.getPage(target);
-    if (page != null) {
-      throw new RewriteException(String.format("Target page already exists for requested copy: {}", target));
-    }
-    return pm.copy(source, target, null, true, false, false); // Copy but only this page, fail if in conflict, don't save.
-  }
 
 }

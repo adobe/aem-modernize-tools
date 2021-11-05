@@ -39,13 +39,12 @@ import com.adobe.aem.modernize.rule.RewriteRule;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.NameConstants;
 import org.jetbrains.annotations.NotNull;
+import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
 
 class PolicyTreeImporter {
 
   static final String POLICY_RESOURCE_TYPE = "wcm/core/components/policy/policy";
-  static final String PN_IMPORTED = "cq:imported";
 
-  static final String POLICY_REL_PATH = "settings/wcm/policies";
   static final String NN_POLICY = "policy";
 
   @NotNull
@@ -76,6 +75,9 @@ class PolicyTreeImporter {
     Session session = node.getSession();
     Node result = rule.applyTo(node, finalPaths);
 
+    if (result == null) {
+      throw new RewriteException("Policy import cannot result in a null.");
+    }
     if (!result.hasProperty(NameConstants.PN_TITLE)) {
       result.setProperty(NameConstants.PN_TITLE, String.format("Imported (%s)", origPath));
     }

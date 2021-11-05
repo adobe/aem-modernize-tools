@@ -10,19 +10,54 @@
         "jcr:lastModifiedBy": "admin",
         "defaultType": "extralarge",
         "jcr:lastModified": "Wed Aug 25 2010 17:55:33 GMT+0200",
-        "sling:resourceType": "geometrixx/components/title"
+        "sling:resourceType": "aem-modernize/components/title"
       },
       "par": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "foundation/components/parsys",
         "components": [
-          "geometrixx/components/title"
+          "aem-modernize/components/title"
         ],
         "title": {
-          "cq:imported": "/conf/test/imported",
+          "cq:imported": "/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title/policy_987654321",
           "jcr:primaryType": "nt:unstructured",
           "defaultType": "small",
-          "sling:resourceType": "geometrixx/components/title"
+          "sling:resourceType": "aem-modernize/components/title"
+        }
+      },
+      "rightpar": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/iparsys",
+        "title": {
+          "cq:imported": "/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title/policy_987654321",
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "aem-modernize/components/title",
+          "jcr:title": "Title Policy",
+          "jcr:description": "Title Policy Description"
+        }
+      }
+    },
+    "page": {
+      "jcr:primaryType": "nt:unstructured",
+      "title": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:lastModifiedBy": "admin",
+        "defaultType": "extralarge",
+        "jcr:lastModified": "Wed Aug 25 2010 17:55:33 GMT+0200",
+        "sling:resourceType": "aem-modernize/components/title"
+      },
+      "par": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/parsys",
+        "components": [
+          "aem-modernize/components/title"
+        ],
+        "title": {
+          "cq:imported": "/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title/policy_987654321",
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "aem-modernize/components/title"
         }
       },
       "rightpar": {
@@ -31,7 +66,7 @@
         "title": {
           "jcr:primaryType": "nt:unstructured",
           "defaultType": "small",
-          "sling:resourceType": "geometrixx/components/title",
+          "sling:resourceType": "aem-modernize/components/title",
           "jcr:title": "Title Policy",
           "jcr:description": "Title Policy Description"
         }

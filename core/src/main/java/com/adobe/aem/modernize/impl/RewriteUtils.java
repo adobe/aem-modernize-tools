@@ -1,5 +1,7 @@
 package com.adobe.aem.modernize.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -9,10 +11,21 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.jackrabbit.oak.commons.PathUtils;
+import org.apache.sling.api.resource.ModifiableValueMap;
+
+import com.adobe.aem.modernize.RewriteException;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.Revision;
+import com.day.cq.wcm.api.WCMException;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 
 public class RewriteUtils {
+  public static final String VERSION_LABEL = "Pre-Modernization";
+  public static final String VERSION_DESC = "Version of content before the modernization process was performed.";
 
   /**
    * Traverses the entire tree rooted at the provided node; Any property found with the search term will have that literal
@@ -57,4 +70,35 @@ public class RewriteUtils {
     String relPath = PathUtils.getAncestorPath(source, relDepth);
     return source.replaceFirst(relPath, targetRoot);
   }
+
+  public static Page restore(PageManager pm, Page page) throws WCMException {
+    String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
+    if (StringUtils.isNotBlank(version)) {
+      page = pm.restore(page.getPath(), version);
+      ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
+      mvm.put(PN_PRE_MODERNIZE_VERSION, version);
+    }
+    return page;
+  }
+
+  public static void createVersion(PageManager pm, Page page) throws WCMException {
+    String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
+    if (StringUtils.isBlank(version)) {
+      String date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS").format(new Date());
+      String label = String.format("%s - %s", VERSION_LABEL, date);
+      Revision revision = pm.createRevision(page, label, VERSION_DESC);
+      ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
+      mvm.put(PN_PRE_MODERNIZE_VERSION, revision.getId());
+    }
+  }
+
+  public static Page copyPage(PageManager pm, Page source, String targetRoot) throws WCMException, RewriteException {
+    String target = RewriteUtils.calcNewPath(source.getPath(), targetRoot);
+    Page page = pm.getPage(target);
+    if (page != null) {
+      throw new RewriteException(String.format("Target page already exists for requested copy: {}", target));
+    }
+    return pm.copy(source, target, null, true, false, false); // Copy but only this page, fail if in conflict, don't save.
+  }
+
 }

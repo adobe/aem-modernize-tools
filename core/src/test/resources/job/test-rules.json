@@ -1,0 +1,70 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "component": {
+    "jcr:primaryType": "nt:unstructured",
+    "title": {
+      "jcr:title": "Simple Rule",
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/title"
+        }
+      },
+      "replacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "core/wcm/components/title/v2/title",
+          "jcr:title": "${'./jcr:title'}"
+        }
+      }
+    }
+  },
+  "policy": {
+    "jcr:primaryType": "nt:unstructured",
+    "smallTitle": {
+      "jcr:title": "Title Policy Rule",
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/title",
+          "defaultType": "small"
+        }
+      },
+      "replacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "allowedTypes": "[h1,h2,h3]",
+          "type": "h3",
+          "sling:resourceType": "core/wcm/components/title/v2/title"
+        }
+      }
+    },
+    "extraLargeTitle": {
+      "jcr:title": "Title Policy Rule",
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/title",
+          "defaultType": "extralarge"
+        }
+      },
+      "replacement": {
+        "jcr:primaryType": "nt:unstructured",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "allowedTypes": "[h1]",
+          "type": "h1",
+          "sling:resourceType": "core/wcm/components/title/v2/title"
+        }
+      }
+    }
+  }
+}
