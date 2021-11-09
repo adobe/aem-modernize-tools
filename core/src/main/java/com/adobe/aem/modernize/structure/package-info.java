@@ -1,7 +1,7 @@
 /*
  * AEM Modernize Tools
  *
- * Copyright (c) 2019 Adobe
+ * Copyright (c) 2021 Adobe
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  *
  */
 @org.osgi.annotation.versioning.Version("2.0.0")
-package com.adobe.aem.modernize;
+package com.adobe.aem.modernize.structure;
 
 /*-
  * #%L
@@ -38,3 +38,4 @@ package com.adobe.aem.modernize;
  * limitations under the License.
  * #L%
  */
+
