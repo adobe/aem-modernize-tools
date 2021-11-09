@@ -24,7 +24,7 @@
         <granite:data jcr:primaryType="nt:unstructured"
                       aem-modernize-url="${granite:url('/mnt/overlay/aem-modernize/content/structure/job/create.json')}"
                       aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/structure/job/view.html')}"
-                      aem-modernize-list-rules-url="${granite:url('/mnt/overlay/aem-modernize/content/structure/job/create.listrules.template.json')}"
+                      aem-modernize-structure="true"
                       aem-modernize-operation="STRUCTURE"/>
         <items jcr:primaryType="nt:unstructured">
           <wizard jcr:primaryType="nt:unstructured"

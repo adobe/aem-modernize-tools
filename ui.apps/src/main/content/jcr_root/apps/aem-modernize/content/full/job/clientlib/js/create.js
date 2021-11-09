@@ -3,10 +3,10 @@
 
   let form;
 
-  class CreateStructureJobForm extends AemModernize.CreateJobForm {}
+  class CreateFullJobForm extends AemModernize.CreateJobForm {}
 
   $(function() {
-    form = new CreateStructureJobForm();
+    form = new CreateFullJobForm();
   });
 
 })(document, AemModernize);
