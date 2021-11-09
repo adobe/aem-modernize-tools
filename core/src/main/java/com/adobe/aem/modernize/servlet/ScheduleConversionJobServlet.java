@@ -34,7 +34,6 @@ import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Designer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
