@@ -142,27 +142,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <extensions>true</extensions>
@@ -303,7 +282,7 @@ Bundle-DocURL:
                     <version>2.22.2</version>
                     <configuration>
                         <argLine>
-                            -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                            @{argLine} -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
                         </argLine>
                         <useSystemClassLoader>false</useSystemClassLoader>
                     </configuration>
@@ -405,11 +384,19 @@ Bundle-DocURL:
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.3.0</version>
+                    <configuration>
+                        <source>11</source>
+                        <notimestamp>true</notimestamp>
+                        <quiet>true</quiet>
+                        <doctitle>${project.name} API</doctitle>
+                        <windowtitle>${project.name} API</windowtitle>
+                        <excludePackageNames>*.impl:*.model:*.generated.*;*.servlet</excludePackageNames>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.6</version>
+                    <version>0.8.3</version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
@@ -477,7 +464,6 @@ Bundle-DocURL:
     </build>
 
     <profiles>
-
         <profile>
             <id>autoInstallPackage</id>
             <activation>
