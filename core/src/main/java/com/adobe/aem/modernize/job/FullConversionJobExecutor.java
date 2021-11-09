@@ -1,6 +1,7 @@
 package com.adobe.aem.modernize.job;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
+import com.day.cq.wcm.api.designer.Cell;
 import com.day.cq.wcm.api.designer.Designer;
 import com.day.cq.wcm.api.designer.Style;
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +67,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   protected void doProcess(Job job, JobExecutionContext context, ConversionJobBucket bucket) {
 
     final boolean reprocess = isReprocess(bucket);
+    final boolean overwritePolicies = isOverwrite(bucket);
     String targetPath = getTargetPath(bucket);
 
     Resource resource = bucket.getResource();
@@ -88,18 +91,18 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         context.incrementProgressCount(1);
         continue;
       }
-
-      // Walk page's content tree and find all styles and import them
-      if (policyRules.isEmpty() || StringUtils.isBlank(confDest)) {
-        context.log("No policy rules or target found, skipping skipping policy import.");
-      } else {
-        importPolicies(page, confDest, policyRules, reprocess, importedPolicies);
-      }
-
       try {
         if (reprocess) {
           page = RewriteUtils.restore(pm, page);
         }
+
+        // Walk page's content tree and find all styles and import them
+        if (policyRules.isEmpty() || StringUtils.isBlank(confDest)) {
+          context.log("No policy rules or target found, skipping skipping policy import.");
+        } else {
+          importPolicies(page, confDest, policyRules, overwritePolicies, importedPolicies);
+        }
+
         RewriteUtils.createVersion(pm, page);
         if (StringUtils.isNotBlank(targetPath)) {
           page = RewriteUtils.copyPage(pm, page, targetPath);
@@ -138,7 +141,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   }
 
   // Import any styles used by this page - set the new policy reference for later use.
-  private void importPolicies(Page page, String confDest, Set<String> rules, boolean reprocess, Set<String> imported) {
+  private void importPolicies(Page page, String confDest, Set<String> rules, boolean overwrite, Set<String> imported) {
 
     ResourceResolver rr = page.getContentResource().getResourceResolver();
     Designer designer = rr.adaptTo(Designer.class);
@@ -149,10 +152,20 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         if (style == null) {
           return;
         }
-        Resource styleRes = rr.getResource(style.getPath());
+        Cell cell = style.getCell();
+        Iterator<String> it = cell.paths();
+        Resource styleRes = null;
+        while (it.hasNext() && styleRes == null) {
+          style = designer.getStyle(resource, it.next());
+          if (style == null) {
+            continue;
+          }
+          styleRes = rr.getResource(style.getPath());
+        }
+
         if (styleRes != null && !imported.contains(styleRes.getPath())) {
           try {
-            policyService.apply(styleRes, confDest, rules, false, reprocess);
+            policyService.apply(styleRes, confDest, rules, false, overwrite);
             String policyPath = styleRes.getValueMap().get(PN_IMPORTED, String.class);
             if (StringUtils.isNotBlank(policyPath)) {
               ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
@@ -187,7 +200,9 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
               String mappingPath = PathUtils.concat(containerPath, compType);
               Resource mapping = ResourceUtil.getOrCreateResource(rr, mappingPath, POLICY_MAPPING_RESOURCE_TYPE, null, false);
               ModifiableValueMap mappingVm = mapping.adaptTo(ModifiableValueMap.class);
-              mappingVm.put(PN_POLICY, policyRef);
+              if (StringUtils.isBlank(mappingVm.get(PN_POLICY, String.class))) { // Don't overwrite existing Policies
+                mappingVm.put(PN_POLICY, policyRef);
+              }
             }
             mvm.remove(TMP_POLICY_PATH);
           }

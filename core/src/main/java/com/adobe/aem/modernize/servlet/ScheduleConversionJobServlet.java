@@ -32,6 +32,10 @@ import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.day.cq.commons.jcr.JcrUtil;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.designer.Design;
+import com.day.cq.wcm.api.designer.Designer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -133,6 +137,20 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       for (String path : data.getPaths()) {
         if (!acm.hasPrivileges(path, privs)) {
           throw new AccessDeniedException(path);
+        }
+      }
+
+      if (data.getPolicyRules() != null && data.getPolicyRules().length > 0) {
+        PageManager pm = rr.adaptTo(PageManager.class);
+        Designer designer = rr.adaptTo(Designer.class);
+        for (String path : data.getPaths()) {
+          Page page = pm.getPage(path);
+          if (page != null) {
+            String designPath = designer.getDesignPath(page);
+            if (!acm.hasPrivileges(designPath, privs)) {
+              throw new AccessDeniedException(designPath);
+            }
+          }
         }
       }
 

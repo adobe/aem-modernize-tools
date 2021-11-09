@@ -37,13 +37,17 @@ public class ColumnControlTreeRewriteTest {
 
 
   @Test
-  public <R extends ResourceResolverFactory> void test() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory> void test() throws Exception {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ComponentRewriteRuleServiceImpl componentService = new ComponentRewriteRuleServiceImpl();

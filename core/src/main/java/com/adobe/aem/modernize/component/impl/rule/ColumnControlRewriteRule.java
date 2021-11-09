@@ -91,6 +91,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   protected static final String PN_OFFSET = "offset";
   private static final Logger logger = LoggerFactory.getLogger(ColumnControlRewriteRule.class);
   private static final Pattern pattern = Pattern.compile("^(\\w+)=\\[([0-9,]+)\\]$");
+  private static final String PARSYS_BASE_TYPE = "foundation/components/parsys";
   private static final String RESPONSIVE_GRID_BASE_TYPE = "wcm/foundation/components/responsivegrid";
   private static final String PROP_RESOURCE_TYPE_DEFAULT = "foundation/components/parsys/colctrl";
   private static final String PROP_RESPONSIVE_TYPE = "RESPONSIVE";
@@ -100,7 +101,6 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   private static final String PN_BEHAVIOR = "behavior";
 
   private static final String PROP_NEWLINE = "newline";
-
 
   private final Map<String, long[]> widths = new HashMap<>();
   private String id = this.getClass().getName();
@@ -115,11 +115,6 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   private ResourceResolverFactory resourceResolverFactory;
 
   @Override
-  public String getId() {
-    return this.id;
-  }
-
-  @Override
   public String getTitle() {
     String[] names = new String[widths.size()];
     List<String> keys = new ArrayList<>(widths.keySet());
@@ -132,32 +127,8 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   }
 
   @Override
-  public int getRanking() {
-    return this.ranking;
-  }
-
-  // This Rule matches off a parent container which has the columns.
-  @Override
-  public @NotNull Set<String> findMatches(@NotNull Resource resource) {
-    final Set<String> paths = new HashSet<>();
-    new AbstractResourceVisitor() {
-      @Override
-      protected void visit(@NotNull Resource resource) {
-        try {
-          if (matches(resource.adaptTo(Node.class))) {
-            paths.add(resource.getPath());
-          }
-        } catch (RepositoryException e) {
-          // No nothing; errors don't find matches.
-        }
-      }
-    }.accept(resource);
-    return paths;
-  }
-
-  @Override
-  public boolean hasPattern(@NotNull String... slingResourceTypes) {
-    return Arrays.asList(slingResourceTypes).contains(columnControlResourceType);
+  public String getId() {
+    return this.id;
   }
 
   @Override
@@ -168,9 +139,8 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     }
     Property property = node.getProperty(SLING_RESOURCE_TYPE_PROPERTY);
     boolean found = false;
-    try {
-      Session session = node.getSession();
-      ResourceResolver rr = resourceResolverFactory.getResourceResolver(Collections.singletonMap(AUTHENTICATION_INFO_SESSION, session));
+    Session session = node.getSession();
+    try (ResourceResolver rr = resourceResolverFactory.getResourceResolver(Collections.singletonMap(AUTHENTICATION_INFO_SESSION, session))) {
       String resourceType = property.getString();
       while (StringUtils.isNotBlank(resourceType)) {
         if (StringUtils.equals(RESPONSIVE_GRID_BASE_TYPE, resourceType)) {
@@ -212,30 +182,9 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     }
   }
 
-  // Move the NodeIterator to the column if found.
-  private Node findFirstColumn(NodeIterator siblings) throws RepositoryException {
-    Node found = null;
-
-    while (siblings.hasNext() && found == null) {
-      Node node = siblings.nextNode();
-      if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
-        continue;
-      }
-      Property property = node.getProperty(SLING_RESOURCE_TYPE_PROPERTY);
-      if (property == null || !StringUtils.equals(columnControlResourceType, property.getString())) {
-        continue;
-      }
-
-      if (!node.hasProperty(PN_LAYOUT)) {
-        continue;
-      }
-      property = node.getProperty(PN_LAYOUT);
-      if (property == null || !StringUtils.equals(layout, property.getString())) {
-        continue;
-      }
-      found = node;
-    }
-    return found;
+  @Override
+  public int getRanking() {
+    return this.ranking;
   }
 
   private Node processResponsiveGrid(Node root) throws RepositoryException {
@@ -289,7 +238,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     }
 
     // Move remaining non column content to the end, preserve the order.
-    while(siblings.hasNext()) {
+    while (siblings.hasNext()) {
       child = siblings.nextNode();
       if (isColumnNode(child)) {
         child.remove();
@@ -302,6 +251,44 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
       root.orderBefore(order.remove(), null);
     }
 
+    return root;
+  }
+
+  private Node processContainer(Node root, Set<String> finalPaths) throws RepositoryException {
+
+    NodeIterator siblings = root.getNodes();
+    Node node = findFirstColumn(siblings);
+    Session session = root.getSession();
+    int i = 0;
+    node.remove(); // Remove the starting column.
+    do {
+      // Create the container
+      String name = JcrUtil.createValidChildName(root, NN_HINT);
+      Node container = root.addNode(name, NT_UNSTRUCTURED);
+      container.setProperty(SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
+      addResponsive(container, i, false, false);
+      finalPaths.add(container.getPath());
+
+      // Added the container, remove the column break;
+      // Move the nodes up to the next column into the container.
+      while (siblings.hasNext()) {
+        node = siblings.nextNode();
+        if (StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString())) {
+          // Node is now the next column break;
+          node.remove();  // Remove the columns when we find it, this ensures the end column gets deleted too.
+          break;
+        }
+        session.move(node.getPath(), PathUtils.concat(container.getPath(), node.getName()));
+      }
+
+      i++;
+    } while (i < columns);
+
+    // Move remaining siblings to after the containers.
+    while (siblings.hasNext()) {
+      Node next = siblings.nextNode();
+      root.orderBefore(next.getName(), null);
+    }
     return root;
   }
 
@@ -333,44 +320,6 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     return StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString());
   }
 
-  private Node processContainer(Node root, Set<String> finalPaths) throws RepositoryException {
-
-    NodeIterator siblings = root.getNodes();
-    Node node = findFirstColumn(siblings);
-    Session session = root.getSession();
-    int i = 0;
-    node.remove(); // Remove the starting column.
-    do {
-      // Create the container
-      String name = JcrUtil.createValidChildName(root, NN_HINT);
-      Node container = root.addNode(name, NT_UNSTRUCTURED);
-      container.setProperty(SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
-      addResponsive(container, i, false,false);
-      finalPaths.add(container.getPath());
-
-      // Added the container, remove the column break;
-      // Move the nodes up to the next column into the container.
-      while (siblings.hasNext()) {
-        node = siblings.nextNode();
-        if (StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString())) {
-          // Node is now the next column break;
-          node.remove();  // Remove the columns when we find it, this ensures the end column gets deleted too.
-          break;
-        }
-        session.move(node.getPath(), PathUtils.concat(container.getPath(), node.getName()));
-      }
-
-      i++;
-    } while (i < columns);
-
-    // Move remaining siblings to after the containers.
-    while (siblings.hasNext()) {
-      Node next = siblings.nextNode();
-      root.orderBefore(next.getName(), null);
-    }
-    return root;
-  }
-
   private void addResponsive(Node node, int index, boolean isNewline, boolean isOffset) throws RepositoryException {
     Node responsive = node.addNode(NN_RESPONSIVE_CONFIG, NT_UNSTRUCTURED);
     for (String key : widths.keySet()) {
@@ -388,6 +337,65 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
         entry.setProperty(PN_BEHAVIOR, PROP_NEWLINE);
       }
     }
+  }
+
+  // Move the NodeIterator to the column if found.
+  private Node findFirstColumn(NodeIterator siblings) throws RepositoryException {
+    Node found = null;
+
+    while (siblings.hasNext() && found == null) {
+      Node node = siblings.nextNode();
+      if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
+        continue;
+      }
+      Property property = node.getProperty(SLING_RESOURCE_TYPE_PROPERTY);
+      if (property == null || !StringUtils.equals(columnControlResourceType, property.getString())) {
+        continue;
+      }
+
+      if (!node.hasProperty(PN_LAYOUT)) {
+        continue;
+      }
+      property = node.getProperty(PN_LAYOUT);
+      if (property == null || !StringUtils.equals(layout, property.getString())) {
+        continue;
+      }
+      found = node;
+    }
+    return found;
+  }
+
+  // This Rule matches off a parent container which has the columns.
+  @Override
+  public @NotNull Set<String> findMatches(@NotNull Resource resource) {
+    final Set<String> paths = new HashSet<>();
+    ResourceResolver rr = resource.getResourceResolver();
+    new AbstractResourceVisitor() {
+      @Override
+      protected void visit(@NotNull Resource resource) {
+        String resourceType = resource.getResourceType();
+        if (StringUtils.equals(PARSYS_BASE_TYPE, resourceType)) {
+          paths.add(resource.getPath());
+        } else {
+          while (StringUtils.isNotBlank(resourceType)) {
+            if (StringUtils.equals(RESPONSIVE_GRID_BASE_TYPE, resourceType)) {
+              paths.add(resource.getPath());
+              break; // This node is of the correct type.
+            }
+            resourceType = rr.getParentResourceType(resourceType);
+          }
+        }
+      }
+    }.accept(resource);
+    return paths;
+  }
+
+  @Override
+  public boolean hasPattern(@NotNull String... slingResourceTypes) {
+    List<String> types = Arrays.asList(slingResourceTypes);
+    return types.contains(containerResourceType) ||
+        types.contains(RESPONSIVE_GRID_BASE_TYPE) ||
+        types.contains(PARSYS_BASE_TYPE);
   }
 
   @Activate
@@ -408,8 +416,8 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     String type = config.grid_type();
     isResponsive = !StringUtils.equals(PROP_CONTAINER_TYPE, type);
 
+    containerResourceType = config.container_resourceType();
     if (!isResponsive) {
-      containerResourceType = config.container_resourceType();
       if (StringUtils.isBlank(containerResourceType)) {
         throw new ConfigurationException("container.resourceType", "Container resource type is required when conversion is type CONTAINER.");
       }

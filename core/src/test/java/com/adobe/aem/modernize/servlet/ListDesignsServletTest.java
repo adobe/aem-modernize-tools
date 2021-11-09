@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
@@ -25,8 +25,7 @@ import com.day.cq.wcm.api.designer.Style;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import lombok.Getter;
-import lombok.experimental.Delegate;
+import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Invocation;
@@ -138,7 +137,11 @@ public class ListDesignsServletTest {
       designer.getStyle(withInstanceOf(Resource.class));
       result = homepageStyle;
       cell.paths();
-      result = Arrays.stream(new String[] { "homepage", "page", "basepage" }).iterator();
+      result = new Delegate<Iterator<String>>() {
+        Iterator<String> delegate() {
+          return Arrays.stream(new String[] { "homepage", "page", "basepage" }).iterator();
+        }
+      };
       design.getStyle("homepage");
       result = homepageStyle;
       design.getStyle("page");

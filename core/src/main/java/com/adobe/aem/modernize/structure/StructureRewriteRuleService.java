@@ -42,6 +42,7 @@ public interface StructureRewriteRuleService extends RewriteRuleService {
    *
    * @param page  the page for applying rules
    * @param rules set of potential matching rule ids
+   * @throws RewriteException if any errors occur while updating the page.
    */
   void apply(@NotNull final Page page, @NotNull final Set<String> rules) throws RewriteException;
 

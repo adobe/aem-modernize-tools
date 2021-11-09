@@ -108,7 +108,7 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
     PredicateGroup predicates = new PredicateGroup();
 
     Predicate predicate = new Predicate(TypePredicateEvaluator.TYPE);
-    predicate.set(TypePredicateEvaluator.TYPE, JcrConstants.NT_UNSTRUCTURED);
+    predicate.set(TypePredicateEvaluator.TYPE, JcrConstants.NT_BASE);
     predicates.add(predicate);
 
     predicate = new Predicate(PathPredicateEvaluator.PATH);

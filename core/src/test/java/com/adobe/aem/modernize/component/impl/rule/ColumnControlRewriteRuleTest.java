@@ -99,14 +99,15 @@ public class ColumnControlRewriteRuleTest {
   }
   
   @Test
-  public <R extends ResourceResolverFactory> void findMatches() {
+  public <F extends ResourceResolverFactory> void findMatches() {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
     };
+
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
     Resource root = context.resourceResolver().getResource("/content/test");
     final Map<String, Object> props = new HashMap<>();
@@ -115,10 +116,16 @@ public class ColumnControlRewriteRuleTest {
     context.registerInjectActivateService(rule, props);
 
     Set<String> matched = rule.findMatches(root);
-    assertEquals(3, matched.size(), "Found count");
+    assertEquals(9, matched.size(), "Found count");
     assertTrue(matched.contains("/content/test/matches/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/matches/jcr:content/rightpar"));
+    assertTrue(matched.contains("/content/test/doesNotMatch/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/fourColumns/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/parentNotResponsiveGrid/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/parentNotResponsiveGrid/jcr:content/rightpar"));
     assertTrue(matched.contains("/content/test/extraFirstColumn/jcr:content/par"));
     assertTrue(matched.contains("/content/test/extraSecondColumn/jcr:content/par"));
+    assertTrue(matched.contains("/content/test/extraMiddleColumns/jcr:content/par"));
   }
 
   @Test
@@ -129,18 +136,24 @@ public class ColumnControlRewriteRuleTest {
     props.put("column.widths", new String[] { "default=[6,6]" });
     context.registerInjectActivateService(rule, props);
 
-    assertFalse(rule.hasPattern( "foundation/components/parsys"), "Does not have pattern");
-    assertTrue(rule.hasPattern("foundation/components/parsys/colctrl", "Has pattern"));
+    assertTrue(rule.hasPattern( "foundation/components/parsys"), "Has pattern");
+    assertTrue(rule.hasPattern( "wcm/foundation/components/responsivegrid"), "Does not have pattern");
+    assertFalse(rule.hasPattern("foundation/components/parsys/colctrl", "Does not have pattern"));
   }
 
   @Test
-  public <R extends ResourceResolverFactory> void matches() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory> void matches() throws Exception {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
@@ -164,13 +177,17 @@ public class ColumnControlRewriteRuleTest {
   }
 
   @Test
-  public  <R extends ResourceResolverFactory>  void responsiveGridEqual() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory>  void responsiveGridEqual() throws Exception {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
@@ -217,13 +234,17 @@ public class ColumnControlRewriteRuleTest {
   }
 
   @Test
-  public  <R extends ResourceResolverFactory>  void responsiveGridExtraFirst() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory>  void responsiveGridExtraFirst() throws Exception {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
@@ -278,13 +299,17 @@ public class ColumnControlRewriteRuleTest {
   }
 
   @Test
-  public  <R extends ResourceResolverFactory>  void responsiveGridExtraSecond() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory>  void responsiveGridExtraSecond() throws Exception {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
@@ -420,13 +445,17 @@ public class ColumnControlRewriteRuleTest {
 
 
   @Test
-  public  <R extends ResourceResolverFactory>  void responsiveGridExtraMiddle() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory>  void responsiveGridExtraMiddle() throws Exception {
 
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
@@ -534,14 +563,18 @@ public class ColumnControlRewriteRuleTest {
   }
 
   @Test
-  public <R extends ResourceResolverFactory> void container() throws Exception {
+  public <R extends ResourceResolver, F extends ResourceResolverFactory> void container() throws Exception {
 
     final String containerResourceType = "geodemo/components/container";
-    new MockUp<R>() {
+    new MockUp<F>() {
       @Mock
       public ResourceResolver getResourceResolver(Map<String, Object> authInfo) {
         return context.resourceResolver();
       }
+    };
+    new MockUp<R>() {
+      @Mock
+      public void close() {}
     };
 
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();

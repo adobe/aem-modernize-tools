@@ -27,6 +27,10 @@ import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.designer.Design;
+import com.day.cq.wcm.api.designer.Designer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -51,10 +55,19 @@ public class ScheduleConversionJobServletTest {
   private ResourceResolver resourceResolver;
 
   @Mocked
+  private PageManager pageManager;
+
+  @Mocked
+  private Designer designer;
+
+  @Mocked
   private Session session;
 
   @Mocked
   private AccessControlManager accessControlManager;
+
+  @Mocked
+  private Page page;
 
   @Injectable
   private SlingRepository slingRepository;
@@ -160,8 +173,57 @@ public class ScheduleConversionJobServletTest {
   }
 
   @Test
-  public void noPermissionDesign() {
-    fail("Not Implemented");
+  public  void noPermissionDesign() throws Exception {
+    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
+    MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
+    ScheduleConversionJobServlet.RequestData requestData = new ScheduleConversionJobServlet.RequestData();
+
+    List<String> list = new ArrayList<>();
+    requestData.setName(JOB_TITLE);
+    list.add("/content/test/path");
+    list.add("/content/other/path");
+    requestData.setPaths(list.toArray(new String[] {}));
+
+    list = new ArrayList<>();
+    list.add("/var/aem-modernize/rules/policy/title");
+    requestData.setPolicyRules(list.toArray( new String[]{}));
+
+    requestData.setConfPath("/conf/test");
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
+
+
+    new Expectations() {{
+      resourceResolver.adaptTo(PageManager.class);
+      result = pageManager;
+      pageManager.getPage(withInstanceOf(String.class));
+      result = page;
+      resourceResolver.adaptTo(Designer.class);
+      result = designer;
+      designer.getDesignPath(page);
+      returns("/etc/designs/test/path", "/etc/designs/other/path");
+      resourceResolver.adaptTo(Session.class);
+      result = session;
+      session.getAccessControlManager();
+      result = accessControlManager;
+      accessControlManager.hasPrivileges("/content/test/path", withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/content/other/path", withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/etc/designs/test/path", withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/etc/designs/other/path", withInstanceOf(Privilege[].class));
+      result = false;
+    }};
+    servlet.doPost(request, response);
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
+
+    assertEquals(SC_FORBIDDEN, response.getStatus(), "Response status code");
+    assertFalse(result.isSuccess(), "Response status");
+    assertNotNull(result.getMessage(), "Response message");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
   }
 
   @Test

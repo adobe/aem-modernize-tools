@@ -49,7 +49,6 @@ public class ListTemplateRulesServlet extends AbstractListRulesServlet {
     if (BooleanUtils.toBoolean(request.getParameter(PARAM_REPROCESS))) {
       String path = request.getParameter(PARAM_PATH);
       addOriginalResourceType(request.getResourceResolver(), path, resourceTypes);
-
     }
 
     return super.getRules(request, resourceTypes);

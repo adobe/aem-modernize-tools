@@ -1,5 +1,6 @@
 package com.adobe.aem.modernize.job;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,11 +32,13 @@ import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.Revision;
 import com.day.cq.wcm.api.WCMException;
+import com.day.cq.wcm.api.designer.Cell;
 import com.day.cq.wcm.api.designer.Design;
 import com.day.cq.wcm.api.designer.Designer;
 import com.day.cq.wcm.api.designer.Style;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Invocation;
 import mockit.Mock;
@@ -51,7 +54,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FullConversionJobExecutorTest {
 
   private static final int pathCount = 3;
-  private static final int pageCount = 2;
   private static final String version = "987654321";
 
   private final AemContext context = new AemContext(ResourceResolverType.JCR_OAK);
@@ -74,6 +76,15 @@ public class FullConversionJobExecutorTest {
 
   @Mocked
   private Revision revision;
+
+  @Mocked
+  private Designer designer;
+
+  @Mocked
+  private Design design;
+
+  @Mocked
+  private Cell cell;
 
   @BeforeEach
   public void beforeEach() {
@@ -106,7 +117,7 @@ public class FullConversionJobExecutorTest {
   }
 
   @Test
-  public void testPathsNotPage() throws Exception {
+  public void testPathsNotPage() {
     final String path = ConversionJob.JOB_DATA_LOCATION + "/component/buckets/bucket0";
     new Expectations() {{
       jobExecutionContext.initProgress(pathCount, -1);
@@ -142,7 +153,7 @@ public class FullConversionJobExecutorTest {
       @Mock
       public <T> T adaptTo(Invocation inv, Class<T> clazz) {
         if (clazz == Designer.class) {
-          return (T) new MockDesigner(rr);
+          return (T) designer;
         } else {
           return inv.proceed();
         }
@@ -172,6 +183,13 @@ public class FullConversionJobExecutorTest {
     final String path = ConversionJob.JOB_DATA_LOCATION + "/full/noReprocess/buckets/bucket0";
     ResourceResolver rr = context.resourceResolver();
 
+    Resource styleRes = rr.getResource("/etc/designs/test/jcr:content/homepage/title");
+    Style homepageStyle = new MockStyle(design, cell, "/etc/designs/test/jcr:content/homepage/title", styleRes);
+
+    styleRes = rr.getResource("/etc/designs/test/jcr:content/page/par/title");
+    Style pageParStyle = new MockStyle(design, cell, "/etc/designs/test/jcr:content/page/par/title", styleRes);
+
+
     new MockUp<P>() {
       @Mock
       public Revision createRevision(Page page, String label, String desc) {
@@ -185,7 +203,7 @@ public class FullConversionJobExecutorTest {
       @Mock
       public <T> T adaptTo(Invocation inv, Class<T> clazz) {
         if (clazz == Designer.class) {
-          return (T) new MockDesigner(rr);
+          return (T) designer;
         } else {
           return inv.proceed();
         }
@@ -198,6 +216,41 @@ public class FullConversionJobExecutorTest {
       result = version;
       jobExecutionContext.incrementProgressCount(1);
       times = pathCount;
+      designer.getStyle(withInstanceOf(Resource.class));
+      result = new Delegate<Style>() {
+        Style delegate(Resource resource) {
+          if ("/content/test/first-page/jcr:content/title".equals(resource.getPath())) {
+            return homepageStyle;
+          } else if (resource.getPath().contains("jcr:content/par/title")) {
+            return pageParStyle;
+          }
+          return null;
+        }
+      };
+      cell.paths();
+      result = new Delegate<Iterator<String>>() {
+        Iterator<String> delegate() {
+          return Arrays.stream(new String[] { "homepage", "page", "basepage" }).iterator();
+        }
+      };
+      designer.getStyle(withInstanceOf(Resource.class), "homepage");
+      result = new Delegate<Style>() {
+        Style delegate(Resource resource, String id) {
+          if ("/content/test/first-page/jcr:content/title".equals(resource.getPath())) {
+            return homepageStyle;
+          }
+          return null;
+        }
+      };
+      designer.getStyle(withInstanceOf(Resource.class), "page");
+      result = new Delegate<Style>() {
+        Style delegate(Resource resource, String id) {
+          if (resource.getPath().contains("jcr:content/par/title")) {
+            return pageParStyle;
+          }
+          return null;
+        }
+      };
     }};
 
     ConversionJobBucket bucket = rr.getResource(path).adaptTo(ConversionJobBucket.class);
@@ -254,6 +307,12 @@ public class FullConversionJobExecutorTest {
     final String path = ConversionJob.JOB_DATA_LOCATION + "/full/reprocess/buckets/bucket0";
     ResourceResolver rr = context.resourceResolver();
 
+    Resource styleRes = rr.getResource("/etc/designs/test/jcr:content/homepage/title");
+    Style homepageStyle = new MockStyle(design, cell, "/etc/designs/test/jcr:content/homepage/title", styleRes);
+
+    styleRes = rr.getResource("/etc/designs/test/jcr:content/page/par/title");
+    Style pageParStyle = new MockStyle(design, cell, "/etc/designs/test/jcr:content/page/par/title", styleRes);
+
     new MockUp<P>() {
       @Mock
       public Revision createRevision(Page page, String label, String desc) {
@@ -281,7 +340,7 @@ public class FullConversionJobExecutorTest {
       @Mock
       public <T> T adaptTo(Invocation inv, Class<T> clazz) {
         if (clazz == Designer.class) {
-          return (T) new MockDesigner(rr);
+          return (T) designer;
         } else {
           return inv.proceed();
         }
@@ -294,6 +353,41 @@ public class FullConversionJobExecutorTest {
       result = version;
       jobExecutionContext.incrementProgressCount(1);
       times = pathCount;
+      designer.getStyle(withInstanceOf(Resource.class));
+      result = new Delegate<Style>() {
+        Style delegate(Resource resource) {
+          if ("/content/test/first-page/jcr:content/title".equals(resource.getPath())) {
+            return homepageStyle;
+          } else if (resource.getPath().contains("jcr:content/par/title")) {
+            return pageParStyle;
+          }
+          return null;
+        }
+      };
+      cell.paths();
+      result = new Delegate<Iterator<String>>() {
+        Iterator<String> delegate() {
+          return Arrays.stream(new String[] { "homepage", "page", "basepage" }).iterator();
+        }
+      };
+      designer.getStyle(withInstanceOf(Resource.class), "homepage");
+      result = new Delegate<Style>() {
+        Style delegate(Resource resource, String id) {
+          if ("/content/test/first-page/jcr:content/title".equals(resource.getPath())) {
+            return homepageStyle;
+          }
+          return null;
+        }
+      };
+      designer.getStyle(withInstanceOf(Resource.class), "page");
+      result = new Delegate<Style>() {
+        Style delegate(Resource resource, String id) {
+          if (resource.getPath().contains("jcr:content/par/title")) {
+            return pageParStyle;
+          }
+          return null;
+        }
+      };
     }};
 
     ConversionJobBucket bucket = rr.getResource(path).adaptTo(ConversionJobBucket.class);
@@ -345,54 +439,5 @@ public class FullConversionJobExecutorTest {
     assertTrue(children.hasNext(), "Created Policy count");
     children.next();
     assertFalse(children.hasNext(), "Created Policy count");
-  }
-
-  private static class MockDesigner implements Designer {
-
-    ResourceResolver rr;
-
-    private MockDesigner(ResourceResolver rr) {
-      this.rr = rr;
-    }
-
-    @Override
-    public String getDesignPath(Page page) {
-      return null;
-    }
-
-    @Override
-    public Design getDesign(Page page) {
-      return null;
-    }
-
-    @Override
-    public boolean hasDesign(String s) {
-      return false;
-    }
-
-    @Override
-    public Design getDesign(String s) {
-      return null;
-    }
-
-    @Override
-    public Style getStyle(Resource resource, String s) {
-      return null;
-    }
-
-    @Override
-    public Style getStyle(Resource resource) {
-      if ("/content/test/first-page/jcr:content/title".equals(resource.getPath())) {
-        return new MockStyle(null, null, "/etc/designs/test/jcr:content/homepage/title", rr.getResource("/etc/designs/test/jcr:content/homepage/title"));
-      } else if (resource.getPath().contains("jcr:content/par/title")) {
-        return new MockStyle(null, null, "/etc/designs/test/jcr:content/page/par/title", rr.getResource("/etc/designs/test/jcr:content/page/par/title"));
-      }
-      return null;
-    }
-
-    @Override
-    public Design getDefaultDesign() {
-      return null;
-    }
   }
 }
