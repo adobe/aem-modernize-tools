@@ -417,7 +417,7 @@ Bundle-DocURL:
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.3</version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->
+                    <version>0.8.7</version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
