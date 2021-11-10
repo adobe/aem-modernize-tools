@@ -1,18 +1,19 @@
-#
+# 📑 Changelog
 
 ## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-1.0.0...HEAD)
 
-###
+### 📁 Other issues
 
 - Only dialog conversion tool detects nodes in 6.3\*, other tools do not seem to work. [\#14](https://github.com/adobe/aem-modernize-tools/issues/14)
 - Add SECRUITY.md file [\#13](https://github.com/adobe/aem-modernize-tools/issues/13)
 - Github Links in pom are wrong [\#5](https://github.com/adobe/aem-modernize-tools/issues/5)
 - Following the download link leads to 404 [\#1](https://github.com/adobe/aem-modernize-tools/issues/1)
 
-###
+### 📁 Other pull requests
 
+- Support Cloud Service - Move to Sling Jobs [\#63](https://github.com/adobe/aem-modernize-tools/pull/63) ([bstopp](https://github.com/bstopp))
 - Bump org.osgi.service.event from 1.3.1 to 1.4.0 [\#53](https://github.com/adobe/aem-modernize-tools/pull/53) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump maven-clean-plugin from 3.0.0 to 3.1.0 [\#52](https://github.com/adobe/aem-modernize-tools/pull/52) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump bnd.version from 5.1.2 to 5.3.0 [\#51](https://github.com/adobe/aem-modernize-tools/pull/51) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -26,11 +27,11 @@
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/168d40edef75843649b0fa8628d26c106bf7e243...aem-modernize-tools-1.0.0)
 
-###
+### 📁 Other issues
 
 - Following the documentation link leads to wrong page [\#2](https://github.com/adobe/aem-modernize-tools/issues/2)
 
-###
+### 📁 Other pull requests
 
 - Automate the release! [\#11](https://github.com/adobe/aem-modernize-tools/pull/11) ([bstopp](https://github.com/bstopp))
 - Fix Travis Build. [\#8](https://github.com/adobe/aem-modernize-tools/pull/8) ([bstopp](https://github.com/bstopp))
