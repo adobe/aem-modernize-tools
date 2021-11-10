@@ -386,7 +386,7 @@ public class PageRewriteRule implements StructureRewriteRule {
   }
 
   @ObjectClassDefinition(
-      name = "AEM Modernization Tools - Page Rewrite Rule",
+      name = "AEM Modernize Tools - Page Rewrite Rule",
       description = "Rewrites a page template & structure to use new responsive grid layout."
   )
   @interface Config {

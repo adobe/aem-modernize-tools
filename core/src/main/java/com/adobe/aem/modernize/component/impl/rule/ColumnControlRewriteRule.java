@@ -482,7 +482,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   }
 
   @ObjectClassDefinition(
-      name = "AEM Modernization Tools - Column Control Rewrite Rule",
+      name = "AEM Modernize Tools - Column Control Rewrite Rule",
       description = "Rewrites Column control components to grid replacements."
   )
   @interface Config {

@@ -54,19 +54,6 @@
                     <group>com.adobe.aem</group>
                     <name>aem-modernize-tools.ui.apps</name>
                     <packageType>application</packageType>
-                    <repositoryStructurePackages>
-                        <repositoryStructurePackage>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
-                        </repositoryStructurePackage>
-                    </repositoryStructurePackages>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>aem-modernize-tools.ui.config</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
-                    </dependencies>
                 </configuration>
             </plugin>
             <plugin>
@@ -106,50 +93,134 @@
         </plugins>
     </build>
 
-    <!-- ====================================================================== -->
-    <!-- D E P E N D E N C I E S                                                -->
-    <!-- ====================================================================== -->
+    <profiles>
+        <profile>
+            <id>aemCloudService</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.jackrabbit</groupId>
+                        <artifactId>filevault-package-maven-plugin</artifactId>
+                        <configuration>
+                            <repositoryStructurePackages>
+                                <repositoryStructurePackage>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                                </repositoryStructurePackage>
+                            </repositoryStructurePackages>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                                    <version>${project.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-sdk-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.core</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                </dependency>
+
+            </dependencies>
+        </profile>
+        <profile>
+            <id>aem65</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.jackrabbit</groupId>
+                        <artifactId>filevault-package-maven-plugin</artifactId>
+                        <configuration>
+                            <repositoryStructurePackages>
+                                <repositoryStructurePackage>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                                </repositoryStructurePackage>
+                            </repositoryStructurePackages>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>aem65</classifier>
+                                </dependency>
+                            </dependencies>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <configuration>
+                            <packageFile>target/${project.artifactId}-${project.version}-aem65.zip</packageFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.jcr</groupId>
+                    <artifactId>jcr</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>uber-jar</artifactId>
+                    <classifier>apis</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.core</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>aem65</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                    <classifier>aem65</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencies>
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>aem-modernize-tools.core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>aem-modernize-tools.ui.config</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>uber-jar</artifactId>
-            <classifier>apis</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.jcr</groupId>
-            <artifactId>jcr</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.day.cq.wcm</groupId>-->
-<!--            <artifactId>cq-wcm-taglib</artifactId>-->
-<!--        </dependency>-->
-
         <!-- HTL dependencies needed for the HTL Maven Plugin source code generation -->
         <dependency>
             <groupId>org.apache.sling</groupId>

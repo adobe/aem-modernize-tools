@@ -41,39 +41,7 @@
     <!-- ====================================================================== -->
     <build>
         <plugins>
-            <!-- ====================================================================== -->
-            <!-- V A U L T   P A C K A G E   P L U G I N S                              -->
-            <!-- ====================================================================== -->
-            <plugin>
-                <groupId>org.apache.jackrabbit</groupId>
-                <artifactId>filevault-package-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <group>com.adobe.aem</group>
-                    <packageType>container</packageType>
-                    <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
-                    <skipSubPackageValidation>true</skipSubPackageValidation>
-                    <embeddeds>
-                        <embedded>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>aem-modernize-tools.ui.apps</artifactId>
-                            <type>zip</type>
-                            <target>/apps/aem-modernize-packages/application/install</target>
-                        </embedded>
-                        <embedded>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>aem-modernize-tools.core</artifactId>
-                            <target>/apps/aem-modernize-packages/application/install</target>
-                        </embedded>
-                        <embedded>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>aem-modernize-tools.ui.config</artifactId>
-                            <type>zip</type>
-                            <target>/apps/aem-modernize-packages/application/install</target>
-                        </embedded>
-                    </embeddeds>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>com.day.jcr.vault</groupId>
                 <artifactId>content-package-maven-plugin</artifactId>
@@ -102,7 +70,138 @@
     <!-- P R O F I L E S                                                        -->
     <!-- ====================================================================== -->
     <profiles>
-
+        <profile>
+            <id>aemCloudService</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.jackrabbit</groupId>
+                        <artifactId>filevault-package-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <group>com.adobe.aem</group>
+                            <packageType>container</packageType>
+                            <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
+                            <skipSubPackageValidation>true</skipSubPackageValidation>
+                            <embeddeds>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.apps</artifactId>
+                                    <type>zip</type>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.core</artifactId>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                                    <type>zip</type>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
+                            </embeddeds>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.core</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.apps</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>aem65</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.jackrabbit</groupId>
+                        <artifactId>filevault-package-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <group>com.adobe.aem</group>
+                            <packageType>container</packageType>
+                            <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
+                            <skipSubPackageValidation>true</skipSubPackageValidation>
+                            <classifier>aem65</classifier>
+                            <embeddeds>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.apps</artifactId>
+                                    <classifier>aem65</classifier>
+                                    <type>zip</type>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.core</artifactId>
+                                    <classifier>aem65</classifier>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                                    <classifier>aem65</classifier>
+                                    <type>zip</type>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
+                            </embeddeds>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <configuration>
+                            <packageFile>target/${project.artifactId}-${project.version}-aem65.zip</packageFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.core</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>aem65</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.apps</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>aem65</classifier>
+                    <type>zip</type>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>aem65</classifier>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>java8</id>
             <activation>
@@ -197,26 +296,4 @@
         </profile>
     </profiles>
 
-    <!-- ====================================================================== -->
-    <!-- D E P E N D E N C I E S                                                -->
-    <!-- ====================================================================== -->
-    <dependencies>
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>aem-modernize-tools.core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>aem-modernize-tools.ui.apps</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>aem-modernize-tools.ui.config</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
 </project>

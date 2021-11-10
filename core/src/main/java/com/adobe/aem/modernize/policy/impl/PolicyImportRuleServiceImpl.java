@@ -165,7 +165,7 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
   }
 
   @ObjectClassDefinition(
-      name = "AEM Modernization Tools - Policy Import Rule Service",
+      name = "AEM Modernize Tools - Policy Import Rule Service",
       description = "Manages operations for performing policy-level import for Modernization tasks."
   )
   @interface Config {

@@ -23,5 +23,4 @@
     <filter root="/apps/aem-modernize/components"/>
     <filter root="/apps/aem-modernize/content"/>
     <filter root="/apps/cq/core/content/nav/tools/aem-modernize"/>
-
 </workspaceFilter>

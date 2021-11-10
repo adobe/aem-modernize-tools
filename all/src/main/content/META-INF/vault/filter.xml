@@ -36,5 +36,4 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <workspaceFilter version="1.0">
     <filter root="/apps/aem-modernize-packages"/>
-    <filter root="/apps/aem-modernize-vendor-packages"/>
 </workspaceFilter>

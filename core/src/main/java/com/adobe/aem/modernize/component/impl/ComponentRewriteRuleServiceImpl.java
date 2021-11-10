@@ -184,7 +184,7 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
   }
 
   @ObjectClassDefinition(
-      name = "AEM Modernization Tools - Component Rewrite Rule Service",
+      name = "AEM Modernize Tools - Component Rewrite Rule Service",
       description = "Manages operations for performing component-level rewrites for Modernization tasks."
   )
   @interface Config {

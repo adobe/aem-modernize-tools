@@ -8,6 +8,12 @@ on:
 jobs:
   maven-verify:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - aemVersion: "CloudService"
+          - aemVersion: "65"
 
     steps:
       - name: Checkout code
@@ -21,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Build & Test with Maven
-        run: mvn -U clean verify
+        run: mvn -U clean verify -Paem{{ matrix.aemVersion }}
 
       - name: Upload CodeCov
         uses: codecov/codecov-action@v2.1.0
