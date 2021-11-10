@@ -162,6 +162,7 @@
                                 <repositoryStructurePackage>
                                     <groupId>com.adobe.aem</groupId>
                                     <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                                    <classifier>aem65</classifier>
                                 </repositoryStructurePackage>
                             </repositoryStructurePackages>
                             <dependencies>
@@ -214,6 +215,7 @@
                     <groupId>com.adobe.aem</groupId>
                     <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
                     <version>${project.version}</version>
+                    <classifier>aem65</classifier>
                     <type>zip</type>
                 </dependency>
             </dependencies>
