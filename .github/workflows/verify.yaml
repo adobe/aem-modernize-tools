@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Build & Test with Maven
-        run: mvn -U clean verify -Paem{{ matrix.aemVersion }}
+        run: mvn -U clean verify -Paem${{ matrix.aemVersion }}
 
       - name: Upload CodeCov
         uses: codecov/codecov-action@v2.1.0
