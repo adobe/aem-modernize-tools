@@ -1,84 +1,138 @@
-/*
- * AEM Modernize Tools
- *
- * Copyright (c) 2019 Adobe
- *
+package com.adobe.aem.modernize.component.impl;
+
+/*-
+ * #%L
+ * AEM Modernize Tools - Core
+ * %%
+ * Copyright (C) 2019 - 2021 Adobe Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * #L%
  */
 
-package com.adobe.aem.modernize.component.impl;
-
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.commons.testing.jcr.RepositoryUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
-import com.adobe.aem.modernize.component.ComponentRewriteRule;
-import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.adobe.aem.modernize.rule.RewriteRule;
+import mockit.Expectations;
+import mockit.Mocked;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SlingContextExtension.class)
 public class ComponentTreeRewriterTest {
 
-    private final String RULES_PATH = "/libs/cq/modernize/component/rules";
-    private final String ROOTS_PATH = "/libs/cq/modernize/component/content/roots";
-    private final String IMAGE_PATH = ROOTS_PATH + "/binary/image/data";
+  // Oak needed to verify order preservation.
+  public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
 
-    private ComponentRewriteRuleService componentRewriteRuleService;
+  @Mocked
+  private RewriteRule simpleRule;
 
-    @Rule
-    public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
 
-    @Before
-    public void setUp() throws Exception {
-        ResourceResolver resolver = context.resourceResolver();
-        Session adminSession = resolver.adaptTo(Session.class);
-        RepositoryUtil.registerSlingNodeTypes(adminSession);
-        RepositoryUtil.registerNodeType(adminSession, getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
+  @Test
+  public void preservesOrder() throws Exception {
 
-        context.load().json("/component/test-rules.json", RULES_PATH);
-        context.load().json("/component/test-content.json", ROOTS_PATH);
-        context.load().binaryFile("/component/image.jpg", IMAGE_PATH);
+    List<RewriteRule> rules = new ArrayList<>();
+    rules.add(simpleRule);
 
-        componentRewriteRuleService = context.registerService(ComponentRewriteRuleService.class, new ComponentRewriteRuleServiceImpl());
+    new Expectations() {{
+      simpleRule.matches(withInstanceOf(Node.class));
+      result = false;
+      times = 9;
+    }};
+
+
+    context.load().json("/rewrite/test-ordered.json", "/content/test");
+    Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
+    ComponentTreeRewriter.rewrite(root, rules);
+
+    Session session = root.getSession();
+    assertTrue(session.hasPendingChanges(), "Updates were made");
+    session.save();
+    Resource updated = context.resourceResolver().getResource("/content/test/ordered");
+
+    // Preserved Order
+    Iterator<Resource> children = updated.listChildren();
+    assertEquals("simple", children.next().getName(), "First child correct.");
+    assertEquals("mapProperties", children.next().getName(), "Second child correct.");
+    assertEquals("rewriteProperties", children.next().getName(), "Third child correct.");
+    assertEquals("rewriteMapChildren", children.next().getName(), "Fourth child correct.");
+  }
+
+  @Test
+  public void skipsFinalPaths() throws Exception {
+
+    SetRootFinalRewriteRule finalRewriteRule = new SetRootFinalRewriteRule("/content/test/final/mapProperties");
+    List<RewriteRule> rules = new ArrayList<>();
+    rules.add(simpleRule);
+    rules.add(finalRewriteRule);
+
+    new Expectations() {{
+      simpleRule.matches(withInstanceOf(Node.class));
+      result = false;
+    }};
+
+
+    context.load().json("/rewrite/test-final.json", "/content/test");
+    Node root = context.resourceResolver().getResource("/content/test/final").adaptTo(Node.class);
+    ComponentTreeRewriter.rewrite(root, rules);
+
+    Session session = root.getSession();
+    assertTrue(session.hasPendingChanges(), "Updates were made");
+    session.save();
+
+    // Should only be called once when matched.
+    assertEquals(1, finalRewriteRule.invoked, "Rewrite rule invocations");
+  }
+
+  private static class SetRootFinalRewriteRule implements RewriteRule {
+
+    private final String path;
+    public int invoked = 0;
+    public SetRootFinalRewriteRule(String path) {
+      this.path = path;
     }
 
-
-    @Test
-    public void testRewriteMaintainsOrder() throws Exception {
-        Node rootNode = context.resourceResolver().getResource(ROOTS_PATH + "/level1/mapProperties").adaptTo(Node.class);
-
-        List<ComponentRewriteRule> rules = componentRewriteRuleService.getRules(context.resourceResolver());
-
-
-        ComponentTreeRewriter rewriter = new ComponentTreeRewriter(rules);
-        Node rewrittenNode = rewriter.rewrite(rootNode);
-
-        assertEquals("map-property-3", rewrittenNode.getProperty("map-property-nested").getValue().getString());
-
-        Node level1 =  context.resourceResolver().getResource(ROOTS_PATH + "/level1").adaptTo(Node.class);
-        NodeIterator nit = level1.getNodes();
-        assertEquals("simple", nit.nextNode().getName());
-        assertEquals("mapProperties", nit.nextNode().getName());
-        assertEquals("rewriteProperties", nit.nextNode().getName());
-        assertEquals("rewriteMapChildren", nit.nextNode().getName());
+    @Override
+    public String getId() {
+      return "Mock";
     }
+
+    @Override
+    public boolean matches(@NotNull Node root) throws RepositoryException {
+      if (StringUtils.equals(root.getPath(), path)) {
+        invoked++;
+      }
+      return StringUtils.equals(root.getPath(), path);
+    }
+
+    @Override
+    public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException {
+      finalPaths.add(root.getPath());
+      return root;
+    }
+  }
 }

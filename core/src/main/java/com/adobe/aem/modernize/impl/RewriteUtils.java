@@ -1,109 +1,124 @@
-/*
- * AEM Modernize Tools
- *
- * Copyright (c) 2019 Adobe
- *
+package com.adobe.aem.modernize.impl;
+
+/*-
+ * #%L
+ * AEM Modernize Tools - Core
+ * %%
+ * Copyright (C) 2019 - 2021 Adobe Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * #L%
  */
 
-package com.adobe.aem.modernize.impl;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
 import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.commons.flat.TreeTraverser;
+import org.apache.jackrabbit.oak.commons.PathUtils;
+import org.apache.sling.api.resource.ModifiableValueMap;
 
-import com.day.cq.commons.jcr.JcrUtil;
-import com.day.text.ISO9075;
-
-/**
- * Provides helper methods to be used by rewrite rules.
- */
+import com.adobe.aem.modernize.RewriteException;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.Revision;
+import com.day.cq.wcm.api.WCMException;
+import static com.adobe.aem.modernize.model.ConversionJob.*;
 
 public class RewriteUtils {
+  public static final String VERSION_LABEL = "Pre-Modernization";
+  public static final String VERSION_DESC = "Version of content before the modernization process was performed.";
 
-    public static final String RESPONSIVE_GRID_RES_TYPE = "wcm/foundation/components/responsivegrid";
-    /**
-     * Checks if a node has a certain primary type.
-     *
-     * @param node The node to check
-     * @param typeName The name of the primary type to check
-     * @return true if the node has the specified primary type, false otherwise
-     * @throws RepositoryException when any repository operation error occurs
-     */
-    public static boolean hasPrimaryType(Node node, String typeName)
-            throws RepositoryException {
-        return typeName != null && typeName.equals(node.getPrimaryNodeType().getName());
-    }
+  /**
+   * Traverses the entire tree rooted at the provided node; Any property found with the search term will have that literal
+   * replaced with the replacement value.
+   */
+  public static void updateReferences(Node root, String search, String replacement) throws RepositoryException {
 
-    /**
-     * Renames the specified node to a temporary name.
-     *
-     * @param node The node to be renamed
-     * @throws RepositoryException when any repository operation error occurs
-     */
-    public static void rename(Node node)
-            throws RepositoryException {
-        Node destination = node.getParent();
-        Session session = node.getSession();
-        String tmpName = JcrUtil.createValidChildName(destination, "tmp-" + System.currentTimeMillis());
-        String tmpPath = destination.getPath() + "/" + tmpName;
-        session.move(node.getPath(), tmpPath);
-    }
-
-    /**
-     * Convert a parameter key for osgi servcies into a map.
-     * @param values the OSGi values to convert
-     * @param separator the separator
-     * @return mapped configuration values
-     */
-    public static Map<String, String> toMap(final String[] values, final String separator) {
-        final Map<String, String> map = new LinkedHashMap<>();
-
-        if (values == null || values.length < 1) {
-            return map;
-        }
-
-        for (final String value : values) {
-            final String[] tmp = StringUtils.split(value, separator, 2 );
-
-            if(tmp.length != 2) {
-                continue;
-            } else if (tmp.length == 2
-                    && StringUtils.stripToNull(tmp[0]) != null
-                    && StringUtils.stripToNull(tmp[1]) != null) {
-                map.put(StringUtils.trim(tmp[0]), StringUtils.trim(tmp[1]));
+    ValueFactory vf = root.getSession().getValueFactory();
+    TreeTraverser traverser = new TreeTraverser(root);
+    Iterator<Node> iterator = traverser.iterator();
+    while (iterator.hasNext()) {
+      Node node = iterator.next();
+      PropertyIterator pi = node.getProperties();
+      while (pi.hasNext()) {
+        Property p = pi.nextProperty();
+        if (p.getType() == PropertyType.STRING) {
+          Value[] values;
+          if (p.isMultiple()) {
+            values = p.getValues();
+            for (int i = 0; i < values.length; i++) {
+              values[i] = vf.createValue(values[i].getString().replaceAll(search, replacement));
             }
+            p.setValue(values);
+          } else {
+            p.setValue(p.getValue().getString().replaceAll(search, replacement));
+          }
         }
-
-        return map;
+      }
     }
+  }
 
-    /**
-     * Encodes provided path
-     *
-     * @param path Path to encode
-     * @return encoded path
-     */
-    public static String encodePath(String path) {
-        String encodedPath = "/".equals(path) ? "" : ISO9075.encodePath(path);
-        if (encodedPath.length() > 1 && encodedPath.endsWith("/")) {
-            encodedPath = encodedPath.substring(0, encodedPath.length() - 1);
-        }
-        return encodedPath;
+  /**
+   * Given a source path, and destination relative root, determine where a new path would be, if depth in repository were kept constant.
+   *
+   * @param source     source path
+   * @param targetRoot target path
+   * @return the new path to the resource
+   */
+  public static String calcNewPath(String source, String targetRoot) {
+    int depth = PathUtils.getDepth(targetRoot);
+    int relDepth = PathUtils.getDepth(source) - depth;
+    String relPath = PathUtils.getAncestorPath(source, relDepth);
+    return source.replaceFirst(relPath, targetRoot);
+  }
+
+  public static Page restore(PageManager pm, Page page) throws WCMException {
+    String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
+    if (StringUtils.isNotBlank(version)) {
+      page = pm.restore(page.getPath(), version);
+      ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
+      mvm.put(PN_PRE_MODERNIZE_VERSION, version);
     }
+    return page;
+  }
+
+  public static void createVersion(PageManager pm, Page page) throws WCMException {
+    String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
+    if (StringUtils.isBlank(version)) {
+      String date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS").format(new Date());
+      String label = String.format("%s - %s", VERSION_LABEL, date);
+      Revision revision = pm.createRevision(page, label, VERSION_DESC);
+      ModifiableValueMap mvm = page.getContentResource().adaptTo(ModifiableValueMap.class);
+      mvm.put(PN_PRE_MODERNIZE_VERSION, revision.getId());
+    }
+  }
+
+  public static Page copyPage(PageManager pm, Page source, String targetRoot) throws WCMException, RewriteException {
+    String target = RewriteUtils.calcNewPath(source.getPath(), targetRoot);
+    Page page = pm.getPage(target);
+    if (page != null) {
+      throw new RewriteException(String.format("Target page already exists for requested copy: {}", target));
+    }
+    return pm.copy(source, target, null, true, false, false); // Copy but only this page, fail if in conflict, don't save.
+  }
+
 }

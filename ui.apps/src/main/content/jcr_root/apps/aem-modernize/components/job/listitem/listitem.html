@@ -1,0 +1,39 @@
+<!--
+  #%L
+  AEM Modernize Tools - UI apps
+  %%
+  Copyright (C) 2019 - 2021 Adobe Inc.
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<tr is="coral-table-row"
+    class="foundation-collection-item foundation-collection-navigator"
+    title="${properties.title}"
+    data-multi="${properties.multi}"
+    data-foundation-collection-navigator-href="${properties.detailViewUrl}${properties.path}"
+    data-foundation-collection-item-id="${properties.path}">
+  <td is="coral-table-cell">${properties.title}</td>
+  <td is="coral-table-cell" value="${properties.statusInt}">
+    <div class="mediumIcon ${properties.statusClass} status">
+      <coral-icon icon="${properties.icon}" size="M"></coral-icon>
+    </div>
+    <div class="status">Status: ${properties.status}</div>
+  </td>
+  <td is="coral-table-cell" value="${properties.finishedMs}">
+    <foundation-time value="${properties.finished}"></foundation-time>
+  </td>
+  <td is="coral-table-cell">
+    <coral-icon data-sly-test="${properties.multi}" icon="check" class="darkText" size="XS"></coral-icon>
+  </td>
+</tr>

@@ -1,0 +1,30 @@
+{
+  "simple": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Strategic Consulting",
+    "sling:resourceType": "aem-modernize/components/simple",
+    "literal": "/content/original",
+    "literalSubpath": "/content/original/subpath",
+    "list": [
+      "/content/original",
+      "/content/original/subpath"
+    ],
+    "richText": "<a href=&quot;/content/original&quot>Link</a>",
+    "richTextLongerPath": "<a href=&quot;/content/original/subpath&quot>Link</a>",
+    "nested": {
+      "jcr:primaryType": "nt:unstructured",
+      "jcr:title": "Strategic Consulting",
+      "sling:resourceType": "aem-modernize/components/simple",
+      "literal": "/content/original",
+      "literalSubpath": "/content/original/subpath",
+      "list": [
+        "/do/not/touch",
+        "/content/original",
+        "/content/original/subpath",
+        "/do/not/touch/subpath"
+      ],
+      "richText": "<a href=&quot;/content/original&quot>Link</a>",
+      "richTextLongerPath": "<a href=&quot;/content/original/subpath&quot>Link</a>"
+    }
+  }
+}

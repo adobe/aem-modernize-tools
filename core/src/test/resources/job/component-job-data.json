@@ -1,0 +1,20 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:title": "Test",
+  "type": "COMPONENT",
+  "componentRules": [
+    "/var/aem-modernize/rules/component/first",
+    "/var/aem-modernize/rules/component/second"
+  ],
+  "policyRules": [],
+  "templateRules": [],
+  "buckets": {
+    "bucket0": {
+      "paths": [
+        "/content/test/first-page/jcr:content/component",
+        "/content/test/second-page/jcr:content/component",
+        "/content/test/not-found-page/jcr:content/component"
+      ]
+    }
+  }
+}

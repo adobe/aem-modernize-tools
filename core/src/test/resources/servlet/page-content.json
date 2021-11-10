@@ -1,0 +1,68 @@
+{
+  "jcr:primaryType": "cq:Page",
+  "jcr:content": {
+    "jcr:primaryType": "cq:PageContent",
+    "jcr:title": "English",
+    "sling:resourceType": "aem-modernize/components/homepage",
+    "simple": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "aem-modernize/components/simple"
+    },
+    "copyChildren": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "aem-modernize/components/copyChildren"
+    }
+  },
+  "notapage": {
+    "jcr:primaryType": "nt:folder"
+  },
+  "products": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:primaryType": "cq:PageContent",
+      "jcr:title": "Products",
+      "sling:resourceType": "aem-modernize/components/contentpage",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple"
+      },
+      "copyChildren": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/copyChildren"
+      }
+    },
+    "triangle": {
+      "jcr:primaryType": "cq:Page",
+      "jcr:content": {
+        "jcr:primaryType": "cq:PageContent",
+        "jcr:title": "Triangle",
+        "sling:resourceType": "aem-modernize/components/contentpage",
+        "simple": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/simple"
+        },
+        "copyChildren": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/copyChildren"
+        }
+
+      }
+    },
+    "square": {
+      "jcr:primaryType": "cq:Page",
+      "jcr:content": {
+        "jcr:primaryType": "cq:PageContent",
+        "jcr:title": "Square",
+        "sling:resourceType": "aem-modernize/components/contentpage"
+      }
+    },
+    "circle": {
+      "jcr:primaryType": "cq:Page",
+      "jcr:content": {
+        "jcr:primaryType": "cq:PageContent",
+        "jcr:title": "Circle",
+        "sling:resourceType": "aem-modernize/components/contentpage"
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  AEM Modernize Tools - UI apps
+  %%
+  Copyright (C) 2019 - 2021 Adobe Inc.
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          jcr:primaryType="nt:unstructured"
+          jcr:title="Include Children"
+          sling:resourceType="granite/ui/components/coral/foundation/dialog"
+          granite:class="aem-modernize-job-includechildren-dialog">
+  <items jcr:primaryType="nt:unstructured">
+    <form jcr:primaryType="nt:unstructured"
+          sling:resourceType="granite/ui/components/coral/foundation/form"
+          granite:id="aem-modernize-job-includechildren-dialog-form">
+      <items jcr:primaryType="nt:unstructured">
+        <path jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/components/coral/foundation/form/hidden"
+              name="path"
+              value="${empty requestPathInfo.suffix ? param.item : requestPathInfo.suffix}"/>
+        <charset jcr:primaryType="nt:unstructured"
+                 sling:resourceType="granite/ui/components/coral/foundation/form/hidden"
+                 name="_charset_"
+                 value="utf-8"/>
+        <depth jcr:primaryType="nt:unstructured"
+               jcr:title="Depth"
+               sling:resourceType="granite/ui/components/coral/foundation/form/fieldset">
+          <items jcr:primaryType="nt:unstructured">
+            <direct jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                    checked="{Boolean}true"
+                    name="direct"
+                    value="true"
+                    text="Include only direct descendants?"/>
+          </items>
+        </depth>
+      </items>
+    </form>
+  </items>
+  <footer jcr:primaryType="nt:unstructured">
+    <cancel jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/button"
+            text="Cancel">
+      <parentConfig jcr:primaryType="nt:unstructured"
+                    close="{Boolean}true"/>
+    </cancel>
+    <add jcr:primaryType="nt:unstructured"
+         sling:resourceType="granite/ui/components/coral/foundation/button"
+         granite:rel="aem-modernize-job-includechildren-dialog-confirm"
+         text="Add"
+         variant="primary"/>
+  </footer>
+</jcr:root>

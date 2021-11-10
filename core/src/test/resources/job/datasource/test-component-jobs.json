@@ -1,0 +1,217 @@
+{
+  "geodemo-components0": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "GeoDemo Components",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "componentRules": [
+      "/var/aem-modernize/job-data/component/header",
+      "/var/aem-modernize/job-data/component/image",
+      "/var/aem-modernize/job-data/component/lead",
+      "/var/aem-modernize/job-data/component/title",
+      "/var/aem-modernize/job-data/component/text"
+    ],
+    "sling:resourceType": "aem-modernize/components/job",
+    "buckets": {
+      "bucket": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/job/bucket",
+        "jobId": "1",
+        "paths": [
+          "/content/geometrixx/en/jcr:content/header",
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead",
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "success": [
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead"
+        ],
+        "failed": [
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "notFound": [
+          "/content/geometrixx/en/jcr:content/header"
+        ]
+      }
+    }
+  },
+  "geodemo-components1": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "GeoDemo Components",
+    "jcr:created": "Mon Aug 23 2011 22:12:08 GMT+0200",
+    "componentRules": [
+      "/var/aem-modernize/job-data/component/header",
+      "/var/aem-modernize/job-data/component/image",
+      "/var/aem-modernize/job-data/component/lead",
+      "/var/aem-modernize/job-data/component/title",
+      "/var/aem-modernize/job-data/component/text"
+    ],
+    "sling:resourceType": "aem-modernize/components/job",
+    "buckets": {
+      "bucket": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/job/bucket",
+        "jobId": "2",
+        "paths": [
+          "/content/geometrixx/en/jcr:content/header",
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead",
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "success": [
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead"
+        ],
+        "failed": [
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "notFound": [
+          "/content/geometrixx/en/jcr:content/header"
+        ]
+      },
+      "bucket1": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/job/bucket",
+        "jobId": "3",
+        "paths": [
+          "/content/geometrixx/en/jcr:content/header",
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead",
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "success": [
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead"
+        ],
+        "failed": [
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "notFound": [
+          "/content/geometrixx/en/jcr:content/header"
+        ]
+      }
+    }
+  },
+  "geodemo-components2": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "GeoDemo Components",
+    "jcr:created": "Mon Aug 23 2012 22:12:08 GMT+0200",
+    "componentRules": [
+      "/var/aem-modernize/job-data/component/header",
+      "/var/aem-modernize/job-data/component/image",
+      "/var/aem-modernize/job-data/component/lead",
+      "/var/aem-modernize/job-data/component/title",
+      "/var/aem-modernize/job-data/component/text"
+    ],
+    "sling:resourceType": "aem-modernize/components/job",
+    "buckets": {
+      "bucket": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/job/bucket",
+        "jobId": "4",
+        "paths": [
+          "/content/geometrixx/en/jcr:content/header",
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead",
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "success": [
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead"
+        ],
+        "failed": [
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "notFound": [
+          "/content/geometrixx/en/jcr:content/header"
+        ]
+      }
+    }
+  },
+  "geodemo-components3": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "GeoDemo Components",
+    "jcr:created": "Mon Aug 23 2013 22:12:08 GMT+0200",
+    "componentRules": [
+      "/var/aem-modernize/job-data/component/header",
+      "/var/aem-modernize/job-data/component/image",
+      "/var/aem-modernize/job-data/component/lead",
+      "/var/aem-modernize/job-data/component/title",
+      "/var/aem-modernize/job-data/component/text"
+    ],
+    "sling:resourceType": "aem-modernize/components/job",
+    "buckets": {
+      "bucket": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/job/bucket",
+        "jobId": "5",
+        "paths": [
+          "/content/geometrixx/en/jcr:content/header",
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead",
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "success": [
+          "/content/geometrixx/en/jcr:content/parsys/image",
+          "/content/geometrixx/en/jcr:content/parsys/title_1",
+          "/content/geometrixx/en/jcr:content/parsys/text_1",
+          "/content/geometrixx/en/jcr:content/parsys/image_0",
+          "/content/geometrixx/en/jcr:content/parsys/title_2",
+          "/content/geometrixx/en/jcr:content/parsys/text_0",
+          "/content/geometrixx/en/jcr:content/lead"
+        ],
+        "failed": [
+          "/content/geometrixx/en/jcr:content/image"
+        ],
+        "notFound": [
+          "/content/geometrixx/en/jcr:content/header"
+        ]
+      }
+    }
+  }
+}

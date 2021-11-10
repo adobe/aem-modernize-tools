@@ -19,108 +19,167 @@
 
 package com.adobe.aem.modernize.component.impl;
 
+/*-
+ * #%L
+ * AEM Modernize Tools - Core
+ * %%
+ * Copyright (C) 2019 - 2021 Adobe Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import javax.jcr.Session;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.commons.testing.jcr.RepositoryUtil;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.apache.sling.testing.mock.sling.junit.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContext;
+import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.adobe.aem.modernize.rule.RewriteRule;
+import com.adobe.aem.modernize.rule.impl.NodeBasedRewriteRule;
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SlingContextExtension.class)
 public class ComponentRewriteRuleServiceImplTest {
 
-    private final String RULES_PATH = "/libs/cq/modernize/component/rules";
+  public final SlingContext context = new SlingContext(ResourceResolverType.JCR_MOCK);
 
-    private ComponentRewriteRuleService componentRewriteRuleService;
+  private final String[] RULE_PATHS = new String[] { "/apps/aem-modernize/component/rules", "/apps/customer/component/rules" };
+  private static final String FOUND_SERVICE_ID = "com.adobe.aem.modernize.component.ComponentRewriteRuleFound";
+  private final ComponentRewriteRuleService componentRewriteRuleService = new ComponentRewriteRuleServiceImpl();
 
-    @Rule
-    public final SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
+  @Mocked
+  private ComponentRewriteRule matchedRewriteRule;
 
-    @Before
-    public void setUp() throws Exception {
-        ResourceResolver resolver = context.resourceResolver();
-        Session adminSession = resolver.adaptTo(Session.class);
-        RepositoryUtil.registerNodeType(adminSession,
-                getClass().getResourceAsStream("/nodetypes/nodetypes.cnd"));
+  @Mocked
+  private ComponentRewriteRule notMatchedRewriteRule;
 
-        context.load().json("/component/test-rules.json", RULES_PATH);
 
-        // register conversion service
-        componentRewriteRuleService = context.registerService(ComponentRewriteRuleService.class,
-                new ComponentRewriteRuleServiceImpl());
+  @BeforeEach
+  public void beforeEach() {
+    for (String path : RULE_PATHS) {
+      context.load().json("/component/test-rules.json", path);
     }
+    context.load().json("/component/test-rules.json", "/apps/not-registered/component/rules");
+    context.load().json("/component/shallow-content.json", "/content/test/shallow");
+    context.load().json("/component/deep-content.json", "/content/test/deep");
+    context.load().json("/component/all-content.json", "/content/test/all");
 
-    @Test
-    public void testGetRules() throws Exception {
-        List<String> expectedRulePaths = new ArrayList<>();
+    Map<String, Object> props = new HashMap<>();
+    props.put("search.paths", RULE_PATHS);
 
-        // expected ordering based on applied ranking is also represented here
-        expectedRulePaths.addAll(Arrays.asList(
-                RULES_PATH + "/rewriteRanking",
-                RULES_PATH + "/simple",
-                RULES_PATH + "/copyChildren",
-                RULES_PATH + "/copyChildrenOrder",
-                RULES_PATH + "/mapProperties",
-                RULES_PATH + "/rewriteOptional",
-                RULES_PATH + "/rewriteMapChildren",
-                RULES_PATH + "/rewriteFinal",
-                RULES_PATH + "/rewriteFinalOnReplacement",
-                RULES_PATH + "/rewriteProperties",
-                RULES_PATH + "/nested1/rule1",
-                RULES_PATH + "/nested1/rule2",
-                RULES_PATH + "/nested2/rule1"));
+    context.registerService(ComponentRewriteRule.class, notMatchedRewriteRule);
+    context.registerService(ComponentRewriteRule.class, matchedRewriteRule);
+    context.registerInjectActivateService(componentRewriteRuleService, props);
+  }
 
-        List<ComponentRewriteRule> rules = componentRewriteRuleService.getRules(context.resourceResolver());
+  @Test
+  public void testShallowApply() throws Exception {
 
-        assertEquals(expectedRulePaths.size(), rules.size());
+    Set<String> rules = new HashSet<>(Arrays.asList(
+        "/apps/aem-modernize/component/rules/simple",
+        "/apps/aem-modernize/component/rules/not-found",
+        "/apps/not-registered/component/rules/simple",
+        "com.adobe.aem.modernize.component.ComponentRewriteRuleFound",
+        "/apps/aem-modernize/component/rules/rewriteOptional"
+    ));
 
-        // asserts:
-        // - rules considered at root and first level folders
-        // - rules ordered based on ranking
-        int index = 0;
-        for (ComponentRewriteRule rule : rules) {
-            String path = expectedRulePaths.get(index);
-            assertTrue(rule.toString().contains("path=" + path + ","));
-            index++;
-        }
-    }
+    final int[] callCounts = { 0, 0 };
+    final boolean[] returns = { false, true};
+    new MockUp<NodeBasedRewriteRule>() {
 
-    @Test
-    public void testGetSlingResourceTypes() throws Exception {
-        Set<String> resourceTypes = componentRewriteRuleService.getSlingResourceTypes(context.resourceResolver());
+      private final List<String> paths = new ArrayList<>();
 
-        assertTrue(resourceTypes.contains("geometrixx/components/simple"));
-        resourceTypes.remove("geometrixx/components/simple");
-        assertTrue(resourceTypes.contains("geometrixx/components/mapProperties"));
-        resourceTypes.remove("geometrixx/components/mapProperties");
-        assertTrue(resourceTypes.contains("geometrixx/components/rewriteOptional"));
-        resourceTypes.remove("geometrixx/components/rewriteOptional");
-        assertTrue(resourceTypes.contains("geometrixx/components/rewriteRanking"));
-        resourceTypes.remove("geometrixx/components/rewriteRanking");
-        assertTrue(resourceTypes.contains("geometrixx/components/rewriteMapChildren"));
-        resourceTypes.remove("geometrixx/components/rewriteMapChildren");
-        assertTrue(resourceTypes.contains("geometrixx/components/rewriteFinal"));
-        resourceTypes.remove("geometrixx/components/rewriteFinal");
-        assertTrue(resourceTypes.contains("geometrixx/components/rewriteFinalOnReplacement"));
-        resourceTypes.remove("geometrixx/components/rewriteFinalOnReplacement");
-        assertTrue(resourceTypes.contains("geometrixx/components/rewriteProperties"));
-        resourceTypes.remove("geometrixx/components/rewriteProperties");
-        assertTrue(resourceTypes.contains("granite/ui/components/foundation/container"));
-        resourceTypes.remove("granite/ui/components/foundation/container");
+      @Mock
+      public void $init(@NotNull Node node) throws RepositoryException {
+        assertNotNull(node);
+        this.paths.add(node.getPath());
+      }
 
+      @Mock
+      public boolean matches(@NotNull Node root) throws RepositoryException {
+        return returns[callCounts[0]++];
+      }
 
+      @Mock
+      public Node applyTo(@NotNull Node root, @NotNull Set<Node> finalNodes) throws RepositoryException {
+        callCounts[1]++;
+        return root;
+      }
 
-        assertTrue(resourceTypes.isEmpty());
+      @Mock
+      public int getRanking() {
+        return Integer.MAX_VALUE;
+      }
+    };
 
-    }
+    new Expectations() {{
+      matchedRewriteRule.getId();
+      result = FOUND_SERVICE_ID;
+    }};
+    Resource resource = context.resourceResolver().getResource("/content/test/shallow/simple");
+    componentRewriteRuleService.apply(resource, rules, false);
+
+    assertEquals(2, callCounts[0], "Correct number of matched called.");
+    assertEquals(1, callCounts[1], "Correct number of apply called.");
+  }
+
+  @Test
+  public void testDeepApply() throws Exception {
+    final boolean[] called = { false };
+    Set<String> rules = new HashSet<>(Arrays.asList(
+        "/apps/aem-modernize/component/rules/simple",
+        "/apps/aem-modernize/component/rules/not-found",
+        "/apps/not-registered/component/rules/simple",
+        "com.adobe.aem.modernize.component.ComponentRewriteRuleFound",
+        "/apps/aem-modernize/component/rules/rewriteOptional"
+    ));
+    new MockUp<ComponentTreeRewriter>() {
+
+      @Mock
+      public Node rewrite(Node root, List<RewriteRule> rules) {
+        called[0] = true;
+        assertNotNull(root);
+        assertNotNull(rules);
+        return root;
+      }
+    };
+    new Expectations() {{
+      matchedRewriteRule.getId();
+      result = FOUND_SERVICE_ID;
+    }};
+    Resource resource = context.resourceResolver().getResource("/content/test/deep/parent");
+    componentRewriteRuleService.apply(resource, rules, true);
+    assertTrue(called[0], "TreeRewriteProcessor called");
+  }
+
 }

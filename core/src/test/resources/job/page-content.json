@@ -1,0 +1,153 @@
+{
+  "first-page": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:primaryType": "cq:PageContent",
+      "jcr:title": "Test Page",
+      "cq:designPath": "/etc/designs/test",
+      "cq:template": "/apps/aem-modernize/template/homepage",
+      "sling:resourceType": "aem-modernize/components/homepage",
+      "component": {
+        "jcr:title": "Test Page",
+        "sling:resourceType": "modernize/components/test"
+      },
+      "par": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/parsys",
+        "colctrl": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:createdBy": "admin",
+          "jcr:lastModifiedBy": "admin",
+          "layout": "2;cq-colctrl-lt0",
+          "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
+          "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
+          "sling:resourceType": "aem-modernize/components/content/image"
+        },
+        "title_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Strategic Consulting",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "text_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
+          "sling:resourceType": "aem-modernize/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_break": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/aem-modernize/offices/clean_room.jpg",
+          "sling:resourceType": "aem-modernize/components/content/image"
+        },
+        "title_2": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Shape Technology",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "text_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
+          "sling:resourceType": "aem-modernize/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_end": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "end",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        }
+      },
+      "title": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "Strategic Consulting",
+        "sling:resourceType": "aem-modernize/components/title"
+      },
+      "header": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "trust our experience\r\nto manage your business",
+        "imageReference": "/content/dam/aem-modernize/header.png",
+        "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
+        "sling:resourceType": "aem-modernize/components/header"
+      }
+    }
+  },
+  "second-page": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "cq:premodernizeVersion": "123456789",
+      "jcr:primaryType": "cq:PageContent",
+      "jcr:title": "Test Page",
+      "cq:designPath": "/etc/designs/test",
+      "cq:template": "/apps/aem-modernize/template/homepage",
+      "sling:resourceType": "aem-modernize/components/homepage",
+      "component": {
+        "jcr:title": "Test Page",
+        "sling:resourceType": "modernize/components/test"
+      },
+      "par": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/parsys",
+        "colctrl": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:createdBy": "admin",
+          "jcr:lastModifiedBy": "admin",
+          "layout": "2;cq-colctrl-lt0",
+          "jcr:created": "Mon Aug 23 2010 22:02:24 GMT+0200",
+          "jcr:lastModified": "Mon Aug 23 2010 22:02:35 GMT+0200",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
+          "sling:resourceType": "aem-modernize/components/content/image"
+        },
+        "title_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Strategic Consulting",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "text_1": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\">In&nbsp;today's competitive market, organizations can face several key geometric challenges:</span></p>\n<ul>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Polyhedral Sectioning</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Triangulation&nbsp;</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Trigonometric Calculation</span></li>\n<li><span class=\"Apple-style-span\" style=\"font-size: 12px;\">Ruler and Compass Construction</span></li>\n</ul>\n<p><span class=\"Apple-style-span\" style=\"font-size: 12px;\"><br>\nGeometrixx is ready to help your organization deal effectively with all these challenges through our award winning geometric consulting services.</span></p>\n<p style=\"font-family: tahoma, arial, helvetica, sans-serif; font-size: 12px;\"></p>\n",
+          "sling:resourceType": "aem-modernize/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_break": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "break",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        },
+        "image_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "fileReference": "/content/dam/aem-modernize/offices/clean_room.jpg",
+          "sling:resourceType": "aem-modernize/components/content/image"
+        },
+        "title_2": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcr:title": "Shape Technology",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "text_0": {
+          "jcr:primaryType": "nt:unstructured",
+          "text": "<p>The Geometrixx investment in R&amp;D has done more than solidify our industry leadership role, we have now outpaced our competitors to such an extent that we are in an altogether new space.</p>\n<p>This is why our high quality polygons and polyhedra provide the only turnkey solutions across the whole range of euclidean geometry. And our mathematicians are working on the next generation of fractal curves to bring you shapes that are unthinkable today.</p>\n<p></p>\n<p></p>\n",
+          "sling:resourceType": "aem-modernize/components/content/text",
+          "textIsRich": "true"
+        },
+        "col_end": {
+          "jcr:primaryType": "nt:unstructured",
+          "controlType": "end",
+          "sling:resourceType": "foundation/components/parsys/colctrl"
+        }
+      }
+    }
+  }
+}

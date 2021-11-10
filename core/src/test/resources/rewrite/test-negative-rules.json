@@ -1,0 +1,403 @@
+{
+  "jcr:primaryType": "sling:OrderedFolder",
+  "noPatterns": {
+    "jcr:primaryType": "nt:unstructured",
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "patternsIsProperty": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": "property",
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "patternsEmpty": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured"
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "aggregateIsProperty": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": "property",
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "aggregatePatternsIsProperty": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": "property"
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "aggregateEmpty": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured"
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "aggregatePatternsEmpty": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "jcr:primaryType": "nt:unstructured"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "noReplacement": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple"
+      }
+    }
+  },
+  "replacementIsProperty": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple"
+      }
+    },
+    "replacement": "property"
+  },
+  "wrongPrimaryType": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "sling:Folder",
+        "sling:resourceType": "aem-modernize/components/simple"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "missingProperty": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "missingProperty": "willnotexist",
+        "sling:resourceType": "aem-modernize/components/simple"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "wrongPropertyValue": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/not-simple"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "missingChild": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "neverMatched": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "component/not/found"
+      },
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple",
+        "missingNode": {
+          "jcr:primaryType": "nt:unstructured"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "missingGrandChild": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "neverMatched": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "component/not/found"
+      },
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple",
+        "child": {
+          "jcr:primaryType": "nt:unstructured",
+          "missingNode": {
+            "jcr:primaryType": "nt:unstructured"
+          }
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "wrongChildNodeType": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "neverMatched": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "component/not/found"
+      },
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple",
+        "child": {
+          "jcr:primaryType": "sling:Folder"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "sling:Folder"
+      }
+    }
+  },
+  "wrongChildPropertyValue": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "neverMatched": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "component/not/found"
+      },
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple",
+        "child": {
+          "jcr:primaryType": "sling:Folder",
+          "sling:resourceType": "aem-modernize/components/simple/notfound"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "wrongGrandChildNodeType": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "neverMatched": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "component/not/found"
+      },
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple",
+        "child": {
+          "jcr:primaryType": "nt:unstructured",
+          "grandChild": {
+            "jcr:primaryType": "sling:Folder"
+          }
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "sling:Folder"
+      }
+    }
+  },
+  "wrongGrandChildPropertyValue": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "neverMatched": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "component/not/found"
+      },
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple",
+        "child": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/simple/child",
+          "grandChild": {
+            "jcr:primaryType": "nt:unstructured",
+            "sling:resourceType": "aem-modernize/components/simple/notfound"
+          }
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "aggregateNotMatched": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate" : {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "text": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "foundation/components/text"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/image"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+      }
+    }
+  },
+  "aggregateIntermediateNode": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "foundation/components/image"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+      }
+    }
+  },
+  "aggregateLongerThanNodes": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
+      "jcr:primaryType": "nt:unstructured",
+      "patterns": {
+        "simple": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/simple"
+        },
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/title"
+        },
+        "text": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "foundation/components/text"
+        },
+        "image": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "foundation/components/image"
+        },
+        "lead": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/lead"
+        }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
+      }
+    }
+  }
+}

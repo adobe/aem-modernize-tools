@@ -1,0 +1,36 @@
+{
+  "missingPath": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "List View",
+    "granite:rel": "aem-modernize-job-bucket-collection",
+    "sling:resourceType": "granite/ui/components/coral/foundation/table",
+    "icon": "viewList",
+    "layoutId": "list",
+    "selectionCount": "none",
+    "src": "${requestPathInfo.resourcePath}{.offset,limit}.html",
+    "limit": 50,
+    "datasource": {
+      "limit": "${empty requestPathInfo.selectors[1] ? &quot;51&quot; : requestPathInfo.selectors[1]}",
+      "offset": "${requestPathInfo.selectors[0]}",
+      "sling:resourceType": "aem-modernize/components/job/bucket/datasource"
+    }
+  },
+  "valid": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "List View",
+    "granite:rel": "aem-modernize-job-bucket-collection",
+    "sling:resourceType": "granite/ui/components/coral/foundation/table",
+    "icon": "viewList",
+    "layoutId": "list",
+    "selectionCount": "none",
+    "bucket": "${empty param.bucket ? &quot;0&quot; : param.bucket}",
+    "path": "${requestPathInfo.suffix}",
+    "src": "${requestPathInfo.resourcePath}{.offset,limit}.html",
+    "limit": 50,
+    "datasource": {
+      "limit": "${empty requestPathInfo.selectors[1] ? &quot;51&quot; : requestPathInfo.selectors[1]}",
+      "offset": "${requestPathInfo.selectors[0]}",
+      "sling:resourceType": "aem-modernize/components/job/bucket/datasource"
+    }
+  }
+}

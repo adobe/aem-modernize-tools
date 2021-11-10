@@ -1,0 +1,110 @@
+/*-
+ * #%L
+ * AEM Modernize Tools - UI apps
+ * %%
+ * Copyright (C) 2019 - 2021 Adobe Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+.jobCardAsset {
+  height: 230px !important;
+  background-color: white !important;
+  text-align: center;
+  padding: 2rem;
+}
+
+.jobCardContent {
+  margin: 0;
+  padding: 0;
+}
+
+.jobCardTitle {
+  background-color: #e0e0e0;
+  word-break: normal;
+  word-wrap: normal;
+}
+
+div.smallIcon {
+  padding: .9375rem;
+  background-color: #bbb;
+  margin-right: .5rem
+}
+
+td div.status {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+div.mediumIcon {
+  font-size: 1rem;
+  margin-right: 1rem;
+}
+
+div.smallIcon {
+  color: #fff;
+}
+
+div.error {
+  color: #fa7d73;
+}
+
+div.errorBackground {
+  background-color: #fa7d73;
+}
+
+div.warn {
+  color: #fad782;
+}
+
+div.warnBackground {
+  background-color: #fad782;
+}
+
+div.success {
+  color: #b3da8a;
+}
+
+div.successBackground {
+  background-color: #b3da8a;
+}
+
+div.info {
+  color: #696969;
+}
+
+div.infoBackground {
+  background-color: #696969;
+}
+
+.truncatedText {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  word-break: normal;
+  word-wrap: normal;
+}
+
+.propertyWithMargin {
+  margin: 1rem !important;
+}
+
+.darkText {
+  color: #666;
+  margin-right: 2rem;
+}
+
+.aem-modernize-rule-list, .aem-modernize-path-list {
+  display: none;
+}

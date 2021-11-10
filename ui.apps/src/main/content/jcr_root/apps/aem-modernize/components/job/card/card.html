@@ -1,0 +1,56 @@
+<!--
+  #%L
+  AEM Modernize Tools - UI apps
+  %%
+  Copyright (C) 2019 - 2021 Adobe Inc.
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<sly data-sly-test.stacked="${properties.multi}"/>
+<coral-card class="foundation-collection-navigator"
+    assetwidth="400"
+    assetheight="230"
+    data-viewdetailpath=""
+    data-multi="${properties.multi}"
+    title="${properties.title}"
+    data-foundation-collection-navigator-href="${properties.detailViewUrl}${properties.path}"
+    colorhint="#FFFFFF"
+    data-sly-attribute.stacked="${stacked}">
+  <coral-card-asset class="jobCardAsset">
+    <div class="globalnav-toolcard-icon">
+      <coral-icon icon="taskList" size="XL" autoarialable="on" role="img" aria-label="clock check"></coral-icon>
+    </div>
+  </coral-card-asset>
+  <coral-card-content class="jobCardContent">
+    <coral-card-title class="jobCardTitle">
+      <table>
+        <tr>
+          <td>
+            <div class="smallIcon ${properties.statusClass}Background">
+              <coral-icon icon="${properties.icon}"></coral-icon>
+            </div>
+          </td>
+          <td>
+            <div class="truncatedText">${properties.title}</div>
+          </td>
+        </tr>
+      </table>
+    </coral-card-title>
+    <coral-card-propertylist class="propertyWithMargin">
+      <coral-card-property>
+        Status: ${properties.status}
+      </coral-card-property>
+    </coral-card-propertylist>
+  </coral-card-content>
+</coral-card>

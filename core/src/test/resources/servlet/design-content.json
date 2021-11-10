@@ -1,0 +1,62 @@
+{
+  "jcr:primaryType": "cq:Page",
+  "jcr:content": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "wcm/core/components/designer",
+    "homepage": {
+      "jcr:primaryType": "nt:unstructured",
+      "title": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:lastModifiedBy": "admin",
+        "defaultType": "extralarge",
+        "jcr:lastModified": "Wed Aug 25 2010 17:55:33 GMT+0200",
+        "sling:resourceType": "geometrixx/components/title"
+      },
+      "rightpar": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/iparsys",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "geometrixx/components/title",
+          "jcr:title": "Title Policy",
+          "jcr:description": "Title Policy Description"
+        }
+      }
+    },
+    "page": {
+      "jcr:primaryType": "nt:unstructured",
+      "title": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:lastModifiedBy": "admin",
+        "defaultType": "extralarge",
+        "jcr:lastModified": "Wed Aug 25 2010 17:55:33 GMT+0200",
+        "sling:resourceType": "geometrixx/components/title"
+      },
+      "par": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/parsys",
+        "components": [
+          "geometrixx/components/title"
+        ],
+        "title": {
+          "cq:imported": "/conf/test/imported",
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "geometrixx/components/title"
+        }
+      },
+      "rightpar": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "foundation/components/iparsys",
+        "title": {
+          "jcr:primaryType": "nt:unstructured",
+          "defaultType": "small",
+          "sling:resourceType": "geometrixx/components/title",
+          "jcr:title": "Title Policy",
+          "jcr:description": "Title Policy Description"
+        }
+      }
+    }
+  }
+}

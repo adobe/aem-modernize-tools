@@ -6,7 +6,7 @@
     <!-- P A R E N T  P R O J E C T  D E S C R I P T I O N                      -->
     <!-- ====================================================================== -->
     <parent>
-        <groupId>com.adobe.cq</groupId>
+        <groupId>com.adobe.aem</groupId>
         <artifactId>aem-modernize-tools</artifactId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -22,7 +22,6 @@
         Empty package that defines the structure of the Adobe Experience Manager repository the Code packages in this project deploy into.
         Any roots in the Code packages of this project should have their parent enumerated in the Filters list below.
     </description>
-
     <build>
         <plugins>
             <plugin>
@@ -36,23 +35,16 @@
                         <!-- /apps root -->
                         <filter><root>/apps</root></filter>
                         <filter><root>/apps/aem-modernize</root></filter>
+                        <filter><root>/apps/aem-modernize-packages</root></filter>
 
-
-                        <!-- Common overlay roots -->
-                        <filter><root>/apps/sling</root></filter>
                         <filter><root>/apps/cq</root></filter>
-                        <filter><root>/apps/dam</root></filter>
-                        <filter><root>/apps/wcm</root></filter>
-                        <filter><root>/apps/msm</root></filter>
 
                         <!-- Custom Nav Tool Access -->
+
                         <filter><root>/apps/cq/core</root></filter>
                         <filter><root>/apps/cq/core/content</root></filter>
                         <filter><root>/apps/cq/core/content/nav</root></filter>
                         <filter><root>/apps/cq/core/content/nav/tools</root></filter>
-
-                        <!-- Immutable context-aware configurations -->
-                        <filter><root>/apps/settings</root></filter>
 
                     </filters>
                 </configuration>

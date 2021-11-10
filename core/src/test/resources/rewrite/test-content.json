@@ -1,0 +1,208 @@
+{
+  "remove": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/remove"
+  },
+  "simple": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/simple"
+  },
+  "copyChildren": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/copyChildren",
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": "item1"
+    },
+    "header": {
+      "jcr:primaryType": "nt:unstructured",
+      "text": "Some Header Value"
+    }
+  },
+  "copyChildrenNested": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/copyChildrenNested",
+    "parsys": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "foundation/components/parsys",
+      "items": {
+        "jcr:primaryType": "nt:unstructured",
+        "item1": "item1"
+      },
+      "header": {
+        "jcr:primaryType": "nt:unstructured",
+        "text": "Some Header Value"
+      }
+    }
+  },
+  "copyChildrenOrder": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/simple",
+    "parsys": {
+      "jcr:primaryType": "nt:unstructured",
+      "text": "Some Header Value",
+      "sling:resourceType": "foundation/components/parsys"
+    },
+    "header": {
+      "jcr:primaryType": "nt:unstructured",
+      "text": "Some Header Value",
+      "sling:resourceType": "aem-modernize/components/header"
+    }
+  },
+  "mapProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/mapProperties",
+    "map-property-1": "map-property-1",
+    "map-property-2": true,
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "map-property-3": "map-property-3"
+    },
+    "map-property-4": [
+      "map-property-4-value-1",
+      "map-property-4-value-2"
+    ]
+  },
+  "rewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/rewriteOptional"
+  },
+  "nestedRewriteOptional": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/rewriteOptional",
+    "items": {
+      "jcr:primaryType": "nt:unstructured"
+    }
+  },
+  "rewriteRanking": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteRanking"
+  },
+  "rewriteMapChildren": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapChildren",
+    "notItems": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured"
+      },
+      "item2": {
+        "jcr:primaryType": "nt:unstructured"
+      }
+    }
+  },
+  "rewriteMapChildrenNested": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapChildren",
+    "items": {
+      "jcr:primaryType": "nt:unstructured",
+      "item1": {
+        "jcr:primaryType": "nt:unstructured"
+      },
+      "not-item2": {
+        "jcr:primaryType": "nt:unstructured"
+      }
+    }
+  },
+  "rewriteFinal": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/rewriteFinal"
+  },
+  "rewriteFinalOnReplacement": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/replacementRewriteFinal"
+  },
+  "rewriteProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteProperties",
+    "rewrite-remove-prefix": "prefix-token",
+    "rewrite-remove-suffix": "token-suffix",
+    "rewrite-concat-tokens": "token1-separator-token2",
+    "rewrite-no-capture-use": "prefix-token",
+    "rewrite-boolean": true
+  },
+  "simpleTree": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:createdBy": "admin",
+    "jcr:title": "Strategic Consulting",
+    "jcr:lastModifiedBy": "admin",
+    "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+    "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+    "sling:resourceType": "aem-modernize/components/simple",
+    "child": {
+      "jcr:primaryType": "nt:unstructured",
+      "sling:resourceType": "aem-modernize/components/simple/child",
+      "grandChild": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple/grandchild"
+      }
+    }
+  },
+  "aggregate": {
+    "simple": {
+      "jcr:primaryType": "nt:unstructured",
+      "jcr:createdBy": "admin",
+      "jcr:title": "Strategic Consulting",
+      "jcr:lastModifiedBy": "admin",
+      "jcr:created": "Mon Aug 23 2010 22:12:08 GMT+0200",
+      "jcr:lastModified": "Wed Oct 27 2010 15:33:24 GMT-0400",
+      "sling:resourceType": "aem-modernize/components/simple"
+    },
+    "title": {
+      "jcr:primaryType": "nt:unstructured",
+      "jcr:title": "Strategic Consulting",
+      "sling:resourceType": "aem-modernize/components/title"
+    },
+    "text": {
+      "jcr:primaryType": "nt:unstructured",
+      "text": "<p>Text of the Text Component</p>",
+      "sling:resourceType": "foundation/components/text"
+    },
+    "image": {
+      "jcr:primaryType": "nt:unstructured",
+      "fileReference": "/content/dam/aem-modernize/portraits/jane_doe.jpg",
+      "width": "340",
+      "sling:resourceType": "foundation/components/image"
+    }
+  }
+}

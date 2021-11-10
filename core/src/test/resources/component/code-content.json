@@ -1,0 +1,31 @@
+{
+  "jcr:primaryType": "sling:Folder",
+  "geodemo": {
+    "jcr:primaryType": "nt:unstructured",
+    "components": {
+      "jcr:primaryType": "nt:unstructured",
+      "container": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceSuperType": "core/wcm/components/container/v1/container"
+      }
+    }
+  },
+  "core": {
+    "jcr:primaryType": "nt:unstructured",
+    "wcm": {
+      "jcr:primaryType": "nt:unstructured",
+      "components": {
+        "jcr:primaryType": "nt:unstructured",
+        "container": {
+          "v1": {
+            "jcr:primaryType": "nt:unstructured",
+            "container": {
+              "jcr:primaryType": "nt:unstructured",
+              "sling:resourceSuperType": "wcm/foundation/components/responsivegrid"
+            }
+          }
+        }
+      }
+    }
+  }
+}

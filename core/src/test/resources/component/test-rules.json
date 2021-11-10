@@ -1,12 +1,13 @@
 {
   "jcr:primaryType": "sling:OrderedFolder",
   "simple": {
+    "jcr:title": "Simple Rule",
     "jcr:primaryType": "nt:unstructured",
     "patterns": {
       "jcr:primaryType": "nt:unstructured",
       "simple": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     },
     "replacement": {
@@ -23,7 +24,7 @@
       "jcr:primaryType": "nt:unstructured",
       "copyChildren": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/copyChildren"
       }
     },
     "replacement": {
@@ -41,7 +42,7 @@
       "jcr:primaryType": "nt:unstructured",
       "copyChildren": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/simple"
+        "sling:resourceType": "aem-modernize/components/copyChildrenOrder"
       }
     },
     "replacement": {
@@ -64,7 +65,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/mapProperties"
+        "sling:resourceType": "aem-modernize/components/mapProperties"
       }
     },
     "replacement": {
@@ -77,9 +78,18 @@
         "map-property-negation": "!${./map-property-2}",
         "map-property-default": "${./map-property-unknown:default}",
         "map-property-default-quoted": "${'./prefix:map-property-unknown':default}",
-        "map-property-multiple": ["${./map-property-unknown}", "${./map-property-1}"],
-        "map-property-multiple-default": ["${./map-property-unknown}", "${./map-property-unknown:default}"],
-        "map-property-multiple-negation": ["${./map-property-unknown}", "!${./map-property-2}"]
+        "map-property-multiple": [
+          "${./map-property-unknown}",
+          "${./map-property-1}"
+        ],
+        "map-property-multiple-default": [
+          "${./map-property-unknown}",
+          "${./map-property-unknown:default}"
+        ],
+        "map-property-multiple-negation": [
+          "${./map-property-unknown}",
+          "!${./map-property-2}"
+        ]
       }
     }
   },
@@ -89,7 +99,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteOptional",
+        "sling:resourceType": "aem-modernize/components/rewriteOptional",
         "items": {
           "jcr:primaryType": "nt:unstructured",
           "cq:rewriteOptional": true
@@ -105,13 +115,13 @@
     }
   },
   "rewriteRanking": {
-    "cq:rewriteRanking" : "3",
+    "cq:rewriteRanking": "3",
     "jcr:primaryType": "nt:unstructured",
     "patterns": {
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteRanking"
+        "sling:resourceType": "aem-modernize/components/rewriteRanking"
       }
     },
     "replacement": {
@@ -131,7 +141,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteMapChildren"
+        "sling:resourceType": "aem-modernize/components/rewriteMapChildren"
       }
     },
     "replacement": {
@@ -152,7 +162,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteFinal"
+        "sling:resourceType": "aem-modernize/components/rewriteFinal"
       }
     },
     "replacement": {
@@ -173,7 +183,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteFinalOnReplacement"
+        "sling:resourceType": "aem-modernize/components/rewriteFinalOnReplacement"
       }
     },
     "replacement": {
@@ -194,7 +204,7 @@
       "jcr:primaryType": "nt:unstructured",
       "pattern": {
         "jcr:primaryType": "nt:unstructured",
-        "sling:resourceType": "geometrixx/components/rewriteProperties"
+        "sling:resourceType": "aem-modernize/components/rewriteProperties"
       }
     },
     "replacement": {
@@ -208,89 +218,90 @@
         "rewrite-boolean": "${./rewrite-boolean}",
         "cq:rewriteProperties": {
           "jcr:primaryType": "nt:unstructured",
-          "rewrite-remove-prefix": ["(?:prefix-)(.+)", "$1"],
-          "rewrite-remove-suffix": ["(.+)(?:-suffix)", "$1"],
-          "rewrite-concat-tokens": ["(.+)(?:-separator-)(.+)", "$1$2"],
-          "rewrite-single-operand": ["(?:prefix-)(.+)"],
-          "rewrite-boolean": ["(.+)", "edited-$1"]
+          "rewrite-remove-prefix": [
+            "(?:prefix-)(.+)",
+            "$1"
+          ],
+          "rewrite-remove-suffix": [
+            "(.+)(?:-suffix)",
+            "$1"
+          ],
+          "rewrite-concat-tokens": [
+            "(.+)(?:-separator-)(.+)",
+            "$1$2"
+          ],
+          "rewrite-single-operand": [
+            "(?:prefix-)(.+)"
+          ],
+          "rewrite-boolean": [
+            "(.+)",
+            "edited-$1"
+          ]
         }
       }
     }
   },
-  "nested1": {
-    "jcr:primaryType": "sling:OrderedFolder",
-    "rule1": {
+  "aggregate": {
+    "jcr:primaryType": "nt:unstructured",
+    "aggregate": {
       "jcr:primaryType": "nt:unstructured",
       "patterns": {
-        "jcr:primaryType": "nt:unstructured",
-        "pattern": {
+        "titlePattern": {
           "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "granite/ui/components/foundation/container"
-        }
-      },
-      "replacement": {
-        "jcr:primaryType": "nt:unstructured",
-        "simple": {
-          "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "granite/ui/components/coral/foundation/container"
-        }
-      }
-    },
-    "rule2": {
-      "jcr:primaryType": "nt:unstructured",
-      "patterns": {
-        "jcr:primaryType": "nt:unstructured",
-        "pattern": {
-          "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "granite/ui/components/foundation/container"
-        }
-      },
-      "replacement": {
-        "jcr:primaryType": "nt:unstructured",
-        "simple": {
-          "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "granite/ui/components/coral/foundation/container"
-        }
-      }
-    },
-    "nested1level1": {
-      "jcr:primaryType": "sling:OrderedFolder",
-      "rule1": {
-        "jcr:primaryType": "nt:unstructured",
-        "patterns": {
-          "jcr:primaryType": "nt:unstructured",
-          "pattern": {
-            "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "granite/ui/components/foundation/container"
-          }
+          "sling:resourceType": "aem-modernize/components/copyChildrenOrder"
         },
-        "replacement": {
+        "textPattern": {
           "jcr:primaryType": "nt:unstructured",
-          "simple": {
-            "jcr:primaryType": "nt:unstructured",
-            "sling:resourceType": "granite/ui/components/coral/foundation/container"
-          }
+          "sling:resourceType": "aem-modernize/components/mapProperties"
+        },
+        "imagePattern": {
+          "jcr:primaryType": "nt:unstructured",
+          "sling:resourceType": "aem-modernize/components/rewriteOptional"
         }
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "teaser": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
       }
     }
   },
-  "nested2": {
-    "jcr:primaryType": "sling:OrderedFolder",
-    "rule1": {
+  "parsys": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
       "jcr:primaryType": "nt:unstructured",
-      "patterns": {
+      "parsys": {
         "jcr:primaryType": "nt:unstructured",
-        "pattern": {
-          "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "granite/ui/components/foundation/container"
-        }
-      },
-      "replacement": {
+        "sling:resourceType": "foundation/components/parsys"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "container": {
         "jcr:primaryType": "nt:unstructured",
-        "simple": {
-          "jcr:primaryType": "nt:unstructured",
-          "sling:resourceType": "granite/ui/components/coral/foundation/container"
-        }
+        "sling:resourceType": "geodemo/components/container",
+        "layout": "responsiveGrid",
+        "cq:copyChildren": true
+      }
+    }
+  },
+  "geoText": {
+    "jcr:title": "Simple Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geometrixx/components/text"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "geodemo/components/content/text"
       }
     }
   }

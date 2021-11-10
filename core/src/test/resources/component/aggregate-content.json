@@ -1,0 +1,50 @@
+{
+  "singleSibling": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:primaryType": "cq:PageContent",
+      "copyChildrenOrder": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/copyChildrenOrder"
+      },
+      "mapProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/mapProperties"
+      },
+      "rewriteOptional": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteOptional",
+        "items": {
+          "jcr:primaryType": "nt:unstructured",
+          "cq:rewriteOptional": true
+        }
+      },
+      "rewriteRanking": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteRanking"
+      }
+    }
+  },
+  "singleNode": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "jcr:primaryType": "cq:PageContent",
+      "copyChildrenOrder": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/copyChildrenOrder"
+      },
+      "mapProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/mapProperties"
+      },
+      "rewriteOptional": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteOptional",
+        "items": {
+          "jcr:primaryType": "nt:unstructured",
+          "cq:rewriteOptional": true
+        }
+      }
+    }
+  }
+}

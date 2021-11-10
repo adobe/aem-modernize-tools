@@ -1,0 +1,271 @@
+<!--
+  #%L
+  AEM Modernize Tools - UI apps
+  %%
+  Copyright (C) 2019 - 2021 Adobe Inc.
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          jcr:title="AEM Modernize Tools | Full (All-in-One) Page Conversion"
+          jcr:primaryType="nt:unstructured"
+          sling:resourceType="aem-modernize/content/job/create"
+          cq:defaultView="html">
+  <head jcr:primaryType="nt:unstructured">
+    <clientlibs
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
+        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common,aem.modernize.job.full]"/>
+  </head>
+  <body jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/page/body">
+    <items jcr:primaryType="nt:unstructured">
+      <form jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/coral/foundation/form"
+            granite:class="aem-modernize-job-form aem-modernize-structure-job-form"
+            maximized="{Boolean}true"
+            method="post"
+            novalidate="true"
+            style="aligned">
+        <granite:data jcr:primaryType="nt:unstructured"
+                      aem-modernize-url="${granite:url('/mnt/overlay/aem-modernize/content/full/job/create.json')}"
+                      aem-modernize-job-view-url="${granite:url('/mnt/overlay/aem-modernize/content/full/job/view.html')}"
+                      aem-modernize-components="true"
+                      aem-modernize-designs="true"
+                      aem-modernize-structure="true"
+                      aem-modernize-operation="FULL"/>
+        <items jcr:primaryType="nt:unstructured">
+          <wizard jcr:primaryType="nt:unstructured"
+                  cancelHref="${empty header.Referer ? &quot;/aem/start.html&quot; : header.Referer}"
+                  jcr:title="Convert Page Content"
+                  sling:resourceType="granite/ui/components/coral/foundation/wizard"
+                  granite:class="aem-modernize-job-wizard aem-modernize-full-job-wizard"
+                  trackingFeature="aem:modernize:convert:full">
+            <items jcr:primaryType="nt:unstructured">
+              <details jcr:primaryType="nt:unstructured"
+                       jcr:title="Job Details"
+                       sling:resourceType="granite/ui/components/coral/foundation/container">
+                <parentConfig jcr:primaryType="nt:unstructured">
+                  <next jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/button"
+                        granite:class="foundation-wizard-control"
+                        disabled="{Boolean}true"
+                        variant="primary"
+                        text="Next">
+                    <granite:data jcr:primaryType="nt:unstructured"
+                                  foundation-wizard-control-action="next"/>
+                  </next>
+                </parentConfig>
+                <items jcr:primaryType="nt:unstructured">
+                  <fixedColumnContainer jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns"
+                                        margin="{Boolean}true"
+                                        maximized="{Boolean}true">
+                    <items jcr:primaryType="nt:unstructured">
+                      <fixedColumn jcr:primaryType="nt:unstructured"
+                                   sling:resourceType="granite/ui/components/coral/foundation/container"
+                                   margin="{Boolean}true"
+                                   maximized="{Boolean}true">
+                        <items jcr:primaryType="nt:unstructured">
+                          <config jcr:primaryType="nt:unstructured"
+                                  jcr:title="General Configuration"
+                                  sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
+                                  margin="{Boolean}true"
+                                  maximized="{Boolean}true">
+                            <items jcr:primaryType="nt:unstructured">
+                              <name jcr:primaryType="nt:unstructured"
+                                    sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                    name="name"
+                                    fieldLabel="Job Name"
+                                    required="{Boolean}true"/>
+                            </items>
+                          </config>
+                          <pageConfig jcr:primaryType="nt:unstructured"
+                                      jcr:title="Page Configuration"
+                                      sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
+                                      margin="{Boolean}true"
+                                      maximized="{Boolean}true">
+                            <items jcr:primaryType="nt:unstructured">
+                              <reprocess jcr:primaryType="nt:unstructured"
+                                         sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                                         checked="{Boolean}false"
+                                         name="reprocess"
+                                         value="{Boolean}true"
+                                         text="Restore First?"
+                                         fieldDescription="Select this to restore page to state before last conversion attempt."/>
+                              <targetPath jcr:primaryType="nt:unstructured"
+                                          sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                                          fieldLabel="Target Path"
+                                          required="{Boolean}false"
+                                          multiple="{Boolean}false"
+                                          name="targetPath"
+                                          rootPath="/content"
+                                          fieldDescription="If specified, pages will be copied to this path before processing."
+                                          filter="hierarchyNotFile" />
+                            </items>
+                          </pageConfig>
+                          <policyConfig jcr:primaryType="nt:unstructured"
+                                        jcr:title="Policy Configuration"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
+                                        margin="{Boolean}true"
+                                        maximized="{Boolean}true">
+                            <items jcr:primaryType="nt:unstructured">
+                              <confPath jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="cq/cloudconfig/components/admin/configpathbrowser"
+                                        activeSelectionCount="single"
+                                        name="confPath"
+                                        fieldLabel="Configuration Path"
+                                        fieldDescription="Select the Configuration path for the Policy Import process."
+                                        required="{Boolean}true" />
+                              <includeSuper jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                                            checked="{Boolean}true"
+                                            name="includeSuperTypes"
+                                            value="true"
+                                            uncheckedValue="false"
+                                            text="Include Super Types?"
+                                            disabled="true"
+                                            fieldDescription="This is automatically set for full page conversion."/>
+                              <overwrite jcr:primaryType="nt:unstructured"
+                                         sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
+                                         checked="{Boolean}false"
+                                         name="overwrite"
+                                         value="{Boolean}true"
+                                         text="Overwrite Existing?"
+                                         fieldDescription="Select this to reimport designs already converted to policies."/>
+                            </items>
+                          </policyConfig>
+                        </items>
+                      </fixedColumn>
+                    </items>
+                  </fixedColumnContainer>
+                </items>
+              </details>
+              <scope jcr:primaryType="nt:unstructured"
+                     jcr:title="Page Selection"
+                     sling:resourceType="granite/ui/components/coral/foundation/container">
+                <parentConfig jcr:primaryType="nt:unstructured">
+                  <next jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/button"
+                        granite:class="foundation-wizard-control aem-modernize-job-create-next"
+                        disabled="{Boolean}true"
+                        variant="primary"
+                        type="submit"
+                        text="Schedule Job">
+                    <granite:data jcr:primaryType="nt:unstructured"
+                                  foundation-wizard-control-action="next"/>
+                  </next>
+                </parentConfig>
+                <items jcr:primaryType="nt:unstructured">
+                  <default jcr:primaryType="nt:unstructured"
+                           sling:resourceType="granite/ui/components/coral/foundation/actionbar">
+                    <primary jcr:primaryType="nt:unstructured">
+                      <add jcr:primaryType="nt:unstructured"
+                           sling:resourceType="granite/ui/components/coral/foundation/button"
+                           granite:class="foundation-collection-action foundation-picker-control"
+                           icon="add"
+                           text="Add Pages"
+                           variant="actionBar">
+                        <granite:data jcr:primaryType="nt:unstructured"
+                                      foundation-collection-action="\{&quot;target&quot;:&quot;.aem-modernize-job-pages&quot;,&quot;activeSelectionCount&quot;:&quot;none&quot;,&quot;relScope&quot;:&quot;collection&quot;}"
+                                      foundation-picker-control-action="\{&quot;name&quot;:&quot;aem.modernize.addcontent&quot;,&quot;data&quot;:{}}"
+                                      foundation-picker-control-src="/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/picker.html?root=%2Fcontent&amp;filter=hierarchyNotFile&amp;selectionCount=multiple"/>
+                      </add>
+                      <includechildren jcr:primaryType="nt:unstructured"
+                                       sling:resourceType="granite/ui/components/coral/foundation/button"
+                                       granite:class="foundation-collection-action aem-modernize-collection-action-includechildren"
+                                       icon="add"
+                                       text="Include Children"
+                                       variant="actionBar">
+                        <granite:data jcr:primaryType="nt:unstructured"
+                                      foundation-collection-action="\{&quot;target&quot;:&quot;.aem-modernize-job-pages&quot;,&quot;activeSelectionCount&quot;:&quot;single&quot;,&quot;action&quot;:&quot;foundation.dialog&quot;,&quot;data&quot;:{&quot;src&quot;:&quot;/mnt/overlay/aem-modernize/content/job/dialog/includechildren.html{+item}&quot;},&quot;relScope&quot;:&quot;collection&quot;}"/>
+                      </includechildren>
+                      <remove jcr:primaryType="nt:unstructured"
+                              sling:resourceType="granite/ui/components/coral/foundation/button"
+                              granite:class="foundation-collection-action aem-modernize-collection-action-delete"
+                              icon="delete"
+                              text="Remove Selection"
+                              variant="actionBar">
+                        <granite:data jcr:primaryType="nt:unstructured"
+                                      foundation-collection-action="\{&quot;target&quot;:&quot;.aem-modernize-job-pages&quot;,&quot;activeSelectionCount&quot;:&quot;multiple&quot;,&quot;relScope&quot;:&quot;collection&quot;}"/>
+                      </remove>
+                    </primary>
+                    <secondary jcr:primaryType="nt:unstructured">
+                      <collectionstatus jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="aem-modernize/components/job/create/status"
+                                        targetCollection=".aem-modernize-job-pages"/>
+                    </secondary>
+                  </default>
+                  <list jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/table"
+                        granite:rel="aem-modernize-full-job-create aem-modernize-job-pages"
+                        modeGroup="aem-modernize-full-job-create"
+                        selectionCount="multiple"
+                        selectionMode="row"
+                        variant="list"
+                        layoutId="table"
+                        skipEmptyRow="{Boolean}true">
+                    <granite:data jcr:primaryType="nt:unstructured"
+                                  empty-table-column-span="8"/>
+                    <columns jcr:primaryType="nt:unstructured">
+                      <select jcr:primaryType="nt:unstructured"
+                              alignment="center"
+                              fixedWidth="{Boolean}true"
+                              select="{Boolean}true"/>
+                      <path jcr:primaryType="nt:unstructured"
+                            jcr:title="Page"
+                            sortable="{Boolean}true"/>
+                      <stuctureRules jcr:primaryType="nt:unstructured"
+                             jcr:title="Structure Rule Count"
+                             sortable="{Boolean}false"
+                             alignment="center"
+                             fixedWidth="{Boolean}true"/>
+                      <policies jcr:primaryType="nt:unstructured"
+                                jcr:title="Policy Count"
+                                sortable="{Boolean}false"
+                                alignment="center"
+                                fixedWidth="{Boolean}true"/>
+                      <policyRules jcr:primaryType="nt:unstructured"
+                             jcr:title="Policy Rule Count"
+                             sortable="{Boolean}false"
+                             alignment="center"
+                             fixedWidth="{Boolean}true"/>
+                      <components jcr:primaryType="nt:unstructured"
+                                jcr:title="Component Count"
+                                sortable="{Boolean}false"
+                                alignment="center"
+                                fixedWidth="{Boolean}true"/>
+                      <componentRules jcr:primaryType="nt:unstructured"
+                                   jcr:title="Component Rule Count"
+                                   sortable="{Boolean}false"
+                                   alignment="center"
+                                   fixedWidth="{Boolean}true"/>
+                      <details jcr:primaryType="nt:unstructured"
+                               jcr:title="Rule Details"
+                               alignment="center"
+                               fixedWidth="{Boolean}true"
+                               sortable="{Boolean}false"/>
+                    </columns>
+                  </list>
+                </items>
+              </scope>
+            </items>
+          </wizard>
+        </items>
+      </form>
+    </items>
+  </body>
+</jcr:root>

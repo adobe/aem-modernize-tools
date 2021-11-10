@@ -1,0 +1,6 @@
+#base=js
+
+namespace.js
+navpanel.js
+list.js
+create.js
