@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
@@ -35,7 +36,6 @@ import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.eclipse.jetty.util.StringUtil;
 
 @Model(
     adaptables = Resource.class
@@ -108,7 +108,7 @@ public class ConversionJobBucket {
       ValueMap vm = resource.getValueMap();
       String str = vm.get(PN_JOB_STATUS, String.class);
       try {
-        if (StringUtil.isNotBlank(str)) {
+        if (StringUtils.isNotBlank(str)) {
           status = ConversionJob.Status.valueOf(str);
         }
       } catch (IllegalArgumentException e) {

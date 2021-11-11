@@ -82,6 +82,6 @@ public class ListPageVisitor extends AbstractResourceVisitor {
   }
 
   public List<String> getPaths() {
-    return paths;
+    return new ArrayList<>(paths);
   }
 }

@@ -71,7 +71,7 @@ public class ConversionJobNavItem {
         buckets.add(new ConversionJobBucketNavItem(b.getPaths().size(), i == activeBucket, b.getStatus()));
       }
     }
-    return buckets;
+    return new ArrayList<>(buckets);
   }
 
   @Value

@@ -1,22 +1,3 @@
-/*
- * AEM Modernize Tools
- *
- * Copyright (c) 2019 Adobe
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.adobe.aem.modernize.component.impl.rule;
 
 /*-
@@ -85,6 +66,7 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.osgi.service.metatype.annotations.Option;
+import org.osgi.util.converter.Converters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.day.cq.wcm.api.NameConstants.*;
@@ -278,6 +260,9 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
 
     NodeIterator siblings = root.getNodes();
     Node node = findFirstColumn(siblings);
+    if (node == null) {
+      return root; // Protect against NPE if incorrectly called.
+    }
     Session session = root.getSession();
     int i = 0;
     node.remove(); // Remove the starting column.
@@ -421,12 +406,12 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
   @Activate
   @Modified
   @SuppressWarnings("unused")
-  protected void activate(ComponentContext context, Config config) throws RepositoryException, ConfigurationException {
+  protected void activate(ComponentContext context, Config config) throws ConfigurationException {
     @SuppressWarnings("unchecked")
     Dictionary<String, Object> props = context.getProperties();
     // read service ranking property
-    this.ranking = PropertiesUtil.toInteger(props.get("service.ranking"), this.ranking);
-    this.id = PropertiesUtil.toString(props.get("service.pid"), this.id);
+    this.ranking = Converters.standardConverter().convert(props.get("service.ranking")).defaultValue(Integer.MAX_VALUE).to(Integer.class);
+    this.id = Converters.standardConverter().convert(props.get("service.id")).defaultValue(this.id).to(String.class);
 
     columnControlResourceType = config.column_control_resourceType();
     if (StringUtils.isBlank(columnControlResourceType)) {

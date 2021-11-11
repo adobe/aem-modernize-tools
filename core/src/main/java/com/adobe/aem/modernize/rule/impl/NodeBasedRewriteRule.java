@@ -690,7 +690,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
      * @param patterns the patterns to match
      */
     private AggregateIterator(Node start, Node patterns) throws RepositoryException {
-      int skip = 0;
+      long skip = 0;
       NodeIterator siblings = start.getParent().getNodes();
       boolean found = false;
       while (!found && siblings.hasNext()) {
@@ -699,7 +699,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
       }
 
       this.nodeIterator = start.getParent().getNodes();
-      this.nodeIterator.skip(skip - 1);
+      this.nodeIterator.skip(skip - (long) 1);
       this.patternIterator = patterns.getNodes();
     }
 
