@@ -96,7 +96,7 @@
         <vault.user>admin</vault.user>
         <vault.password>admin</vault.password>
 
-        <bnd.version>5.3.0</bnd.version>
+        <bnd.version>6.0.0</bnd.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jmockit.version>1.49</jmockit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -554,7 +554,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.osgi</groupId>
                         <artifactId>org.osgi.service.component.annotations</artifactId>
-                        <version>1.4.0</version>
+                        <version>1.5.0</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
@@ -578,7 +578,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.osgi</groupId>
                         <artifactId>org.osgi.service.log</artifactId>
-                        <version>1.4.0</version>
+                        <version>1.5.0</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
