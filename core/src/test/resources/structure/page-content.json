@@ -11,6 +11,23 @@
       "cq:designPath": "/etc/designs/aem-modernize/en",
       "cq:template": "/apps/aem-modernize/templates/homepage",
       "sling:resourceType": "aem-modernize/components/homepage",
+      "doNotTouch": {
+        "jcr:primaryType": "nt:unstructured"
+      },
+      "cq:LiveSyncConfig": {
+        "jcr:primaryType": "nt:unstructured",
+        "cq:isDeep": true,
+        "cq:master": "/content/test/master/matches",
+        "cq:rolloutConfigs": [
+          "/libs/msm/wcm/rolloutconfigs/default"
+        ]
+      },
+      "cq:BlueprintSyncConfig": {
+        "jcr:primaryType": "nt:unstructured",
+        "cq:rolloutConfigs": [
+          "/libs/msm/wcm/rolloutconfigs/default"
+        ]
+      },
       "movedToEnd": {
         "jcr:primaryType": "nt:unstructured",
         "jcr:title": "Strategic Consulting",
