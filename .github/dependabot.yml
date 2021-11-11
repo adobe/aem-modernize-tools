@@ -4,6 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "jacoco-maven-plugin"
+        versions: ["0.8.x"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
