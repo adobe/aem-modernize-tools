@@ -22,8 +22,8 @@
 
   class CreateJobForm {
 
-    static #NO_CONTENT = Granite.I18n.get("There are no items.");
-    static #EMPTY_ROW = '<tr is="coral-table-row" class="empty-row"><td is="coral-table-cell" alignment="center">' + CreateJobForm.#NO_CONTENT + '</td></tr>';
+    static NO_CONTENT = Granite.I18n.get("There are no items.");
+    static EMPTY_ROW = '<tr is="coral-table-row" class="empty-row"><td is="coral-table-cell" alignment="center">' + CreateJobForm.NO_CONTENT + '</td></tr>';
 
     #ui;
     #$form;
@@ -552,7 +552,7 @@
       this.#$table[0].trigger("foundation-selections-change");
       const next = this.#$wizard.find(".aem-modernize-job-create-next")[0];
       if (this.#$wizard.pageList.length === 0) {
-        this.#$table[0].items.add($(CreateJobForm.#EMPTY_ROW)[0]);
+        this.#$table[0].items.add($(CreateJobForm.EMPTY_ROW)[0]);
         $(".empty-row td").attr("colspan", this.#columnCount);
         this.#$table.trigger("coral-collection:add");
         next.disabled = true;

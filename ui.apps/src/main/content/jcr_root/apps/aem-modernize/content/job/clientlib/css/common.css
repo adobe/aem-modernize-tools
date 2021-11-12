@@ -38,7 +38,8 @@
 div.smallIcon {
   padding: .9375rem;
   background-color: #bbb;
-  margin-right: .5rem
+  margin-right: .5rem;
+  color: #fff;
 }
 
 td div.status {
@@ -49,10 +50,6 @@ td div.status {
 div.mediumIcon {
   font-size: 1rem;
   margin-right: 1rem;
-}
-
-div.smallIcon {
-  color: #fff;
 }
 
 div.error {

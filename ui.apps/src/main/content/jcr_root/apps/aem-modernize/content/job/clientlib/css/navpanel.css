@@ -18,18 +18,18 @@
  * #L%
  */
 
-coral-tab.error coral-icon {
+coral-tab.error._coral-Tabs-item ._coral-Icon, coral-tab.error._coral-Tabs-item.is-selected ._coral-Icon {
   color: #fa7d73;
 }
 
-coral-tab.warn coral-icon  {
+coral-tab.warn._coral-Tabs-item ._coral-Icon, coral-tab.warn._coral-Tabs-item.is-selected ._coral-Icon {
   color: #fad782;
 }
 
-coral-tab.success coral-icon{
+coral-tab.success._coral-Tabs-item ._coral-Icon, coral-tab.success._coral-Tabs-item.is-selected ._coral-Icon {
   color: #b3da8a;
 }
 
-coral-tab.info coral-icon{
+coral-tab.info._coral-Tabs-item ._coral-Icon, coral-tab.info._coral-Tabs-item.is-selected ._coral-Icon {
   color: #696969;
 }
