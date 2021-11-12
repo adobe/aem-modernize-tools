@@ -572,7 +572,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.osgi</groupId>
                         <artifactId>org.osgi.service.event</artifactId>
-                        <version>1.4.0</version>
+                        <version>1.4.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
