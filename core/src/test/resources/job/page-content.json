@@ -78,6 +78,9 @@
         "text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc eget neque. Nunc condimentum ipsum et orci. Aenean est. Cras eget diam. read more",
         "sling:resourceType": "aem-modernize/components/header"
       }
+    },
+    "childPage": {
+      "jcr:primaryType": "cq:Page"
     }
   },
   "second-page": {

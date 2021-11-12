@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
@@ -286,6 +287,11 @@ public class FullConversionJobExecutorTest {
     assertEquals(1, notFound.size(), "Not found list size");
     assertTrue(notFound.contains("/content/test/not-found-page"), "Not found item");
 
+    Node page = rr.getResource("/content/test/first-page").adaptTo(Node.class);
+    NodeIterator pageNodes = page.getNodes();
+    assertEquals(NameConstants.NN_CONTENT, pageNodes.nextNode().getName(), "Content order");
+    assertEquals("childPage", pageNodes.nextNode().getName(), "Content order");
+
     ValueMap vm = rr.getResource("/content/test/first-page/jcr:content").adaptTo(ValueMap.class);
     assertEquals(version, vm.get(PN_PRE_MODERNIZE_VERSION, String.class), "Page Version");
     assertEquals("aem-modernize/components/structure/homepage", vm.get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class), "Page Sling Resource Type");
@@ -293,6 +299,7 @@ public class FullConversionJobExecutorTest {
 
     vm = rr.getResource("/content/test/first-page/jcr:content/root/title").adaptTo(ValueMap.class);
     assertNull(vm.get("cq:policyPath"), "Temp property removed");
+
 
     vm = rr.getResource("/content/test/second-page/jcr:content").adaptTo(ValueMap.class);
     assertEquals("123456789", vm.get(PN_PRE_MODERNIZE_VERSION, String.class));
@@ -313,12 +320,12 @@ public class FullConversionJobExecutorTest {
     assertEquals("wcm/core/components/policies/mappings", vm.get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class), "Mapping resource type");
 
     Resource policiesParent = rr.getResource("/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title");
-    Iterator<Resource> children = policiesParent.listChildren();
-    assertTrue(children.hasNext(), "Created Policy count");
-    children.next();
-    assertTrue(children.hasNext(), "Created Policy count");
-    children.next();
-    assertFalse(children.hasNext(), "Created Policy count");
+    Iterator<Resource> childResources = policiesParent.listChildren();
+    assertTrue(childResources.hasNext(), "Created Policy count");
+    childResources.next();
+    assertTrue(childResources.hasNext(), "Created Policy count");
+    childResources.next();
+    assertFalse(childResources.hasNext(), "Created Policy count");
 
   }
 

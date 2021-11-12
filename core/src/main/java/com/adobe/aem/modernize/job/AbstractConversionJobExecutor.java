@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
@@ -40,7 +41,6 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
-import org.eclipse.jetty.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   @Override
   public JobExecutionResult process(Job job, JobExecutionContext context) {
     String trackingPath = job.getProperty(PN_TRACKING_PATH, String.class);
-    if (StringUtil.isBlank(trackingPath)) {
+    if (StringUtils.isBlank(trackingPath)) {
       return context.result().message("Invalid job state, no paths specified to process.").cancelled();
     }
     ResourceResolver resourceResolver = null;
@@ -84,7 +84,6 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
       updateBucket(bucket, finished);
       logFinish(tracking, finished);
       resourceResolver.commit();
-      // TODO: Save job state on Bucket for reporting (jobs get removed)
       return context.result().message("Successfully processed conversion job.").succeeded();
     } catch (LoginException e) {
       context.log("Unable to log in using service user: {}", e.getLocalizedMessage());

@@ -38,6 +38,7 @@ import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.policy.job.PolicyJobExecutor;
 import com.adobe.aem.modernize.structure.job.PageStructureJobExecutor;
+import com.day.cq.wcm.api.NameConstants;
 import lombok.Getter;
 
 @Model(
@@ -64,7 +65,7 @@ public class ConversionJob {
 
   public static final String JOB_DATA_LOCATION = "/var/aem-modernize/job-data";
 
-  public static final String PN_TITLE = "jcr:title";
+  public static final String PN_TITLE = NameConstants.PN_TITLE;
   public static final String PN_OVERWRITE = "overwrite";
   public static final String PN_TEMPLATE_RULES = "templateRules";
   public static final String PN_COMPONENT_RULES = "componentRules";

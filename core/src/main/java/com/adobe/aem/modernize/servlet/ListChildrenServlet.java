@@ -26,7 +26,7 @@ import java.util.List;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;

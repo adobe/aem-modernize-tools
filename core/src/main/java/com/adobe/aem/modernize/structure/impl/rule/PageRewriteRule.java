@@ -1,22 +1,3 @@
-/*
- * AEM Modernize Tools
- *
- * Copyright (c) 2019 Adobe
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.adobe.aem.modernize.structure.impl.rule;
 
 /*-
@@ -61,7 +42,6 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -79,8 +59,6 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.osgi.util.converter.Converters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import static com.day.cq.wcm.api.NameConstants.*;
 
 /**
@@ -100,9 +78,10 @@ import static com.day.cq.wcm.api.NameConstants.*;
 public class PageRewriteRule implements StructureRewriteRule {
 
   protected static final String NN_ROOT_CONTAINER = "root";
-  private static final Logger logger = LoggerFactory.getLogger(PageRewriteRule.class);
   private String id = PageRewriteRule.class.getName();
   private int ranking = Integer.MAX_VALUE;
+  private static final String NN_LIVE_SYNC = "cq:LiveSyncConfig";
+  private static final String NN_BLUEPRINT_SYNC = "cq:BlueprintSyncConfig";
 
   private String staticTemplate;
   private String editableTemplate;
@@ -110,6 +89,7 @@ public class PageRewriteRule implements StructureRewriteRule {
   private Map<String, List<String>> componentOrdering = new HashMap<>();
   private Map<String, String> componentRenamed;
   private List<String> componentsToRemove;
+  private List<String> componentsToIgnore;
   private String slingResourceType;
 
   @Override
@@ -157,7 +137,7 @@ public class PageRewriteRule implements StructureRewriteRule {
       String name = child.getName();
       if (componentsToRemove.contains(name)) {
         child.remove();
-      } else {
+      } else if (!componentsToIgnore.contains(name)) {
         names.add(name);
       }
     }
@@ -207,7 +187,7 @@ public class PageRewriteRule implements StructureRewriteRule {
 
   private String getResourceType(Session session) throws RewriteException, RepositoryException {
 
-    String path = PathUtils.concat(editableTemplate, "structure", "jcr:content");
+    String path = PathUtils.concat(editableTemplate, "structure", NN_CONTENT);
     if (!session.nodeExists(path)) {
       throw new RewriteException(String.format("Unable to find Editable Template: {}", editableTemplate));
     }
@@ -314,9 +294,8 @@ public class PageRewriteRule implements StructureRewriteRule {
     @SuppressWarnings("unchecked")
     Dictionary<String, Object> props = context.getProperties();
     // read service ranking property
-    this.ranking = PropertiesUtil.toInteger(props.get("service.ranking"), this.ranking);
-    this.id = PropertiesUtil.toString(props.get("service.pid"), this.id);
     this.ranking = Converters.standardConverter().convert(props.get("service.ranking")).defaultValue(Integer.MAX_VALUE).to(Integer.class);
+    this.id = Converters.standardConverter().convert(props.get("service.id")).defaultValue(this.id).to(String.class);
 
     staticTemplate = config.static_template();
     if (StringUtils.isBlank(staticTemplate)) {
@@ -366,6 +345,13 @@ public class PageRewriteRule implements StructureRewriteRule {
     if (config.rename_components() != null) {
       componentsToRemove = Arrays.stream(config.remove_components()).collect(Collectors.toList());
     }
+
+    componentsToIgnore = new ArrayList<>();
+    if (config.rename_components() != null) {
+      componentsToIgnore = Arrays.stream(config.ignore_components()).collect(Collectors.toList());
+    }
+    componentsToIgnore.add(NN_LIVE_SYNC);
+    componentsToIgnore.add(NN_BLUEPRINT_SYNC);
 
     componentRenamed = new LinkedHashMap<>();
     if (config.rename_components() != null) {
@@ -423,11 +409,19 @@ public class PageRewriteRule implements StructureRewriteRule {
 
     @AttributeDefinition(
         name = "Remove Components",
-        description = "Specify any components that may exist on the static page that can be removed.",
+        description = "Specify any components that may exist on the page that can be removed.",
         cardinality = Integer.MAX_VALUE,
         required = false
     )
     String[] remove_components();
+
+    @AttributeDefinition(
+        name = "Ignore Components",
+        description = "Specify any components that must remain on the root of the page content node.",
+        cardinality = Integer.MAX_VALUE,
+        required = false
+    )
+    String[] ignore_components();
 
     @AttributeDefinition(
         name = "Rename Components",

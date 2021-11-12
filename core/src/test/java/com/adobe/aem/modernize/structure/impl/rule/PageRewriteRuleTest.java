@@ -1,22 +1,3 @@
-/*
- * AEM Modernize Tools
- *
- * Copyright (c) 2019 Adobe
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.adobe.aem.modernize.structure.impl.rule;
 
 /*-
@@ -80,6 +61,7 @@ public class PageRewriteRuleTest {
   };
   private static final String[] REMOVE = { "toBeRemoved" };
   private static final String[] RENAME = { "par=container/container", "rightpar=container_12345", "ignored=", "alsoignored" };
+  private static final String[] IGNORED = { "doNotTouch" };
 
   public final AemContext context = new AemContext(ResourceResolverType.JCR_OAK);
 
@@ -159,6 +141,14 @@ public class PageRewriteRuleTest {
     assertEquals("container_12345", renamed.get("rightpar"), "Renamed container");
     assertNull(renamed.get("ignored"), "Ignores invalid");
     assertNull(renamed.get("alsoignored"), "Ignores invalid");
+
+    // Parses Ignores
+    props.put("ignore.components", IGNORED);
+    context.registerInjectActivateService(rule, props);
+    f = rule.getClass().getDeclaredField("componentsToIgnore");
+    f.setAccessible(true);
+    List<String> ignored = (List<String>) f.get(rule);
+    assertEquals("doNotTouch", ignored.get(0), "Ignored list");
 
     assertEquals(10, rule.getRanking());
     assertFalse(StringUtils.isBlank(rule.getId()));
@@ -255,6 +245,7 @@ public class PageRewriteRuleTest {
     props.put("order.components", ORDER);
     props.put("remove.components", REMOVE);
     props.put("rename.components", RENAME);
+    props.put("ignore.components", IGNORED);
     context.registerInjectActivateService(rule, props);
 
     ResourceResolver rr = context.resourceResolver();
@@ -265,6 +256,10 @@ public class PageRewriteRuleTest {
     assertFalse(rewrittenNode.hasProperty("cq:designPath"), "Design path removed");
     assertEquals(EDITABLE_TEMPLATE, rewrittenNode.getProperty("cq:template").getString(), "CQ Template property");
     assertEquals("aem-modernize/components/structure/homepage", rewrittenNode.getProperty("sling:resourceType").getString(), "Sling Resource Type");
+
+    assertTrue(rewrittenNode.hasNode("cq:LiveSyncConfig"), "Live Sync Config ignored");
+    assertTrue(rewrittenNode.hasNode("cq:BlueprintSyncConfig"), "Blueprint Sync Config ignored");
+    assertTrue(rewrittenNode.hasNode("doNotTouch"), "Explicitly specified node ignored");
 
     Node rootContainer = rewrittenNode.getNode("root");
     assertNotNull(rootContainer, "Root Container");

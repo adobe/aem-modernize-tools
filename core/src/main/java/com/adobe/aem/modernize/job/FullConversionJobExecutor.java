@@ -25,6 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.AbstractResourceVisitor;
@@ -124,7 +127,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         }
 
         RewriteUtils.createVersion(pm, page);
-        if (StringUtils.isNotBlank(targetPath)) {
+        if (!reprocess && StringUtils.isNotBlank(targetPath)) {
           page = RewriteUtils.copyPage(pm, page, targetPath);
         }
 
@@ -141,6 +144,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
           context.log("No component rules found, skipping skipping component conversion.");
         } else {
           componentService.apply(page.getContentResource(), componentRules, true);
+          fixChildrenOrder(page);
         }
 
         bucket.getSuccess().add(path);
@@ -158,6 +162,18 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   @Override
   protected ResourceResolverFactory getResourceResolverFactory() {
     return resourceResolverFactory;
+  }
+
+  private void fixChildrenOrder(Page page) throws RewriteException {
+    Iterator<Page> children = page.listChildren();
+    if (children.hasNext()) {
+      Node node = page.adaptTo(Node.class);
+      try {
+        node.orderBefore(NameConstants.NN_CONTENT, children.next().getName());
+      } catch (RepositoryException e) {
+        throw new RewriteException("Unable to re-order page's JCR Content Node.", e);
+      }
+    }
   }
 
   // Import any styles used by this page - set the new policy reference for later use.

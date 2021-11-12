@@ -147,7 +147,6 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     return null;
   }
 
-  // TODO: Add Logic for checking write permissions in /conf and /etc
   private void checkPermissions(ResourceResolver rr, RequestData data) throws AccessDeniedException {
     try {
       Session session = rr.adaptTo(Session.class);
@@ -182,7 +181,6 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       }
 
     } catch (RepositoryException e) {
-      logger.error("Unable to check permissions: {}", e.getLocalizedMessage());
       throw new AccessDeniedException(e.getLocalizedMessage());
     }
 
@@ -216,19 +214,14 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
 
   // Create the tree of data for tracking the state of the job.
   private String createTrackingState(Session session, RequestData requestData, String userId, List<String[]> buckets) throws RepositoryException {
-    try {
-      Node tracking = createTrackingNode(session, requestData, userId);
-      Node parent = tracking.addNode(NN_BUCKETS, JcrConstants.NT_UNSTRUCTURED);
-      for (String[] bucket : buckets) {
-        addBucketNode(session, parent, bucket);
-      }
-      session.save();
-      session.refresh(true);
-      return tracking.getPath();
-    } catch (RepositoryException e) {
-      logger.error("Could not save tracking data state.", e);
-      throw e;
+    Node tracking = createTrackingNode(session, requestData, userId);
+    Node parent = tracking.addNode(NN_BUCKETS, JcrConstants.NT_UNSTRUCTURED);
+    for (String[] bucket : buckets) {
+      addBucketNode(session, parent, bucket);
     }
+    session.save();
+    session.refresh(true);
+    return tracking.getPath();
   }
 
   // Create the parent node for tracking.
