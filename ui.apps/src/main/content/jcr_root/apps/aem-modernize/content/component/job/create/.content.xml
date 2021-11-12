@@ -163,7 +163,7 @@
                         layoutId="table"
                         skipEmptyRow="{Boolean}true">
                     <granite:data jcr:primaryType="nt:unstructured"
-                                  empty-table-column-span="5"/>
+                                  empty-table-column-span="4"/>
                     <columns jcr:primaryType="nt:unstructured">
                       <select jcr:primaryType="nt:unstructured"
                               alignment="center"
@@ -182,11 +182,11 @@
                              sortable="{Boolean}false"
                              alignment="center"
                              fixedWidth="{Boolean}true"/>
-                      <details jcr:primaryType="nt:unstructured"
-                               jcr:title="Rule Details"
-                               alignment="center"
-                               fixedWidth="{Boolean}true"
-                               sortable="{Boolean}false"/>
+<!--                      <details jcr:primaryType="nt:unstructured"-->
+<!--                               jcr:title="Rule Details"-->
+<!--                               alignment="center"-->
+<!--                               fixedWidth="{Boolean}true"-->
+<!--                               sortable="{Boolean}false"/>-->
                     </columns>
                   </list>
                 </items>

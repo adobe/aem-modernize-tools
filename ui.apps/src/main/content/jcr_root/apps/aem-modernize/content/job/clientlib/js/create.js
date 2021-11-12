@@ -412,9 +412,9 @@
         $row.append($cell[0]);
       }
 
-      const $details = $('<td is="coral-table-cell" alignment="center">');
-      $details.append('<coral-icon icon="gears" size="S" autoarialable="on" role="img" aria-label="gears"></coral-icon>');
-      $row.append($details[0]);
+      // const $details = $('<td is="coral-table-cell" alignment="center">');
+      // $details.append('<coral-icon icon="gears" size="S" autoarialable="on" role="img" aria-label="gears"></coral-icon>');
+      // $row.append($details[0]);
 
       return $row;
     }

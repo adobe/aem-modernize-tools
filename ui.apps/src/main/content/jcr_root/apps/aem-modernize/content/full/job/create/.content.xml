@@ -219,7 +219,7 @@
                         layoutId="table"
                         skipEmptyRow="{Boolean}true">
                     <granite:data jcr:primaryType="nt:unstructured"
-                                  empty-table-column-span="8"/>
+                                  empty-table-column-span="7"/>
                     <columns jcr:primaryType="nt:unstructured">
                       <select jcr:primaryType="nt:unstructured"
                               alignment="center"
@@ -229,35 +229,35 @@
                             jcr:title="Page"
                             sortable="{Boolean}true"/>
                       <stuctureRules jcr:primaryType="nt:unstructured"
-                             jcr:title="Structure Rule Count"
+                             jcr:title="Structure Rules"
                              sortable="{Boolean}false"
                              alignment="center"
                              fixedWidth="{Boolean}true"/>
                       <policies jcr:primaryType="nt:unstructured"
-                                jcr:title="Policy Count"
+                                jcr:title="Policies"
                                 sortable="{Boolean}false"
                                 alignment="center"
                                 fixedWidth="{Boolean}true"/>
                       <policyRules jcr:primaryType="nt:unstructured"
-                             jcr:title="Policy Rule Count"
+                             jcr:title="Policy Rules"
                              sortable="{Boolean}false"
                              alignment="center"
                              fixedWidth="{Boolean}true"/>
                       <components jcr:primaryType="nt:unstructured"
-                                jcr:title="Component Count"
+                                jcr:title="Components"
                                 sortable="{Boolean}false"
                                 alignment="center"
                                 fixedWidth="{Boolean}true"/>
                       <componentRules jcr:primaryType="nt:unstructured"
-                                   jcr:title="Component Rule Count"
+                                   jcr:title="Component Rules"
                                    sortable="{Boolean}false"
                                    alignment="center"
                                    fixedWidth="{Boolean}true"/>
-                      <details jcr:primaryType="nt:unstructured"
-                               jcr:title="Rule Details"
-                               alignment="center"
-                               fixedWidth="{Boolean}true"
-                               sortable="{Boolean}false"/>
+<!--                      <details jcr:primaryType="nt:unstructured"-->
+<!--                               jcr:title="Details"-->
+<!--                               alignment="center"-->
+<!--                               fixedWidth="{Boolean}true"-->
+<!--                               sortable="{Boolean}false"/>-->
                     </columns>
                   </list>
                 </items>
