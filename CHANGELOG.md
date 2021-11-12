@@ -8,6 +8,7 @@
 
 - Latest build fails, due to api error for specified biz.aQute.bnd version [\#29](https://github.com/adobe/aem-modernize-tools/issues/29)
 - Policy importer doesn't copy child nodes with cq:copyChildren [\#28](https://github.com/adobe/aem-modernize-tools/issues/28)
+- LiveCopy and BluePrint configs moved to Root [\#27](https://github.com/adobe/aem-modernize-tools/issues/27)
 - \[Query\] Page versioning after migration [\#26](https://github.com/adobe/aem-modernize-tools/issues/26)
 - Dialog Conversion Tool needs to encode colon in CRXDE link [\#22](https://github.com/adobe/aem-modernize-tools/issues/22)
 - Exception because of empty XML file [\#21](https://github.com/adobe/aem-modernize-tools/issues/21)
@@ -24,6 +25,7 @@
 
 ### 📁 Other pull requests
 
+- Leave LC/BP nodes at root of `jcr:content` [\#69](https://github.com/adobe/aem-modernize-tools/pull/69) ([bstopp](https://github.com/bstopp))
 - Update Dependencies [\#67](https://github.com/adobe/aem-modernize-tools/pull/67) ([bstopp](https://github.com/bstopp))
 - Support Cloud Service - Move to Sling Jobs [\#63](https://github.com/adobe/aem-modernize-tools/pull/63) ([bstopp](https://github.com/bstopp))
 - Bump org.osgi.service.event from 1.3.1 to 1.4.0 [\#53](https://github.com/adobe/aem-modernize-tools/pull/53) ([dependabot[bot]](https://github.com/apps/dependabot))
