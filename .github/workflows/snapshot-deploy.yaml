@@ -22,30 +22,7 @@ jobs:
           echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
-      - name: Setup JDK 8
-        uses: actions/setup-java@v2.3.1
-        with:
-          distribution: 'zulu'
-          java-version: 8
-          cache: maven
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-
-      - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -P aem65,release
-        env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Java 8 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging -P aemCloudSerivce,release
-        env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Setup JDK 11
+      - name: Setup JDK
         uses: actions/setup-java@v2.3.1
         with:
           distribution: 'zulu'
@@ -57,8 +34,18 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Java 8 AEM6.5 Build
+        run: mvn clean deploy -DskipRemoteStaging -P java8aem65,release
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Java 8 AEMaaCS Build
+        run: mvn clean deploy -DskipRemoteStaging -P java8,release
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
       - name: Java 11 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -P aemCloudService,release
+        run: mvn clean deploy -DskipRemoteStaging -P aem65,release
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 

@@ -11,8 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        aem: [aemCloudService, aem65]
-        jdk: [8, 11]
+        profile: [aemCloudService, java8, aem65, java8aem65]
 
     steps:
       - name: Checkout code
@@ -22,11 +21,11 @@ jobs:
         uses: actions/setup-java@v2.3.1
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.jdk }}
+          java-version: 11
           cache: maven
 
       - name: Build & Test with Maven
-        run: mvn -U clean verify -P${{ matrix.aem }}
+        run: mvn -U clean install -P${{ matrix.profile }}
 
       - name: Upload CodeCov
         uses: codecov/codecov-action@v2.1.0
