@@ -6,6 +6,7 @@
 
 ### 📁 Other issues
 
+- Page Conversion Tool url encode issue with page/folders that are numerically named [\#32](https://github.com/adobe/aem-modernize-tools/issues/32)
 - Latest build fails, due to api error for specified biz.aQute.bnd version [\#29](https://github.com/adobe/aem-modernize-tools/issues/29)
 - Policy importer doesn't copy child nodes with cq:copyChildren [\#28](https://github.com/adobe/aem-modernize-tools/issues/28)
 - LiveCopy and BluePrint configs moved to Root [\#27](https://github.com/adobe/aem-modernize-tools/issues/27)
@@ -25,6 +26,7 @@
 
 ### 📁 Other pull requests
 
+- Enable Java8 Builds [\#70](https://github.com/adobe/aem-modernize-tools/pull/70) ([bstopp](https://github.com/bstopp))
 - Leave LC/BP nodes at root of `jcr:content` [\#69](https://github.com/adobe/aem-modernize-tools/pull/69) ([bstopp](https://github.com/bstopp))
 - Update Dependencies [\#67](https://github.com/adobe/aem-modernize-tools/pull/67) ([bstopp](https://github.com/bstopp))
 - Support Cloud Service - Move to Sling Jobs [\#63](https://github.com/adobe/aem-modernize-tools/pull/63) ([bstopp](https://github.com/bstopp))
