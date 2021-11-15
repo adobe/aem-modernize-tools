@@ -729,27 +729,24 @@ Bundle-DocURL:
             <properties>
                 <aem.version>2021.11.6013.20211105T162756Z-211000</aem.version>
             </properties>
-
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <classifier>java8</classifier>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>8</source>
-                            <target>8</target>
-                        </configuration>
-                    </plugin>
-                </plugins>
                 <pluginManagement>
                     <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <classifier>java8</classifier>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <source>8</source>
+                                <target>8</target>
+                            </configuration>
+                        </plugin>
                         <plugin>
                             <groupId>org.apache.jackrabbit</groupId>
                             <artifactId>filevault-package-maven-plugin</artifactId>
@@ -776,26 +773,27 @@ Bundle-DocURL:
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <aem.version>6.5.0</aem.version>
+            </properties>
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <classifier>java8aem65</classifier>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>8</source>
-                            <target>8</target>
-                        </configuration>
-                    </plugin>
-                </plugins>
                 <pluginManagement>
                     <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <classifier>java8aem65</classifier>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <source>8</source>
+                                <target>8</target>
+                            </configuration>
+                        </plugin>
                         <plugin>
                             <groupId>org.apache.jackrabbit</groupId>
                             <artifactId>filevault-package-maven-plugin</artifactId>
