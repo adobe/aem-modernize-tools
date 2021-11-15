@@ -86,7 +86,7 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
       resourceResolver.commit();
       return context.result().message("Successfully processed conversion job.").succeeded();
     } catch (LoginException e) {
-      context.log("Unable to log in using service user: {}", e.getLocalizedMessage());
+      context.log("Unable to log in using service user: {0}", e.getLocalizedMessage());
       logger.error("Unable to log in using service user to perform conversion", e);
       return context.result().message("Unable to log in using service user.").cancelled();
     } catch (PersistenceException e) {

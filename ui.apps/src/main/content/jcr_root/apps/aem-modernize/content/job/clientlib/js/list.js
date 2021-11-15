@@ -25,11 +25,11 @@
     $(".aem-modernize-collectionstatus").filter(function() {
       return $collection.is($(this).data("aemModernizeTarget"));
     }).each(function() {
-      let count = Math.max($collection[0].items.length, $("form.aem-modernize-job-form input[type=hidden][name=path]").length) - $collection.find(".empty-row").length;
+      let count = Math.max($collection[0].items.length, $("form.aem-modernize-job-form input[type='hidden'][name='path']").length) - $collection.find(".empty-row").length;
       if (count === 0) {
         count = "0";
       }
-      const content = Granite.I18n.get("{0} conversions(s)", count, "The current selection count");
+      const content = Granite.I18n.get("{0} conversion(s)", count, "The current selection count");
       $(this).html(content);
     });
 

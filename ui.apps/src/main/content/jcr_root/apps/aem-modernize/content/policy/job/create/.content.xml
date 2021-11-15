@@ -121,7 +121,8 @@
               </details>
               <scope jcr:primaryType="nt:unstructured"
                      jcr:title="Page Selection"
-                     sling:resourceType="granite/ui/components/coral/foundation/container">
+                     sling:resourceType="granite/ui/components/coral/foundation/container"
+                     maximized="{Boolean}true">
                 <parentConfig jcr:primaryType="nt:unstructured">
                   <next jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/button"

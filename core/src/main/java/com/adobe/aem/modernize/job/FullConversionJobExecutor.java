@@ -109,20 +109,18 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
     for (String path : paths) {
       Page page = pm.getPage(path);
       if (page == null) {
-        context.log("Path [{}] was not a page, skipping.", path);
         bucket.getNotFound().add(path);
         context.incrementProgressCount(1);
         continue;
       }
+
       try {
         if (reprocess) {
           page = RewriteUtils.restore(pm, page);
         }
 
         // Walk page's content tree and find all styles and import them
-        if (policyRules.isEmpty() || StringUtils.isBlank(confDest)) {
-          context.log("No policy rules or target found, skipping skipping policy import.");
-        } else {
+        if (!policyRules.isEmpty() && !StringUtils.isBlank(confDest)) {
           importPolicies(page, confDest, policyRules, overwritePolicies, importedPolicies);
         }
 
@@ -131,14 +129,15 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
           page = RewriteUtils.copyPage(pm, page, targetPath);
         }
 
-        if (templateRules.isEmpty()) {
-          context.log("No template rules found, skipping structure conversion.");
-        } else {
+        if (!templateRules.isEmpty()) {
           structureService.apply(page, templateRules);
         }
 
         // Policies need to be applied before component processing - that will remove temp property.
-        applyPolicies(context, page, confDest);
+        String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+        if (StringUtils.startsWith(templatePath, confDest)) {
+          applyPolicies(context, page, confDest);
+        }
 
         if (componentRules.isEmpty()) {
           context.log("No component rules found, skipping skipping component conversion.");
@@ -244,7 +243,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
           }
         } catch (PersistenceException e) {
           logger.error("Unable to apply policy due to repository error.", e);
-          context.log("Unable to apply policy due to repository error: {}", e.getLocalizedMessage());
+          context.log("Unable to apply policy due to repository error: {0}", e.getLocalizedMessage());
         }
       }
     }.accept(page.getContentResource());
