@@ -14,8 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up environment with Java and Maven
-      # See https://github.com/actions/setup-java#publishing-using-apache-maven
+      - name: Import GPG key
+        env:
+          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+        run: |
+          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
+          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+
       - name: Setup JDK
         uses: actions/setup-java@v2.3.1
         with:
@@ -28,22 +34,22 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Import GPG key
+      - name: Java 8 AEM6.5 Build
+        run: mvn clean deploy -DskipRemoteStaging -P java8aem65,release
         env:
-          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
-          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
-        run: |
-          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
-          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
-
-      - name: Publish AEM6.5 to Apache Maven Central
-        run: mvn clean deploy -P aem65,release
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Publish to Apache Maven Central
+      - name: Java 8 AEMaaCS Build
+        run: mvn clean deploy -DskipRemoteStaging -P java8,release
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Java 11 AEM6.5 Build
+        run: mvn clean deploy -DskipRemoteStaging -P aem65,release
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Java 11 AEMaaCS Build & Deploy all to Central
         run: mvn clean deploy -P aemCloudService,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}

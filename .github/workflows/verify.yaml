@@ -11,9 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        include:
-          - aemVersion: "CloudService"
-          - aemVersion: "65"
+        profile: [aemCloudService, java8, aem65, java8aem65]
 
     steps:
       - name: Checkout code
@@ -27,7 +25,7 @@ jobs:
           cache: maven
 
       - name: Build & Test with Maven
-        run: mvn -U clean verify -Paem${{ matrix.aemVersion }}
+        run: mvn -U clean install -P${{ matrix.profile }}
 
       - name: Upload CodeCov
         uses: codecov/codecov-action@v2.1.0
