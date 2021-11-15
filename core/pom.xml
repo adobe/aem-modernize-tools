@@ -221,6 +221,24 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
             </dependencies>
         </profile>
         <profile>
+            <id>java8</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <jdk>1.8.0</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <classifier>java8</classifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>attach-java8</id>
             <activation>
                 <activeByDefault>false</activeByDefault>

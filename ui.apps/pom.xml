@@ -144,7 +144,6 @@
                     <version>${project.version}</version>
                     <type>zip</type>
                 </dependency>
-
             </dependencies>
         </profile>
         <profile>
@@ -217,6 +216,67 @@
                     <version>${project.version}</version>
                     <classifier>aem65</classifier>
                     <type>zip</type>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>java8</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <jdk>1.8.0</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.jackrabbit</groupId>
+                        <artifactId>filevault-package-maven-plugin</artifactId>
+                        <configuration>
+                            <repositoryStructurePackages>
+                                <repositoryStructurePackage>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                                    <classifier>java8</classifier>
+                                </repositoryStructurePackage>
+                            </repositoryStructurePackages>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>java8</classifier>
+                                </dependency>
+                            </dependencies>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <configuration>
+                            <packageFile>target/${project.artifactId}-${project.version}-java8.zip</packageFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.core</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>java8</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                    <classifier>java8</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                    <classifier>java8</classifier>
                 </dependency>
             </dependencies>
         </profile>

@@ -206,6 +206,7 @@
             <id>java8</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
+                <jdk>1.8.0</jdk>
             </activation>
             <build>
                 <plugins>
@@ -214,11 +215,16 @@
                         <artifactId>filevault-package-maven-plugin</artifactId>
                         <extensions>true</extensions>
                         <configuration>
+                            <group>com.adobe.aem</group>
+                            <packageType>container</packageType>
+                            <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
+                            <skipSubPackageValidation>true</skipSubPackageValidation>
                             <classifier>java8</classifier>
                             <embeddeds>
                                 <embedded>
                                     <groupId>com.adobe.aem</groupId>
                                     <artifactId>aem-modernize-tools.ui.apps</artifactId>
+                                    <classifier>java8</classifier>
                                     <type>zip</type>
                                     <target>/apps/aem-modernize-packages/application/install</target>
                                 </embedded>
@@ -228,7 +234,21 @@
                                     <classifier>java8</classifier>
                                     <target>/apps/aem-modernize-packages/application/install</target>
                                 </embedded>
+                                <embedded>
+                                    <groupId>com.adobe.aem</groupId>
+                                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                                    <classifier>java8</classifier>
+                                    <type>zip</type>
+                                    <target>/apps/aem-modernize-packages/application/install</target>
+                                </embedded>
                             </embeddeds>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <configuration>
+                            <packageFile>target/${project.artifactId}-${project.version}-java8.zip</packageFile>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -239,6 +259,20 @@
                     <artifactId>aem-modernize-tools.core</artifactId>
                     <version>${project.version}</version>
                     <classifier>java8</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.apps</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>java8</classifier>
+                    <type>zip</type>
+                </dependency>
+                <dependency>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aem-modernize-tools.ui.config</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>java8</classifier>
+                    <type>zip</type>
                 </dependency>
             </dependencies>
         </profile>

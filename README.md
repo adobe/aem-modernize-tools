@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 -->
 [![Maven Central](https://img.shields.io/maven-central/v/com.adobe.cq/aem-modernize-tools)](https://search.maven.org/artifact/com.adobe.cq/aem-modernize-tools)
-[![Build](https://github.com/adobe/aem-modernize-tools/workflows/Build/badge.svg)](https://github.com/adobe/aem-modernize-tools/actions?query=workflow%3ABuild)
+[![Build](https://github.com/adobe/aem-modernize-tools/workflows/Snapshot%20Deploy/badge.svg)](https://github.com/adobe/aem-modernize-tools/actions?query=workflow%3Averify)
 [![Codecov](https://img.shields.io/codecov/c/github/adobe/aem-modernize-tools)](https://codecov.io/gh/adobe/aem-modernize-tools)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
