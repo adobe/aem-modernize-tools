@@ -49,6 +49,7 @@
 
     addPathHidden(item) {
       const $wizard = this.$getWizard();
+      $wizard.pageList.splice($wizard.pageList.length, 0, item);
       if ($wizard.find("input[type='hidden'][name='path'][value='" + item.path + "']").length === 0) {
         const $hidden = $('<input type="hidden">').attr("name", "path").attr("data-path", item.path).attr("value", item.path);
         $wizard.append($hidden);
@@ -310,22 +311,17 @@
 
     #getItem = (path) => {
       let retVal = undefined;
-      if (this.#$wizard.pageList && this.#$wizard.pageList.length > 0) {
-        for (let index = 0; index < this.#$wizard.pageList.length; index++) {
-          if (this.#$wizard.pageList[index].path === path) {
-            retVal = this.#$wizard.pageList[index];
-            break;
-          }
+      for (let index = 0; index < this.#$wizard.pageList.length; index++) {
+        if (this.#$wizard.pageList[index].path === path) {
+          retVal = this.#$wizard.pageList[index];
+          break;
         }
       }
       return retVal;
     }
 
     #addTableRow = (item) => {
-      const paginator = this.#$table.data("foundation-layout-table.internal.paginator");
-      this.#$wizard.pageList.splice(paginator.offset, 0, item);
       this.#$table[0].items.add(this.#getRow(item)[0])
-      this.#$table.trigger("coral-collection:add");
     }
 
     #getRow = (data) => {
@@ -426,24 +422,24 @@
       item.templateRules.forEach((rule) => {
         if ($wizard.find("input[type='hidden'][name='templateRule'][value='" + rule.id + "']").length === 0) {
           const $hidden = $('<input type="hidden">').attr("name", "templateRule").attr("value", rule.id);
-          this.#$wizard.append($hidden);
+          $wizard.append($hidden);
         }
       });
 
       item.policyRules.forEach((rule) => {
         if ($wizard.find("input[type='hidden'][name='policyRule'][value='" + rule.id + "']").length === 0) {
           const $hidden = $('<input type="hidden">').attr("name", "policyRule").attr("value", rule.id);
-          this.#$wizard.append($hidden);
+          $wizard.append($hidden);
         }
       });
 
       item.componentRules.forEach((rule) => {
         if ($wizard.find("input[type='hidden'][name='componentRule'][value='" + rule.id + "']").length === 0) {
           const $hidden = $('<input type="hidden">').attr("name", "componentRule").attr("value", rule.id);
-          this.#$wizard.append($hidden);
+          $wizard.append($hidden);
         }
       });
-
+      this.#$table.trigger("coral-collection:add");
     }
 
     #removeHidden = ($row) => {
@@ -484,6 +480,7 @@
           }
         });
       }
+      this.#$table.trigger("coral-collection:remove");
     }
 
     #remove = () => {
@@ -499,8 +496,10 @@
         if (more === undefined) {
           more = selected.length >= (paginator.offset + paginator.limit);
         }
-        if (more && this.#$table[0].items.getAll().length === 0) {
-          paginator.restart(paginator.offset, more);
+        if (this.#$table[0].items.getAll().length === 0) {
+          paginator.restart(0, more);
+        } else {
+          paginator.restart(paginator.offset - selected.length, more);
         }
         this.#refreshPageList();
       }
@@ -527,6 +526,7 @@
                   paginator.offset = this.#$table[0].items.getAll().length;
                 } else {
                   this.#addHidden(item);
+                  paginator.hasNext = true;
                 }
                 resolve(item);
               });
@@ -586,7 +586,6 @@
       const paginator = new Paginator({
         el: $scrollContainer[0],
         limit: 30,
-        hasNext: false,
         wait: (paginator) => {
           _this.#ui.wait();
           return {
@@ -600,12 +599,11 @@
         },
         processResponse: (paginator, html) => {
           return new Promise((resolve, reject) => {
-            const items = _this.#$wizard.pageList.slice(this.offset, this.offset + this.limit);
+            const items = _this.#$wizard.pageList.slice(paginator.offset, paginator.offset + paginator.limit);
             items.forEach((item) => {
               _this.#addTableRow(item);
-              _this.#addHidden(item);
             });
-            const more = this.#$wizard.pageList.length > (this.offset + this.limit);
+            const more = this.#$wizard.pageList.length > (paginator.offset + paginator.limit);
             resolve({length: items.length, hasNext: more});
           })
         }
@@ -788,7 +786,7 @@
 
       Coral.commons.ready(this.#$wizard[0], () => {
         _this.#refreshPageList();
-        _this.#paginate()
+        _this.#paginate();
       });
     }
   }

@@ -71,7 +71,6 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
     for (String path : paths) {
       Page page = pm.getPage(path);
       if (page == null) {
-        context.log("Path [{}] was not a page, skipping.", path);
         bucket.getNotFound().add(path);
         context.incrementProgressCount(1);
         continue;
