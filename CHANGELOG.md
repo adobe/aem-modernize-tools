@@ -26,6 +26,7 @@
 
 ### 📁 Other pull requests
 
+- Pagination & No Template Matches [\#71](https://github.com/adobe/aem-modernize-tools/pull/71) ([bstopp](https://github.com/bstopp))
 - Enable Java8 Builds [\#70](https://github.com/adobe/aem-modernize-tools/pull/70) ([bstopp](https://github.com/bstopp))
 - Leave LC/BP nodes at root of `jcr:content` [\#69](https://github.com/adobe/aem-modernize-tools/pull/69) ([bstopp](https://github.com/bstopp))
 - Update Dependencies [\#67](https://github.com/adobe/aem-modernize-tools/pull/67) ([bstopp](https://github.com/bstopp))
