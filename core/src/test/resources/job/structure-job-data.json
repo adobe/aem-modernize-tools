@@ -6,7 +6,8 @@
     "componentRules": [],
     "policyRules": [],
     "pageHandling": "COPY",
-    "targetPath": "/content/newpath",
+    "sourceRoot": "/content/test",
+    "targetRoot": "/content/newpath/with/extra/tokens",
     "templateRules": [
       "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.first-page",
       "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.second-page"

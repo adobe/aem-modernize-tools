@@ -145,6 +145,8 @@ public class PageStructureJobExecutorTest {
       }
       @Mock
       public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
+        String path = page.getPath().replace("/content/test", "/content/newpath/with/extra/tokens");
+        assertEquals(path, dest, "New page path correct");
         return page;
       }
     };

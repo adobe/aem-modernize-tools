@@ -176,8 +176,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
         throw new AccessDeniedException(data.getConfPath());
       }
 
-      if (StringUtils.isNotBlank(data.getTargetPath()) && !acm.hasPrivileges(data.getTargetPath(), privs)) {
-        throw new AccessDeniedException(data.getTargetPath());
+      if (StringUtils.isNotBlank(data.getTargetRoot()) && !acm.hasPrivileges(data.getTargetRoot(), privs)) {
+        throw new AccessDeniedException(data.getTargetRoot());
       }
 
     } catch (RepositoryException e) {
@@ -239,7 +239,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     node.setProperty(PN_POLICY_RULES, requestData.getPolicyRules());
     node.setProperty(PN_TYPE, requestData.getType().toString());
     node.setProperty(PN_CONF_PATH, requestData.getConfPath());
-    node.setProperty(PN_TARGET_PATH, requestData.getTargetPath());
+    node.setProperty(PN_SOURCE_ROOT, requestData.getSourceRoot());
+    node.setProperty(PN_TARGET_ROOT, requestData.getTargetRoot());
     node.setProperty(PN_PAGE_HANDLING, requestData.getPageHandling().name());
     node.setProperty(PN_OVERWRITE, requestData.isOverwrite());
     node.setProperty(PN_INITIATOR, userId);
@@ -285,7 +286,8 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     private String[] componentRules;
     private String[] policyRules;
     private String confPath;
-    private String targetPath;
+    private String sourceRoot;
+    private String targetRoot;
     private boolean overwrite;
     private PageHandling pageHandling = PageHandling.NONE;
     private Type type;

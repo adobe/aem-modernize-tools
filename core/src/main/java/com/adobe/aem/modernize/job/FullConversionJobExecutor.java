@@ -9,9 +9,9 @@ package com.adobe.aem.modernize.job;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -58,9 +57,8 @@ import com.day.cq.wcm.api.designer.Style;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
-
 import static com.adobe.aem.modernize.model.ConversionJob.PageHandling.*;
+import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -94,7 +92,8 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
 
     final ConversionJob.PageHandling pageHandling = getPageHandling(bucket);
     final boolean overwritePolicies = isOverwrite(bucket);
-    String targetPath = getTargetPath(bucket);
+    String sourceRoot = getSourceRoot(bucket);
+    String targetRoot = getTargetRoot(bucket);
 
     Resource resource = bucket.getResource();
     ResourceResolver rr = resource.getResourceResolver();
@@ -117,7 +116,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         continue;
       }
 
-      if (pageHandling == COPY && StringUtils.isBlank(targetPath)) {
+      if (pageHandling == COPY && (StringUtils.isBlank(sourceRoot) || StringUtils.isBlank(targetRoot))) {
         bucket.getFailed().add(path);
         continue;
       }
@@ -135,7 +134,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         RewriteUtils.createVersion(pm, page);
 
         if (pageHandling == COPY) {
-          page = RewriteUtils.copyPage(pm, page, targetPath);
+          page = RewriteUtils.copyPage(pm, page, sourceRoot, targetRoot);
         }
 
         if (!templateRules.isEmpty()) {
@@ -170,18 +169,6 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   @Override
   protected ResourceResolverFactory getResourceResolverFactory() {
     return resourceResolverFactory;
-  }
-
-  private void fixChildrenOrder(Page page) throws RewriteException {
-    Iterator<Page> children = page.listChildren();
-    if (children.hasNext()) {
-      Node node = page.adaptTo(Node.class);
-      try {
-        node.orderBefore(NameConstants.NN_CONTENT, children.next().getName());
-      } catch (RepositoryException e) {
-        throw new RewriteException("Unable to re-order page's JCR Content Node.", e);
-      }
-    }
   }
 
   // Import any styles used by this page - set the new policy reference for later use.
@@ -256,6 +243,18 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         }
       }
     }.accept(page.getContentResource());
+  }
+
+  private void fixChildrenOrder(Page page) throws RewriteException {
+    Iterator<Page> children = page.listChildren();
+    if (children.hasNext()) {
+      Node node = page.adaptTo(Node.class);
+      try {
+        node.orderBefore(NameConstants.NN_CONTENT, children.next().getName());
+      } catch (RepositoryException e) {
+        throw new RewriteException("Unable to re-order page's JCR Content Node.", e);
+      }
+    }
   }
 
 }

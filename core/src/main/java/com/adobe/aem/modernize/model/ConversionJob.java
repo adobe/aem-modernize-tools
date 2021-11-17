@@ -70,7 +70,8 @@ public class ConversionJob {
   public static final String PN_TEMPLATE_RULES = "templateRules";
   public static final String PN_COMPONENT_RULES = "componentRules";
   public static final String PN_POLICY_RULES = "policyRules";
-  public static final String PN_TARGET_PATH = "targetPath";
+  public static final String PN_SOURCE_ROOT = "sourceRoot";
+  public static final String PN_TARGET_ROOT = "targetRoot";
   public static final String PN_CONF_PATH = "confPath";
   public static final String PN_INITIATOR = "startedBy";
   public static final String PN_PAGE_HANDLING = "pageHandling";

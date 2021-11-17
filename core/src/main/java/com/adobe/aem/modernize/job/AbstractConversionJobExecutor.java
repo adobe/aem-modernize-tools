@@ -197,12 +197,21 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   }
 
   @Nullable
-  protected String getTargetPath(ConversionJobBucket bucket) {
+  protected String getSourceRoot(ConversionJobBucket bucket) {
     ValueMap vm = getTrackingInfo(bucket);
     if (vm == null) {
       return null;
     }
-    return vm.get(PN_TARGET_PATH, String.class);
+    return vm.get(PN_SOURCE_ROOT, String.class);
+  }
+
+  @Nullable
+  protected String getTargetRoot(ConversionJobBucket bucket) {
+    ValueMap vm = getTrackingInfo(bucket);
+    if (vm == null) {
+      return null;
+    }
+    return vm.get(PN_TARGET_ROOT, String.class);
   }
 
   @NotNull

@@ -286,9 +286,9 @@
     }
 
     #checkTargetPermissions = () => {
-      if ($("input[name='targetPath']").length > 0) {
+      if ($("input[name='targetRoot']").length > 0) {
         return new Promise((resolve, reject) => {
-          const target = $("input[name='targetPath']").val();
+          const target = $("input[name='targetRoot']").val();
           if (target === '') {
             resolve();
           } else {
@@ -675,7 +675,8 @@
       }));
       data.confPath = $("input[name='confPath']").val();
       data.overwrite = $("input[name='overwrite']").is(":checked");
-      data.targetPath = $("input[name='targetPath']").val();
+      data.sourceRoot = $("input[name='sourceRoot']").val();
+      data.targetRoot = $("input[name='targetRoot']").val();
       data.pageHandling = $("input[name='pageHandling']:checked").val();
       return data;
     }
@@ -705,9 +706,41 @@
       });
     }
 
+    #updatePageRoot = (path) => {
+      const $button = $(".aem-modernize-job-add-pages");
+      $button.removeData("foundation-picker-control.internal.state"); // Clear state - need to redraw picker.
+      let src = $button[0].dataset.foundationPickerControlSrc;
+      const regex = /root=(.+?)&/;
+      const matches = src.match(regex);
+      src =  src.replace(matches[1], encodeURIComponent(path));
+      $button[0].dataset.foundationPickerControlSrc = src;
+    }
+
     #setup = () => {
       const _this = this;
       const registry = $(window).adaptTo("foundation-registry");
+
+      $(document).on("change", ".aem-modernize-job-source-root", function(e) {
+        _this.#updatePageRoot(e.target.value);
+      });
+
+      $(document).on("change", ".aem-modernize-page-handling", function(e) {
+        const sourceField = $("input[name='sourceRoot']").closest("foundation-autocomplete").adaptTo("foundation-field");
+        const targetField = $("input[name='targetRoot']").closest("foundation-autocomplete").adaptTo("foundation-field");
+        const needs = (e.target.checked && e.target.value === "COPY")
+        if (sourceField && targetField) {
+          sourceField.setDisabled(!needs);
+          sourceField.setRequired(needs);
+
+          targetField.setDisabled(!needs);
+          targetField.setRequired(needs);
+          _this.#updateNext();
+        }
+        if (!needs) {
+          _this.#updatePageRoot("/content");
+        }
+      });
+
       registry.register("foundation.picker.control.action", {
         name: "aem.modernize.addcontent",
         handler: (name, el, config, selections) => {
@@ -790,15 +823,6 @@
         });
       });
 
-      $(document).on("change", ".aem-modernize-page-handling", function(e) {
-        const foundationField = $("input[name='targetPath']").closest("foundation-autocomplete").adaptTo("foundation-field");
-        if (foundationField) {
-          const needsTarget = (e.target.checked && e.target.value === "COPY")
-          foundationField.setDisabled(!needsTarget)
-          foundationField.setRequired(needsTarget);
-          _this.#updateNext();
-        }
-      });
 
       this.#$form.on("submit", (e) => {
         e.stopPropagation();

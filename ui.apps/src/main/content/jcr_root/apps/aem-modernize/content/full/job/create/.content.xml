@@ -124,12 +124,24 @@
                                         fieldDescription="Select this option to copy the page before processing." />
                                 </items>
                               </pageHandling>
-                              <targetPath jcr:primaryType="nt:unstructured"
+                              <sourceRoot jcr:primaryType="nt:unstructured"
+                                          sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                                          granite:rel="aem-modernize-job-source-root"
+                                          fieldLabel="Source Path"
+                                          fieldDescription="Each page will have this portion of the path replaced with the target location."
+                                          required="{Boolean}false"
+                                          multiple="{Boolean}false"
+                                          name="sourceRoot"
+                                          rootPath="/content"
+                                          filter="hierarchyNotFile"
+                                          disabled="{Boolean}true">
+                              </sourceRoot>
+                              <targetRoot jcr:primaryType="nt:unstructured"
                                           sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
                                           fieldLabel="Target Path"
                                           required="{Boolean}false"
                                           multiple="{Boolean}false"
-                                          name="targetPath"
+                                          name="targetRoot"
                                           rootPath="/content"
                                           filter="hierarchyNotFile"
                                           disabled="{Boolean}true"/>
@@ -194,7 +206,7 @@
                     <primary jcr:primaryType="nt:unstructured">
                       <add jcr:primaryType="nt:unstructured"
                            sling:resourceType="granite/ui/components/coral/foundation/button"
-                           granite:class="foundation-collection-action foundation-picker-control"
+                           granite:class="foundation-collection-action foundation-picker-control aem-modernize-job-add-pages"
                            icon="add"
                            text="Add Pages"
                            variant="actionBar">

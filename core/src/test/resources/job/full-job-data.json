@@ -5,7 +5,8 @@
     "type": "FULL",
     "confPath": "/conf/test",
     "pageHandling": "COPY",
-    "targetPath": "/content/newpath",
+    "sourceRoot": "/content/test",
+    "targetRoot": "/content/newpath/with/extra/tokens",
     "componentRules": [
       "/var/aem-modernize/rules/component/title"
     ],

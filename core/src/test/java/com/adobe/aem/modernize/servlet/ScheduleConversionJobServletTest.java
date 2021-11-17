@@ -324,6 +324,8 @@ public class ScheduleConversionJobServletTest {
     ScheduleConversionJobServlet.RequestData requestData = buildJobData();
     requestData.setType(ConversionJob.Type.FULL);
     requestData.setPageHandling(RESTORE);
+    requestData.setSourceRoot("/content/test/source");
+    requestData.setTargetRoot("/content/test/target");
     Map<String, Object> params = new HashMap<>();
     params.put("data", new ObjectMapper().writeValueAsString(requestData));
     request.setParameterMap(params);
@@ -364,6 +366,8 @@ public class ScheduleConversionJobServletTest {
     assertEquals(ConversionJob.RESOURCE_TYPE, serviceSession.getProperty(path + "/" + JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(), "Resource type was set");
     assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJob.PN_TITLE).getString(), "Title was set");
     assertEquals(RESTORE.name(), serviceSession.getProperty(path + "/" + ConversionJob.PN_PAGE_HANDLING).getString(), "Page handling was set");
+    assertEquals("/content/test/source", serviceSession.getProperty(path + "/" + ConversionJob.PN_SOURCE_ROOT).getString(), "Source copy path set");
+    assertEquals("/content/test/target", serviceSession.getProperty(path + "/" + ConversionJob.PN_TARGET_ROOT).getString(), "Target copy path set");
     assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJob.PN_INITIATOR).getString(), "Initiated by was set");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_TEMPLATE_RULES), "Template rules were set.");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_COMPONENT_RULES), "Component rules were set.");

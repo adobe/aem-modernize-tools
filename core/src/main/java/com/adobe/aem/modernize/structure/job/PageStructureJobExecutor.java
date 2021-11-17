@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.event.jobs.Job;
@@ -63,7 +64,8 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
   @Override
   protected void doProcess(@NotNull Job job, @NotNull JobExecutionContext context, @NotNull ConversionJobBucket bucket) {
     ConversionJob.PageHandling pageHandling = getPageHandling(bucket);
-    String targetPath = getTargetPath(bucket);
+    String sourceRoot = getSourceRoot(bucket);
+    String targetRoot = getTargetRoot(bucket);
     ResourceResolver rr = bucket.getResource().getResourceResolver();
     PageManager pm = rr.adaptTo(PageManager.class);
 
@@ -78,14 +80,19 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
         continue;
       }
 
+      if (pageHandling == COPY && (StringUtils.isBlank(sourceRoot) || StringUtils.isBlank(targetRoot))) {
+        bucket.getFailed().add(path);
+        continue;
+      }
+
       // If reprocessing, restore from the latest version
       try {
         if (pageHandling == RESTORE) {
           page = RewriteUtils.restore(pm, page);
         }
         RewriteUtils.createVersion(pm, page);
-        if (pageHandling == COPY && StringUtils.isNotBlank(targetPath)) {
-          page = RewriteUtils.copyPage(pm, page, targetPath);
+        if (pageHandling == COPY) {
+          page = RewriteUtils.copyPage(pm, page, sourceRoot, targetRoot);
         }
         Set<String> rules = getTemplateRules(bucket);
         structureService.apply(page, rules);
