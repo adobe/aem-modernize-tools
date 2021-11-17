@@ -243,7 +243,7 @@
       if (this.#$form.data("aemModernizeStructure") === true && item.path) {
         const params = {
           path: item.path + "/jcr:content",
-          reprocess: $("input[name='reprocess']").is(":checked")
+          reprocess: $("input[name='pageHandling'][value='RESTORE']").is(":checked")
         }
         const url = Granite.HTTP.externalize(Granite.HTTP.getPath(window.location.href) + ".listrules.template.json");
         return new Promise((resolve, reject) => {
@@ -332,7 +332,8 @@
       $cell.append('<coral-checkbox></coral-checkbox>');
       $row.append($cell[0]);
 
-      $cell = $('<td is="coral-table-cell" class="foundation-collection-item-title" alignment="column" value="' + data.title + '">');
+      $cell =
+        $('<td is="coral-table-cell" class="foundation-collection-item-title" alignment="column" value="' + data.title + '">');
       $cell.append('<span>' + data.title + '</span><div class="foundation-layout-util-subtletext">' + data.path + '</div>');
       $row.append($cell[0]);
 
@@ -346,7 +347,8 @@
           $div.append($span[0]);
           $ruleList.append($div[0]);
         });
-        $cell = $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-template-rule-count" alignment="center">');
+        $cell =
+          $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-template-rule-count" alignment="center">');
         $cell.append('<span>' + data.templateRules.length + '</span>');
         $cell.append($ruleList[0]);
         $row.append($cell[0]);
@@ -360,7 +362,8 @@
           $div.append($span[0]);
           $ruleList.append($div[0]);
         });
-        $cell = $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-policy-path-count" alignment="center">');
+        $cell =
+          $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-policy-path-count" alignment="center">');
         $cell.append('<span>' + data.policyPaths.length + '</span>');
         $cell.append($ruleList[0]);
         $row.append($cell[0]);
@@ -374,7 +377,8 @@
           $div.append($span[0]);
           $ruleList.append($div[0]);
         });
-        $cell = $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-policy-rule-count" alignment="center">');
+        $cell =
+          $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-policy-rule-count" alignment="center">');
         $cell.append('<span>' + data.policyRules.length + '</span>');
         $cell.append($ruleList[0]);
         $row.append($cell[0]);
@@ -388,7 +392,8 @@
           $div.append($span[0]);
           $ruleList.append($div[0]);
         });
-        $cell = $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-component-path-count" alignment="center">');
+        $cell =
+          $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-component-path-count" alignment="center">');
         $cell.append('<span>' + data.componentPaths.length + '</span>');
         $cell.append($ruleList[0]);
         $row.append($cell[0]);
@@ -402,7 +407,8 @@
           $div.append($span[0]);
           $ruleList.append($div[0]);
         });
-        $cell = $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-component-rule-count" alignment="center">');
+        $cell =
+          $('<td is="coral-table-cell" class="aem-modernize-rule-count aem-modernize-component-rule-count" alignment="center">');
         $cell.append('<span>' + data.componentRules.length + '</span>');
         $cell.append($ruleList[0]);
         $row.append($cell[0]);
@@ -548,6 +554,41 @@
         });
     }
 
+    #updateNext = () => {
+      const activeStep = this.#$wizard.find(".foundation-wizard-step-active");
+
+      let valid = true;
+
+      const fields = activeStep.adaptTo("foundation-validation-helper").getSubmittables();
+      fields.forEach((field) => {
+        const $field = $(field);
+        if (!$field.is(":visible")) {
+          return;
+        }
+
+        const api = $field.adaptTo("foundation-field");
+        const validation = $field.adaptTo("foundation-validation");
+        if (api && api.isDisabled()) {
+          if (validation) {
+            validation.checkValidity();
+            validation.updateUI();
+          }
+          return;
+        } else if ($field.is(":disabled")) {
+          return;
+        }
+
+        if (validation) {
+          if (!validation.checkValidity()) {
+            valid = false;
+          }
+          validation.updateUI();
+        }
+      });
+      activeStep.data("foundation-wizard-step.internal.valid", valid);
+      this.#$wizard.adaptTo("foundation-wizard").toggleNext(valid);
+    }
+
     #refreshPageList = () => {
       this.#$table[0].trigger("foundation-selections-change");
       const next = this.#$wizard.find(".aem-modernize-job-create-next")[0];
@@ -635,7 +676,7 @@
       data.confPath = $("input[name='confPath']").val();
       data.overwrite = $("input[name='overwrite']").is(":checked");
       data.targetPath = $("input[name='targetPath']").val();
-      data.reprocess = $("input[name='reprocess']").is(":checked");
+      data.pageHandling = $("input[name='pageHandling']:checked").val();
       return data;
     }
 
@@ -749,6 +790,16 @@
         });
       });
 
+      $(document).on("change", ".aem-modernize-page-handling", function(e) {
+        const foundationField = $("input[name='targetPath']").closest("foundation-autocomplete").adaptTo("foundation-field");
+        if (foundationField) {
+          const needsTarget = (e.target.checked && e.target.value === "COPY")
+          foundationField.setDisabled(!needsTarget)
+          foundationField.setRequired(needsTarget);
+          _this.#updateNext();
+        }
+      });
+
       this.#$form.on("submit", (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -757,23 +808,23 @@
         _this.#checkConfPermissions()
           .then(_this.#checkTargetPermissions)
           .then(() => {
-          const formData = _this.#getFormData();
-          _this.#ui.clearWait();
-          this.#ui.prompt(
-            Granite.I18n.get("Convert Pages"),
-            Granite.I18n.get("You are about to submit {0} items(s) for conversion. Are you sure?", formData.paths.length, "The current selection count"),
-            "warn",
-            [
-              {id: "no", text: Granite.I18n.get("Cancel")},
-              {id: "yes", text: Granite.I18n.get("Convert"), warning: true}
-            ],
-            (id) => {
-              if (id === "yes") {
-                this.#scheduleJob(formData);
+            const formData = _this.#getFormData();
+            _this.#ui.clearWait();
+            this.#ui.prompt(
+              Granite.I18n.get("Convert Pages"),
+              Granite.I18n.get("You are about to submit {0} items(s) for conversion. Are you sure?", formData.paths.length, "The current selection count"),
+              "warn",
+              [
+                {id: "no", text: Granite.I18n.get("Cancel")},
+                {id: "yes", text: Granite.I18n.get("Convert"), warning: true}
+              ],
+              (id) => {
+                if (id === "yes") {
+                  this.#scheduleJob(formData);
+                }
               }
-            }
-          );
-        }).catch(() => {
+            );
+          }).catch(() => {
           _this.#ui.clearWait();
           _this.#ui.prompt(
             Granite.I18n.get("Error"),

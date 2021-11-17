@@ -175,12 +175,16 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     return Boolean.TRUE.equals(vm.get(PN_OVERWRITE, Boolean.class));
   }
 
-  protected boolean isReprocess(ConversionJobBucket bucket) {
+  protected PageHandling getPageHandling(ConversionJobBucket bucket) {
     ValueMap vm = getTrackingInfo(bucket);
     if (vm == null) {
-      return false;
+      return PageHandling.NONE;
     }
-    return Boolean.TRUE.equals(vm.get(PN_REPROCESS, Boolean.class));
+    try {
+      return PageHandling.valueOf(vm.get(PN_PAGE_HANDLING, PageHandling.NONE.name()));
+    } catch (IllegalArgumentException e) {
+      return PageHandling.NONE;
+    }
   }
 
   @Nullable

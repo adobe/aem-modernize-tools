@@ -81,7 +81,7 @@
                                    maximized="{Boolean}true">
                         <items jcr:primaryType="nt:unstructured">
                           <config jcr:primaryType="nt:unstructured"
-                                  jcr:title="General Configuration"
+                                  jcr:title="General"
                                   sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                   margin="{Boolean}true"
                                   maximized="{Boolean}true">
@@ -94,18 +94,36 @@
                             </items>
                           </config>
                           <pageConfig jcr:primaryType="nt:unstructured"
-                                      jcr:title="Page Configuration"
+                                      jcr:title="Page"
                                       sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                       margin="{Boolean}true"
                                       maximized="{Boolean}true">
                             <items jcr:primaryType="nt:unstructured">
-                              <reprocess jcr:primaryType="nt:unstructured"
-                                         sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
-                                         checked="{Boolean}false"
-                                         name="reprocess"
-                                         value="{Boolean}true"
-                                         text="Restore First?"
-                                         fieldDescription="Select this to restore page to state before last conversion attempt."/>
+                              <pageHandling jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/form/radiogroup"
+                                            granite:class="aem-modernize-page-handling"
+                                            fieldLabel="Page Handling"
+                                            name="pageHandling"
+                                            required="{Boolean}true"
+                                            vertical="{Boolean}false" >
+                                <items jcr:primaryType="nt:unstructured">
+                                  <none jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/radiogroupitem"
+                                        value="NONE"
+                                        text="None"
+                                        checked="{Boolean}true"/>
+                                  <restore jcr:primaryType="nt:unstructured"
+                                           sling:resourceType="granite/ui/components/coral/foundation/form/radiogroupitem"
+                                           value="RESTORE"
+                                           text="Restore"
+                                           fieldDescription="Select this to restore page to state before last Structure conversion."/>
+                                  <copy jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/radiogroupitem"
+                                        value="COPY"
+                                        text="Copy to Target"
+                                        fieldDescription="Select this option to copy the page before processing." />
+                                </items>
+                              </pageHandling>
                               <targetPath jcr:primaryType="nt:unstructured"
                                           sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
                                           fieldLabel="Target Path"
@@ -113,12 +131,12 @@
                                           multiple="{Boolean}false"
                                           name="targetPath"
                                           rootPath="/content"
-                                          fieldDescription="If specified, pages will be copied to this path before processing."
-                                          filter="hierarchyNotFile" />
+                                          filter="hierarchyNotFile"
+                                          disabled="{Boolean}true"/>
                             </items>
                           </pageConfig>
                           <policyConfig jcr:primaryType="nt:unstructured"
-                                        jcr:title="Policy Configuration"
+                                        jcr:title="Policy"
                                         sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                         margin="{Boolean}true"
                                         maximized="{Boolean}true">

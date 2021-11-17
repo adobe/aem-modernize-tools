@@ -33,6 +33,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.impl.RewriteUtils;
 import com.adobe.aem.modernize.job.AbstractConversionJobExecutor;
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.day.cq.wcm.api.Page;
@@ -42,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.structure.job.PageStructureJobExecutor.*;
+import static com.adobe.aem.modernize.model.ConversionJob.PageHandling.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -60,7 +62,7 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
 
   @Override
   protected void doProcess(@NotNull Job job, @NotNull JobExecutionContext context, @NotNull ConversionJobBucket bucket) {
-    boolean reprocess = isReprocess(bucket);
+    ConversionJob.PageHandling pageHandling = getPageHandling(bucket);
     String targetPath = getTargetPath(bucket);
     ResourceResolver rr = bucket.getResource().getResourceResolver();
     PageManager pm = rr.adaptTo(PageManager.class);
@@ -78,11 +80,11 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
 
       // If reprocessing, restore from the latest version
       try {
-        if (reprocess) {
+        if (pageHandling == RESTORE) {
           page = RewriteUtils.restore(pm, page);
         }
         RewriteUtils.createVersion(pm, page);
-        if (StringUtils.isNotBlank(targetPath)) {
+        if (pageHandling == COPY && StringUtils.isNotBlank(targetPath)) {
           page = RewriteUtils.copyPage(pm, page, targetPath);
         }
         Set<String> rules = getTemplateRules(bucket);

@@ -240,7 +240,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     node.setProperty(PN_TYPE, requestData.getType().toString());
     node.setProperty(PN_CONF_PATH, requestData.getConfPath());
     node.setProperty(PN_TARGET_PATH, requestData.getTargetPath());
-    node.setProperty(PN_REPROCESS, requestData.isReprocess());
+    node.setProperty(PN_PAGE_HANDLING, requestData.getPageHandling().name());
     node.setProperty(PN_OVERWRITE, requestData.isOverwrite());
     node.setProperty(PN_INITIATOR, userId);
     node.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, ConversionJob.RESOURCE_TYPE);
@@ -287,7 +287,7 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
     private String confPath;
     private String targetPath;
     private boolean overwrite;
-    private boolean reprocess;
+    private PageHandling pageHandling = PageHandling.NONE;
     private Type type;
   }
 

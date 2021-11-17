@@ -44,6 +44,7 @@ import org.apache.sling.event.jobs.consumer.JobExecutor;
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.RewriteUtils;
+import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
@@ -58,6 +59,8 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
+
+import static com.adobe.aem.modernize.model.ConversionJob.PageHandling.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -89,7 +92,7 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
   @Override
   protected void doProcess(Job job, JobExecutionContext context, ConversionJobBucket bucket) {
 
-    final boolean reprocess = isReprocess(bucket);
+    final ConversionJob.PageHandling pageHandling = getPageHandling(bucket);
     final boolean overwritePolicies = isOverwrite(bucket);
     String targetPath = getTargetPath(bucket);
 
@@ -114,8 +117,13 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         continue;
       }
 
+      if (pageHandling == COPY && StringUtils.isBlank(targetPath)) {
+        bucket.getFailed().add(path);
+        continue;
+      }
+
       try {
-        if (reprocess) {
+        if (pageHandling == RESTORE) {
           page = RewriteUtils.restore(pm, page);
         }
 
@@ -125,7 +133,8 @@ public class FullConversionJobExecutor extends AbstractConversionJobExecutor {
         }
 
         RewriteUtils.createVersion(pm, page);
-        if (!reprocess && StringUtils.isNotBlank(targetPath)) {
+
+        if (pageHandling == COPY) {
           page = RewriteUtils.copyPage(pm, page, targetPath);
         }
 

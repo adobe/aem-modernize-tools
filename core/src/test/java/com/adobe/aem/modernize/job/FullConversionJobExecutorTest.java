@@ -219,6 +219,10 @@ public class FullConversionJobExecutorTest {
         assertNotNull(desc);
         return revision;
       }
+      @Mock
+      public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
+        return page;
+      }
     };
     new MockUp<R>() {
       @Mock
@@ -358,10 +362,6 @@ public class FullConversionJobExecutorTest {
         return rr.getResource(path).adaptTo(Page.class);
       }
 
-      @Mock
-      public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
-        return page;
-      }
     };
     new MockUp<R>() {
       @Mock

@@ -4,6 +4,8 @@
     "jcr:title": "Test",
     "type": "FULL",
     "confPath": "/conf/test",
+    "pageHandling": "COPY",
+    "targetPath": "/content/newpath",
     "componentRules": [
       "/var/aem-modernize/rules/component/title"
     ],
@@ -29,8 +31,7 @@
     "jcr:title": "Test",
     "type": "FULL",
     "confPath": "/conf/test",
-    "targetPath": "/content/newpath",
-    "reprocess": true,
+    "pageHandling": "RESTORE",
     "overwrite": true,
     "componentRules": [
       "/var/aem-modernize/rules/component/title"

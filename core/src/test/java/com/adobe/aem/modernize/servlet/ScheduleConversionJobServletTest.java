@@ -60,6 +60,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.BundleContext;
 import static org.apache.sling.api.SlingHttpServletResponse.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static com.adobe.aem.modernize.model.ConversionJob.PageHandling.*;
 
 @ExtendWith(SlingContextExtension.class)
 public class ScheduleConversionJobServletTest {
@@ -322,6 +323,7 @@ public class ScheduleConversionJobServletTest {
 
     ScheduleConversionJobServlet.RequestData requestData = buildJobData();
     requestData.setType(ConversionJob.Type.FULL);
+    requestData.setPageHandling(RESTORE);
     Map<String, Object> params = new HashMap<>();
     params.put("data", new ObjectMapper().writeValueAsString(requestData));
     request.setParameterMap(params);
@@ -361,6 +363,7 @@ public class ScheduleConversionJobServletTest {
     assertTrue(serviceSession.nodeExists(path + "/buckets/bucket0"), "Bucket 2 was created");
     assertEquals(ConversionJob.RESOURCE_TYPE, serviceSession.getProperty(path + "/" + JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString(), "Resource type was set");
     assertEquals(JOB_TITLE, serviceSession.getProperty(path + "/" + ConversionJob.PN_TITLE).getString(), "Title was set");
+    assertEquals(RESTORE.name(), serviceSession.getProperty(path + "/" + ConversionJob.PN_PAGE_HANDLING).getString(), "Page handling was set");
     assertEquals(userId, serviceSession.getProperty(path + "/" + ConversionJob.PN_INITIATOR).getString(), "Initiated by was set");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_TEMPLATE_RULES), "Template rules were set.");
     assertTrue(serviceSession.propertyExists(path + "/" + ConversionJob.PN_COMPONENT_RULES), "Component rules were set.");
@@ -415,6 +418,7 @@ public class ScheduleConversionJobServletTest {
     List<Map<String, Object>> jobProperties = new ArrayList<>();
     ScheduleConversionJobServlet.RequestData requestData = buildJobData();
     requestData.setType(ConversionJob.Type.FULL);
+    requestData.setPageHandling(RESTORE);
     Map<String, Object> params = new HashMap<>();
     params.put("data", new ObjectMapper().writeValueAsString(requestData));
     request.setParameterMap(params);
