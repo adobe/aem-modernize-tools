@@ -26,6 +26,7 @@
 
 ### 📁 Other pull requests
 
+- Copy or Restore Pages - not both [\#72](https://github.com/adobe/aem-modernize-tools/pull/72) ([bstopp](https://github.com/bstopp))
 - Pagination & No Template Matches [\#71](https://github.com/adobe/aem-modernize-tools/pull/71) ([bstopp](https://github.com/bstopp))
 - Enable Java8 Builds [\#70](https://github.com/adobe/aem-modernize-tools/pull/70) ([bstopp](https://github.com/bstopp))
 - Leave LC/BP nodes at root of `jcr:content` [\#69](https://github.com/adobe/aem-modernize-tools/pull/69) ([bstopp](https://github.com/bstopp))
