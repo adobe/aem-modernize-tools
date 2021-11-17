@@ -205,7 +205,7 @@ public class ConversionJobDataSource extends SlingSafeMethodsServlet {
       Calendar finished =  cj.getFinished();
       if (finished != null) {
         vm.put("finishedMs", finished.getTimeInMillis());
-        vm.put("finished", finished.toInstant());
+        vm.put("finished", finished.toInstant().toString());
       } else {
         vm.put("finishedMs", 0);
         vm.put("finished", "");

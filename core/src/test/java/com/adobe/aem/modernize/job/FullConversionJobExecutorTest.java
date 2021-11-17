@@ -219,6 +219,12 @@ public class FullConversionJobExecutorTest {
         assertNotNull(desc);
         return revision;
       }
+      @Mock
+      public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
+        String path = page.getPath().replace("/content/test", "/content/newpath/with/extra/tokens");
+        assertEquals(path, dest, "New page path correct");
+        return page;
+      }
     };
     new MockUp<R>() {
       @Mock
@@ -358,10 +364,6 @@ public class FullConversionJobExecutorTest {
         return rr.getResource(path).adaptTo(Page.class);
       }
 
-      @Mock
-      public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
-        return page;
-      }
     };
     new MockUp<R>() {
       @Mock

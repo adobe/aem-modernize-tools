@@ -5,6 +5,9 @@
     "type": "STRUCTURE",
     "componentRules": [],
     "policyRules": [],
+    "pageHandling": "COPY",
+    "sourceRoot": "/content/test",
+    "targetRoot": "/content/newpath/with/extra/tokens",
     "templateRules": [
       "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.first-page",
       "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.second-page"
@@ -21,10 +24,10 @@
   },
   "reprocess": {
     "jcr:primaryType": "nt:unstructured",
-    "targetPath": "/content/newpath",
     "reprocess": true,
     "jcr:title": "Test",
     "type": "STRUCTURE",
+    "pageHandling": "RESTORE",
     "componentRules": [],
     "policyRules": [],
     "templateRules": [

@@ -70,10 +70,11 @@ public class ConversionJob {
   public static final String PN_TEMPLATE_RULES = "templateRules";
   public static final String PN_COMPONENT_RULES = "componentRules";
   public static final String PN_POLICY_RULES = "policyRules";
-  public static final String PN_TARGET_PATH = "targetPath";
+  public static final String PN_SOURCE_ROOT = "sourceRoot";
+  public static final String PN_TARGET_ROOT = "targetRoot";
   public static final String PN_CONF_PATH = "confPath";
   public static final String PN_INITIATOR = "startedBy";
-  public static final String PN_REPROCESS = "reprocess";
+  public static final String PN_PAGE_HANDLING = "pageHandling";
   public static final String PN_PRE_MODERNIZE_VERSION = "cq:premodernizeVersion";
   public static final String PN_TYPE = "type";
   public static final String PN_FINISHED = "finished";
@@ -182,6 +183,12 @@ public class ConversionJob {
     public String getTopic() {
       return this.topic;
     }
+  }
+
+  public enum PageHandling {
+    NONE,
+    RESTORE,
+    COPY
   }
 
   public enum Status {

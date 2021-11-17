@@ -143,6 +143,12 @@ public class PageStructureJobExecutorTest {
         assertNotNull(desc);
         return revision;
       }
+      @Mock
+      public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
+        String path = page.getPath().replace("/content/test", "/content/newpath/with/extra/tokens");
+        assertEquals(path, dest, "New page path correct");
+        return page;
+      }
     };
 
     new Expectations() {{
@@ -191,10 +197,6 @@ public class PageStructureJobExecutorTest {
           node.getProperty(PN_PRE_MODERNIZE_VERSION).remove();
         }
         return context.resourceResolver().getResource(path).adaptTo(Page.class);
-      }
-      @Mock
-      public Page copy(Page page, String dest, String before, boolean shallow, boolean resolve, boolean commit) {
-        return page;
       }
     };
 

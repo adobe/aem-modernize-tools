@@ -175,12 +175,16 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
     return Boolean.TRUE.equals(vm.get(PN_OVERWRITE, Boolean.class));
   }
 
-  protected boolean isReprocess(ConversionJobBucket bucket) {
+  protected PageHandling getPageHandling(ConversionJobBucket bucket) {
     ValueMap vm = getTrackingInfo(bucket);
     if (vm == null) {
-      return false;
+      return PageHandling.NONE;
     }
-    return Boolean.TRUE.equals(vm.get(PN_REPROCESS, Boolean.class));
+    try {
+      return PageHandling.valueOf(vm.get(PN_PAGE_HANDLING, PageHandling.NONE.name()));
+    } catch (IllegalArgumentException e) {
+      return PageHandling.NONE;
+    }
   }
 
   @Nullable
@@ -193,12 +197,21 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
   }
 
   @Nullable
-  protected String getTargetPath(ConversionJobBucket bucket) {
+  protected String getSourceRoot(ConversionJobBucket bucket) {
     ValueMap vm = getTrackingInfo(bucket);
     if (vm == null) {
       return null;
     }
-    return vm.get(PN_TARGET_PATH, String.class);
+    return vm.get(PN_SOURCE_ROOT, String.class);
+  }
+
+  @Nullable
+  protected String getTargetRoot(ConversionJobBucket bucket) {
+    ValueMap vm = getTrackingInfo(bucket);
+    if (vm == null) {
+      return null;
+    }
+    return vm.get(PN_TARGET_ROOT, String.class);
   }
 
   @NotNull

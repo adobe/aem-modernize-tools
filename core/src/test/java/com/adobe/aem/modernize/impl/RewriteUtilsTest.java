@@ -86,9 +86,4 @@ public class RewriteUtilsTest {
     assertEquals("<a href=&quot;/content/test/subpath&quot>Link</a>", property.getString(), "Longer path Rich Text Value");
   }
 
-  @Test
-  public void calcNewPath() {
-    assertEquals("/content/foo/bar", RewriteUtils.calcNewPath("/not/foo/bar", "/content"));
-    assertEquals("/content/foo/bar/baz", RewriteUtils.calcNewPath("/not/foo/bar/baz", "/content"));
-  }
 }

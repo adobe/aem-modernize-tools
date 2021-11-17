@@ -77,19 +77,6 @@ public class RewriteUtils {
     }
   }
 
-  /**
-   * Given a source path, and destination relative root, determine where a new path would be, if depth in repository were kept constant.
-   *
-   * @param source     source path
-   * @param targetRoot target path
-   * @return the new path to the resource
-   */
-  public static String calcNewPath(String source, String targetRoot) {
-    int depth = PathUtils.getDepth(targetRoot);
-    int relDepth = PathUtils.getDepth(source) - depth;
-    String relPath = PathUtils.getAncestorPath(source, relDepth);
-    return source.replaceFirst(relPath, targetRoot);
-  }
 
   public static Page restore(PageManager pm, Page page) throws WCMException {
     String version = page.getProperties().get(PN_PRE_MODERNIZE_VERSION, String.class);
@@ -112,8 +99,9 @@ public class RewriteUtils {
     }
   }
 
-  public static Page copyPage(PageManager pm, Page source, String targetRoot) throws WCMException, RewriteException {
-    String target = RewriteUtils.calcNewPath(source.getPath(), targetRoot);
+  public static Page copyPage(PageManager pm, Page source, String sourceRoot, String targetRoot) throws WCMException, RewriteException {
+
+    String target = source.getPath().replace(sourceRoot, targetRoot);
     Page page = pm.getPage(target);
     if (page != null) {
       throw new RewriteException(String.format("Target page already exists for requested copy: {}", target));
