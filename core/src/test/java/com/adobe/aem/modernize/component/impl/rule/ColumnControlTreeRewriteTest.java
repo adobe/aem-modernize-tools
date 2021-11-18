@@ -37,6 +37,7 @@ import com.adobe.aem.modernize.component.impl.ComponentRewriteRuleServiceImpl;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,6 +58,7 @@ public class ColumnControlTreeRewriteTest {
 
 
   @Test
+  @Disabled
   public <R extends ResourceResolver, F extends ResourceResolverFactory> void test() throws Exception {
 
     new MockUp<F>() {

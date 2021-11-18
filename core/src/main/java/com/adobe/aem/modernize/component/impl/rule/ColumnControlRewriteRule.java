@@ -418,8 +418,8 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
       columnControlResourceType = PROP_RESOURCE_TYPE_DEFAULT;
     }
 
-    String type = config.grid_type();
-    isResponsive = !StringUtils.equals(PROP_CONTAINER_TYPE, type);
+//    String type = config.grid_type();
+    isResponsive = false; // !StringUtils.equals(PROP_CONTAINER_TYPE, type);
 
     containerResourceType = config.container_resourceType();
     if (!isResponsive) {
@@ -477,15 +477,15 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     )
     String column_control_resourceType() default PROP_RESOURCE_TYPE_DEFAULT;
 
-    @AttributeDefinition(
-        name = "Conversion Type",
-        description = "Type of structure to convert to: RESPONSIVE will arrange column contents in parent responsive grid. CONTAINER will replace each column with a container.",
-        options = {
-            @Option(label = "Responsive", value = PROP_RESPONSIVE_TYPE),
-            @Option(label = "Container", value = PROP_CONTAINER_TYPE),
-        }
-    )
-    String grid_type() default PROP_RESPONSIVE_TYPE;
+//    @AttributeDefinition(
+//        name = "Conversion Type",
+//        description = "Type of structure to convert to: RESPONSIVE will arrange column contents in parent responsive grid. CONTAINER will replace each column with a container.",
+//        options = {
+//            @Option(label = "Responsive", value = PROP_RESPONSIVE_TYPE),
+//            @Option(label = "Container", value = PROP_CONTAINER_TYPE),
+//        }
+//    )
+//    String grid_type() default PROP_RESPONSIVE_TYPE;
 
     @AttributeDefinition(
         name = "Container ResourceType",
