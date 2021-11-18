@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-1.0.0...HEAD)
 
+### 🐛 Bug fixes
+
+- RepoInit failure on local SDK [\#73](https://github.com/adobe/aem-modernize-tools/issues/73)
+
 ### 📁 Other issues
 
 - Page Conversion Tool url encode issue with page/folders that are numerically named [\#32](https://github.com/adobe/aem-modernize-tools/issues/32)
@@ -26,6 +30,7 @@
 
 ### 📁 Other pull requests
 
+- Fix issues with RepoInit on AEM instances without /etc/designs [\#74](https://github.com/adobe/aem-modernize-tools/pull/74) ([bstopp](https://github.com/bstopp))
 - Copy or Restore Pages - not both [\#72](https://github.com/adobe/aem-modernize-tools/pull/72) ([bstopp](https://github.com/bstopp))
 - Pagination & No Template Matches [\#71](https://github.com/adobe/aem-modernize-tools/pull/71) ([bstopp](https://github.com/bstopp))
 - Enable Java8 Builds [\#70](https://github.com/adobe/aem-modernize-tools/pull/70) ([bstopp](https://github.com/bstopp))
