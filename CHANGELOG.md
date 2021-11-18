@@ -30,6 +30,7 @@
 
 ### 📁 Other pull requests
 
+- Disable responsive grid of Column Control rewrite [\#75](https://github.com/adobe/aem-modernize-tools/pull/75) ([bstopp](https://github.com/bstopp))
 - Fix issues with RepoInit on AEM instances without /etc/designs [\#74](https://github.com/adobe/aem-modernize-tools/pull/74) ([bstopp](https://github.com/bstopp))
 - Copy or Restore Pages - not both [\#72](https://github.com/adobe/aem-modernize-tools/pull/72) ([bstopp](https://github.com/bstopp))
 - Pagination & No Template Matches [\#71](https://github.com/adobe/aem-modernize-tools/pull/71) ([bstopp](https://github.com/bstopp))
