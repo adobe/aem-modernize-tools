@@ -189,11 +189,20 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
     Set<String> paths = getHitPaths(predicates, rr);
     return paths.stream().map(p -> {
       Resource r = rr.getResource(p);
-      if (r == null || r.getParent() == null || !StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, r.getParent().getName())) {
+      if (r == null || r.getParent() == null) {
         return null;
       }
-      r = r.getParent().getParent();
-      Node rule = r == null ? null : r.adaptTo(Node.class);
+      Resource parent = r.getParent();
+      if (parent != null && StringUtils.equals(NodeBasedRewriteRule.NN_PATTERNS, parent.getName())) {
+        parent = parent.getParent(); // At Patterns node.
+      }
+      if (parent != null && StringUtils.equals(NodeBasedRewriteRule.NN_AGGREGATE, parent.getName())) {
+        parent = parent.getParent(); // At Aggregate node if valid
+      }
+      if (parent == null) {
+        return null;
+      }
+      Node rule = parent.adaptTo(Node.class); // The rule node.
       try {
         return new NodeBasedRewriteRule(rule);
       } catch (RepositoryException e) {
