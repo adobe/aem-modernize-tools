@@ -7,6 +7,7 @@
 ### 🐛 Bug fixes
 
 - RepoInit failure on local SDK [\#73](https://github.com/adobe/aem-modernize-tools/issues/73)
+- Pagination has issues on CloudService UI. [\#77](https://github.com/adobe/aem-modernize-tools/pull/77) ([bstopp](https://github.com/bstopp))
 
 ### 📁 Other issues
 
