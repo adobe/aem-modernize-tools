@@ -7,6 +7,7 @@
 ### 🐛 Bug fixes
 
 - RepoInit failure on local SDK [\#73](https://github.com/adobe/aem-modernize-tools/issues/73)
+- Fixing issue where aggregate rules weren't found during lookup [\#78](https://github.com/adobe/aem-modernize-tools/pull/78) ([bstopp](https://github.com/bstopp))
 - Pagination has issues on CloudService UI. [\#77](https://github.com/adobe/aem-modernize-tools/pull/77) ([bstopp](https://github.com/bstopp))
 
 ### 📁 Other issues
