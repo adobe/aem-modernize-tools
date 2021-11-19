@@ -49,7 +49,6 @@
 
     addPathHidden(item) {
       const $wizard = this.$getWizard();
-      $wizard.pageList.splice($wizard.pageList.length, 0, item);
       if ($wizard.find("input[type='hidden'][name='path'][value='" + item.path + "']").length === 0) {
         const $hidden = $('<input type="hidden">').attr("name", "path").attr("data-path", item.path).attr("value", item.path);
         $wizard.append($hidden);
@@ -423,6 +422,7 @@
 
     #addHidden = (item) => {
       const $wizard = this.$getWizard();
+      $wizard.pageList.splice($wizard.pageList.length, 0, item);
       this.addPathHidden(item);
 
       item.templateRules.forEach((rule) => {
@@ -526,14 +526,9 @@
           if (!item) {
             promises.push(this.#populateItem({path: path}).then((item) => {
               return new Promise((resolve) => {
-                if (this.#$table[0].items.getAll().length <= (offset + paginator.limit)) {
-                  this.#addTableRow(item);
-                  this.#addHidden(item)
-                  paginator.offset = this.#$table[0].items.getAll().length;
-                } else {
-                  this.#addHidden(item);
-                  paginator.hasNext = true;
-                }
+                this.#addTableRow(item);
+                this.#addHidden(item)
+                paginator.offset = this.#$table[0].items.getAll().length;
                 resolve(item);
               });
             }));
