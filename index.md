@@ -9,9 +9,6 @@ layout: default
     </header>
         
     <hr/>
-    <div class="iframe">
-        <iframe width="1280" height="720" src="https://video.tv.adobe.com/v/338788/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
-    </div>
     <div class="image right">
         <article>
             <span class="image object">
