@@ -19,17 +19,17 @@
  */
 
 coral-tab.error._coral-Tabs-item ._coral-Icon, coral-tab.error._coral-Tabs-item.is-selected ._coral-Icon {
-  color: #fa7d73;
+  color: #fa7d73 !important;
 }
 
 coral-tab.warn._coral-Tabs-item ._coral-Icon, coral-tab.warn._coral-Tabs-item.is-selected ._coral-Icon {
-  color: #fad782;
+  color: #fad782 !important;
 }
 
 coral-tab.success._coral-Tabs-item ._coral-Icon, coral-tab.success._coral-Tabs-item.is-selected ._coral-Icon {
-  color: #b3da8a;
+  color: #b3da8a !important;
 }
 
 coral-tab.info._coral-Tabs-item ._coral-Icon, coral-tab.info._coral-Tabs-item.is-selected ._coral-Icon {
-  color: #696969;
+  color: #696969 !important;
 }
