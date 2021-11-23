@@ -1,0 +1,284 @@
+
+## Overview
+
+Rewrite rules are defined in two parts:
+
+1. One or more *patterns*, used for determining which transformation rule should be applied (if any) to a given node.
+1. A *replacement*, defining the rules for the transformation: How content should be coped and transformed to the replacement node.
+
+``` xml
+<title>
+  <patterns jcr:primaryType="nt:unstructured">
+    <title jcr:primaryType="nt:unstructured"
+           sling:resourceType="geometrixx/components/title"/>
+  </patterns>
+  <replacement jcr:primaryType="nt:unstructured">
+    <title jcr:primaryType="nt:unstructured"
+           jcr:title="${'./jcr:title'}"
+           linkURL="${'./href'}"
+           sling:resourceType="geodemo/components/content/title"
+           type="${'./type'}"/>
+  </replacement>
+</title>
+```
+
+
+## Ranking (Optional)
+
+A rewrite rule may specify an optional `cq:rewriteRaking` property. This can be used to prioritize one rule over others,
+when there may be multiple matches
+
+The primary use case for this is for overriding the out-of-the-box dialog widget conversions rules.This suite contains
+rules for most of the AEM Provided Classic and Coral2 widgets, to their Coral3 counterparts. This ranking allows
+customer implementations to override provided rules with one with a higher ranking.
+
+## Patterns
+
+Each rewrite rule has a node containing a set of patterns. This 'wrapping' node must be named `patterns`, otherwise the
+rule will be ignored. Each child node of this parent are pattern rules against which nodes are matched for comparisons.
+
+
+### Pattern
+
+Pattern nodes are effectively a set of properties and optional node tree which must be matched to apply the replacement rules.
+The name of each pattern node is arbitrary.
+
+```xml
+<patterns jcr:primaryType="nt:unstructured">
+  <title jcr:primaryType="nt:unstructured"
+         sling:resourceType="geometrixx/components/title"/>
+</patterns>
+```
+Each property of the pattern must be matched exactly for this rule to be applied. Minimally this generally includes:
+
+* The primary node type
+* The `sling:resourceType` property's value.
+
+Patterns may also specify any other arbitrary properties, child nodes, or entire trees, to be matched. The rules for
+matching are universal - every property and node of the source node must match the expected rule's entire hierarchy,
+property for property, node for node - with one allowed exception: Optional children.
+
+
+#### Rewrite Optional
+
+```xml
+<patterns jcr:primaryType="nt:unstructured">
+  <lead jcr:primaryType="nt:unstructured"
+        sling:resourceType="geometrixx/components/lead">
+    <items jcr:primaryType="nt:unstructured"
+           cq:rewriteOptional="true"/>
+  </lead>
+</patterns>
+```
+
+The pattern allows for optional child ancestors; by specifying the property `cq:rewriteOptional` to a node in the
+pattern, if that node does not exist in the repository, it will not fail the match rule. If the node does exist, the
+rule will apply the same full equivalency match requirements.
+
+
+## Replacement
+
+Regardless of how many patterns are specified, there is only one *replacement* definition. This node structure prescribes
+the new structure that will replace any found nodes.
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <title jcr:primaryType="nt:unstructured"
+         jcr:title="${'./jcr:title'}"
+         linkURL="${'./href'}"
+         sling:resourceType="geodemo/components/content/title"
+         type="${'./type'}"/>
+</replacement>
+```
+A replacement definition may choose to specify no replacement structure. If this is the case, the original node will be
+removed, and no replacement or transformations made.
+
+Replacement definitions contain one child node containing all of the replacement rules, any additional children beyond
+the first are ignored.
+
+Any content (property or child nodes) that are not referenced by the replacement definition are ignored, and will not be on
+the resulting replacement node.
+
+### Static Values
+
+Replacement definitions can contain any number of static properties to set. The existence or value of any like-named
+property on the original node is ignored.
+
+Every replacement will contain static values for the `jcr:primaryType` and `sling:resourceType` properties.
+
+### Copying Properties
+
+Properties can be copied from the original node to its replacement. These definitions can also apply some simple transformative
+operations during the copy. For more advanced capabilities, see the [Rewriting Properties](#rewriting-properties) section.
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <title jcr:primaryType="nt:unstructured"
+         jcr:title="${'./jcr:title'}"
+         linkURL="${'./href'}"
+         sling:resourceType="geodemo/components/content/title"
+         type="${'./type'}"/>
+</replacement>
+```
+
+Property copies are identified with the expression syntax `${ }`. The value within the expression identifies the property
+to find on the original node. These examples show the use of single quotes `'` to encapsulate the property name. This is
+necessary for any properties containing a colon `:`. However, we recommend their use on all expressions.
+
+#### Simple Copy
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <example
+      jcr:primaryType="nt:unstructured"
+      prop="${'./some/prop'}"
+      sling:resourceType="example/resource/type"/>
+</replacement>
+```
+This example shows the simplest use case - copying a value from an original property. The original node will be searched for
+the property at `./some/prop`. If it is found, it will be set to the replacement node's `prop` property. If the the original
+property is not found, this replacement rule is ignored, and the property `prop` will not be set.
+
+#### Boolean Negation
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <example
+      jcr:primaryType="nt:unstructured"
+      booleanValue="!${'./some/boolean/prop'}"
+      sling:resourceType="example/resource/type"/>
+</replacement>
+```
+
+Properties that are of type `boolean` can be negated during the copying operation.
+
+#### Default Value
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <example
+      jcr:primaryType="nt:unstructured"
+      foo="${'./some/missing/prop':bar}"
+      sling:resourceType="example/resource/type"/>
+</replacement>
+```
+
+The default handling of a missing property is to ignore it during the transformation. However, if desired, a default value
+can be specified instead. In this example the property `foo` will be set to the value *bar*.
+
+
+#### If/Else Option
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <example
+      jcr:primaryType="nt:unstructured"
+      foo="[${'./some/missing/prop'}, ${'./exists'}]"
+      sling:resourceType="example/resource/type"/>
+</replacement>
+```
+Another option for handling a missing property is to set the value a secondary option. This example shows that the property
+`foo` of the new node, will be set too the value of the original node's `./exists` property.
+
+### Rewriting Properties
+
+In some cases, a more robust transformation is needed for string properties. This can be achieved by specifying a rewrite
+property node.
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <example
+      jcr:primaryType="nt:unstructured"
+      foo="[${'./some/missing/prop'}, ${'./exists'}]"
+      sling:resourceType="example/resource/type">
+    <cq:rewriteProperties
+        jcr:primaryType="nt:unstructured"
+        rewrite-remove-prefix="[(?:prefix-)(.+), $1]"
+        rewrite-remove-suffix="[(.+)(?:-suffix), $1]"
+        rewrite-concat-tokens="[(.+)(?:-separator-)(.+), $1$2]"
+        rewrite-single-operand="[(?:prefix-)(.+)]"
+        rewrite-boolean="[(.+), edited-$1]"
+        foo="[(?:prefix-)(.+), $1]"
+    />
+  </example>
+</replacement>
+```
+
+A replacement definition may contain a `cq:rewriteProperties` node, containing regular expression rules for transforming
+string properties of the original node.
+
+Each property of the `cq:rewriteProperties` node must match property definition contained in the original replacement list,
+otherwise it will be ignored.
+
+Each property of this node will contain string array containing two values:
+1. The regular expression used for matching the original value, including any grouping rules.
+1. The replacement to apply to the string - grouping references from the regular expression are supported.
+
+In the example shown, the `foo` property originally contains the string value: *prefix-removed*. This is copied to the
+new property, then the rewrite rules are applied, and the value is updated and finalized to the string: *removed*.
+
+### Copying Children
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <lead jcr:primaryType="nt:unstructured"
+        jcr:description="${'./jcr:description'}"
+        jcr:title="${'./jcr:title'}"
+        sling:resourceType="geodemo/components/content/lead"
+        cq:copyChildren="{Boolean}true"
+  />
+</replacement>
+```
+
+Some source nodes are not single items, they may be a tree of content that needs to be coped to the destination. Setting
+the the `cq:copyChildren` property of the replacement node to **true** to perform this operation. The children of the
+matched source node are copied to the destination, order and names preserved.
+
+### Renaming and Reordering Children
+
+```xml
+<replacement jcr:primaryType="nt:unstructured">
+  <lead jcr:primaryType="nt:unstructured"
+        jcr:description="${'./jcr:description'}"
+        jcr:title="${'./jcr:title'}"
+        sling:resourceType="geodemo/components/content/lead"
+        cq:copyChildren="{Boolean}true" >
+
+    <items jcr:primaryType="nt:unstructured"
+           cq:rewriteMapChildren="./notItems"
+           cq:orderBefore="nextNode" />
+  </lead>
+</replacement>
+```
+In the event that the child nodes need to be renamed or reordered, additional rules are necessary. Similar to the property
+rewrite, a node definition is used to configure the transformation process.
+
+The name of the node should be the desired new name on the replacement tree. This will contain the rules for the conversion.
+The `cq:rewriteMapChildren` property is used to specify which original node should be renamed. Order is managed by setting
+the `cq:orderBefore` property to the node which should be *next* in the order.
+
+### Final Node Definition
+
+```xml
+<replacement
+    jcr:primaryType="nt:unstructured"
+    cq:rewriteFinal="{Boolean}true" >
+
+  <lead jcr:primaryType="nt:unstructured"
+        jcr:description="${'./jcr:description'}"
+        jcr:title="${'./jcr:title'}"
+        sling:resourceType="geodemo/components/content/lead"
+        cq:copyChildren="{Boolean}true" >
+
+    <items jcr:primaryType="nt:unstructured"
+           cq:rewriteMapChildren="./notItems"
+           cq:orderBefore="nextNode" />
+  </lead>
+</replacement>
+```
+
+A replacement node or it's children may specify an optional `cq:rewriteFinal` property. This is used to flag that the
+associated tree of content is a final transformation, and need not be scanned again.
+
+This is primarily useful and used by the Dialog Conversion - as it traverses the `dialog` node tree, each descendant has
+a distinct rewrite rule to be applied. It intent is to optimize the traversal - so if unsure, omit it.

@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+
+    
+        <title>Modernization Suite Set-Up | AEM Modernization Tools</title>
+    
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="google-site-verification" content="lunlv61z07z3yf-aXoSSoHC3VUWRrJ-MkUXtggDUcOE" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138736911-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138736911-1');
+    </script>
+
+    <link rel="stylesheet" href="/aem-modernize-tools/assets/css/styles.css" />
+
+</head>
+
+
+    <body>
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+        <!-- Main -->
+            <div id="main">
+                <div class="inner">
+
+                    <div class="content-page doc-page">
+    <h1> - Modernization Suite Set-Up</h1>
+
+    <article class="page-content">
+        
+        <h2 id="tool-installation">Tool Installation</h2>
+
+<p>The AEM Modernization Tool suite is released as a standard AEM content package. It can be downloaded from the <a href="https://github.com/adobe/aem-modernize-tools/releases/" target="_blank">GitHub Release page</a> or included as a sub-package dependency of a configuration project.</p>
+
+<p>The following steps assume you are adding this project to one created from AEM Archetype 21 or above.</p>
+
+<h3 id="step-1-add-dependency">Step 1: Add Dependency</h3>
+
+<p>Note that all <code class="language-plaintext highlighter-rouge">&lt;dependency&gt;</code> entries listed below can be defined at the Reactor pom.xml with the version, type and classifier, and the version-less/type-less/classifier-less dependencies can be used in the sub-project poms. The instructions below define the dependencies directly in each sub-project pom for clarity and succinctness.</p>
+
+<p>Add the following to the <code class="language-plaintext highlighter-rouge">&lt;dependencies&gt;</code> section of the <em>all project’s pom.xml</em> file:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.adobe.aem<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>aem-modernize-tools-ui.apps<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;type&gt;</span>zip<span class="nt">&lt;/type&gt;</span>
+    <span class="c">&lt;!-- &lt;classifier&gt;java8&lt;/classifier&gt; optional, see below --&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></figure>
+
+<h4 id="classifiers">Classifiers</h4>
+
+<p>The AEM Modernize Tools has multiple distributions; the following are available through classifiers:</p>
+
+<ul>
+  <li>No classifier
+    <ul>
+      <li>AEM Version: Cloud Service</li>
+      <li>JDK Target: Java 11</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">java8</code>
+    <ul>
+      <li>AEM Version: Cloud Service</li>
+      <li>JDK Target: Java 8</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">aem65</code>
+    <ul>
+      <li>AEM Version: AEM 6.5.x</li>
+      <li>JDK Target: Java 11</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">java8aem65</code>
+    <ul>
+      <li>AEM Version: AEM 6.5.x</li>
+      <li>JDK Target: Java 8</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="step-2-add-as-an-embedsub-package">Step 2: Add as an Embed/Sub package</h3>
+
+<p>For more information on the Maven Project sructural changes in Maven Archetype 21, please review <a href="https://docs.adobe.com/content/help/en/experience-manager-cloud-service/implementing/developing/aem-project-content-package-structure.html">Understand the Structure of a Project Content Package in AEM as a Cloud Service</a>. Note that this project structure is compatible with AEM 6.x as well.</p>
+
+<p>In the <code class="language-plaintext highlighter-rouge">filevault-package-maven-plugin</code> configuration of your all project’s pom.xml file, add this:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;plugins&gt;</span> 
+  <span class="nt">&lt;plugin&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.jackrabbit<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>filevault-package-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    ...
+    <span class="nt">&lt;configuration&gt;</span>
+      <span class="nt">&lt;embeddeds&gt;</span>
+        <span class="nt">&lt;embedded&gt;</span>
+          <span class="nt">&lt;groupId&gt;</span>com.adobe.aem<span class="nt">&lt;/groupId&gt;</span>
+          <span class="nt">&lt;artifactId&gt;</span>aem-modernize-tools.ui.apps<span class="nt">&lt;/artifactId&gt;</span>
+          <span class="nt">&lt;type&gt;</span>zip<span class="nt">&lt;/type&gt;</span>
+          <span class="nt">&lt;target&gt;</span>/apps/my-app-packages/application/install<span class="nt">&lt;/target&gt;</span>
+        <span class="nt">&lt;/embedded&gt;</span>
+      <span class="nt">&lt;embedded&gt;</span>
+      ...</code></pre></figure>
+
+<h3 id="step-3-add-bundle-as-a-dependency-optional">Step 3: Add Bundle as a Dependency (Optional)</h3>
+
+<p>If you plan to create custom implementations of the <code class="language-plaintext highlighter-rouge">RewriteRule</code> interface, your bundle project will need to add a dependency to the bundle artifact of this project. This can be done by adding this to the your dependency list:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>com.adobe.aem<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>aem-modernize-tools.core<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></figure>
+
+
+    </article>
+</div>
+
+
+                </div>
+                <div class="footer">
+                    <a href="/aem-modernize-tools/pages/license.html">License</a>
+                    <span class="right">&copy; Adobe, Inc. All Rights Reserved<br/>
+            <a href="/aem-modernize-tools/pages/notice.html">Trademark Notice</a>
+        </span>
+                </div>
+            </div>
+            <!-- Sidebar -->
+<div id="sidebar">
+    <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+            <header class="major">
+                <h3><a href="/aem-modernize-tools/">AEM Modernization Tools</a></h3>
+            </header>
+            <ul>
+                <li><a href="/aem-modernize-tools/pages/v2-changes.html">Version 2.0 Changes</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <span class="opener">Planning &amp; Operation</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/plan.html">Project Planning</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/evaluation.html">Evaluating a Site</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/set-up.html">Set Up</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/usage.html">Using the Tools</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">All-in-One Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Page Structure Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/structure/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Component Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/component/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Policy Importing</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/policy/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Development</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/apidocs/index.html">API Java Docs</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/extending.html">Extending</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/troubleshooting.html">Troubleshooting</a></li>
+                    </ul>
+                </li>
+                <li><a href="/aem-modernize-tools/pages/support-license.html">Support &amp; Licensing</a></li>
+            </ul>
+        </nav>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>Download</h2>
+            </header>
+            <article>
+                <p>Download the latest release from GitHub.</p>
+            </article>
+
+            <ul class="actions">
+                <li style="margin-bottom: 1rem;">
+                    <a href="https://github.com/adobe/aem-modernize-tools/releases/" target="_blank" class="button primary icon solid fa-download">Download</a>
+                </li>
+                <li>
+                    <a href="/aem-modernize-tools/pages/releases.html" class="button">Release notes</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>GitHub Project</h2>
+            </header>
+            <p>
+                AEM Modernization Tools' source code is open and freely available on GitHub.
+            </p>
+
+            <ul class="contact">
+                <li class="fa-github"><a href="https://github.com/adobe/aem-modernize-tools" target="_blank">github.com/adobe/aem-modernize-tools</a></li>
+                <li class="fa-bug"><a href="https://github.com/adobe/aem-modernize-tools/issues" target="_blank">Report issues</a></li>
+                <li class="fa-pencil"><a href="https://github.com/adobe/aem-modernize-tools/blob/main/.github/CONTRIBUTING.md">Learn how to contribute</a></li>
+                <li class="fa-rocket"><a href="/aem-modernize-tools/pages/releases/process.html">Learn about the release process</a></li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+
+        </div>
+    </body>
+    <footer>
+        
+<!-- Scripts -->
+
+<script src="/aem-modernize-tools/assets/js/jquery.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/jquery.pjax.js"></script>
+<script src="/aem-modernize-tools/assets/js/browser.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/breakpoints.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/util.js"></script>
+<script src="/aem-modernize-tools/assets/js/main.js"></script>
+
+<script src="/aem-modernize-tools/assets/js/custom.js"></script>
+
+
+    </footer>
+</html>

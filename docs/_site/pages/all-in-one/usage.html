@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+
+    
+        <title>Usage | All-in-One Converter | AEM Modernization Tools</title>
+    
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="google-site-verification" content="lunlv61z07z3yf-aXoSSoHC3VUWRrJ-MkUXtggDUcOE" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138736911-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138736911-1');
+    </script>
+
+    <link rel="stylesheet" href="/aem-modernize-tools/assets/css/styles.css" />
+
+</head>
+
+
+    <body>
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+        <!-- Main -->
+            <div id="main">
+                <div class="inner">
+
+                    <div class="content-page doc-page">
+    <h1>All-in-One Converter - Usage</h1>
+
+    <article class="page-content">
+        
+            <div class="video right">
+                <iframe src="https://video.tv.adobe.com/v/338802/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
+            </div>
+        
+        <p class="padded">
+This page describes how to use the All-in-One conversion tool. The tool can be found via the AEM Tools primary navigation, and selecting the <code>AEM Modernize Tools</code> menu item.
+</p>
+
+<h2 id="job-listing">Job Listing</h2>
+
+<p class="image right">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/job-card-view.png" alt="All-in-One Job Card View" />
+</p>
+
+<p class="padded">
+Selecting the All-in-One Conversion tool displays a list of all the previously scheduled jobs. From here the user can view the details of a specific job, or create a new one.
+</p>
+
+<h2 id="job-detail-view">Job Detail View</h2>
+
+<p class="image right">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/job-detail-view.png" alt="All-in-One Job Detail View" />
+</p>
+
+<p>When a job has been scheduled and is running or completed, it can be viewed via the Job Detail view. This will show the paths selected for processing and their current state.</p>
+
+<p>If the job has been scheduled but not executed, or is mid-execution, you can refresh the page to check the status/state.</p>
+
+<h3 id="job-buckets-list">Job (Buckets) List</h3>
+
+<p>If a given scheduling request has over 500 paths that need to be processed, then multiple jobs will be scheduled. The job detail view will allow users to select which job to view the details, using the left panel.</p>
+
+<h2 id="job-creation">Job Creation</h2>
+
+<p>The following configuration options are available when scheduling an All-in-One Conversion Job.</p>
+
+<h3 id="job-title">Job Title</h3>
+
+<p class="image right">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/job-title.png" alt="All-in-One Job Title" />
+</p>
+
+<p>As with all the tools, the All-in-One conversion tool requires a name for the Job to be created. This helps with identifying the job once it is scheduled and completed.</p>
+
+<h3 id="page-handling">Page Handling</h3>
+<p>An all-in-one conversion has the option of processing the pages using different options.</p>
+
+<h4 id="no-handling">No Handling</h4>
+
+<p>This option will simply process the page as-is, in place in the repository.</p>
+
+<h4 id="restore">Restore</h4>
+
+<p class="image right small">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/page-handling-restore.png" alt="Page Handling Restore Selected" />
+</p>
+
+<div class="padded">
+This option will restore a page to a previous state. When a page is processed using the All-in-One conversion or Structure conversion tools, a version is created prior to the execution.
+
+This option will restore the page to the most recent version that was marked as "Pre-Modernization." This allows for reprocessing pages based on updated rules.
+</div>
+
+<h4 id="copy-to-target">Copy to Target</h4>
+
+<p class="image right small">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/page-handling-copy.png" alt="Page Handling Copy Selected" />
+</p>
+
+<p>This option will copy a page from the source location, to a new path in the repository. Each page must exist under the <code class="language-plaintext highlighter-rouge">source</code> path selection. When processing that portion of the path will be replaced with the <code class="language-plaintext highlighter-rouge">target</code> path.</p>
+
+<p>The user scheduling the job must have <em>write</em> access to the target location in the repository, or the job will not be scheduled.</p>
+
+<p>The target path must not have a page that already exists in that location, or that page conversion will fail.</p>
+
+<h3 id="configuration-target">Configuration Target</h3>
+
+<p class="image right small">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/conf-target.png" alt="Policy Configuration Target" />
+</p>
+
+<p class="padded">
+An All-in-One job also requires a target location into which the new policies will be created. This will make them available to any Editable templates. The user scheduling the job must have *write* access to this location in the repository, or the job will not be scheduled.
+</p>
+
+<h3 id="supertypes">SuperTypes</h3>
+
+<p class="image right small">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/include-supertypes.png" alt="Policy Include Supertypes" />
+</p>
+
+<p>This option is required by default, as this tool automatically applies the found policies.</p>
+
+<p>Components using a design are not necessarily using a direct reference. Legacy designs are inheritable through the <em>page’s supertypes</em>. Thus, it is possible when searching for a design the direct reference does not contain the information used to render a component.</p>
+
+<p>Checking this property will task the job to search the page’s hierarchy to find the specific Style node that a component references. Unchecked, if the Style is not a direct reference, it will be ignored for import.</p>
+
+<h3 id="overwrite">Overwrite</h3>
+
+<p class="image right small">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/overwrite.png" alt="Policy Overwrite" />
+</p>
+
+<div class="padded">
+Since Designs and Policies are not stored in the same location in the repository, it's possible to reprocess a Policy import. This tool marks already imported designs with the created Policy location.
+
+Checking this option import all found designs as Policies, regardless of whether they have already been imported. This can result in duplicate policies, if selected.
+</div>
+
+<h3 id="page-selection">Page Selection</h3>
+
+<p class="image right">
+    <img src="/aem-modernize-tools/pages/all-in-one/images/page-selection.png" alt="All-in-One Page List" />
+</p>
+
+<p>The final step is to select the pages to process. The list will show how many structure, component, and policy conversion rules are found that match the page.</p>
+
+<p>The user may select as many pages as they want; depending on the number more than one job may be scheduled.</p>
+
+    </article>
+</div>
+
+
+                </div>
+                <div class="footer">
+                    <a href="/aem-modernize-tools/pages/license.html">License</a>
+                    <span class="right">&copy; Adobe, Inc. All Rights Reserved<br/>
+            <a href="/aem-modernize-tools/pages/notice.html">Trademark Notice</a>
+        </span>
+                </div>
+            </div>
+            <!-- Sidebar -->
+<div id="sidebar">
+    <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+            <header class="major">
+                <h3><a href="/aem-modernize-tools/">AEM Modernization Tools</a></h3>
+            </header>
+            <ul>
+                <li><a href="/aem-modernize-tools/pages/v2-changes.html">Version 2.0 Changes</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <span class="opener">Planning &amp; Operation</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/plan.html">Project Planning</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/evaluation.html">Evaluating a Site</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/set-up.html">Set Up</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/usage.html">Using the Tools</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">All-in-One Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Page Structure Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/structure/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Component Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/component/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Policy Importing</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/policy/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Development</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/apidocs/index.html">API Java Docs</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/extending.html">Extending</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/troubleshooting.html">Troubleshooting</a></li>
+                    </ul>
+                </li>
+                <li><a href="/aem-modernize-tools/pages/support-license.html">Support &amp; Licensing</a></li>
+            </ul>
+        </nav>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>Download</h2>
+            </header>
+            <article>
+                <p>Download the latest release from GitHub.</p>
+            </article>
+
+            <ul class="actions">
+                <li style="margin-bottom: 1rem;">
+                    <a href="https://github.com/adobe/aem-modernize-tools/releases/" target="_blank" class="button primary icon solid fa-download">Download</a>
+                </li>
+                <li>
+                    <a href="/aem-modernize-tools/pages/releases.html" class="button">Release notes</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>GitHub Project</h2>
+            </header>
+            <p>
+                AEM Modernization Tools' source code is open and freely available on GitHub.
+            </p>
+
+            <ul class="contact">
+                <li class="fa-github"><a href="https://github.com/adobe/aem-modernize-tools" target="_blank">github.com/adobe/aem-modernize-tools</a></li>
+                <li class="fa-bug"><a href="https://github.com/adobe/aem-modernize-tools/issues" target="_blank">Report issues</a></li>
+                <li class="fa-pencil"><a href="https://github.com/adobe/aem-modernize-tools/blob/main/.github/CONTRIBUTING.md">Learn how to contribute</a></li>
+                <li class="fa-rocket"><a href="/aem-modernize-tools/pages/releases/process.html">Learn about the release process</a></li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+
+        </div>
+    </body>
+    <footer>
+        
+<!-- Scripts -->
+
+<script src="/aem-modernize-tools/assets/js/jquery.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/jquery.pjax.js"></script>
+<script src="/aem-modernize-tools/assets/js/browser.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/breakpoints.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/util.js"></script>
+<script src="/aem-modernize-tools/assets/js/main.js"></script>
+
+<script src="/aem-modernize-tools/assets/js/custom.js"></script>
+
+
+    </footer>
+</html>

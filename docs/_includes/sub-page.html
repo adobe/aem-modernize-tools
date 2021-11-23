@@ -1,0 +1,17 @@
+{% assign p = include.subpage %}
+{% assign url = p.url %}
+{% if p.link %}
+    {% assign url = p.link %}
+{% endif %}
+{% capture image %}{{ site.baseurl }}/images/icons/{{ p.image }}{% endcapture %}
+
+<article>
+    <a href="{{ site.baseurl }}{{ url }}" class="image left"><img src="{{ image }}" alt="{{ p.title }}" /></a>
+    <div class="content">
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.description }}</p>
+        <a href="{{ site.baseurl }}{{ url }}" class="button primary small">Read More</a>
+    </div>
+</article>
+
+

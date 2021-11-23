@@ -1,0 +1,348 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+
+    
+        <title>Evaluating a Site | AEM Modernization Tools</title>
+    
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="google-site-verification" content="lunlv61z07z3yf-aXoSSoHC3VUWRrJ-MkUXtggDUcOE" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138736911-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138736911-1');
+    </script>
+
+    <link rel="stylesheet" href="/aem-modernize-tools/assets/css/styles.css" />
+
+</head>
+
+
+    <body>
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+        <!-- Main -->
+            <div id="main">
+                <div class="inner">
+
+                    <div class="content-page doc-page">
+    <h1> - Evaluating a Site</h1>
+
+    <article class="page-content">
+        
+        <h2 id="overview">Overview</h2>
+
+<p>When planning the modernization of a site, existing templates and components need to be reviewed methodically and analytically to identify the correct transformation. The conversion tools are only as good as the configuration provided, therefore thorough definition is critical.</p>
+
+<p>Through some examples, we’ll provide guidance on how to evaluate content &amp; structure to create a successful conversion plan.</p>
+
+<h2 id="templates">Templates</h2>
+
+<p>Throughout this documentation we reiterate that Static templates have their content structured through the code, the repository organization does not accurately reflect the visual rendering order. Even with this limitation, both the visual and repository representation are used as input to a template’s evaluation, along with a third item: the template’s code.</p>
+
+<p>Each of the different elements inform the review process of the others. Therefore, the order of review isn’t as important as insuring that the information output from one review is validated against the others.</p>
+
+<h3 id="source-review">Source Review</h3>
+
+<p>This evaluation focuses on the code’s embedded components. Editable templates rarely have any directly embedded components, other than the root container, so any components included through code are candidates to be managed by template editors. Reviewing the code also identifies the order in which components must be specified.</p>
+
+<h4 id="geometrixx-shapes">Geometrixx Shapes</h4>
+
+<p>This is the source for the <em>Geometrix Shapes</em> home page. For simplicity’s sake we have aggregated the distinct <code class="language-plaintext highlighter-rouge">jsp</code> sources into one representation for easier review.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-shapes-homepage-body.png" alt="Geometrixx Shapes Body JSP" />
+</p>
+
+<p>We’ve annotated the image indicating where each portion of code is managed - the script include from which it was sourced. With this information, we can begin to identify which resources should be specified in a <strong>Template Type</strong>, and which should be managed by Template Editors.</p>
+
+<p>A possible outcome of this evaluation is the following conclusions:</p>
+
+<ol>
+  <li>A new <strong>Template Type</strong> is required: <em>Base Template</em>
+    <ul>
+      <li>This template type will contain the header, footer, a few misc. components, and the main container for the template editor to manage.</li>
+    </ul>
+  </li>
+  <li>A new <strong>Editable Template</strong> is required: <em>Home Page Template</em>
+    <ol>
+      <li>This template be derived from the <em>Base Template</em> type.</li>
+      <li>This will contain some template editor managed components, in this order:
+        <ul>
+          <li>Carousel</li>
+          <li>Lead</li>
+          <li>Main container</li>
+          <li>Right Rail container</li>
+        </ul>
+      </li>
+      <li>This template uses a 16 column layout - this is important as it affects the AEM Grid system.</li>
+    </ol>
+  </li>
+</ol>
+
+<h4 id="geometrixx-outdoors">Geometrixx Outdoors</h4>
+
+<p>This is the source for the <em>Geometrix Outdoors</em> home page. Again, we aggregated the distinct <code class="language-plaintext highlighter-rouge">jsp</code> sources into one representation for easier review.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-outdoors-homepage-body.png" alt="Geometrixx Outdoors Body JSP" />
+</p>
+
+<p>These notes also show the same general findings as the previous example:</p>
+
+<ol>
+  <li>A new <strong>Template Type</strong> is required: <em>Base Template</em>
+    <ul>
+      <li>This template type will be will contain the header, footer, a few misc. components, and the main container for the template editor to manage.</li>
+    </ul>
+  </li>
+  <li>A new <strong>Editable Template</strong> is required: <em>Home Page Template</em>
+    <ol>
+      <li>This template be derived from the <em>Base Template</em> type.</li>
+      <li>Currently the evaluation doesn’t show any new template editor managed components other than the root container. This may change after further review.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3 id="repository-review">Repository Review</h3>
+
+<p>A repository review incorporates taking a look at the content tree for an exemplar page that will be converted. This will identify what exists beyond what is represented in the code.</p>
+
+<p>This review is the only means for identifying <em>Column Controls</em> which need to be converted. Reviewing the content tree also helps identifying content which should be managed by a template editor vs. normal content authoring. Finally, resources defined in the repository, but not referenced by the template, are candidates for removal - they likely are leftovers from previous iterations of the template.</p>
+
+<h4 id="geometrixx-shapes-1">Geometrixx Shapes</h4>
+
+<p>This image depicts the Geometrixx English home page’s repository tree, showing resources defined beneath the <code class="language-plaintext highlighter-rouge">jcr:content</code> node.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-shapes-homepage-tree.png" alt="Geometrixx Shapes Body JSP" />
+</p>
+
+<p>We’ve already made teh following notes:</p>
+
+<ol>
+  <li><em>Paragraph System</em> components which will be rewritten as a <em>Container</em>, and thus will require renaming.</li>
+  <li>A <em>Column Control</em>, which manages content organization within a parsys</li>
+  <li>Content ordering which does not reflect the static template referencing, thereby requiring an order configuration</li>
+  <li>Unused resources which can be deleted.</li>
+</ol>
+
+<h4 id="geometrixx-outdoors-1">Geometrixx Outdoors</h4>
+
+<p>This image depicts the Geometrixx Outdoors English home page’s repository tree.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-outdoors-homepage-tree.png" alt="Geometrixx Shapes Body JSP" />
+</p>
+
+<p>As with the previous example, we’ve noted our assessment. This evaluation shows a fairly simple conversion definition.</p>
+
+<ol>
+  <li><em>Paragraph System</em> component which will be rewritten as a <em>Container</em>, and thus will require renaming.</li>
+  <li>A <em>Column Control</em>, which manages content organization within a parsys.</li>
+</ol>
+
+<h3 id="visual-review">Visual Review</h3>
+
+<p>Content management on pages must be delineated between that which is managed by <em>Template Editors</em> and that managed by <em>Content Authors</em>. A visual review of exemplar pages helps identify this breakout. This review also helps with identifying placement and number of containers.</p>
+
+<h4 id="geometrixx-shapes-2">Geometrixx Shapes</h4>
+
+<p>Here’s the Geometrixx Shapes home page annotated with containers, embedded and template editor managed components.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-shapes-homepage-annotated.png" alt="Geometrixx Shapes Home Page Annotated" width="400px" class="inline" />
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-shapes-homepage-containers.png" alt="Geometrixx Shapes Home Page Containers" width="400px" class="inline" />
+</p>
+
+<h4 id="geometrixx-outdoors-2">Geometrixx Outdoors</h4>
+
+<p>Here’s the Geometrixx Outdoors home page, again annotated with containers, embedded and template editor managed components.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/geometrixx-outdoors-homepage-annotated.png" alt="Geometrixx Outdoors Homepage Annotated" width="600px" />
+</p>
+
+<h3 id="additional-considerations">Additional Considerations</h3>
+
+<h4 id="new-template-types">New Template Types</h4>
+
+<p>The first rounds of template evaluations will likely lead to new <strong>Template Type</strong> definitions. While there may be some reusable code from the original components that comprised the static templates, there is likely new development needed to conform to editable template best practices.</p>
+
+<p>At a minimum these changes will be updating any <em>Paragraph System</em> to a container proxy, as provided by in the AEM Core Components. Other changes may include reorganizing the script references or changing markup to accommodate for a change in the content hierarchy.</p>
+
+<h4 id="msm-relationships">MSM Relationships</h4>
+
+<p>When converting a site managed by MultiSite Manager, Blue Prints and Live Copies, it is important to convert both the BluePrint and all LiveCopies simultaneously.</p>
+
+<h2 id="components">Components</h2>
+
+<p>Component evaluation is relatively simple compared to templates. Evaluation consists of identifying replacement components for existing legacy versions, then determing the correct data transformations. The evaluation is the same for both the component’s standard authoring mode, as well as design to policy conversion.</p>
+
+<h3 id="replacement-selection">Replacement Selection</h3>
+
+<p>As stated elsewhere in this documentation, the purpose of the component conversion is to transform from legacy version fo components. Thus, the most likely scenario is that a deprecated component is being replaced with a newer or more robust version. Selection for conversion is relatively straight forward.</p>
+
+<h3 id="content-manipulations">Content Manipulations</h3>
+
+<p>The component and design conversions support a several options for data copy or transformations between node definitions. As part of the evaluation, every possible property that can be set on a component needs to be identified, along with its new property on the replacement node.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/example-image-component-before.png" alt="Example Component - Before" width="400px" class="inline" />
+    <img src="/aem-modernize-tools/pages/plan-operate/images/example-image-component-after.png" alt="Example Component - After" width="400px" class="inline" />
+</p>
+
+<p>The above example shows the before and after node for an <em>image</em> component conversion. The original component was a Foundation Image, which contained a few simple values. As you can see from the output, the desired transformations are simple property copies.</p>
+
+<p class="image">
+    <img src="/aem-modernize-tools/pages/plan-operate/images/example-title-design-before.png" alt="Example Design - Before" width="400px" class="inline" />
+    <img src="/aem-modernize-tools/pages/plan-operate/images/example-title-design-after.png" alt="Example Design - After" width="400px" class="inline" />
+</p>
+
+<p>This second example shows before/after for <em>Title</em> component’s design configuration. This example is also from Geometrixx Shapes. It shows that one of the properties needs to be converted during the transformation. This informs the conversion configuration definitions.</p>
+
+
+    </article>
+</div>
+
+
+                </div>
+                <div class="footer">
+                    <a href="/aem-modernize-tools/pages/license.html">License</a>
+                    <span class="right">&copy; Adobe, Inc. All Rights Reserved<br/>
+            <a href="/aem-modernize-tools/pages/notice.html">Trademark Notice</a>
+        </span>
+                </div>
+            </div>
+            <!-- Sidebar -->
+<div id="sidebar">
+    <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+            <header class="major">
+                <h3><a href="/aem-modernize-tools/">AEM Modernization Tools</a></h3>
+            </header>
+            <ul>
+                <li><a href="/aem-modernize-tools/pages/v2-changes.html">Version 2.0 Changes</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <span class="opener">Planning &amp; Operation</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/plan.html">Project Planning</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/evaluation.html">Evaluating a Site</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/set-up.html">Set Up</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/usage.html">Using the Tools</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">All-in-One Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Page Structure Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/structure/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Component Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/component/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Policy Importing</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/policy/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Development</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/apidocs/index.html">API Java Docs</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/extending.html">Extending</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/troubleshooting.html">Troubleshooting</a></li>
+                    </ul>
+                </li>
+                <li><a href="/aem-modernize-tools/pages/support-license.html">Support &amp; Licensing</a></li>
+            </ul>
+        </nav>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>Download</h2>
+            </header>
+            <article>
+                <p>Download the latest release from GitHub.</p>
+            </article>
+
+            <ul class="actions">
+                <li style="margin-bottom: 1rem;">
+                    <a href="https://github.com/adobe/aem-modernize-tools/releases/" target="_blank" class="button primary icon solid fa-download">Download</a>
+                </li>
+                <li>
+                    <a href="/aem-modernize-tools/pages/releases.html" class="button">Release notes</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>GitHub Project</h2>
+            </header>
+            <p>
+                AEM Modernization Tools' source code is open and freely available on GitHub.
+            </p>
+
+            <ul class="contact">
+                <li class="fa-github"><a href="https://github.com/adobe/aem-modernize-tools" target="_blank">github.com/adobe/aem-modernize-tools</a></li>
+                <li class="fa-bug"><a href="https://github.com/adobe/aem-modernize-tools/issues" target="_blank">Report issues</a></li>
+                <li class="fa-pencil"><a href="https://github.com/adobe/aem-modernize-tools/blob/main/.github/CONTRIBUTING.md">Learn how to contribute</a></li>
+                <li class="fa-rocket"><a href="/aem-modernize-tools/pages/releases/process.html">Learn about the release process</a></li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+
+        </div>
+    </body>
+    <footer>
+        
+<!-- Scripts -->
+
+<script src="/aem-modernize-tools/assets/js/jquery.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/jquery.pjax.js"></script>
+<script src="/aem-modernize-tools/assets/js/browser.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/breakpoints.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/util.js"></script>
+<script src="/aem-modernize-tools/assets/js/main.js"></script>
+
+<script src="/aem-modernize-tools/assets/js/custom.js"></script>
+
+
+    </footer>
+</html>

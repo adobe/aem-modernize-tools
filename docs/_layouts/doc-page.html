@@ -1,0 +1,15 @@
+---
+layout: default
+---
+<div class="content-page doc-page">
+    <h1>{{ page.tool }} - {{ page.title }}</h1>
+
+    <article class="page-content">
+        {% if page.videoId %}
+            <div class="video right">
+                <iframe src="https://video.tv.adobe.com/v/{{ page.videoId }}/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
+            </div>
+        {% endif %}
+        {{ content }}
+    </article>
+</div>

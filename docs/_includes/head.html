@@ -1,0 +1,27 @@
+<head>
+
+    {% if page.tool %}
+        <title>{{ page.title}} | {{ page.tool }} | {{ site.title }}</title>
+    {% elsif page.title %}
+        <title>{{ page.title }} | {{ site.title }}</title>
+    {% else %}
+        <title>{{ site.title }}</title>
+    {% endif %}
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="google-site-verification" content="lunlv61z07z3yf-aXoSSoHC3VUWRrJ-MkUXtggDUcOE" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138736911-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138736911-1');
+    </script>
+
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/styles.css" />
+
+</head>

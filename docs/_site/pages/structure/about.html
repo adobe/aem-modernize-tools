@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+
+    
+        <title>About | Page/Structure Converter | AEM Modernization Tools</title>
+    
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="google-site-verification" content="lunlv61z07z3yf-aXoSSoHC3VUWRrJ-MkUXtggDUcOE" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138736911-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138736911-1');
+    </script>
+
+    <link rel="stylesheet" href="/aem-modernize-tools/assets/css/styles.css" />
+
+</head>
+
+
+    <body>
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+        <!-- Main -->
+            <div id="main">
+                <div class="inner">
+
+                    <div class="content-page doc-page">
+    <h1>Page/Structure Converter - About</h1>
+
+    <article class="page-content">
+        
+            <div class="video right">
+                <iframe src="https://video.tv.adobe.com/v/????/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
+            </div>
+        
+        <p>This conversion tool is used to manipulate the structure of a page from a <em>Static</em> definition, to an <em>Editable Template</em>. The intent is to help customers move from the limited capabilities of the legacy features to the robust, modern AEM offerings.</p>
+
+<p>The operations referenced here are performed on the content in the repository, this tool does not modify any code. There is an implicit expectation that a new Editable Template has been created to support the content updated by these conversions. See the <a href="/aem-modernize-tools/pages/plan-operate.html">Plan &amp; Operate</a> section for more information.</p>
+
+<p>Here you’ll find information on what conversion operations occur. For information on how to configure the tool, see the associated <a href="/aem-modernize-tools/pages/configuration/structure.html">configuration page</a>. For information on how the services perform the changes, and options for extending or enhancing, see the <a href="/aem-modernize-tools/pages/development.html">developer detail pages</a>.</p>
+
+<h2 id="conversions">Conversions</h2>
+
+<h3 id="root-container">Root Container</h3>
+
+<div class="row">
+    <div class="col-6 col-12-small">
+        <p>Static templates are based on embedded components, the template defines the order and structure <strong>through code</strong>. The image on the right shows the structure of the Geometrixx Shapes home page. You'll see that there a number of components embedded in the template itself.</p>
+        <p>However, standard Editable Templates use a responsive grid container at their root, to contain the base template structure. <i>Therefore, the first step of conversion is to create a new <strong>Container</strong> proxy component, with the node name of <code>root</code></i>.</p>
+    </div>
+    <div class="col-6 col-12-small">
+        <span class="image">
+            <img src="./images/geometrixx-static-template-content.png" alt="Geometrixx Static Template Content" />
+        </span>
+    </div>  
+</div>
+
+<h3 id="content-relocation">Content Relocation</h3>
+
+<p>Once the <code class="language-plaintext highlighter-rouge">root</code> node is created, the next conversion step is to move the existing nodes to the newly created parent. The components are moved over in the order specified in the OSGi Configuration for the template. This reordering is necessary to ensure the same display order as was previously managed by the static template.</p>
+
+<p>There are some nodes which are ignored for relocation. Out-of-the-box configurations include Blueprint and Live Copy metadata nodes; these will remain at the root of the page tree to ensure continued operation. Additional ignored nodes can be added via configuration, see the <a href="/aem-modernize-tools/pages/configuration/structure.html">configuration page</a> for more information.</p>
+
+<h3 id="node-renaming">Node Renaming</h3>
+
+<p>While moving the static node structure to the new root container, the nodes may require renaming. This is again due to the inherent difference in the static structure to the editable template layout. The static structure likely relied on nodes named <em>parsys</em>, whereas an editable template uses layout containers which are named <em>container</em> or some derivation thereof. Node renaming is configured in the OSGi service definition.</p>
+
+<h3 id="parsys--container-proxy">Parsys =&gt; Container Proxy</h3>
+
+<p>While the legacy Paragraph System component will continue to render the contained content, it cannot be updated with new content. Therefore, the entire tree of nodes is modified to replace all parsys’ references with container proxies. All content order is maintained during this transformation.</p>
+
+<h3 id="content-removal">Content Removal</h3>
+
+<p>Since static templates function via code defined paths, there are times when a template update creates orphaned content. The only way to remove this content is to do it manually. This conversion allows specified nodes to be deleted during the transformation process.</p>
+
+    </article>
+</div>
+
+
+                </div>
+                <div class="footer">
+                    <a href="/aem-modernize-tools/pages/license.html">License</a>
+                    <span class="right">&copy; Adobe, Inc. All Rights Reserved<br/>
+            <a href="/aem-modernize-tools/pages/notice.html">Trademark Notice</a>
+        </span>
+                </div>
+            </div>
+            <!-- Sidebar -->
+<div id="sidebar">
+    <div class="inner">
+
+        <!-- Menu -->
+        <nav id="menu">
+            <header class="major">
+                <h3><a href="/aem-modernize-tools/">AEM Modernization Tools</a></h3>
+            </header>
+            <ul>
+                <li><a href="/aem-modernize-tools/pages/v2-changes.html">Version 2.0 Changes</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <span class="opener">Planning &amp; Operation</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/plan.html">Project Planning</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/evaluation.html">Evaluating a Site</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/set-up.html">Set Up</a></li>
+                        <li><a href="/aem-modernize-tools/pages/plan-operate/usage.html">Using the Tools</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">All-in-One Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/all-in-one/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Page Structure Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/structure/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/structure/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Component Conversion</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/component/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/component/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Policy Importing</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/pages/policy/about.html">About the Feature</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/usage.html">How to Use</a></li>
+                        <li><a href="/aem-modernize-tools/pages/policy/config.html">Configuring the Rules</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="opener">Development</span>
+                    <ul>
+                        <li><a href="/aem-modernize-tools/apidocs/index.html">API Java Docs</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/extending.html">Extending</a></li>
+                        <li><a href="/aem-modernize-tools/pages/development/troubleshooting.html">Troubleshooting</a></li>
+                    </ul>
+                </li>
+                <li><a href="/aem-modernize-tools/pages/support-license.html">Support &amp; Licensing</a></li>
+            </ul>
+        </nav>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>Download</h2>
+            </header>
+            <article>
+                <p>Download the latest release from GitHub.</p>
+            </article>
+
+            <ul class="actions">
+                <li style="margin-bottom: 1rem;">
+                    <a href="https://github.com/adobe/aem-modernize-tools/releases/" target="_blank" class="button primary icon solid fa-download">Download</a>
+                </li>
+                <li>
+                    <a href="/aem-modernize-tools/pages/releases.html" class="button">Release notes</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>GitHub Project</h2>
+            </header>
+            <p>
+                AEM Modernization Tools' source code is open and freely available on GitHub.
+            </p>
+
+            <ul class="contact">
+                <li class="fa-github"><a href="https://github.com/adobe/aem-modernize-tools" target="_blank">github.com/adobe/aem-modernize-tools</a></li>
+                <li class="fa-bug"><a href="https://github.com/adobe/aem-modernize-tools/issues" target="_blank">Report issues</a></li>
+                <li class="fa-pencil"><a href="https://github.com/adobe/aem-modernize-tools/blob/main/.github/CONTRIBUTING.md">Learn how to contribute</a></li>
+                <li class="fa-rocket"><a href="/aem-modernize-tools/pages/releases/process.html">Learn about the release process</a></li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+
+        </div>
+    </body>
+    <footer>
+        
+<!-- Scripts -->
+
+<script src="/aem-modernize-tools/assets/js/jquery.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/jquery.pjax.js"></script>
+<script src="/aem-modernize-tools/assets/js/browser.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/breakpoints.min.js"></script>
+<script src="/aem-modernize-tools/assets/js/util.js"></script>
+<script src="/aem-modernize-tools/assets/js/main.js"></script>
+
+<script src="/aem-modernize-tools/assets/js/custom.js"></script>
+
+
+    </footer>
+</html>
