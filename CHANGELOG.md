@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- Fix workflow. [\#90](https://github.com/adobe/aem-modernize-tools/pull/90) ([bstopp](https://github.com/bstopp))
 - Github Actions workflow updates [\#89](https://github.com/adobe/aem-modernize-tools/pull/89) ([bstopp](https://github.com/bstopp))
 
 ## [aem-modernize-tools-2.0.6](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.6) (2021-11-23)
