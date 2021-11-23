@@ -37,16 +37,22 @@ jobs:
       - name: Java 8 AEM6.5 Build
         run: mvn clean deploy -DskipStagingRepositoryClose=true -P java8aem65,release
         env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 8 AEMaaCS Build
         run: mvn clean deploy -DskipStagingRepositoryClose=true -P java8,release
         env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEM6.5 Build
         run: mvn clean deploy -DskipStagingRepositoryClose=true -P aem65,release
         env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEMaaCS Build & Deploy all to Central
