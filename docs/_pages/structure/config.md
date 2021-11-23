@@ -5,11 +5,11 @@ tool: Page/Structure Converter
 description: How to configure Page Structure conversion service.
 order: 3
 image: config-page-structure-converter.svg
-videoId: ????
+videoId: 338821
 ---
 
 <p class="padded">
-The Page Structure rewrite tool consists of a single *rewrite rule* OSGi service factory.
+The Page Structure rewrite tool consists of a single <strong>rewrite rule</strong> OSGi service factory.
 </p>
 
 ## Page Rewrite Rule Service

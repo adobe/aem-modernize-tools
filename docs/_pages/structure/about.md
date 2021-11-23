@@ -5,7 +5,7 @@ tool: Page/Structure Converter
 description: About the page Structure conversion tool.
 order: 1
 image: tools-page-structure-converter.svg
-videoId: ????
+videoId: 338820
 ---
 
 
@@ -26,7 +26,7 @@ Here you'll find information on what conversion operations occur. For informatio
     </div>
     <div class="col-6 col-12-small">
         <span class="image">
-            <img src="./images/geometrixx-static-template-content.png" alt="Geometrixx Static Template Content" />
+            <img src="{{site.baseurl}}/pages/structure/images/geometrixx-static-template-content.png" alt="Geometrixx Static Template Content" />
         </span>
     </div>  
 </div>
@@ -41,9 +41,6 @@ There are some nodes which are ignored for relocation. Out-of-the-box configurat
 
 While moving the static node structure to the new root container, the nodes may require renaming. This is again due to the inherent difference in the static structure to the editable template layout. The static structure likely relied on nodes named *parsys*, whereas an editable template uses layout containers which are named *container* or some derivation thereof. Node renaming is configured in the OSGi service definition.
 
-### Parsys => Container Proxy
-
-While the legacy Paragraph System component will continue to render the contained content, it cannot be updated with new content. Therefore, the entire tree of nodes is modified to replace all parsys' references with container proxies. All content order is maintained during this transformation.
 
 ### Content Removal
 

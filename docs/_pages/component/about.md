@@ -20,3 +20,4 @@ Here you'll find information on what conversion operations occur. For informatio
 The following operations are performed during the component transformation. Using this out-of-the-box feature replaces the original matched component node  matched, with a new node. If the component's parent is an *ordered* node, the component's position in that order is preserved.
 
 {% include node-rewrites/conversions.html %}
+

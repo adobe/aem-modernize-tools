@@ -2,12 +2,22 @@
 layout: default
 ---
 <div class="content-page doc-page">
-    <h1>{{ page.tool }} - {{ page.title }}</h1>
+    {% if page.tool %}
+        <h1>{{ page.tool }} - {{ page.title }}</h1>
+    {% else %}
+        <h1>{{ page.title }}</h1>
+    {% endif %}
+
 
     <article class="page-content">
         {% if page.videoId %}
             <div class="video right">
+                <span class="image object">
                 <iframe src="https://video.tv.adobe.com/v/{{ page.videoId }}/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
+                </span>
+                <div class="content">
+                    <a href="https://video.tv.adobe.com/v/{{ page.videoId }}/?quality=12&learn=on" target="_blank" class="button primary small fit" title="Watch the Video">Learn More</a>
+                </div>
             </div>
         {% endif %}
         {{ content }}
