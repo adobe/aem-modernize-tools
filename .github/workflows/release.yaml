@@ -57,7 +57,7 @@ jobs:
           cache: maven
 
       - name: Maven Verify
-        run: mvn -U clean verify
+        run: mvn -U clean install
 
       - name: Generate Release Changelog
         id: generate-release-changelog
@@ -106,11 +106,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        aem: [ aemCloudService, aem65 ]
-        jdk: [ 8, 11 ]
-        exclude:
-          - aem: aemCloudService
-            jdk: 11
+        profile: [ java8, aem65, java8aem65 ]
 
     steps:
       - name: Checkout code
@@ -123,11 +119,11 @@ jobs:
         uses: actions/setup-java@v2.3.1
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.jdk }}
+          java-version: 11
           cache: maven
 
       - name: Maven Verify
-        run: mvn -U clean verify -P${{ matrix.aem }}
+        run: mvn clean install -P${{ matrix.profile }}
 
       - name: Upload Release Artifacts
         id: upload-release-artifacts

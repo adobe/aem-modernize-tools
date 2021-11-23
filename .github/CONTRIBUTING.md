@@ -1,4 +1,4 @@
-s# Contributing
+# Contributing
 
 Thanks for choosing to contribute!
 
