@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.4...HEAD)
+
+### 🐛 Bug fixes
+
+- Small visual issue with the UI. [\#88](https://github.com/adobe/aem-modernize-tools/pull/88) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.0.4](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.4) (2021-11-23)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.2...aem-modernize-tools-2.0.4)
