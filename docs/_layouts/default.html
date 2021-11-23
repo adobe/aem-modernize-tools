@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+
+    {% include head.html %}
+
+    <body>
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+        <!-- Main -->
+            <div id="main">
+                <div class="inner">
+
+                    {{ content }}
+
+                </div>
+                <div class="footer">
+                    <a href="{{ site.baseurl }}/pages/license.html">License</a>
+                    <span class="right">&copy; Adobe, Inc. All Rights Reserved<br/>
+            <a href="{{ site.baseurl }}/pages/notice.html">Trademark Notice</a>
+        </span>
+                </div>
+            </div>
+            {% include sidebar.html %}
+        </div>
+    </body>
+    <footer>
+        {% include footer.html %}
+    </footer>
+</html>
