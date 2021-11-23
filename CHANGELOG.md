@@ -1,8 +1,8 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
+## [aem-modernize-tools-2.0.10](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.10) (2021-11-23)
 
-[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.8...HEAD)
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.8...aem-modernize-tools-2.0.10)
 
 ### 📁 Other pull requests
 
