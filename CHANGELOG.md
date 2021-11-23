@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.2...HEAD)
+
+### 🐛 Bug fixes
+
+- Action on Release - Missing Credentials [\#87](https://github.com/adobe/aem-modernize-tools/pull/87) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.0.2](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.2) (2021-11-23)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-1.0.0...aem-modernize-tools-2.0.2)
