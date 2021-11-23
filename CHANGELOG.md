@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.4...HEAD)
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.6...HEAD)
+
+### 📁 Other pull requests
+
+- Github Actions workflow updates [\#89](https://github.com/adobe/aem-modernize-tools/pull/89) ([bstopp](https://github.com/bstopp))
+
+## [aem-modernize-tools-2.0.6](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.6) (2021-11-23)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.4...aem-modernize-tools-2.0.6)
 
 ### 🐛 Bug fixes
 
