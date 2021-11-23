@@ -110,15 +110,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.policy">com.adobe.aem.modernize.policy</a></th>
+<th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.component.rule">com.adobe.aem.modernize.component.rule</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.rule">com.adobe.aem.modernize.rule</a></th>
+<th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.policy">com.adobe.aem.modernize.policy</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.rule">com.adobe.aem.modernize.rule</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.structure">com.adobe.aem.modernize.structure</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#com.adobe.aem.modernize.structure.rule">com.adobe.aem.modernize.structure.rule</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -146,6 +154,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      boolean&nbsp;deep)</code></th>
 <td class="colLast">
 <div class="block">Applies the indicated rules to the provided resource.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="com.adobe.aem.modernize.component.rule">
+<!--   -->
+</a>
+<h3>Uses of <a href="../RewriteException.html" title="class in com.adobe.aem.modernize">RewriteException</a> in <a href="../component/rule/package-summary.html">com.adobe.aem.modernize.component.rule</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../component/rule/package-summary.html">com.adobe.aem.modernize.component.rule</a> that throw <a href="../RewriteException.html" title="class in com.adobe.aem.modernize">RewriteException</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>@Nullable javax.jcr.Node</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ColumnControlRewriteRule.</span><code><span class="memberNameLink"><a href="../component/rule/ColumnControlRewriteRule.html#applyTo(javax.jcr.Node,java.util.Set)">applyTo</a></span>&#8203;(@NotNull javax.jcr.Node&nbsp;root,
+       @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;finalPaths)</code></th>
+<td class="colLast">
+<div class="block">Updates this node, the returned node is the primary column control resource, although this updates a number of sibling resources.</div>
 </td>
 </tr>
 </tbody>
@@ -233,6 +266,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Applies the indicated rules to the provided resource.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="com.adobe.aem.modernize.structure.rule">
+<!--   -->
+</a>
+<h3>Uses of <a href="../RewriteException.html" title="class in com.adobe.aem.modernize">RewriteException</a> in <a href="../structure/rule/package-summary.html">com.adobe.aem.modernize.structure.rule</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../structure/rule/package-summary.html">com.adobe.aem.modernize.structure.rule</a> that throw <a href="../RewriteException.html" title="class in com.adobe.aem.modernize">RewriteException</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>@Nullable javax.jcr.Node</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">PageRewriteRule.</span><code><span class="memberNameLink"><a href="../structure/rule/PageRewriteRule.html#applyTo(javax.jcr.Node,java.util.Set)">applyTo</a></span>&#8203;(@NotNull javax.jcr.Node&nbsp;pageContent,
+       @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;finalPaths)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>

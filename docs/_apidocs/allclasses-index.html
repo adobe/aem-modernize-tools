@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":1,"i1":1,"i2":1,"i3":1,"i4":8,"i5":1,"i6":2,"i7":2,"i8":1,"i9":1,"i10":1,"i11":1};
+var data = {"i0":2,"i1":1,"i2":1,"i3":2,"i4":1,"i5":1,"i6":8,"i7":1,"i8":2,"i9":2,"i10":1,"i11":1,"i12":1,"i13":1};
 var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"],8:["t4","Exception Summary"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -111,58 +111,70 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><a href="com/adobe/aem/modernize/component/rule/ColumnControlRewriteRule.html" title="class in com.adobe.aem.modernize.component.rule">ColumnControlRewriteRule</a></td>
+<th class="colLast" scope="row">
+<div class="block">Rewrites a Column Control component into multiple Responsive Grid layout components.</div>
+</th>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/component/ComponentRewriteRule.html" title="interface in com.adobe.aem.modernize.component">ComponentRewriteRule</a></td>
 <th class="colLast" scope="row">
 <div class="block">Interface for services that implement a component rewrite rule.</div>
 </th>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/component/ComponentRewriteRuleService.html" title="interface in com.adobe.aem.modernize.component">ComponentRewriteRuleService</a></td>
 <th class="colLast" scope="row">
 <div class="block">Provides a mechanism for listing all configured rules either via Nodes or custom implementations.</div>
 </th>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
+<td class="colFirst"><a href="com/adobe/aem/modernize/structure/rule/PageRewriteRule.html" title="class in com.adobe.aem.modernize.structure.rule">PageRewriteRule</a></td>
+<th class="colLast" scope="row">
+<div class="block">Rewrites the jcr:content node of a Page.</div>
+</th>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/policy/PolicyImportRule.html" title="interface in com.adobe.aem.modernize.policy">PolicyImportRule</a></td>
 <th class="colLast" scope="row">
 <div class="block">Interface for services that implement a Design rewrite rule.</div>
 </th>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/policy/PolicyImportRuleService.html" title="interface in com.adobe.aem.modernize.policy">PolicyImportRuleService</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/RewriteException.html" title="class in com.adobe.aem.modernize">RewriteException</a></td>
 <th class="colLast" scope="row">
 <div class="block">Exception thrown when something goes wrong while rewriting a node.</div>
 </th>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/rule/RewriteRule.html" title="interface in com.adobe.aem.modernize.rule">RewriteRule</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/rule/RewriteRule.Comparator.html" title="class in com.adobe.aem.modernize.rule">RewriteRule.Comparator</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/rule/RewriteRuleMapping.html" title="class in com.adobe.aem.modernize.rule">RewriteRuleMapping</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/rule/RewriteRuleService.html" title="interface in com.adobe.aem.modernize.rule">RewriteRuleService</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/rule/ServiceBasedRewriteRule.html" title="interface in com.adobe.aem.modernize.rule">ServiceBasedRewriteRule</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/structure/StructureRewriteRule.html" title="interface in com.adobe.aem.modernize.structure">StructureRewriteRule</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><a href="com/adobe/aem/modernize/structure/StructureRewriteRuleService.html" title="interface in com.adobe.aem.modernize.structure">StructureRewriteRuleService</a></td>
 <th class="colLast" scope="row">
 <div class="block">Provides a mechanism for listing all the configured rules either via Nodes or custom implementations.</div>
