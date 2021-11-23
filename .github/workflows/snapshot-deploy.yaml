@@ -35,17 +35,17 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -P java8aem65,release
+        run: mvn clean deploy -DskipStagingRepositoryClose=true -P java8aem65,release
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 8 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging -P java8,release
+        run: mvn clean deploy -DskipStagingRepositoryClose=true -P java8,release
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -P aem65,release
+        run: mvn clean deploy -DskipStagingRepositoryClose=true -P aem65,release
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 

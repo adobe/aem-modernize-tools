@@ -170,21 +170,21 @@ jobs:
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
       - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -Pjava8aem65,release
+        run: mvn clean deploy -DskipStagingRepositoryClose=true -Pjava8aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 8 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging -Pjava8,release
+        run: mvn clean deploy -DskipStagingRepositoryClose=true -Pjava8,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -Paem65,release
+        run: mvn clean deploy -DskipStagingRepositoryClose=true -Paem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
