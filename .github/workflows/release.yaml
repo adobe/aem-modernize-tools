@@ -101,7 +101,7 @@ jobs:
             ui.config/target/aem-modernize-tools.ui.config-*.zip
 
   additional-release-artifacts:
-    needs: github-release
+    needs: [tag, github-release]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -139,7 +139,6 @@ jobs:
             ui.apps.structure/target/aem-modernize-tools.ui.apps.structure-*.zip
             ui.config/target/aem-modernize-tools.ui.config-*.zip
 
-
   maven-central-deploy:
     needs: tag
     runs-on: ubuntu-latest
@@ -149,14 +148,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: aem-modernize-tools-${{ needs.tag.outputs.version }}
-
-      - name: Import GPG key
-        env:
-          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
-          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
-        run: |
-          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
-          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
       - name: Setup JDK
         uses: actions/setup-java@v2.3.1
@@ -170,23 +161,37 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -P java8aem65,release
+      - name: Import GPG key
         env:
+          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+        run: |
+          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
+          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+
+      - name: Java 8 AEM6.5 Build
+        run: mvn clean deploy -DskipRemoteStaging -Pjava8aem65,release
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 8 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging -P java8,release
+        run: mvn clean deploy -DskipRemoteStaging -Pjava8,release
         env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging -P aem65,release
+        run: mvn clean deploy -DskipRemoteStaging -Paem65,release
         env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEMaaCS Build & Deploy all to Central
-        run: mvn clean deploy -DautoReleaseAfterClose=true -P aemCloudService,release,attach-javadoc,attach-source
+        run: mvn clean deploy -DautoReleaseAfterClose=true -PaemCloudService,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
