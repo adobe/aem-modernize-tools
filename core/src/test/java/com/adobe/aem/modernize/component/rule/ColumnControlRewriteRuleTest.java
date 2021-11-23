@@ -1,4 +1,4 @@
-package com.adobe.aem.modernize.component.impl.rule;
+package com.adobe.aem.modernize.component.rule;
 
 /*-
  * #%L
@@ -44,7 +44,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static com.adobe.aem.modernize.component.impl.rule.ColumnControlRewriteRule.*;
+import static com.adobe.aem.modernize.component.rule.ColumnControlRewriteRule.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SlingContextExtension.class)

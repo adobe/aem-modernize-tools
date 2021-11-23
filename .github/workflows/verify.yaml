@@ -25,7 +25,7 @@ jobs:
           cache: maven
 
       - name: Build & Test with Maven
-        run: mvn -U clean install -P${{ matrix.profile }}
+        run: mvn -U clean verify -P${{ matrix.profile }}
 
       - name: Upload CodeCov
         uses: codecov/codecov-action@v2.1.0

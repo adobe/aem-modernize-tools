@@ -36,7 +36,7 @@ import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
 import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
-import com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule;
+import com.adobe.aem.modernize.structure.rule.PageRewriteRule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;

@@ -47,7 +47,7 @@ import com.adobe.aem.modernize.policy.impl.PolicyImportRuleServiceImpl;
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.adobe.aem.modernize.structure.impl.StructureRewriteRuleServiceImpl;
-import com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule;
+import com.adobe.aem.modernize.structure.rule.PageRewriteRule;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;

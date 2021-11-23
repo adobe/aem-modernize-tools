@@ -96,6 +96,7 @@
         <vault.user>admin</vault.user>
         <vault.password>admin</vault.password>
 
+        <aemanalyser.version>1.2.2</aemanalyser.version>
         <bnd.version>6.0.0</bnd.version>
         <slf4j.version>1.7.32</slf4j.version>
         <jmockit.version>1.49</jmockit.version>
@@ -210,7 +211,7 @@
                         <dependency>
                             <groupId>org.apache.maven.shared</groupId>
                             <artifactId>maven-invoker</artifactId>
-                            <version>3.1.0</version>
+                            <version>2.2</version> <!-- Freeze until 3.0.0 of Maven Release Plugin is GA -->
                         </dependency>
                         <dependency>
                             <groupId>org.apache.maven.release</groupId>
@@ -354,6 +355,13 @@ Bundle-DocURL:
                             <version>6.5.7.0</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <!-- AEM Analyser Plugin -->
+                <plugin>
+                    <groupId>com.adobe.aem</groupId>
+                    <artifactId>aemanalyser-maven-plugin</artifactId>
+                    <version>${aemanalyser.version}</version>
+                    <extensions>true</extensions>
                 </plugin>
                 <!-- Content Package Plugin -->
                 <plugin>

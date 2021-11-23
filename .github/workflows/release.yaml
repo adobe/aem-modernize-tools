@@ -57,7 +57,7 @@ jobs:
           cache: maven
 
       - name: Maven Verify
-        run: mvn -U clean install
+        run: mvn -U clean verify
 
       - name: Generate Release Changelog
         id: generate-release-changelog
@@ -123,7 +123,7 @@ jobs:
           cache: maven
 
       - name: Maven Verify
-        run: mvn clean install -P${{ matrix.profile }}
+        run: mvn clean verify -P${{ matrix.profile }}
 
       - name: Upload Release Artifacts
         id: upload-release-artifacts

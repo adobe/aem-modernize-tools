@@ -1,4 +1,4 @@
-package com.adobe.aem.modernize.component.impl.rule;
+package com.adobe.aem.modernize.component.rule;
 
 /*-
  * #%L
