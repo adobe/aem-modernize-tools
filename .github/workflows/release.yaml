@@ -190,8 +190,15 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Java 11 AEMaaCS Build & Deploy all to Central
-        run: mvn clean deploy -DautoReleaseAfterClose=true -PaemCloudService,release,attach-javadoc,attach-source
+      - name: Java 11 AEMaaCS Build
+        run: mvn clean deploy -DskipRemoteStaging=true -PaemCloudService,release,attach-javadoc,attach-source
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Deploy to Central
+        run: mvn nexus-staging:deploy-staged
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
