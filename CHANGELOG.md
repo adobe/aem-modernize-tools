@@ -10,6 +10,10 @@
 - Fixing issue where aggregate rules weren't found during lookup [\#78](https://github.com/adobe/aem-modernize-tools/pull/78) ([bstopp](https://github.com/bstopp))
 - Pagination has issues on CloudService UI. [\#77](https://github.com/adobe/aem-modernize-tools/pull/77) ([bstopp](https://github.com/bstopp))
 
+### 📖 Documentation
+
+- Move documentation to main [\#84](https://github.com/adobe/aem-modernize-tools/pull/84) ([bstopp](https://github.com/bstopp))
+
 ### 📁 Other issues
 
 - Page Conversion Tool url encode issue with page/folders that are numerically named [\#32](https://github.com/adobe/aem-modernize-tools/issues/32)
