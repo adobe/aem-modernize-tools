@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-1.0.0...HEAD)
 
+### 🚀 Enhancements
+
+- OOTB Service-Based rewrite rules should be exported [\#86](https://github.com/adobe/aem-modernize-tools/pull/86) ([bstopp](https://github.com/bstopp))
+
 ### 🐛 Bug fixes
 
 - RepoInit failure on local SDK [\#73](https://github.com/adobe/aem-modernize-tools/issues/73)
