@@ -5,7 +5,7 @@ tool: Page/Structure Converter
 description: About the page Structure conversion tool.
 order: 1
 image: tools-page-structure-converter.svg
-videoId: ????
+videoId: 338820
 ---
 
 
@@ -26,7 +26,7 @@ Here you'll find information on what conversion operations occur. For informatio
     </div>
     <div class="col-6 col-12-small">
         <span class="image">
-            <img src="./images/geometrixx-static-template-content.png" alt="Geometrixx Static Template Content" />
+            <img src="{{site.baseurl}}/pages/structure/images/geometrixx-static-template-content.png" alt="Geometrixx Static Template Content" />
         </span>
     </div>  
 </div>

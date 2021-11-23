@@ -8,10 +8,10 @@ description: Details about what's new in v2.0 of the tools.
 
 <div class="video right">
   <span class="image object">
-    <iframe src="https://video.tv.adobe.com/v/{{ page.videoId }}/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
+    <iframe src="https://video.tv.adobe.com/v/338822/?quality=12&learn=on" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe>
   </span>
   <div class="content">
-    <a href="https://video.tv.adobe.com/v/{{ page.videoId }}/?quality=12&learn=on" target="_blank" class="button primary small fit" title="Watch the Video">Learn More</a>
+    <a href="https://video.tv.adobe.com/v/338822/?quality=12&learn=on" target="_blank" class="button primary small fit" title="Watch the Video">Learn More</a>
   </div>
 </div>
 
