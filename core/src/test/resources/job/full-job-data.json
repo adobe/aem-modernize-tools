@@ -15,7 +15,7 @@
       "/var/aem-modernize/rules/policy/extraLargeTitle"
     ],
     "templateRules": [
-      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule"
+      "com.adobe.aem.modernize.structure.rule.PageRewriteRule"
     ],
     "buckets": {
       "bucket0": {
@@ -42,7 +42,7 @@
       "/var/aem-modernize/rules/policy/extraLargeTitle"
     ],
     "templateRules": [
-      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule"
+      "com.adobe.aem.modernize.structure.rule.PageRewriteRule"
     ],
     "buckets": {
       "bucket0": {

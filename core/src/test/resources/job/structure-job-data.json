@@ -9,8 +9,8 @@
     "sourceRoot": "/content/test",
     "targetRoot": "/content/newpath/with/extra/tokens",
     "templateRules": [
-      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.first-page",
-      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.second-page"
+      "com.adobe.aem.modernize.structure.rule.PageRewriteRule.first-page",
+      "com.adobe.aem.modernize.structure.rule.PageRewriteRule.second-page"
     ],
     "buckets": {
       "bucket0": {
@@ -31,8 +31,8 @@
     "componentRules": [],
     "policyRules": [],
     "templateRules": [
-      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.first-page",
-      "com.adobe.aem.modernize.structure.impl.rule.PageRewriteRule.second-page"
+      "com.adobe.aem.modernize.structure.rule.PageRewriteRule.first-page",
+      "com.adobe.aem.modernize.structure.rule.PageRewriteRule.second-page"
     ],
     "buckets": {
       "bucket0": {
