@@ -19,6 +19,8 @@ search.paths=["/path/to/rule/root"]
 Only rules found which are direct descendants of these paths will be used for search & transformations.  It is important to note however, that pattern rules have no feature to distinguish between node paths for application. Any pattern that matches a node, from any tenant's rule set, will be displayed on the conversion search results.
 
 
-Customers may also register custom _Service Based_ rules. As long as they implement the <a href="{{ site.baseurl }}/apidocs/com/adobe/aem/modernize/component/ComponentRewriteRule.html">ComponentRewriteRule interface</a> and are registered as OSGi services, they will be found and applied.
+Teams may also register custom _Service Based_ rules. As long as they implement the <a href="{{ site.baseurl }}/apidocs/com/adobe/aem/modernize/component/ComponentRewriteRule.html">ComponentRewriteRule interface</a> and are registered as OSGi services, they will be found and applied.
 
 {% include rules/configuration.html %}
+
+

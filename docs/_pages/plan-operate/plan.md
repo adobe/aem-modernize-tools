@@ -1,7 +1,7 @@
 ---
 layout: doc-page
 title: Modernization Project Planing
-description: The first step in your Modernization effort!
+description: The first step in your Modernization effort.
 order: 1
 image: project-planning.svg
 ---
