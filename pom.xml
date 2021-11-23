@@ -22,6 +22,7 @@
     <version>2.0.9-SNAPSHOT</version>
     <name>AEM Modernize Tools</name>
     <description>AEM Modernize Tools</description>
+    <url>https://opensource.adobe.com/aem-modernize-tools/</url>
 
     <organization>
         <name>Adobe Inc.</name>
@@ -161,7 +162,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
-<!--                    <altStagingDirectory>dist/nexus-staging</altStagingDirectory>-->
+                    <altStagingDirectory>dist/nexus-staging</altStagingDirectory>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                 </configuration>
