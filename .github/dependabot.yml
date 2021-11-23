@@ -11,6 +11,8 @@ updates:
         versions: ["1.x"]
       - dependency-name: "org.osgi.service.log"
         versions: ["1.x"]
+      - dependency-name: "maven-invoker"
+        versions: ["2.x"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
