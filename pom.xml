@@ -161,8 +161,8 @@
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
-                    <altStagingDirectory>dist/nexus-staging</altStagingDirectory>
+                    <stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
+                    <altStagingDirectory>${maven.multiModuleProjectDirectory}/dist/nexus-staging</altStagingDirectory>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                 </configuration>
