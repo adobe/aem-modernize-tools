@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.10...HEAD)
+
+### 📁 Other pull requests
+
+- All files in one directory for Nexus Release. [\#92](https://github.com/adobe/aem-modernize-tools/pull/92) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.0.10](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.10) (2021-11-23)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.8...aem-modernize-tools-2.0.10)
