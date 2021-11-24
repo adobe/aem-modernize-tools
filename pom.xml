@@ -162,7 +162,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
-                    <altStagingDirectory>dist/nexus-staging</altStagingDirectory>
+                    <altStagingDirectory>${maven.multiModuleProjectDirectory}/dist/nexus-staging</altStagingDirectory>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                 </configuration>
