@@ -295,7 +295,7 @@ public class PageRewriteRule implements StructureRewriteRule {
     Dictionary<String, Object> props = context.getProperties();
     // read service ranking property
     this.ranking = Converters.standardConverter().convert(props.get("service.ranking")).defaultValue(Integer.MAX_VALUE).to(Integer.class);
-    this.id = Converters.standardConverter().convert(props.get("service.id")).defaultValue(this.id).to(String.class);
+    this.id = Converters.standardConverter().convert(props.get("service.pid")).defaultValue(this.id).to(String.class);
 
     staticTemplate = config.static_template();
     if (StringUtils.isBlank(staticTemplate)) {

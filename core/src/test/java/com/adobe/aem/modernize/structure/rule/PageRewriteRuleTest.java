@@ -105,6 +105,7 @@ public class PageRewriteRuleTest {
     props.put("container.resourceType", CONTAINER_RESOURCE_TYPE);
     context.registerInjectActivateService(rule, props);
 
+
     // Parses Order
     props.put("order.components", ORDER);
     context.registerInjectActivateService(rule, props);
@@ -150,9 +151,13 @@ public class PageRewriteRuleTest {
     List<String> ignored = (List<String>) f.get(rule);
     assertEquals("doNotTouch", ignored.get(0), "Ignored list");
 
-    assertEquals(10, rule.getRanking());
-    assertFalse(StringUtils.isBlank(rule.getId()));
+    assertEquals(10, rule.getRanking(), "Rule ranking.");
+    assertEquals(PageRewriteRule.class.getName(), rule.getId(), "Default Rule Id");
     assertEquals("PageRewriteRule (/apps/aem-modernize/templates/homepage -> /conf/aem-modernize/settings/wcm/templates/aem-modernize-home-page)", rule.getTitle());
+
+    props.put("service.pid", PageRewriteRule.class.getName() + "~customrule");
+    context.registerInjectActivateService(rule, props);
+    assertEquals(PageRewriteRule.class.getName() + "~customrule", rule.getId(), "ServicePID Rule ID");
   }
 
   @Test
