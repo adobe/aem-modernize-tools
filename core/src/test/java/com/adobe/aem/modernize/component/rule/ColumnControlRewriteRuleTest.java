@@ -120,8 +120,12 @@ public class ColumnControlRewriteRuleTest {
     ColumnControlRewriteRule rule = new ColumnControlRewriteRule();
     context.registerInjectActivateService(rule, props);
     assertEquals(20, rule.getRanking());
-    assertFalse(StringUtils.isBlank(rule.getId()));
+    assertEquals(ColumnControlRewriteRule.class.getName(), rule.getId(), "Default Rule Id");
     assertEquals("ColumnControlRewriteRule ('2;cq-colctrl-lt0' => default=[3,3],phone=[12,12],tablet=[6,6])", rule.getTitle());
+
+    props.put("service.pid", ColumnControlRewriteRule.class.getName() + "~customrule");
+    context.registerInjectActivateService(rule, props);
+    assertEquals(ColumnControlRewriteRule.class.getName() + "~customrule", rule.getId(), "ServicePID Rule Id");
 
   }
   

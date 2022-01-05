@@ -409,7 +409,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     Dictionary<String, Object> props = context.getProperties();
     // read service ranking property
     this.ranking = Converters.standardConverter().convert(props.get("service.ranking")).defaultValue(Integer.MAX_VALUE).to(Integer.class);
-    this.id = Converters.standardConverter().convert(props.get("service.id")).defaultValue(this.id).to(String.class);
+    this.id = Converters.standardConverter().convert(props.get("service.pid")).defaultValue(this.id).to(String.class);
 
     columnControlResourceType = config.column_control_resourceType();
     if (StringUtils.isBlank(columnControlResourceType)) {
