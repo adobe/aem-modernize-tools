@@ -8,8 +8,13 @@
 
 - PageRewriter Rule  - All Rules are not processed \(Issue in new 2.0 release\) [\#94](https://github.com/adobe/aem-modernize-tools/issues/94)
 
+### 📁 Other issues
+
+- Infinite Loop if Rule doesn't change Node state [\#99](https://github.com/adobe/aem-modernize-tools/issues/99)
+
 ### 📁 Other pull requests
 
+- Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
 - Fix Lookup of Service PID [\#97](https://github.com/adobe/aem-modernize-tools/pull/97) ([bstopp](https://github.com/bstopp))
 
 ## [aem-modernize-tools-2.0.12](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.12) (2021-11-24)
