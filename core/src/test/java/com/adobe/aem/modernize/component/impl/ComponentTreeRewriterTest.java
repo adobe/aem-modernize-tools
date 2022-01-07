@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -34,11 +35,14 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -95,7 +99,6 @@ public class ComponentTreeRewriterTest {
       result = false;
     }};
 
-
     context.load().json("/rewrite/test-final.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/final").adaptTo(Node.class);
     ComponentTreeRewriter.rewrite(root, rules);
@@ -108,7 +111,25 @@ public class ComponentTreeRewriterTest {
     assertEquals(1, finalRewriteRule.invoked, "Rewrite rule invocations");
   }
 
-  private static class SetRootFinalRewriteRule implements RewriteRule {
+  @Test
+  void infiniteLoop() throws Exception {
+
+    NoOpRewriteRule rule = new NoOpRewriteRule();
+    List<RewriteRule> rules = new ArrayList<>();
+    rules.add(rule);
+
+    context.load().json("/rewrite/test-ordered.json", "/content/test");
+    Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
+    ComponentTreeRewriter.rewrite(root, rules);
+
+    Session session = root.getSession();
+    assertTrue(session.hasPendingChanges(), "Updates were made");
+    session.save();
+
+    assertEquals(9, rule.invoked, "Rewrite rule invocations");
+  }
+
+  private static final class SetRootFinalRewriteRule implements RewriteRule {
 
     private final String path;
     public int invoked = 0;
@@ -132,6 +153,26 @@ public class ComponentTreeRewriterTest {
     @Override
     public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException {
       finalPaths.add(root.getPath());
+      return root;
+    }
+  }
+
+  private static final class NoOpRewriteRule implements RewriteRule {
+
+    public int invoked = 0;
+    @Override
+    public String getId() {
+      return NoOpRewriteRule.class.getName();
+    }
+
+    @Override
+    public boolean matches(@NotNull Node root) throws RepositoryException {
+      return true;
+    }
+
+    @Override
+    public @Nullable Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RewriteException, RepositoryException {
+      invoked++;
       return root;
     }
   }

@@ -45,7 +45,7 @@ public class NodeBasedPolicyImportRule extends NodeBasedRewriteRule {
   public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RewriteException, RepositoryException {
     Node parent = root.getParent();
     String name = JcrUtil.createValidChildName(parent, root.getName());
-    Node newRoot = JcrUtil.copy(root, parent, name);
+    Node newRoot = JcrUtil.copy(root, parent, name, false);
     return super.applyTo(newRoot, finalPaths);
   }
 }

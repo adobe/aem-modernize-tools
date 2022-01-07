@@ -112,7 +112,7 @@ class PolicyTreeImporter {
     String path = PathUtils.concat(dest, POLICY_REL_PATH, resourceType);
     Node parent = JcrUtils.getOrCreateByPath(path, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, source.getSession(), false);
     String name = JcrUtil.createValidChildName(parent, NN_POLICY);
-    Node policy = JcrUtil.copy(source, parent, name);
+    Node policy = JcrUtil.copy(source, parent, name, false);
     policy.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, POLICY_RESOURCE_TYPE);
     source.remove();
     return policy;

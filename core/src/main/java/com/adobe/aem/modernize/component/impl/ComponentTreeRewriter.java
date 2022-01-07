@@ -20,9 +20,13 @@ package com.adobe.aem.modernize.component.impl;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -64,6 +68,7 @@ public class ComponentTreeRewriter {
     Node startNode = root;
     boolean matched;
 
+    Map<String, Set<String>> processed = new HashMap<>();
     Set<String> finalPaths = new LinkedHashSet<>();
 
     do {
@@ -92,9 +97,20 @@ public class ComponentTreeRewriter {
 
         // Apply the rules
         for (RewriteRule rule : rules) {
-          if (rule.matches(node)) {
-            logger.debug("Rule [{}] matched subtree at [{}]", rule.getId(), node.getPath());
+
+          if (!processed.containsKey(rule.getId())) {
+            processed.put(rule.getId(), new HashSet<>());
+          }
+
+          // Some rules may process a node without changing its state enough to no longer match.
+          Set<String> ruleProcessedPaths = processed.get(rule.getId());
+          if (!ruleProcessedPaths.contains(node.getPath()) && rule.matches(node)) {
+
+            String path = node.getPath();
+            logger.debug("Rule [{}] matched subtree at [{}]", rule.getId(), path);
             Node result = rule.applyTo(node, finalPaths);
+            ruleProcessedPaths.add(path);
+
             // set the start node in case it was rewritten
             if (node.equals(startNode)) {
               startNode = result;
