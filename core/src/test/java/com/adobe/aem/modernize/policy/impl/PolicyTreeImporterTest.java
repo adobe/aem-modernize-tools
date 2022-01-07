@@ -240,7 +240,7 @@ public class PolicyTreeImporterTest {
 
     @Override
     public Node applyTo(@NotNull Node root, @NotNull Set<String> finalPaths) throws RepositoryException {
-      return JcrUtil.copy(root, root.getParent(), "copyOfNode");
+      return JcrUtil.copy(root, root.getParent(), "copyOfNode", false);
     }
   }
 }

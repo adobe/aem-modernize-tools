@@ -175,7 +175,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
 
     // copy replacement to original tree under original name
     Node replacementNext = replacement.getNodes().nextNode();
-    Node updated = JcrUtil.copy(replacementNext, parent, originalName);
+    Node updated = JcrUtil.copy(replacementNext, parent, originalName, false);
 
     // collect mappings: (node in original tree) -> (node in replacement tree)
     // Don't want to copy during traversal, as it'd mess with iteration
