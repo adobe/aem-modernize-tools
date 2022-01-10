@@ -16,6 +16,7 @@
 
 - Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
 - Fix Lookup of Service PID [\#97](https://github.com/adobe/aem-modernize-tools/pull/97) ([bstopp](https://github.com/bstopp))
+- Bump actions/setup-java from 2.3.1 to 2.5.0 [\#96](https://github.com/adobe/aem-modernize-tools/pull/96) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [aem-modernize-tools-2.0.12](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.12) (2021-11-24)
 
