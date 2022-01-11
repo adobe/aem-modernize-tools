@@ -14,6 +14,9 @@
 
 ### 📁 Other pull requests
 
+- Bump maven-enforcer-plugin from 3.0.0-M3 to 3.0.0 [\#111](https://github.com/adobe/aem-modernize-tools/pull/111) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump maven-resources-plugin from 3.0.2 to 3.2.0 [\#110](https://github.com/adobe/aem-modernize-tools/pull/110) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump io.wcm.testing.aem-mock.junit5 from 4.1.2 to 4.1.8 [\#109](https://github.com/adobe/aem-modernize-tools/pull/109) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump junit-jupiter-api from 5.7.2 to 5.8.2 [\#108](https://github.com/adobe/aem-modernize-tools/pull/108) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump htl-maven-plugin from 2.0.2-1.4.0 to 2.0.4-1.4.0 [\#107](https://github.com/adobe/aem-modernize-tools/pull/107) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update safe dependencies. [\#106](https://github.com/adobe/aem-modernize-tools/pull/106) ([bstopp](https://github.com/bstopp))
