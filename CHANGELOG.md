@@ -14,6 +14,8 @@
 
 ### 📁 Other pull requests
 
+- Bump junit-jupiter-api from 5.7.2 to 5.8.2 [\#108](https://github.com/adobe/aem-modernize-tools/pull/108) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump htl-maven-plugin from 2.0.2-1.4.0 to 2.0.4-1.4.0 [\#107](https://github.com/adobe/aem-modernize-tools/pull/107) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update safe dependencies. [\#106](https://github.com/adobe/aem-modernize-tools/pull/106) ([bstopp](https://github.com/bstopp))
 - Bump aemanalyser-maven-plugin from 1.2.2 to 1.3.0 [\#101](https://github.com/adobe/aem-modernize-tools/pull/101) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump actions/setup-java from 2.3.1 to 2.5.0 [\#96](https://github.com/adobe/aem-modernize-tools/pull/96) ([dependabot[bot]](https://github.com/apps/dependabot))
