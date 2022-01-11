@@ -89,7 +89,8 @@
           item.title = data["jcr:title"];
           item.designPath = data['cq:designPath'];
           resolve(item);
-        }).fail(() => {
+        }).fail((xhr, status, error) => {
+          item.error = error;
           reject(item);
         });
       });
@@ -106,7 +107,8 @@
             item.hasPermission = false;
             reject(item);
           }
-        }).fail(() => {
+        }).fail((xhr, status, error) => {
+          item.error = error;
           reject(item)
         });
       });
@@ -124,7 +126,8 @@
               item.hasPermission = false;
               reject(item);
             }
-          }).fail(() => {
+          }).fail((xhr, status, error) => {
+            item.error = error;
             reject(item)
           });
         });
@@ -160,7 +163,8 @@
           $.getJSON(url, params, (data) => {
             item.componentPaths = data.paths;
             resolve(item);
-          }).fail(() => {
+          }).fail((xhr, status, error) => {
+            item.error = error
             reject(item)
           });
         }).then((item) => {
@@ -178,6 +182,7 @@
                   item.componentRules = data.rules;
                   resolve(item);
                 }, error: (xhr, status, error) => {
+                  item.error = error;
                   reject(item);
                 }
               });
@@ -204,7 +209,8 @@
           $.getJSON(url, {path: item.path, includeSuperTypes: include}, (data) => {
             item.policyPaths = data.paths;
             resolve(item);
-          }).fail(() => {
+          }).fail((xhr, status, error) => {
+            item.error = error;
             reject(item)
           });
         }).then((item) => {
@@ -222,6 +228,7 @@
                   item.policyRules = data.rules;
                   resolve(item);
                 }, error: (xhr, status, error) => {
+                  item.error = error;
                   reject(item);
                 }
               });
@@ -254,6 +261,7 @@
               item.templateRules = data.rules;
               resolve(item);
             }, error: (xhr, status, error) => {
+              item.error = error;
               reject(item);
             }
           });
@@ -519,6 +527,8 @@
       const offset = paginator.offset;
       const promises = [];
       let showNotice = false;
+      let errored = false;
+      let permissionIssue = false;
 
       pages.forEach((path) => {
         if (path !== "/content") {
@@ -531,6 +541,13 @@
                 paginator.offset = this.#$table[0].items.getAll().length;
                 resolve(item);
               });
+            }).catch(item => {
+              errored = true;
+              permissionIssue = permissionIssue || !item.hasPermission;
+              if (item.error) {
+                console.log(item.error);
+              }
+              return new Promise((resolve) => resolve(item));
             }));
           } else {
             showNotice = true;
@@ -540,11 +557,13 @@
 
       Promise.all(promises)
         .then(this.#refreshPageList)
-        .catch(this.#showError)
-        .finally(() => {
+        .then(() => {
           this.#ui.clearWait();
           if (showNotice) {
             this.#ui.notify(Granite.I18n.get("Error"), Granite.I18n.get("Selected page already exist in the list."), "notice");
+          }
+          if (errored) {
+            this.#showError(permissionIssue);
           }
         });
     }
@@ -601,16 +620,21 @@
       }
     }
 
-    #showError = (item) => {
-      if (item && item.path && item.hasPermission !== true) {
+    #showError = (permissionIssue) => {
+      if (permissionIssue) {
         this.#ui.prompt(
           Granite.I18n.get("Error"),
-          Granite.I18n.get("You do not have permission to convert that content."),
+          Granite.I18n.get("You do not have permission to one or more items."),
           "error",
           [{id: "no-permissions", text: Granite.I18n.get("Ok")}]
         );
       } else {
-        throw item;
+        this.#ui.prompt(
+          Granite.I18n.get("Error"),
+          Granite.I18n.get("An error occurred processing request. Check console for details."),
+          "error",
+          [{id: "error", text: Granite.I18n.get("Ok")}]
+        );
       }
     }
 
@@ -707,7 +731,7 @@
       let src = $button[0].dataset.foundationPickerControlSrc;
       const regex = /root=(.+?)&/;
       const matches = src.match(regex);
-      src =  src.replace(matches[1], encodeURIComponent(path));
+      src = src.replace(matches[1], encodeURIComponent(path));
       $button[0].dataset.foundationPickerControlSrc = src;
     }
 
@@ -740,6 +764,9 @@
         name: "aem.modernize.addcontent",
         handler: (name, el, config, selections) => {
           let showNotice = false;
+          let errored = false;
+          let permissionIssue = false;
+
           if (selections.length > 0) {
             _this.#ui.wait();
             const promises = [];
@@ -758,6 +785,14 @@
                           resolve(item);
                         });
                       })
+                      .catch(item => {
+                        errored = true;
+                        permissionIssue = permissionIssue || !item.hasPermission;
+                        if (item.error) {
+                          console.log(item.error);
+                        }
+                        return new Promise((resolve) => resolve(item));
+                      })
                   );
                 } else {
                   showNotice = true;
@@ -767,11 +802,13 @@
 
             Promise.all(promises)
               .then(_this.#refreshPageList)
-              .catch(_this.#showError)
-              .finally(() => {
-                _this.#ui.clearWait();
+              .then(() => {
+                this.#ui.clearWait();
                 if (showNotice) {
-                  _this.#ui.notify(Granite.I18n.get("Error"), Granite.I18n.get("Selected page already exist in the list."), "notice");
+                  this.#ui.notify(Granite.I18n.get("Error"), Granite.I18n.get("Selected page already exist in the list."), "notice");
+                }
+                if (errored) {
+                  this.#showError(permissionIssue);
                 }
               });
           }
