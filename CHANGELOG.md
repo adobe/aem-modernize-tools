@@ -6,8 +6,11 @@
 
 ### 🐛 Bug fixes
 
+- The Java8 AEM65 all package is built for Java11 [\#104](https://github.com/adobe/aem-modernize-tools/issues/104)
 - Infinite Loop if Rule doesn't change Node state [\#99](https://github.com/adobe/aem-modernize-tools/issues/99)
+- List lookup  wait overlay ends early [\#98](https://github.com/adobe/aem-modernize-tools/issues/98)
 - PageRewriter Rule  - All Rules are not processed \(Issue in new 2.0 release\) [\#94](https://github.com/adobe/aem-modernize-tools/issues/94)
+- Handle/Catch rejects and manage - don't fail promise list fast. [\#113](https://github.com/adobe/aem-modernize-tools/pull/113) ([bstopp](https://github.com/bstopp))
 - Fixing builds for Java8. [\#105](https://github.com/adobe/aem-modernize-tools/pull/105) ([bstopp](https://github.com/bstopp))
 - Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
 - Fix Lookup of Service PID [\#97](https://github.com/adobe/aem-modernize-tools/pull/97) ([bstopp](https://github.com/bstopp))
