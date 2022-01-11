@@ -1190,7 +1190,7 @@ Bundle-DocURL:
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.sling-mock-oak</artifactId>
-                <version>3.0.0-1.16.0</version>
+                <version>3.1.2-1.40.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
