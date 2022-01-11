@@ -9,6 +9,8 @@ updates:
         versions: ["0.8.x"]
       - dependency-name: "org.osgi.service.component.annotations"
         versions: ["1.x"]
+      - dependency-name: "org.osgi.service.component"
+        versions: ["1.x"]
       - dependency-name: "org.osgi.service.log"
         versions: ["1.x"]
       - dependency-name: "maven-invoker"
