@@ -14,6 +14,7 @@
 
 ### 📁 Other pull requests
 
+- Fixing builds for Java8. [\#105](https://github.com/adobe/aem-modernize-tools/pull/105) ([bstopp](https://github.com/bstopp))
 - Bump aemanalyser-maven-plugin from 1.2.2 to 1.3.0 [\#101](https://github.com/adobe/aem-modernize-tools/pull/101) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
 - Fix Lookup of Service PID [\#97](https://github.com/adobe/aem-modernize-tools/pull/97) ([bstopp](https://github.com/bstopp))
