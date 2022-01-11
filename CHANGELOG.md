@@ -17,6 +17,7 @@
 
 ### 📁 Other pull requests
 
+- Change order and version of dep. [\#114](https://github.com/adobe/aem-modernize-tools/pull/114) ([bstopp](https://github.com/bstopp))
 - Bump maven-enforcer-plugin from 3.0.0-M3 to 3.0.0 [\#111](https://github.com/adobe/aem-modernize-tools/pull/111) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump maven-resources-plugin from 3.0.2 to 3.2.0 [\#110](https://github.com/adobe/aem-modernize-tools/pull/110) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump io.wcm.testing.aem-mock.junit5 from 4.1.2 to 4.1.8 [\#109](https://github.com/adobe/aem-modernize-tools/pull/109) ([dependabot[bot]](https://github.com/apps/dependabot))
