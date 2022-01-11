@@ -6,18 +6,16 @@
 
 ### 🐛 Bug fixes
 
-- PageRewriter Rule  - All Rules are not processed \(Issue in new 2.0 release\) [\#94](https://github.com/adobe/aem-modernize-tools/issues/94)
-
-### 📁 Other issues
-
 - Infinite Loop if Rule doesn't change Node state [\#99](https://github.com/adobe/aem-modernize-tools/issues/99)
+- PageRewriter Rule  - All Rules are not processed \(Issue in new 2.0 release\) [\#94](https://github.com/adobe/aem-modernize-tools/issues/94)
+- Fixing builds for Java8. [\#105](https://github.com/adobe/aem-modernize-tools/pull/105) ([bstopp](https://github.com/bstopp))
+- Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
+- Fix Lookup of Service PID [\#97](https://github.com/adobe/aem-modernize-tools/pull/97) ([bstopp](https://github.com/bstopp))
 
 ### 📁 Other pull requests
 
-- Fixing builds for Java8. [\#105](https://github.com/adobe/aem-modernize-tools/pull/105) ([bstopp](https://github.com/bstopp))
+- Update safe dependencies. [\#106](https://github.com/adobe/aem-modernize-tools/pull/106) ([bstopp](https://github.com/bstopp))
 - Bump aemanalyser-maven-plugin from 1.2.2 to 1.3.0 [\#101](https://github.com/adobe/aem-modernize-tools/pull/101) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
-- Fix Lookup of Service PID [\#97](https://github.com/adobe/aem-modernize-tools/pull/97) ([bstopp](https://github.com/bstopp))
 - Bump actions/setup-java from 2.3.1 to 2.5.0 [\#96](https://github.com/adobe/aem-modernize-tools/pull/96) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.apache.sling.testing.sling-mock.junit5 from 3.1.0 to 3.2.2 [\#95](https://github.com/adobe/aem-modernize-tools/pull/95) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump lombok from 1.18.20 to 1.18.22 [\#79](https://github.com/adobe/aem-modernize-tools/pull/79) ([dependabot[bot]](https://github.com/apps/dependabot))
