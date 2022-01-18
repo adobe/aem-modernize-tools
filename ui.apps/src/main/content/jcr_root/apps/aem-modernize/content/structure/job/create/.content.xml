@@ -79,7 +79,7 @@
                                    margin="{Boolean}true"
                                    maximized="{Boolean}true">
                         <items jcr:primaryType="nt:unstructured">
-                          <config jcr:primaryType="nt:unstructured"
+                          <fieldset jcr:primaryType="nt:unstructured"
                                   jcr:title="Configuration"
                                   sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                   margin="{Boolean}true"
@@ -136,7 +136,7 @@
                                           filter="hierarchyNotFile"
                                           disabled="{Boolean}true"/>
                             </items>
-                          </config>
+                          </fieldset>
                         </items>
                       </fixedColumn>
                     </items>

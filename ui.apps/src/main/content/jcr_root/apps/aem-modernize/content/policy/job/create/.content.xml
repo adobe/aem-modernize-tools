@@ -79,7 +79,7 @@
                                    margin="{Boolean}true"
                                    maximized="{Boolean}true">
                         <items jcr:primaryType="nt:unstructured">
-                          <config jcr:primaryType="nt:unstructured"
+                          <fieldest jcr:primaryType="nt:unstructured"
                                   jcr:title="Configuration"
                                   sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                   margin="{Boolean}true"
@@ -112,7 +112,7 @@
                                          text="Overwrite Existing?"
                                          fieldDescription="Select this to reimport designs already converted to policies."/>
                             </items>
-                          </config>
+                          </fieldest>
                         </items>
                       </fixedColumn>
                     </items>
