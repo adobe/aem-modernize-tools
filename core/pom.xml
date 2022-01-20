@@ -76,6 +76,31 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <notimestamp>true</notimestamp>
+                    <quiet>true</quiet>
+                    <doctitle>${project.name} API</doctitle>
+                    <windowtitle>${project.name} API</windowtitle>
+                    <excludePackageNames>
+                        *.impl:
+                        *.impl.*:
+                        *.model:
+                        *.generated.*:
+                        *.servlet:
+                        *.servlet.*:
+                        *.job:
+                        *.datasource
+                    </excludePackageNames>
+                    <links>
+                        <link>https://www.adobe.io/experience-manager/reference-materials/spec/javax.jcr/javadocs/jcr-2.0/</link>
+                        <link>https://javadoc.io/doc/org.jetbrains/annotations/latest/</link>
+                    </links>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
