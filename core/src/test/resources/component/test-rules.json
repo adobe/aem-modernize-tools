@@ -304,5 +304,47 @@
         "sling:resourceType": "geodemo/components/content/text"
       }
     }
+  },
+  "deletes_simple": {
+    "jcr:title": "Deletes Node Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/simple"
+      }
+    },
+    "replacement": {
+
+    }
+  },
+  "deletes_middle": {
+    "jcr:title": "Deletes Node Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteOptional"
+      }
+    },
+    "replacement": {
+
+    }
+  },
+  "deletes_end": {
+    "jcr:title": "Deletes Node Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteProperties"
+      }
+    },
+    "replacement": {
+
+    }
   }
 }
