@@ -127,22 +127,24 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
     }
     for (RewriteRule rule : rewrites) {
       if (rule.matches(node)) {
-        rule.applyTo(node, new HashSet<>());
+        node = rule.applyTo(node, new HashSet<>());
         break;
       }
     }
-    // Previous not set - we should be first in the order - if previous and first item in list, we're the only child.
-    if (isOrdered && prevName == null) {
-      String nextName = parent.getNodes().nextNode().getName();
-      if (!nextName.equals(nodeName)) {
-        parent.orderBefore(nodeName, nextName);
+    if (node != null) {
+      // Previous not set - we should be first in the order - if previous and first item in list, we're the only child.
+      if (isOrdered && prevName == null) {
+        String nextName = parent.getNodes().nextNode().getName();
+        if (!nextName.equals(nodeName)) {
+          parent.orderBefore(nodeName, nextName);
+        }
+      } else {
+        NodeIterator siblings = parent.getNodes();
+        while (!siblings.nextNode().getName().equals(prevName)) {
+          // There has to be a better way to skip through a parent's children nodes.
+        }
+        parent.orderBefore(nodeName, siblings.nextNode().getName());
       }
-    } else {
-      NodeIterator siblings = parent.getNodes();
-      while (!siblings.nextNode().getName().equals(prevName)) {
-        // There has to be a better way to skip through a parent's children nodes.
-      }
-      parent.orderBefore(nodeName, siblings.nextNode().getName());
     }
   }
 
