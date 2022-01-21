@@ -1,5 +1,5 @@
 <!--
-Copyright 2020 Adobe. All rights reserved.
+Copyright 2022 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -22,7 +22,6 @@ This suite of tools provides AEM Development teams with converting legacy AEM fe
 * Template Conversion Tool (Static -> Editable)
 * Policy Conversion Tool (Design Configurations -> Policies)
 * Component Conversion Tool (Legacy -> Modern/Core)
-* Dialog Conversion Tool (Classic -> Touch Enabled UI)
 
 
 ## Goals
@@ -32,10 +31,7 @@ The goal of this project is to provide development teams with a framework for up
 
 ### Install
 
-The tool should work on instances of AEM 6.3 or newer. To install it, do one of the following:
-
-  * Download and install the latest released version of [aem-modernize-tools-content](https://repo.adobe.com/nexus/content/groups/public/com/adobe/cq/aem-modernize-tools-content/)
-  * Clone this git repository, then build and install the content package located in `/content`
+The tool should work on instances of AEM 6.5 or newer. To install it, review the documentation on the [setup page](https://opensource.adobe.com/aem-modernize-tools/pages/plan-operate/set-up.html).
 
 ### Usage
 

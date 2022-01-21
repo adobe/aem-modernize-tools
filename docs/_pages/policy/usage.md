@@ -71,7 +71,7 @@ The user scheduling the job must have *write* access to this location in the rep
 </p>
 
 <div class="padded">
-Components using a design are not necessarily using a direct reference. Legacy designs are inheritable through the _page's supertypes_. Thus, it is possible when searching for a design the direct reference does not contain the information used to render a component.
+Components using a design are not necessarily using a direct reference. Legacy designs are inheritable through the *page's supertypes*. Thus, it is possible when searching for a design the direct reference does not contain the information used to render a component.
 
 Checking this property will task the job to search the page's hierarchy to find the specific Style node that a component references. Unchecked, if the Style is not a direct reference, it will be ignored for import.
 </div>

@@ -84,4 +84,4 @@ If during a job, you do not see the Column Control conversion being applied, che
 
 In the previous release of the Modernization there existed a _Structure_ rewrite rule to convert a Paragraph System (parsys) component to a Responsive Grid component. This feature has been removed from v2.0 of the tools. 
 
-This was done as using th Responsive Grid directly in a project is considered an anti-pattern. Instead, teams should use a Container Core Component proxy. There is an example rule for accomplishing this documented on the [Component Converter details]({{ site.baseurl }}/pages/component/details.html) page.
+This was done as using the Responsive Grid directly in a project is considered an anti-pattern. Instead, teams should use a Container Core Component proxy. There is an example rule for accomplishing this documented on the [Component Converter details]({{ site.baseurl }}/pages/component/details.html) page.
