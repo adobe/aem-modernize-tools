@@ -392,23 +392,6 @@ Bundle-DocURL:
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.3.0</version>
-                    <configuration>
-                        <source>11</source>
-                        <notimestamp>true</notimestamp>
-                        <quiet>true</quiet>
-                        <doctitle>${project.name} API</doctitle>
-                        <windowtitle>${project.name} API</windowtitle>
-                        <excludePackageNames>
-                            *.impl:
-                            *.impl.*:
-                            *.model:
-                            *.generated.*:
-                            *.servlet:
-                            *.servlet.*:
-                            *.job:
-                            *.datasource
-                        </excludePackageNames>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1096,7 +1079,7 @@ Bundle-DocURL:
             </build>
         </profile>
         <profile>
-            <id>generate-site-javadoc</id>
+            <id>generate-site-docs</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -1121,6 +1104,31 @@ Bundle-DocURL:
                                 </goals>
                                 <configuration>
                                     <outputDirectory>${maven.multiModuleProjectDirectory}/docs/_apidocs</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>process-readme</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/docs</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <filtering>true</filtering>
+                                            <directory>${project.basedir}/src/docs/resources</directory>
+                                            <includes>
+                                                <include>**/*.md</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
                                 </configuration>
                             </execution>
                         </executions>

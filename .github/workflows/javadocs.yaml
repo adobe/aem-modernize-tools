@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Build JavaDocs
-        run: mvn -U clean verify -Pgenerate-site-javadoc,aemCloudService
+        run: mvn -U clean verify -Pgenerate-site-docs,aemCloudService
 
       - name: Commit JavaDocs
         run: |

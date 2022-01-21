@@ -21,8 +21,8 @@ Add the following to the `<dependencies>` section of the _all project's pom.xml_
 {% highlight xml %}
 <dependency>
     <groupId>com.adobe.aem</groupId>
-    <artifactId>aem-modernize-tools-ui.apps</artifactId>
-    <version>2.0.2</version>
+    <artifactId>aem-modernize-tools.all</artifactId>
+    <version>${project.version}</version>
     <type>zip</type>
     <!-- <classifier>java8</classifier> optional, see below -->
 </dependency>
@@ -64,8 +64,9 @@ In the `filevault-package-maven-plugin` configuration of your all project’s po
       <embeddeds>
         <embedded>
           <groupId>com.adobe.aem</groupId>
-          <artifactId>aem-modernize-tools.ui.apps</artifactId>
+          <artifactId>aem-modernize-tools.ui.all</artifactId>
           <type>zip</type>
+          <!-- <classifier>java8</classifier> optional, see above -->
           <target>/apps/my-app-packages/application/install</target>
         </embedded>
       <embedded>

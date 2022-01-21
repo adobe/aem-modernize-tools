@@ -32,11 +32,11 @@ This property is used as means to identify pages for conversion. This, along wit
 
 ### Editable Template
 
-This will be the new value of thee `cq:template` property after the conversion process. This template is assumed to exist, no validation of its presence is performed.
+This will be the new value of thee `cq:template` property after the conversion process. This template is assumed to exist, no validation of its presence is performed. If it does not exist, then errors will be thrown during the Job resulting in failures.
 
 ### Container Resource Type
 
-Since the Foundation Responsive Grid is not recommended be used directly, this property specifies the Container Core Component proxy to use when modifying the page structure.
+Since the Foundation Responsive Grid is not recommended be used directly, this property specifies the _Container_ Core Component proxy to use when modifying the page structure.
 
 
 ### Node Ordering
@@ -47,8 +47,9 @@ Since the Foundation Responsive Grid is not recommended be used directly, this p
 
 This property allows users to define the order of the nodes on the new root *container*. The ordering supports nested components through the use of a colon (`:`) to separate parent/child relationships. In this example, the `lead` node will be moved to the first position of the `container` node, which is a child of the root layout container.
 
+The names referenced here are those that either already exist in the page content (i.e. static references) or nodes which are renamed through the _Rename & Relocation_ configuration.
 
-Any nodes found but not listed in here will be added to the end of associated container in which it was originally found. For example, nodes found as direct descendants of the `jcr:content` node will be appended to the end of the `root` container in the order found. Nodes found in a parsys will be appended, in order, to the parsys after it is moved.
+Any nodes found, but not listed in here, will be added to the end of the root container; i.e. nodes found as direct descendants of the `jcr:content` node will be appended to the end of the `root` container in the order found.
 
 ### Node Renaming & Relocation
 
@@ -56,7 +57,7 @@ Any nodes found but not listed in here will be added to the end of associated co
     <img src="{{ site.baseurl }}/pages/structure/images/node-renaming-configuration.png" alt="Node Renaming Configuration"/>
 </p>
 
-This configuration property allows users to rename a node as it is moved & transformed. The primary use case for this is renaming parsys nodes to their editable template counterparts, which will be containers. In this example the page's `par` and `rightpar` nodes are renamed the values shown, intermediate needing to be created are defined as layout containers.
+This configuration property allows users to rename a node as it is moved & transformed. The primary use case for this is renaming previous static parsys nodes to their editable template counterparts. In this example the page's `par` and `rightpar` nodes are renamed the values shown. If a node is specified to be renamed to relative child path, then the intermediate nodes will be created based on the structure in the Editable template definition.
 
 It's important to note that these values are found by reviewing the structure for the editable template created by the template editors. An incorrect definition will lead content not rendering on the transformed pages.
 

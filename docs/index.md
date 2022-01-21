@@ -25,10 +25,9 @@ layout: default
 
 <section>
     <header class="major">
-        <h2>Changes in v2.0</h2>
+        <h2><a href="{{ site.baseurl }}/pages/changes.html">Important Changes</a></h2>
     </header>
-    <p>Version 2.0 of the tools introduced many updates. Learn about them here.</p>
-    <a href="{{ site.baseurl }}/pages/v2-changes.html" class="button primary small">Changes in v2.0</a>
+    <p>Check <a href="{{ site.baseurl }}/pages/changes.html">this page</a> for details about important updates in each release.</p>
 </section>
 
 <!-- Section -->
@@ -53,7 +52,7 @@ layout: default
             </a>
             <div class="content">
                 <h3>Development</h3>
-                <p>Out of the box features not able to meet your needs? Here's where you'll find information on extending the library with custom features.</p>
+                <p>Out of the box features not able to meet your needs? Learn about extending the library here.</p>
                 <a href="{{ site.baseurl }}/pages/development.html" class="button primary small">Extend the library</a>
             </div>
         </article>

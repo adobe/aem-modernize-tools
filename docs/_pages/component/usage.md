@@ -62,5 +62,5 @@ As with all the tools, the Component conversion tool requires a name for the Job
 <p class="padded">
 The final step is to select the pages to process. The list will show how many conversion component rules are found that match the page's components.
 
-The user may select as many pages as they want; depending on the number more than one job may be scheduled.
+The user may select as many pages as they want; depending on the number, more than one job may be scheduled.
 </p>

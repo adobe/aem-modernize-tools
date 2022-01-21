@@ -28,8 +28,6 @@ Rewrite rules are defined in two parts:
 A rewrite rule may specify an optional `cq:rewriteRaking` property. This can be used to prioritize one rule over others,
 when there may be multiple matches.
 
-The primary use case for this is for overriding the out-of-the-box dialog widget conversions rules.This suite contains rules for most of the AEM Provided Classic and Coral2 widgets, to their Coral3 counterparts. This ranking allows customer implementations to override provided rules with one with a higher ranking.
-
 ## Patterns
 
 Each rewrite rule has a node containing a set of patterns. This 'wrapping' node must be named `patterns`, otherwise the rule will be ignored. Each child node of this parent are pattern rules against which nodes are matched for comparisons.
@@ -46,7 +44,7 @@ The name of each pattern node is arbitrary.
          sling:resourceType="geometrixx/components/title"/>
 </patterns>
 ```
-Each property of the pattern must be matched exactly for this rule to be applied. Minimally this generally includes:
+Each property of the pattern must be matched exactly for this rule to be applied. This generally includes, at a minimum:
 
 * The primary node type
 * The `sling:resourceType` property's value.
@@ -86,7 +84,7 @@ A replacement definition may choose to specify no replacement structure. If this
 
 Replacement definitions contain one child node containing all of the replacement rules, any additional children beyond the first are ignored.
 
-Any content (property or child nodes) that are not referenced by the replacement definition are ignored, and will not be on the resulting replacement node.
+Any original content (property or child nodes) that are not referenced by the replacement definition are ignored, and will not be on the resulting replacement node.
 
 ### Static Values
 
@@ -253,7 +251,6 @@ The `cq:rewriteMapChildren` property is used to specify which original node shou
 
 A replacement node or it's children may specify an optional `cq:rewriteFinal` property. This is used to flag that the associated tree of content is a final transformation, and need not be scanned again.
 
-This is primarily useful and used by the Dialog Conversion - as it traverses the `dialog` node tree, each descendant has a distinct rewrite rule to be applied. It intent is to optimize the traversal - so if unsure, omit it.
 
 ### Aggregation of Rules
 
@@ -296,7 +293,7 @@ This is primarily useful and used by the Dialog Conversion - as it traverses the
 </teaser>
 ```
 
-Aggregation rules allow teams to specify a sequence of patters that must be matched explicitly, and that will be replaced with a single output node. Component consolidation is used to reduce the number of custom components, or update a set reference to use Core Components. In the example above, the rule will convert the pattern of a image, title, text set of nodes into a single Teaser Core Component proxy.
+Aggregation rules allow teams to specify a sequence of patters that must be matched explicitly, and that will be replaced with a single output node. Component consolidation is used to reduce the number of custom components, or update a set reference to use Core Components. In the example above, the rule will convert the pattern of an image, title, and text node set, into a single _Teaser_ Core Component proxy.
 
 Since the names of the nodes are unknown during the conversion process, the `[pattern:????]` reference is used to determine from which node a given property should be copied. Thus:
 
@@ -304,4 +301,4 @@ Since the names of the nodes are unknown during the conversion process, the `[pa
 jcr:description="${./[pattern:textPattern]/text}"
 ```
 
-Will set the `jcr:description` property to the value found in the `text` property, of whichever node matched that pattern rule. All of the [rewrite rules](#rewriting-properties) are a available in the replacement definition.
+Will set the `jcr:description` property to the value found in the `text` property, of whichever node matched that pattern rule. All the [rewrite rules](#rewriting-properties) are a available in the replacement definition.
