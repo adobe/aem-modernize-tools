@@ -78,7 +78,7 @@
                                    maximized="{Boolean}true"
                                    sling:resourceType="granite/ui/components/coral/foundation/container">
                         <items jcr:primaryType="nt:unstructured">
-                          <config jcr:primaryType="nt:unstructured"
+                          <fieldset jcr:primaryType="nt:unstructured"
                                   margin="{Boolean}true"
                                   maximized="{Boolean}true"
                                   jcr:title="Configuration"
@@ -90,7 +90,7 @@
                                     required="{Boolean}true"
                                     sling:resourceType="granite/ui/components/coral/foundation/form/textfield"/>
                             </items>
-                          </config>
+                          </fieldset>
                         </items>
                       </fixedColumn>
                     </items>

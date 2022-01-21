@@ -57,6 +57,69 @@ public class ComponentRewriteRuleServiceOakTest {
   }
 
   @Test
+  public void testIssue_119_beginning() throws Exception {
+    Resource resource = context.resourceResolver().getResource("/content/test/all/jcr:content/simple");
+    Set<String> rule = Collections.singleton("/apps/aem-modernize/component/rules/deletes_simple");
+    componentRewriteRuleService.apply(resource, rule, false);
+    context.resourceResolver().commit();
+    String parentPath = "/content/test/all/jcr:content";
+    Resource parent = context.resourceResolver().getResource(parentPath);
+    Iterator<Resource> children = parent.getChildren().iterator();
+    assertEquals(parentPath + "/copyChildren", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/copyChildrenOrder", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/mapProperties", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteOptional", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteRanking", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteMapChildren", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteFinal", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteFinalOnReplacement", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteProperties", children.next().getPath(), "Order preserved");
+    assertFalse(children.hasNext(), "Children length");
+  }
+
+  @Test
+  public void testIssue_119_middle() throws Exception {
+    Resource resource = context.resourceResolver().getResource("/content/test/all/jcr:content/rewriteOptional");
+    Set<String> rule = Collections.singleton("/apps/aem-modernize/component/rules/deletes_middle");
+    componentRewriteRuleService.apply(resource, rule, false);
+    context.resourceResolver().commit();
+    String parentPath = "/content/test/all/jcr:content";
+    Resource parent = context.resourceResolver().getResource(parentPath);
+    Iterator<Resource> children = parent.getChildren().iterator();
+    assertEquals(parentPath + "/simple", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/copyChildren", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/copyChildrenOrder", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/mapProperties", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteRanking", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteMapChildren", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteFinal", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteFinalOnReplacement", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteProperties", children.next().getPath(), "Order preserved");
+    assertFalse(children.hasNext(), "Children length");
+  }
+
+  @Test
+  public void testIssue_119_end() throws Exception {
+    Resource resource = context.resourceResolver().getResource("/content/test/all/jcr:content/rewriteProperties");
+    Set<String> rule = Collections.singleton("/apps/aem-modernize/component/rules/deletes_end");
+    componentRewriteRuleService.apply(resource, rule, false);
+    context.resourceResolver().commit();
+    String parentPath = "/content/test/all/jcr:content";
+    Resource parent = context.resourceResolver().getResource(parentPath);
+    Iterator<Resource> children = parent.getChildren().iterator();
+    assertEquals(parentPath + "/simple", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/copyChildren", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/copyChildrenOrder", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/mapProperties", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteOptional", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteRanking", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteMapChildren", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteFinal", children.next().getPath(), "Order preserved");
+    assertEquals(parentPath + "/rewriteFinalOnReplacement", children.next().getPath(), "Order preserved");
+    assertFalse(children.hasNext(), "Children length");
+  }
+
+  @Test
   public void testShallowKeepsOrder() throws Exception {
     Resource resource = context.resourceResolver().getResource("/content/test/all/jcr:content/copyChildren");
     Set<String> rule = Collections.singleton("/apps/aem-modernize/component/rules/copyChildren");

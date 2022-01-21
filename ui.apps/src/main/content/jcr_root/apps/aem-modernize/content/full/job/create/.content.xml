@@ -80,7 +80,7 @@
                                    margin="{Boolean}true"
                                    maximized="{Boolean}true">
                         <items jcr:primaryType="nt:unstructured">
-                          <config jcr:primaryType="nt:unstructured"
+                          <general jcr:primaryType="nt:unstructured"
                                   jcr:title="General"
                                   sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
                                   margin="{Boolean}true"
@@ -92,7 +92,7 @@
                                     fieldLabel="Job Name"
                                     required="{Boolean}true"/>
                             </items>
-                          </config>
+                          </general>
                           <pageConfig jcr:primaryType="nt:unstructured"
                                       jcr:title="Page"
                                       sling:resourceType="granite/ui/components/coral/foundation/form/fieldset"
