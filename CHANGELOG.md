@@ -2,7 +2,21 @@
 
 ## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.12...HEAD)
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.14...HEAD)
+
+### 🐛 Bug fixes
+
+- Warning on Wizard node named "config" [\#121](https://github.com/adobe/aem-modernize-tools/issues/121)
+- Repository Exception when Rule deletes node [\#119](https://github.com/adobe/aem-modernize-tools/issues/119)
+- Fix reorder on Delete [\#120](https://github.com/adobe/aem-modernize-tools/pull/120) ([bstopp](https://github.com/bstopp))
+
+### 📁 Other pull requests
+
+- Rename wizard nodes from config [\#122](https://github.com/adobe/aem-modernize-tools/pull/122) ([bstopp](https://github.com/bstopp))
+
+## [aem-modernize-tools-2.0.14](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.14) (2022-01-11)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.12...aem-modernize-tools-2.0.14)
 
 ### 🐛 Bug fixes
 
