@@ -97,7 +97,7 @@
 
         <aemanalyser.version>1.3.0</aemanalyser.version>
         <bnd.version>6.1.0</bnd.version>
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>1.7.33</slf4j.version>
         <jmockit.version>1.49</jmockit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -386,7 +386,7 @@ Bundle-DocURL:
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -619,7 +619,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.osgi</groupId>
                         <artifactId>org.osgi.resource</artifactId>
-                        <version>1.0.0</version>
+                        <version>1.0.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
@@ -666,7 +666,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>javax.servlet</groupId>
                         <artifactId>javax.servlet-api</artifactId>
-                        <version>3.1.0</version>
+                        <version>4.0.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
@@ -841,7 +841,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.osgi</groupId>
                         <artifactId>org.osgi.resource</artifactId>
-                        <version>1.0.0</version>
+                        <version>1.0.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
@@ -888,7 +888,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>javax.servlet</groupId>
                         <artifactId>javax.servlet-api</artifactId>
-                        <version>3.1.0</version>
+                        <version>4.0.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
