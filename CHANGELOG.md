@@ -6,13 +6,19 @@
 
 ### 🐛 Bug fixes
 
-- Warning on Wizard node named "config" [\#121](https://github.com/adobe/aem-modernize-tools/issues/121)
-- Repository Exception when Rule deletes node [\#119](https://github.com/adobe/aem-modernize-tools/issues/119)
+- Rename wizard nodes from config [\#122](https://github.com/adobe/aem-modernize-tools/pull/122) ([bstopp](https://github.com/bstopp))
 - Fix reorder on Delete [\#120](https://github.com/adobe/aem-modernize-tools/pull/120) ([bstopp](https://github.com/bstopp))
+
+### 📖 Documentation
+
+- Documentation updates. [\#123](https://github.com/adobe/aem-modernize-tools/pull/123) ([bstopp](https://github.com/bstopp))
 
 ### 📁 Other pull requests
 
-- Rename wizard nodes from config [\#122](https://github.com/adobe/aem-modernize-tools/pull/122) ([bstopp](https://github.com/bstopp))
+- Bump build-helper-maven-plugin from 3.2.0 to 3.3.0 [\#118](https://github.com/adobe/aem-modernize-tools/pull/118) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump slf4j.version from 1.7.32 to 1.7.33 [\#117](https://github.com/adobe/aem-modernize-tools/pull/117) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.osgi.resource from 1.0.0 to 1.0.1 [\#116](https://github.com/adobe/aem-modernize-tools/pull/116) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump javax.servlet-api from 3.1.0 to 4.0.1 [\#115](https://github.com/adobe/aem-modernize-tools/pull/115) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [aem-modernize-tools-2.0.14](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.14) (2022-01-11)
 
@@ -20,10 +26,6 @@
 
 ### 🐛 Bug fixes
 
-- The Java8 AEM65 all package is built for Java11 [\#104](https://github.com/adobe/aem-modernize-tools/issues/104)
-- Infinite Loop if Rule doesn't change Node state [\#99](https://github.com/adobe/aem-modernize-tools/issues/99)
-- List lookup  wait overlay ends early [\#98](https://github.com/adobe/aem-modernize-tools/issues/98)
-- PageRewriter Rule  - All Rules are not processed \(Issue in new 2.0 release\) [\#94](https://github.com/adobe/aem-modernize-tools/issues/94)
 - Handle/Catch rejects and manage - don't fail promise list fast. [\#113](https://github.com/adobe/aem-modernize-tools/pull/113) ([bstopp](https://github.com/bstopp))
 - Fixing builds for Java8. [\#105](https://github.com/adobe/aem-modernize-tools/pull/105) ([bstopp](https://github.com/bstopp))
 - Protect against infinite loops. [\#100](https://github.com/adobe/aem-modernize-tools/pull/100) ([bstopp](https://github.com/bstopp))
@@ -94,7 +96,6 @@
 
 ### 🐛 Bug fixes
 
-- RepoInit failure on local SDK [\#73](https://github.com/adobe/aem-modernize-tools/issues/73)
 - Fix module references to parent version. [\#85](https://github.com/adobe/aem-modernize-tools/pull/85) ([bstopp](https://github.com/bstopp))
 - Fixing issue where aggregate rules weren't found during lookup [\#78](https://github.com/adobe/aem-modernize-tools/pull/78) ([bstopp](https://github.com/bstopp))
 - Pagination has issues on CloudService UI. [\#77](https://github.com/adobe/aem-modernize-tools/pull/77) ([bstopp](https://github.com/bstopp))
@@ -102,26 +103,6 @@
 ### 📖 Documentation
 
 - Move documentation to main [\#84](https://github.com/adobe/aem-modernize-tools/pull/84) ([bstopp](https://github.com/bstopp))
-
-### 📁 Other issues
-
-- Page Conversion Tool url encode issue with page/folders that are numerically named [\#32](https://github.com/adobe/aem-modernize-tools/issues/32)
-- Latest build fails, due to api error for specified biz.aQute.bnd version [\#29](https://github.com/adobe/aem-modernize-tools/issues/29)
-- Policy importer doesn't copy child nodes with cq:copyChildren [\#28](https://github.com/adobe/aem-modernize-tools/issues/28)
-- LiveCopy and BluePrint configs moved to Root [\#27](https://github.com/adobe/aem-modernize-tools/issues/27)
-- \[Query\] Page versioning after migration [\#26](https://github.com/adobe/aem-modernize-tools/issues/26)
-- Dialog Conversion Tool needs to encode colon in CRXDE link [\#22](https://github.com/adobe/aem-modernize-tools/issues/22)
-- Exception because of empty XML file [\#21](https://github.com/adobe/aem-modernize-tools/issues/21)
-- Dynamically populated classic ui with options path is not converted [\#18](https://github.com/adobe/aem-modernize-tools/issues/18)
-- When clicking on show dialog after conversion, nothing shows [\#15](https://github.com/adobe/aem-modernize-tools/issues/15)
-- Only dialog conversion tool detects nodes in 6.3\*, other tools do not seem to work. [\#14](https://github.com/adobe/aem-modernize-tools/issues/14)
-- Add SECRUITY.md file [\#13](https://github.com/adobe/aem-modernize-tools/issues/13)
-- Dynamically poplulated selection field breaks after dialog conversion from coral ui 2 to coral ui 3 [\#10](https://github.com/adobe/aem-modernize-tools/issues/10)
-- Suggestion: Larger band for service rankings  [\#6](https://github.com/adobe/aem-modernize-tools/issues/6)
-- Github Links in pom are wrong [\#5](https://github.com/adobe/aem-modernize-tools/issues/5)
-- Show conversion rule on search page [\#4](https://github.com/adobe/aem-modernize-tools/issues/4)
-- Remove unnecessary columns [\#3](https://github.com/adobe/aem-modernize-tools/issues/3)
-- Following the download link leads to 404 [\#1](https://github.com/adobe/aem-modernize-tools/issues/1)
 
 ### 📁 Other pull requests
 
@@ -145,10 +126,6 @@
 ## [aem-modernize-tools-1.0.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-1.0.0) (2019-06-17)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/168d40edef75843649b0fa8628d26c106bf7e243...aem-modernize-tools-1.0.0)
-
-### 📁 Other issues
-
-- Following the documentation link leads to wrong page [\#2](https://github.com/adobe/aem-modernize-tools/issues/2)
 
 ### 📁 Other pull requests
 
