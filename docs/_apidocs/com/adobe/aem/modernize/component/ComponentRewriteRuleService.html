@@ -153,8 +153,8 @@ extends <a href="../rule/RewriteRuleService.html" title="interface in com.adobe.
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#apply(org.apache.sling.api.resource.Resource,java.util.Set,boolean)">apply</a></span>&#8203;(@NotNull org.apache.sling.api.resource.Resource&nbsp;resource,
-     @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;rules,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#apply(org.apache.sling.api.resource.Resource,java.util.Set,boolean)">apply</a></span>&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> org.apache.sling.api.resource.Resource&nbsp;resource,
+     <a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;rules,
      boolean&nbsp;deep)</code></th>
 <td class="colLast">
 <div class="block">Applies the indicated rules to the provided resource.</div>
@@ -190,10 +190,10 @@ extends <a href="../rule/RewriteRuleService.html" title="interface in com.adobe.
 <ul class="blockListLast">
 <li class="blockList">
 <h4>apply</h4>
-<pre class="methodSignature">void&nbsp;apply&#8203;(@NotNull
-           @NotNull org.apache.sling.api.resource.Resource&nbsp;resource,
-           @NotNull
-           @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;rules,
+<pre class="methodSignature">void&nbsp;apply&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
+           <a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> org.apache.sling.api.resource.Resource&nbsp;resource,
+           <a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
+           <a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;rules,
            boolean&nbsp;deep)
     throws <a href="../RewriteException.html" title="class in com.adobe.aem.modernize">RewriteException</a></pre>
 <div class="block">Applies the indicated rules to the provided resource. If <code>deep</code> is set, rules will be applied recursively.

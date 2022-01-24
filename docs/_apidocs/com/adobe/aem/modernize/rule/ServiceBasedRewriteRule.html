@@ -175,15 +175,15 @@ extends <a href="RewriteRule.html" title="interface in com.adobe.aem.modernize.r
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findMatches(org.apache.sling.api.resource.Resource)">findMatches</a></span>&#8203;(@NotNull org.apache.sling.api.resource.Resource&nbsp;resource)</code></th>
+<td class="colFirst"><code><a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findMatches(org.apache.sling.api.resource.Resource)">findMatches</a></span>&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> org.apache.sling.api.resource.Resource&nbsp;resource)</code></th>
 <td class="colLast">
 <div class="block">Lists all resource paths in tree rooted at the specified resource, that match any rules of which this service is aware.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasPattern(java.lang.String...)">hasPattern</a></span>&#8203;(@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;slingResourceTypes)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasPattern(java.lang.String...)">hasPattern</a></span>&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;slingResourceTypes)</code></th>
 <td class="colLast">
 <div class="block">Indicates if this service uses any of the specified <code>sling:resourceType</code> in any of its matching logic.</div>
 </td>
@@ -218,9 +218,9 @@ extends <a href="RewriteRule.html" title="interface in com.adobe.aem.modernize.r
 <ul class="blockList">
 <li class="blockList">
 <h4>findMatches</h4>
-<pre class="methodSignature">@NotNull
-@NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;findMatches&#8203;(@NotNull
-                                 @NotNull org.apache.sling.api.resource.Resource&nbsp;resource)</pre>
+<pre class="methodSignature"><a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
+<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;findMatches&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
+                                 <a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> org.apache.sling.api.resource.Resource&nbsp;resource)</pre>
 <div class="block">Lists all resource paths in tree rooted at the specified resource, that match any rules of which this service is aware.
  <p>
  This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.</div>
@@ -238,8 +238,8 @@ extends <a href="RewriteRule.html" title="interface in com.adobe.aem.modernize.r
 <ul class="blockListLast">
 <li class="blockList">
 <h4>hasPattern</h4>
-<pre class="methodSignature">boolean&nbsp;hasPattern&#8203;(@NotNull
-                   @NotNull <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;slingResourceTypes)</pre>
+<pre class="methodSignature">boolean&nbsp;hasPattern&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
+                   <a href="https://javadoc.io/doc/org.jetbrains/annotations/latest/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;slingResourceTypes)</pre>
 <div class="block">Indicates if this service uses any of the specified <code>sling:resourceType</code> in any of its matching logic.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
