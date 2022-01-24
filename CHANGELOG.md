@@ -15,6 +15,7 @@
 
 ### 📁 Other pull requests
 
+- Bump jackson-core from 2.9.5 to 2.13.1 [\#124](https://github.com/adobe/aem-modernize-tools/pull/124) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump build-helper-maven-plugin from 3.2.0 to 3.3.0 [\#118](https://github.com/adobe/aem-modernize-tools/pull/118) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump slf4j.version from 1.7.32 to 1.7.33 [\#117](https://github.com/adobe/aem-modernize-tools/pull/117) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.osgi.resource from 1.0.0 to 1.0.1 [\#116](https://github.com/adobe/aem-modernize-tools/pull/116) ([dependabot[bot]](https://github.com/apps/dependabot))
