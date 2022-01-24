@@ -693,7 +693,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-core</artifactId>
-                        <version>2.9.5</version>
+                        <version>2.13.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
@@ -915,7 +915,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-core</artifactId>
-                        <version>2.9.5</version>
+                        <version>2.13.1</version>
                         <scope>provided</scope>
                     </dependency>
                     <dependency>
