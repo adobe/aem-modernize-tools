@@ -1,6 +1,5 @@
 name: Update JavaDocs
 
-concurrency: ci-${{ github.ref }}
 on:
   workflow_run:
     workflows: ["Tag & Release"]

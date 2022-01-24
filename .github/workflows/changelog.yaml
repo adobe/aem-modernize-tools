@@ -1,12 +1,12 @@
 name: Update Changelog
 
-concurrency: ci-${{ github.ref }}
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
   workflow_run:
-    workflows: ["Tag & Release"]
+    workflows: ["Update JavaDocs"]
     branches: [main]
     types:
       - completed
@@ -14,7 +14,7 @@ on:
 jobs:
   changelog:
     runs-on: ubuntu-latest
-    if: github.repository == 'adobe/aem-modernize-tools'
+    if: github.repository == 'adobe/aem-modernize-tools' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
