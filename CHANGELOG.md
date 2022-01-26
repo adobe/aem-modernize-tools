@@ -10,6 +10,10 @@
 - Support running javadocs manually. [\#132](https://github.com/adobe/aem-modernize-tools/pull/132) ([bstopp](https://github.com/bstopp))
 - Fix issues with github workflow order. [\#130](https://github.com/adobe/aem-modernize-tools/pull/130) ([bstopp](https://github.com/bstopp))
 
+### 📖 Documentation
+
+- Change how Docs are generated, and order of Github workflows. [\#134](https://github.com/adobe/aem-modernize-tools/pull/134) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.0.16](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.16) (2022-01-24)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.14...aem-modernize-tools-2.0.16)
