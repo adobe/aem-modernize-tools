@@ -6,6 +6,7 @@
 
 ### 🐛 Bug fixes
 
+- Support running javadocs manually. [\#132](https://github.com/adobe/aem-modernize-tools/pull/132) ([bstopp](https://github.com/bstopp))
 - Fix issues with github workflow order. [\#130](https://github.com/adobe/aem-modernize-tools/pull/130) ([bstopp](https://github.com/bstopp))
 
 ## [aem-modernize-tools-2.0.16](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.16) (2022-01-24)
