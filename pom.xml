@@ -1099,11 +1099,12 @@ Bundle-DocURL:
                         <executions>
                             <execution>
                                 <id>attach-javadoc</id>
+                                <phase>process-resources</phase>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>javadoc</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${maven.multiModuleProjectDirectory}/docs/_apidocs</outputDirectory>
+                                    <reportOutputDirectory>${maven.multiModuleProjectDirectory}/docs/_apidocs</reportOutputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
