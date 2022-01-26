@@ -1,6 +1,7 @@
 name: Update JavaDocs
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Tag & Release"]
     branches: [main]
@@ -10,7 +11,7 @@ on:
 jobs:
   generate-javadocs:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.repository == 'adobe/aem-modernize-tools'
+    if: (!github.event.workflow_run || github.event.workflow_run.conclusion == 'success') && github.repository == 'adobe/aem-modernize-tools' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
