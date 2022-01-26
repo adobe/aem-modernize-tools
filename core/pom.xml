@@ -81,8 +81,8 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
                     <source>11</source>
                     <notimestamp>true</notimestamp>
                     <quiet>true</quiet>
-                    <doctitle>${project.name} API</doctitle>
-                    <windowtitle>${project.name} API</windowtitle>
+                    <doctitle>${project.name} API v${project.version}</doctitle>
+                    <windowtitle>${project.name} API v${project.version}</windowtitle>
                     <excludePackageNames>
                         *.impl:
                         *.impl.*:

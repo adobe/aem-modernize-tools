@@ -3,7 +3,7 @@ name: Update JavaDocs
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Tag & Release"]
+    workflows: ["Update JavaDocs"]
     branches: [main]
     types:
       - completed
@@ -27,13 +27,13 @@ jobs:
           cache: maven
 
       - name: Build JavaDocs
-        run: mvn -U clean verify -Pgenerate-site-docs,aemCloudService -Dmaven.test.skip
+        run: mvn clean process-resources -Pgenerate-site-docs,aemCloudService -pl .,core
 
-      - name: Commit JavaDocs
+      - name: Commit Docs
         run: |
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
           git add docs/_apidocs
-          git add docs/_pages/plan-operate/set-up.md
-          git commit -m 'Updating JavaDocs.'
+          git add docs/_pages
+          git commit -m 'Updating Docs.'
           git push
