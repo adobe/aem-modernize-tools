@@ -35,6 +35,8 @@
                         <!-- /apps root -->
                         <filter><root>/apps</root></filter>
                         <filter><root>/apps/aem-modernize</root></filter>
+                        <filter><root>/apps/aem-modernize/content</root></filter>
+                        
                         <filter><root>/apps/aem-modernize-packages</root></filter>
 
                         <filter><root>/apps/cq</root></filter>
@@ -45,6 +47,7 @@
                         <filter><root>/apps/cq/core/content</root></filter>
                         <filter><root>/apps/cq/core/content/nav</root></filter>
                         <filter><root>/apps/cq/core/content/nav/tools</root></filter>
+                        <filter><root>/apps/cq/core/content/nav/tools/aem-modernize</root></filter>
 
                     </filters>
                 </configuration>

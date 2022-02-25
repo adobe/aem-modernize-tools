@@ -21,6 +21,12 @@
 
 <workspaceFilter version="1.0">
     <filter root="/apps/aem-modernize/components"/>
-    <filter root="/apps/aem-modernize/content"/>
-    <filter root="/apps/cq/core/content/nav/tools/aem-modernize"/>
+    <filter root="/apps/aem-modernize/content/component"/>
+    <filter root="/apps/aem-modernize/content/full"/>
+    <filter root="/apps/aem-modernize/content/policy"/>
+    <filter root="/apps/aem-modernize/content/structure"/>
+    <filter root="/apps/cq/core/content/nav/tools/aem-modernize/component"/>
+    <filter root="/apps/cq/core/content/nav/tools/aem-modernize/full"/>
+    <filter root="/apps/cq/core/content/nav/tools/aem-modernize/policy"/>
+    <filter root="/apps/cq/core/content/nav/tools/aem-modernize/structure"/>
 </workspaceFilter>
