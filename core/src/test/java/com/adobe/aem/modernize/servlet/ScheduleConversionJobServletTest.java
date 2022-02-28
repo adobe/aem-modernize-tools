@@ -138,6 +138,33 @@ public class ScheduleConversionJobServletTest {
   }
 
   @Test
+  public void noPermissionsJobDataPath() throws Exception {
+    MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
+    MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
+    ScheduleConversionJobServlet.RequestData requestData = buildJobData();
+    Map<String, Object> params = new HashMap<>();
+    params.put("data", new ObjectMapper().writeValueAsString(requestData));
+    request.setParameterMap(params);
+
+    new Expectations() {{
+      resourceResolver.adaptTo(Session.class);
+      result = session;
+      session.getAccessControlManager();
+      result = accessControlManager;
+      accessControlManager.hasPrivileges(ConversionJob.JOB_DATA_LOCATION, withInstanceOf(Privilege[].class));
+      result = false;
+    }};
+
+    servlet.doPost(request, response);
+    ScheduleConversionJobServlet.ResponseData result = new ObjectMapper().readValue(response.getOutputAsString(), ScheduleConversionJobServlet.ResponseData.class);
+
+    assertEquals(SC_FORBIDDEN, response.getStatus(), "Response status code");
+    assertFalse(result.isSuccess(), "Response status");
+    assertNotNull(result.getMessage(), "Response message");
+    assertTrue(StringUtils.isBlank(result.getJob()), "Tracking path");
+  }
+  
+  @Test
   public void noPermissionsSinglePath() throws Exception {
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(resourceResolver, bundleContext);
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
@@ -151,7 +178,9 @@ public class ScheduleConversionJobServletTest {
       result = session;
       session.getAccessControlManager();
       result = accessControlManager;
-      accessControlManager.hasPrivileges(anyString, withInstanceOf(Privilege[].class));
+      accessControlManager.hasPrivileges(ConversionJob.JOB_DATA_LOCATION, withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/content/test/path", withInstanceOf(Privilege[].class));
       result = false;
     }};
 
@@ -178,9 +207,12 @@ public class ScheduleConversionJobServletTest {
       result = session;
       session.getAccessControlManager();
       result = accessControlManager;
-      accessControlManager.hasPrivileges(anyString, withInstanceOf(Privilege[].class));
-      times = 2;
-      returns(true, false);
+      accessControlManager.hasPrivileges(ConversionJob.JOB_DATA_LOCATION, withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/content/test/path", withInstanceOf(Privilege[].class));
+      result = true;
+      accessControlManager.hasPrivileges("/content/other/path", withInstanceOf(Privilege[].class));
+      result = false;
     }};
 
     servlet.doPost(request, response);
@@ -228,6 +260,8 @@ public class ScheduleConversionJobServletTest {
       result = session;
       session.getAccessControlManager();
       result = accessControlManager;
+      accessControlManager.hasPrivileges(ConversionJob.JOB_DATA_LOCATION, withInstanceOf(Privilege[].class));
+      result = true;
       accessControlManager.hasPrivileges("/content/test/path", withInstanceOf(Privilege[].class));
       result = true;
       accessControlManager.hasPrivileges("/content/other/path", withInstanceOf(Privilege[].class));
@@ -267,6 +301,8 @@ public class ScheduleConversionJobServletTest {
       result = session;
       session.getAccessControlManager();
       result = accessControlManager;
+      accessControlManager.hasPrivileges(ConversionJob.JOB_DATA_LOCATION, withInstanceOf(Privilege[].class));
+      result = true;
       accessControlManager.hasPrivileges("/content/test/path", withInstanceOf(Privilege[].class));
       result = true;
       accessControlManager.hasPrivileges("/content/other/path", withInstanceOf(Privilege[].class));

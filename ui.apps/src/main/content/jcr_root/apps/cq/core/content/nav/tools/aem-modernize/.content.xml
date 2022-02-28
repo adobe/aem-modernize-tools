@@ -24,8 +24,8 @@
     jcr:title="AEM Modernize Tools"
     id="aem-modernize">
 
-    <component />
     <full />
-    <policy />
     <structure />
+    <component />
+    <policy />
 </jcr:root>

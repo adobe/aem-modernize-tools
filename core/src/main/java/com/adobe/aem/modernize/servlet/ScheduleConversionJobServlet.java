@@ -152,6 +152,11 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       Session session = rr.adaptTo(Session.class);
       AccessControlManager acm = session.getAccessControlManager();
       Privilege[] privs = new Privilege[] { acm.privilegeFromName(Privilege.JCR_WRITE) };
+      
+      if (!acm.hasPrivileges(JOB_DATA_LOCATION, privs)) {
+        throw new AccessDeniedException(JOB_DATA_LOCATION);
+      }
+      
       for (String path : data.getPaths()) {
         if (!acm.hasPrivileges(path, privs)) {
           throw new AccessDeniedException(path);
