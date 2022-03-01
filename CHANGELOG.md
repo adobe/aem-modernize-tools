@@ -16,6 +16,7 @@
 
 ### 📁 Other pull requests
 
+- Update workflows and docs generation. [\#141](https://github.com/adobe/aem-modernize-tools/pull/141) ([bstopp](https://github.com/bstopp))
 - RepoInit Fix [\#140](https://github.com/adobe/aem-modernize-tools/pull/140) ([bstopp](https://github.com/bstopp))
 
 ## [aem-modernize-tools-2.0.16](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.16) (2022-01-24)
