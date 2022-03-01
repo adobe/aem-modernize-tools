@@ -1,19 +1,27 @@
 name: Update JavaDocs
 
+concurrency: ci-modernize-tools-metadata
+
 on:
+  push:
+    tags:
+      - aem-modernize-tools-*
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Update JavaDocs"]
-    branches: [main]
-    types:
-      - completed
 
 jobs:
+  job
   generate-javadocs:
     runs-on: ubuntu-latest
-    if: (!github.event.workflow_run || github.event.workflow_run.conclusion == 'success') && github.repository == 'adobe/aem-modernize-tools' && github.ref == 'refs/heads/main'
+    if: github.repository == 'adobe/aem-modernize-tools'
 
     steps:
+      - name: Checkout tag
+        uses: actions/checkout@v2
+        
+      - name: Store Version
+        id: store-version
+        run: echo "::set-output name=version::$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)"
+        
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -27,7 +35,7 @@ jobs:
           cache: maven
 
       - name: Build JavaDocs
-        run: mvn clean process-resources -Pgenerate-site-docs,aemCloudService -pl .,core
+        run: mvn clean process-resources -Pgenerate-site-docs,aemCloudService -pl .,core -Dproject.version=${{ steps.store-version.outputs.version }}
 
       - name: Commit Docs
         run: |
