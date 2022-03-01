@@ -50,7 +50,7 @@ The AEM Modernize Tools has multiple distributions; the following are available 
 
 ### Step 2: Add as an Embed/Sub package
 
-For more information on the Maven Project sructural changes in Maven Archetype 21, please review [Understand the Structure of a Project Content Package in AEM as a Cloud Service](https://docs.adobe.com/content/help/en/experience-manager-cloud-service/implementing/developing/aem-project-content-package-structure.html). Note that this project structure is compatible with AEM 6.x as well.
+For more information on the Maven Project structural changes in Maven Archetype 21, please review [Understand the Structure of a Project Content Package in AEM as a Cloud Service](https://docs.adobe.com/content/help/en/experience-manager-cloud-service/implementing/developing/aem-project-content-package-structure.html). Note that this project structure is compatible with AEM 6.x as well.
 
 In the `filevault-package-maven-plugin` configuration of your all project’s pom.xml file, add this:
 
@@ -64,18 +64,20 @@ In the `filevault-package-maven-plugin` configuration of your all project’s po
       <embeddeds>
         <embedded>
           <groupId>com.adobe.aem</groupId>
-          <artifactId>aem-modernize-tools.ui.all</artifactId>
+          <artifactId>aem-modernize-tools.all</artifactId>
           <type>zip</type>
           <!-- <classifier>java8</classifier> optional, see above -->
           <target>/apps/my-app-packages/application/install</target>
         </embedded>
       <embedded>
       ...
+  </plugin>
+</plugins>
 {% endhighlight %}
 
 ### Step 3: Add Bundle as a Dependency (Optional)
 
-If you plan to create custom implementations of the `RewriteRule` interface, your bundle project will need to add a dependency to the bundle artifact of this project. This can be done by adding this to the your dependency list:
+If you plan to create custom implementations of the `RewriteRule` interface, your bundle project will need to add a dependency to the bundle artifact of this project. This can be done by adding this to your dependency list:
 
 {% highlight xml %}
 <dependency>
