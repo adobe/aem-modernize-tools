@@ -19,6 +19,12 @@
 - Worklow Syntax Error Fix. [\#142](https://github.com/adobe/aem-modernize-tools/pull/142) ([bstopp](https://github.com/bstopp))
 - Update workflows and docs generation. [\#141](https://github.com/adobe/aem-modernize-tools/pull/141) ([bstopp](https://github.com/bstopp))
 - RepoInit Fix [\#140](https://github.com/adobe/aem-modernize-tools/pull/140) ([bstopp](https://github.com/bstopp))
+- Bump actions/setup-java from 2.5.0 to 3 [\#137](https://github.com/adobe/aem-modernize-tools/pull/137) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump maven-compiler-plugin from 3.8.1 to 3.10.0 [\#135](https://github.com/adobe/aem-modernize-tools/pull/135) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.osgi.annotation.versioning from 1.1.1 to 1.1.2 [\#129](https://github.com/adobe/aem-modernize-tools/pull/129) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump junit-jupiter-engine from 5.7.2 to 5.8.2 [\#128](https://github.com/adobe/aem-modernize-tools/pull/128) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.osgi.service.cm from 1.6.0 to 1.6.1 [\#127](https://github.com/adobe/aem-modernize-tools/pull/127) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump maven-invoker from 2.2 to 3.1.0 [\#125](https://github.com/adobe/aem-modernize-tools/pull/125) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [aem-modernize-tools-2.0.16](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.16) (2022-01-24)
 
