@@ -16,6 +16,10 @@
 
 ### 📁 Other pull requests
 
+- Bump nexus-staging-maven-plugin from 1.6.8 to 1.6.12 [\#147](https://github.com/adobe/aem-modernize-tools/pull/147) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.apache.sling.scripting.sightly.compiler from 1.2.6-1.4.0 to 1.2.14-1.4.0 [\#146](https://github.com/adobe/aem-modernize-tools/pull/146) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump maven-jar-plugin from 3.2.1 to 3.2.2 [\#145](https://github.com/adobe/aem-modernize-tools/pull/145) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump annotations from 22.0.0 to 23.0.0 [\#143](https://github.com/adobe/aem-modernize-tools/pull/143) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Worklow Syntax Error Fix. [\#142](https://github.com/adobe/aem-modernize-tools/pull/142) ([bstopp](https://github.com/bstopp))
 - Update workflows and docs generation. [\#141](https://github.com/adobe/aem-modernize-tools/pull/141) ([bstopp](https://github.com/bstopp))
 - RepoInit Fix [\#140](https://github.com/adobe/aem-modernize-tools/pull/140) ([bstopp](https://github.com/bstopp))
