@@ -16,6 +16,7 @@
 
 ### 📁 Other pull requests
 
+- Worklow Syntax Error Fix. [\#142](https://github.com/adobe/aem-modernize-tools/pull/142) ([bstopp](https://github.com/bstopp))
 - Update workflows and docs generation. [\#141](https://github.com/adobe/aem-modernize-tools/pull/141) ([bstopp](https://github.com/bstopp))
 - RepoInit Fix [\#140](https://github.com/adobe/aem-modernize-tools/pull/140) ([bstopp](https://github.com/bstopp))
 
