@@ -14,6 +14,10 @@
 
 - Change how Docs are generated, and order of Github workflows. [\#134](https://github.com/adobe/aem-modernize-tools/pull/134) ([bstopp](https://github.com/bstopp))
 
+### 📁 Other pull requests
+
+- RepoInit Fix [\#140](https://github.com/adobe/aem-modernize-tools/pull/140) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.0.16](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.16) (2022-01-24)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.14...aem-modernize-tools-2.0.16)
