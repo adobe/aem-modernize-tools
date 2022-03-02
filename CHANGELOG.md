@@ -16,6 +16,7 @@
 
 ### 📁 Other pull requests
 
+- Fix the Maven Invoker dependency [\#150](https://github.com/adobe/aem-modernize-tools/pull/150) ([bstopp](https://github.com/bstopp))
 - Bump nexus-staging-maven-plugin from 1.6.8 to 1.6.12 [\#147](https://github.com/adobe/aem-modernize-tools/pull/147) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.apache.sling.scripting.sightly.compiler from 1.2.6-1.4.0 to 1.2.14-1.4.0 [\#146](https://github.com/adobe/aem-modernize-tools/pull/146) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump maven-jar-plugin from 3.2.1 to 3.2.2 [\#145](https://github.com/adobe/aem-modernize-tools/pull/145) ([dependabot[bot]](https://github.com/apps/dependabot))
