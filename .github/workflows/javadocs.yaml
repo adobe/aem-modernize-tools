@@ -1,26 +1,41 @@
-name: Update JavaDocs
+name: Update Docs
 
 concurrency: ci-modernize-tools-metadata
 
 on:
-  push:
-    tags:
-      - aem-modernize-tools-*
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Tag & Release"]
+    types:
+      - completed
 
 jobs:
-  generate-javadocs:
-    runs-on: ubuntu-latest
+  version:
     if: github.repository == 'adobe/aem-modernize-tools'
+    runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.store-version.outputs.version }}
 
     steps:
+      - name: Get Latest Tag
+        id: previoustag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+
       - name: Checkout tag
         uses: actions/checkout@v2
-        
+        with:
+          ref: ${{ steps.previoustag.output.tag }}
+
       - name: Store Version
         id: store-version
         run: echo "::set-output name=version::$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)"
-        
+
+  generate-docs:
+    runs-on: ubuntu-latest
+    needs: version
+
+    steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -34,7 +49,7 @@ jobs:
           cache: maven
 
       - name: Build JavaDocs
-        run: mvn clean process-resources -Pgenerate-site-docs,aemCloudService -pl .,core -Dproject.version=${{ steps.store-version.outputs.version }}
+        run: mvn clean process-resources -Pgenerate-site-docs,aemCloudService -pl .,core -Dproject.version=${{ needs.version.outputs.version }}
 
       - name: Commit Docs
         run: |
