@@ -9,9 +9,9 @@ package com.adobe.aem.modernize.structure.rule;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,8 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.commons.PathUtils;
@@ -78,16 +80,16 @@ import static com.day.cq.wcm.api.NameConstants.*;
 public class PageRewriteRule implements StructureRewriteRule {
 
   protected static final String NN_ROOT_CONTAINER = "root";
-  private String id = PageRewriteRule.class.getName();
-  private int ranking = Integer.MAX_VALUE;
   private static final String NN_LIVE_SYNC = "cq:LiveSyncConfig";
   private static final String NN_BLUEPRINT_SYNC = "cq:BlueprintSyncConfig";
-
+  private String id = PageRewriteRule.class.getName();
+  private int ranking = Integer.MAX_VALUE;
+  private List<String> allowedPaths;
   private String staticTemplate;
   private String editableTemplate;
   private String containerResourceType;
   private Map<String, List<String>> componentOrdering = new HashMap<>();
-  private Map<String, String> componentRenamed;
+  private BidiMap<String, String> componentRenamed;
   private List<String> componentsToRemove;
   private List<String> componentsToIgnore;
   private String slingResourceType;
@@ -109,11 +111,28 @@ public class PageRewriteRule implements StructureRewriteRule {
       root = root.getNode(NN_CONTENT);
     }
 
-    if (!root.hasProperty(PN_TEMPLATE)) {
+    if (!root.hasProperty(PN_TEMPLATE) || !root.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
       return false;
     }
     String template = root.getProperty(PN_TEMPLATE).getString();
-    return StringUtils.equals(staticTemplate, template);
+    if (!StringUtils.equals(staticTemplate, template)) {
+      return false;
+    }
+
+    String resourceType = root.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
+    if (!StringUtils.equals(slingResourceType, resourceType)) {
+      return false;
+    }
+
+    boolean allowed = allowedPaths.isEmpty();
+    Iterator<String> it = allowedPaths.iterator();
+    String pagePath = root.getPath();
+
+    while (!allowed && it.hasNext()) {
+      String path = it.next();
+      allowed = pagePath.startsWith(path);
+    }
+    return allowed;
   }
 
   @Nullable
@@ -162,6 +181,121 @@ public class PageRewriteRule implements StructureRewriteRule {
     return this.ranking;
   }
 
+  private String getResourceType(Session session) throws RewriteException, RepositoryException {
+
+    String path = PathUtils.concat(editableTemplate, "structure", NN_CONTENT);
+    if (!session.nodeExists(path)) {
+      throw new RewriteException(String.format("Unable to find Editable Template: {}", editableTemplate));
+    }
+    Node structure = session.getNode(path);
+    if (!structure.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
+      throw new RewriteException(String.format("Unable to find sling:resourceType on template structure: {}", path));
+    }
+    return structure.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
+  }
+
+  // This will list any intermediate nodes as needed by the order or rename logic.
+  private void moveRenamedNodes(final Node source, final Node target, final List<String> nodeNames) throws RepositoryException {
+    Session session = source.getSession();
+
+    List<String> processed = new ArrayList<>();
+
+    // Create intermediate nodes for renamed ones;
+    for (String value : componentRenamed.inverseBidiMap().keySet()) {
+
+      // Possible that entries were intermediately processed by loop.
+      if (processed.contains(value)) {
+        continue;
+      }
+      int idx = value.lastIndexOf('/');
+      if (idx > 0) {
+        String[] tokens = value.substring(0, idx).split("/");
+        Node parent = target;
+        String relPath = "";
+        for (String t : tokens) {
+
+          relPath = PathUtils.concat(relPath, t);
+          if (source.hasNode(t)) {
+            // If the mapping has an intermediate node, and that node exists on source, move it to destination.
+            session.move(PathUtils.concat(source.getPath(), t), PathUtils.concat(parent.getPath(), t));
+            parent = target.getNode(t);
+            nodeNames.remove(t);
+          } else if (componentRenamed.containsValue(relPath) && !processed.contains(relPath)) {
+            // If the mapping has an intermediate node which is mapped by rename, apply the intermediate rename now, not later.
+            String sourceName = componentRenamed.inverseBidiMap().get(relPath);
+            session.move(PathUtils.concat(source.getPath(), sourceName), PathUtils.concat(parent.getPath(), t));
+            parent = parent.getNode(t);
+            nodeNames.remove(sourceName);
+            processed.add(relPath);
+          } else {
+            // Create the node if it doesn't exist, otherwise continue walking the tree.
+            if (parent.hasNode(t)) {
+              parent = parent.getNode(t);
+            } else {
+              parent = parent.addNode(t, JcrConstants.NT_UNSTRUCTURED);
+              parent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
+            }
+          }
+        }
+      }
+      // All intermediate nodes were created or renames moved to.
+      String key =  componentRenamed.inverseBidiMap().get(value);
+      session.move(PathUtils.concat(source.getPath(), key), PathUtils.concat(target.getPath(), value));
+      nodeNames.remove(key);
+      processed.add(value);
+    }
+  }
+
+  private void moveRemainingNodes(final Node source, final Node target, final List<String> names) throws RepositoryException {
+    Session session = source.getSession();
+
+    Iterator<String> iterator = names.iterator();
+    while (iterator.hasNext()) {
+      String name = iterator.next();
+      boolean found = false;
+      for (Map.Entry<String, List<String>> entry : componentOrdering.entrySet()) {
+        if (entry.getValue().contains(name) && !entry.getKey().equals(NN_ROOT_CONTAINER)) {
+          String path = entry.getKey().replace(NN_ROOT_CONTAINER + "/", "");
+          String[] tokens = path.split("/");
+          Node parent = target;
+          for (String t : tokens) {
+            if (parent.hasNode(t)) {
+              parent = parent.getNode(t);
+            } else {
+              parent = parent.addNode(t, JcrConstants.NT_UNSTRUCTURED);
+              parent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
+            }
+          }
+          session.move(PathUtils.concat(source.getPath(), name), PathUtils.concat(parent.getPath(), name));
+          found = true;
+        }
+      }
+      if (!found) {
+        session.move(PathUtils.concat(source.getPath(), name), PathUtils.concat(target.getPath(), name));
+      }
+      iterator.remove();
+    }
+  }
+
+  private void orderNodes(Node pageContent) throws RepositoryException {
+    for (Map.Entry<String, List<String>> entry : componentOrdering.entrySet()) {
+      // Find the list of all the children in this container
+      Node parent = pageContent.getNode(entry.getKey());
+      for (String name : entry.getValue()) {
+        parent.orderBefore(name, null);
+      }
+
+      NodeIterator children = parent.getNodes();
+      while (children.hasNext()) {
+        String name = children.nextNode().getName();
+        if (entry.getValue().contains(name)) {
+          continue;
+        }
+        parent.orderBefore(name, null);
+      }
+    }
+  }
+
   @Override
   public @NotNull Set<String> findMatches(@NotNull Resource resource) {
     Set<String> match = new HashSet<>();
@@ -185,108 +319,6 @@ public class PageRewriteRule implements StructureRewriteRule {
     return Arrays.asList(slingResourceTypes).contains(slingResourceType);
   }
 
-  private String getResourceType(Session session) throws RewriteException, RepositoryException {
-
-    String path = PathUtils.concat(editableTemplate, "structure", NN_CONTENT);
-    if (!session.nodeExists(path)) {
-      throw new RewriteException(String.format("Unable to find Editable Template: {}", editableTemplate));
-    }
-    Node structure = session.getNode(path);
-    if (!structure.hasProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY)) {
-      throw new RewriteException(String.format("Unable to find sling:resourceType on template structure: {}", path));
-    }
-    return structure.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
-  }
-
-  // This will list any intermediate nodes as needed by the order or rename logic.
-  private void moveRenamedNodes(final Node source, final Node target, final List<String> nodeNames) throws RepositoryException {
-    Session session = source.getSession();
-
-    // Create intermediate nodes for renamed ones;
-    for (Map.Entry<String, String> entry : componentRenamed.entrySet()) {
-      int idx = entry.getValue().lastIndexOf('/');
-      if (idx > 0) {
-        String[] tokens = entry.getValue().substring(0, idx).split("/");
-        Node parent = target;
-        String relPath = "";
-        for (String t : tokens) {
-          relPath = PathUtils.concat(relPath, t);
-          if (source.hasNode(t)) {
-            session.move(PathUtils.concat(source.getPath(), t), PathUtils.concat(parent.getPath(), t));
-            parent = target.getNode(t);
-            nodeNames.remove(t);
-          } else if (componentRenamed.containsValue(relPath)) {
-            // Find the source node for this rename
-            for (Map.Entry<String, String> nestedEntry : componentRenamed.entrySet()) {
-              if (nestedEntry.getValue().equals(relPath)) {
-                session.move(PathUtils.concat(source.getPath(), nestedEntry.getKey()), PathUtils.concat(parent.getPath(), t));
-                parent = parent.getNode(t);
-                nodeNames.remove(nestedEntry.getKey());
-                break;
-              }
-            }
-          } else {
-            parent = target.addNode(t, JcrConstants.NT_UNSTRUCTURED);
-            parent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
-          }
-        }
-      }
-      // All intermediate nodes were created or renames moved to.
-      session.move(PathUtils.concat(source.getPath(), entry.getKey()), PathUtils.concat(target.getPath(), entry.getValue()));
-      nodeNames.remove(entry.getKey());
-    }
-  }
-
-  private void moveRemainingNodes(final Node source, final Node target, final List<String> names) throws RepositoryException {
-    Session session = source.getSession();
-
-    Iterator<String> iterator = names.iterator();
-    while (iterator.hasNext()) {
-      String name = iterator.next();
-      boolean found = false;
-      for (Map.Entry<String, List<String>> entry : componentOrdering.entrySet()) {
-        if (entry.getValue().contains(name) && !entry.getKey().equals(NN_ROOT_CONTAINER)) {
-          String path = entry.getKey().replace(NN_ROOT_CONTAINER + "/", "");
-          String[] tokens = path.split("/");
-          Node parent = target;
-          for (String t : tokens) {
-            if (target.hasNode(t)) {
-              parent = target.getNode(t);
-            } else {
-              parent = parent.addNode(t, JcrConstants.NT_UNSTRUCTURED);
-              parent.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, containerResourceType);
-            }
-          }
-          session.move(PathUtils.concat(source.getPath(), name), PathUtils.concat(parent.getPath(), name));
-          found = true;
-        }
-      }
-      if (!found) {
-        session.move(PathUtils.concat(source.getPath(), name), PathUtils.concat(target.getPath(), name));
-      }
-      iterator.remove();
-    }
-  }
-
-  private void orderNodes(Node pageContent) throws RepositoryException {
-    for (Map.Entry<String, List<String>> entry : componentOrdering.entrySet()) {
-      // Find the list of all the children in this container
-      Node parent = pageContent.getNode(entry.getKey());
-      for (String name : entry.getValue()){
-        parent.orderBefore(name, null);
-      }
-
-      NodeIterator children = parent.getNodes();
-      while (children.hasNext()) {
-        String name = children.nextNode().getName();
-        if (entry.getValue().contains(name)) {
-          continue;
-        }
-        parent.orderBefore(name, null);
-      }
-    }
-  }
-
   @Activate
   @Modified
   @SuppressWarnings("unused")
@@ -297,6 +329,11 @@ public class PageRewriteRule implements StructureRewriteRule {
     this.ranking = Converters.standardConverter().convert(props.get("service.ranking")).defaultValue(Integer.MAX_VALUE).to(Integer.class);
     this.id = Converters.standardConverter().convert(props.get("service.pid")).defaultValue(this.id).to(String.class);
 
+    allowedPaths = new ArrayList<>();
+    if (config.allowed_paths() != null) {
+      allowedPaths = Arrays.stream(config.allowed_paths()).collect(Collectors.toList());
+    }
+
     staticTemplate = config.static_template();
     if (StringUtils.isBlank(staticTemplate)) {
       throw new ConfigurationException("static.template", "Static template is required.");
@@ -306,7 +343,6 @@ public class PageRewriteRule implements StructureRewriteRule {
     if (StringUtils.isBlank(slingResourceType)) {
       throw new ConfigurationException("sling.resourceType", "Sling Resource Type is required.");
     }
-
 
     editableTemplate = config.editable_template();
     if (StringUtils.isBlank(editableTemplate)) {
@@ -353,7 +389,7 @@ public class PageRewriteRule implements StructureRewriteRule {
     componentsToIgnore.add(NN_LIVE_SYNC);
     componentsToIgnore.add(NN_BLUEPRINT_SYNC);
 
-    componentRenamed = new LinkedHashMap<>();
+    componentRenamed = new DualLinkedHashBidiMap<>();
     if (config.rename_components() != null) {
 
       for (String cfg : config.rename_components()) {
@@ -376,6 +412,14 @@ public class PageRewriteRule implements StructureRewriteRule {
       description = "Rewrites a page template & structure to use new responsive grid layout."
   )
   @interface Config {
+    @AttributeDefinition(
+        name = "Allowed Paths",
+        description = "Restrict which paths to which this configuration applies.",
+        cardinality = Integer.MAX_VALUE,
+        required = false
+    )
+    String[] allowed_paths();
+
     @AttributeDefinition(
         name = "Static Template",
         description = "The static template which will be updated by this Page Rewrite Rule"
@@ -430,6 +474,7 @@ public class PageRewriteRule implements StructureRewriteRule {
         required = false
     )
     String[] rename_components();
+
   }
 
 }
