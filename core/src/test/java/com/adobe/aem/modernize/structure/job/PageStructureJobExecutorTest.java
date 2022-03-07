@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.event.jobs.Job;
@@ -155,7 +156,8 @@ public class PageStructureJobExecutorTest {
       jobExecutionContext.initProgress(pathCount, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = pathCount;
-      structureService.apply(withInstanceOf(Page.class), withInstanceOf(Set.class));
+      structureService.apply(withInstanceOf(Resource.class), withInstanceOf(Set.class));
+      result = true;
       times = pageCount;
       revision.getId();
       result = version;
@@ -204,7 +206,8 @@ public class PageStructureJobExecutorTest {
       jobExecutionContext.initProgress(pathCount, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = pathCount;
-      structureService.apply(withInstanceOf(Page.class), withInstanceOf(Set.class));
+      structureService.apply(withInstanceOf(Resource.class), withInstanceOf(Set.class));
+      result = true;
       times = pageCount;
       revision.getId();
       result = version;
@@ -258,7 +261,8 @@ public class PageStructureJobExecutorTest {
       jobExecutionContext.initProgress(pathCount, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = pathCount;
-      structureService.apply(withInstanceOf(Page.class), withInstanceOf(Set.class));
+      structureService.apply(withInstanceOf(Resource.class), withInstanceOf(Set.class));
+      result = true;
       times = pageCount;
       revision.getId();
       result = version;
