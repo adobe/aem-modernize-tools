@@ -135,11 +135,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <dryRun>true</dryRun>
                     <verbose>false</verbose>
-                    <canUpdateCopyright>false</canUpdateCopyright>
-                    <canUpdateDescription>false</canUpdateDescription>
-                    <canUpdateLicense>false</canUpdateLicense>
                     <failOnMissingHeader>true</failOnMissingHeader>
                     <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
                     <roots>src</roots>
@@ -488,7 +484,7 @@ Bundle-DocURL:
                             <execution>
                                 <id>check-license-headers</id>
                                 <goals>
-                                    <goal>check-file-header</goal>
+                                    <goal>update-file-header</goal>
                                 </goals>
                                 <phase>process-sources</phase>
                             </execution>

@@ -4,7 +4,7 @@ title: Important Changes
 subtitle: Details on the changes that have been introduced in the tool suite.
 ---
 
-{% assign sorted = site.pages | sort: name %}
+{% assign sorted = site.pages | sort: "version" | reverse %}
 {% assign currentPagePath = page.path | remove: '.md' %}
 
 {% for subpage in sorted %}
