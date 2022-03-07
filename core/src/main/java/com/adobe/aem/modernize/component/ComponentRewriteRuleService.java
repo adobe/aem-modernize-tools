@@ -49,7 +49,19 @@ public interface ComponentRewriteRuleService extends RewriteRuleService {
    * @param deep     {@code true} to recurse into the tree
    * @throws RewriteException if any errors occur when applying the rules
    */
-  // TODO: Consider returning list of paths that were processed for reporting
+  @Deprecated(since = "2.1.0")
   void apply(@NotNull final Resource resource, @NotNull final Set<String> rules, boolean deep) throws RewriteException;
 
+
+  /**
+   * Applies the indicated rules to the provided resource.
+   * <p>
+   * Transformations are performed but not saved.
+   *
+   * @param resource Resource to process
+   * @param rules    the ids of the rules to apply
+   * @return {@code true} if one of the specified rules was successfully applied, false otherwise
+   * @throws RewriteException if any errors occur when applying the rules
+   */
+  boolean apply(@NotNull final Resource resource, @NotNull final Set<String> rules) throws RewriteException;
 }

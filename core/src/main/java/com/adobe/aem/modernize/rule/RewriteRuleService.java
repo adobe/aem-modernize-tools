@@ -26,7 +26,10 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.osgi.annotation.versioning.ProviderType;
 
+@ProviderType
 public interface RewriteRuleService {
 
   /**
@@ -37,17 +40,41 @@ public interface RewriteRuleService {
    * @param resource Resource for the root of the search
    * @return list of mappings that match rules or empty set if none found or an error occurs
    */
+  @Deprecated(since = "2.1.0")
   @NotNull
   Set<String> find(@NotNull Resource resource);
 
   /**
    * Lists all rules that may apply to the specified {@code sling:resourceType}.
+   * <p>
    * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead.
    *
    * @param resourceResolver ResourceResolver for searching
    * @param slingResourceType the {@code sling:resourceType}(s) to check
-   * @return list of rules by path or PID
+   * @return set of rules by path or PID
    */
+  @Deprecated(since = "2.1.0")
   @NotNull
   Set<RewriteRule> listRules(@NotNull ResourceResolver resourceResolver, String... slingResourceType);
+
+  /**
+   * Finds set of rule ids of which this service is aware, that may match the provided resource's {@code sling:resourceType}.
+   * <p>
+   * This method may result in fuzzy matches to improve performance and prevent resource utilization overhead. 
+   *
+   * @param resource Resource to find matching rules
+   * @return set of rules by path or PID
+   */
+  @NotNull
+  Set<String> listRules(@NotNull Resource resource);
+
+  /**
+   * Returns the rule based on its unique identifier.
+   * 
+   * @param id the id for the rule
+   * @return the rule associated with the id or null if none exists 
+   */
+  @Nullable
+  RewriteRule getRule(@NotNull ResourceResolver resourceResolver, @NotNull String id);
+
 }

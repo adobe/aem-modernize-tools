@@ -22,29 +22,43 @@ package com.adobe.aem.modernize.structure;
 
 import java.util.Set;
 
+import org.apache.sling.api.resource.Resource;
+
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRuleService;
 import com.day.cq.wcm.api.Page;
 import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Provides a mechanism for listing all the configured rules either via Nodes or custom implementations.
  */
+@ProviderType
 public interface StructureRewriteRuleService extends RewriteRuleService {
 
   /**
-   * Applies the indicated rules to the provided resource. In the event more than one rule applies to the resource, they are applied in priority order.
-   *
+   * Applies the indicated rules to the provided page.
+   * <p>
    * Transformations are performed but not saved.
-   *
-   * The rules can be either a fully qualified path to a rule or a Service PID depending on the implementation.
-   *
+   * <p>
    * Implementations decide how to handle rule paths which are invalid for their context.
    *
-   * @param page  the page for applying rules
-   * @param rules set of potential matching rule ids
+   * @param page  page to process
+   * @param rules the ids of the rules to apply
    * @throws RewriteException if any errors occur while updating the page.
    */
+  @Deprecated(since = "2.1")
   void apply(@NotNull final Page page, @NotNull final Set<String> rules) throws RewriteException;
 
+  /**
+   * Applies the indicated rules to the provided resource.
+   * <p>
+   * Transformations are performed but not saved.
+   *
+   * @param resource resource of the page to process
+   * @param rules the ids of the rules to apply
+   * @return {@code true} if one of the specified rules was successfully applied, false otherwise
+   * @throws RewriteException if any errors occur while updating the page.
+   */
+  boolean apply(@NotNull final Resource resource, @NotNull final Set<String> rules) throws RewriteException;
 }

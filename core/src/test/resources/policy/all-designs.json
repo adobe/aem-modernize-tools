@@ -19,7 +19,7 @@
           "geometrixx/components/title"
         ],
         "title": {
-          "cq:imported": "/conf/test/imported",
+          "cq:imported": "/conf/test/settings/wcm/policies/geometrixx/components/title/policy_1234",
           "jcr:primaryType": "nt:unstructured",
           "defaultType": "small",
           "sling:resourceType": "geometrixx/components/title"

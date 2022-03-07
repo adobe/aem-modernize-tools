@@ -56,6 +56,7 @@ public class ComponentRewriteRuleServiceImplTest {
 
   private final String[] RULE_PATHS = new String[] { "/apps/aem-modernize/component/rules", "/apps/customer/component/rules" };
   private static final String FOUND_SERVICE_ID = "com.adobe.aem.modernize.component.ComponentRewriteRuleFound";
+  private static final String NOT_FOUND_SERVICE_ID = "com.adobe.aem.modernize.component.ComponentRewriteRuleNotFound";
   private final ComponentRewriteRuleService componentRewriteRuleService = new ComponentRewriteRuleServiceImpl();
 
   @Mocked
@@ -67,6 +68,12 @@ public class ComponentRewriteRuleServiceImplTest {
 
   @BeforeEach
   public void beforeEach() {
+    new Expectations() {{
+      matchedRewriteRule.getId();
+      result = FOUND_SERVICE_ID;
+      notMatchedRewriteRule.getId();
+      result = NOT_FOUND_SERVICE_ID;
+    }};
     for (String path : RULE_PATHS) {
       context.load().json("/component/test-rules.json", path);
     }
@@ -123,12 +130,8 @@ public class ComponentRewriteRuleServiceImplTest {
       }
     };
 
-    new Expectations() {{
-      matchedRewriteRule.getId();
-      result = FOUND_SERVICE_ID;
-    }};
     Resource resource = context.resourceResolver().getResource("/content/test/shallow/simple");
-    componentRewriteRuleService.apply(resource, rules, false);
+    componentRewriteRuleService.apply(resource, rules);
 
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
@@ -154,10 +157,7 @@ public class ComponentRewriteRuleServiceImplTest {
         return root;
       }
     };
-    new Expectations() {{
-      matchedRewriteRule.getId();
-      result = FOUND_SERVICE_ID;
-    }};
+    
     Resource resource = context.resourceResolver().getResource("/content/test/deep/parent");
     componentRewriteRuleService.apply(resource, rules, true);
     assertTrue(called[0], "TreeRewriteProcessor called");

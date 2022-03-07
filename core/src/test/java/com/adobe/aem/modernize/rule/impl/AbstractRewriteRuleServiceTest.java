@@ -107,19 +107,21 @@ public class AbstractRewriteRuleServiceTest {
       searchResult.getHits();
       result = new RepositoryException("Error");
 
-      matchedRewriteRule.findMatches(withInstanceOf(Resource.class));
+      matchedRewriteRule.hasPattern(withNotNull());
       times = 1;
-      result = Collections.singleton("/content/test/all/serviceTest");
-      notMatchedRewriteRule.findMatches(withInstanceOf(Resource.class));
+      result = true;
+      matchedRewriteRule.getId();
+      result = "MatchedRulePId";
+      notMatchedRewriteRule.hasPattern(withNotNull());
       times = 1;
-      result = Collections.emptySet();
+      result = false;
     }};
 
-    Resource root = context.resourceResolver().getResource("/content/test/all");
-    Set<String> paths = rewriteRuleService.find(root);
-    assertTrue(paths.contains("/content/test/all/serviceTest"));
-    paths.remove("/content/test/all/serviceTest");
-    assertTrue(paths.isEmpty(), "Paths content");
+    Resource root = context.resourceResolver().getResource("/content/test/all/jcr:content/simple");
+    Set<String> ruleIds = rewriteRuleService.listRules(root);
+    assertTrue(ruleIds.contains("MatchedRulePId"), "Contains Service pid");
+    ruleIds.remove("MatchedRulePId");
+    assertTrue(ruleIds.isEmpty(), "Rule list content");
   }
 
   @Test

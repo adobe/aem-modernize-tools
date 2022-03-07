@@ -72,7 +72,8 @@ public class PolicyJobExecutorTest {
       jobExecutionContext.initProgress(3, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = 3;
-      policyService.apply(withInstanceOf(Resource.class), CONF_PATH, withInstanceOf(Set.class), false, false);
+      policyService.apply(withInstanceOf(Resource.class), CONF_PATH, withInstanceOf(Set.class), false);
+      returns(true, false);
       times = 2;
     }};
 
@@ -81,12 +82,12 @@ public class PolicyJobExecutorTest {
     executor.doProcess(job, jobExecutionContext, bucket);
     tracking.getResourceResolver().commit();
 
-    assertEquals(2, bucket.getSuccess().size(), "Success count");
+    assertEquals(1, bucket.getSuccess().size(), "Success count");
     assertEquals("/etc/designs/test/jcr:content/homepage/par", bucket.getSuccess().get(0), "Success path");
-    assertEquals("/etc/designs/test/jcr:content/homepage/title", bucket.getSuccess().get(1), "Success path");
 
-    assertEquals(1, bucket.getNotFound().size(), "NotFound count");
-    assertEquals("/etc/designs/test/jcr:content/homepage/component-not-found", bucket.getNotFound().get(0), "Not Found path");
+    assertEquals(2, bucket.getNotFound().size(), "NotFound count");
+    assertEquals("/etc/designs/test/jcr:content/homepage/title", bucket.getNotFound().get(0), "Found, no rule");
+    assertEquals("/etc/designs/test/jcr:content/homepage/component-not-found", bucket.getNotFound().get(1), "Not Found path");
 
   }
 
@@ -98,7 +99,8 @@ public class PolicyJobExecutorTest {
       jobExecutionContext.initProgress(3, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = 3;
-      policyService.apply(withInstanceOf(Resource.class), CONF_PATH, withInstanceOf(Set.class), false, true);
+      policyService.apply(withInstanceOf(Resource.class), CONF_PATH, withInstanceOf(Set.class), true);
+      result = true;
       times = 2;
     }};
 
@@ -124,7 +126,7 @@ public class PolicyJobExecutorTest {
       jobExecutionContext.initProgress(3, -1);
       jobExecutionContext.incrementProgressCount(1);
       times = 3;
-      policyService.apply(withInstanceOf(Resource.class), CONF_PATH, withInstanceOf(Set.class), false, true);
+      policyService.apply(withInstanceOf(Resource.class), CONF_PATH, withInstanceOf(Set.class), true);
       result = new RewriteException("Error");
       times = 2;
     }};
