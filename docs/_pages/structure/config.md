@@ -22,6 +22,11 @@ The Page Structure rewrite tool consists of a single <strong>rewrite rule</stron
 The Page Rewrite Rule service is a factory service intended for creating one rule per static template to be converted.
 </p>
 
+### Allowed Paths
+Use this property to restrict the content paths to which this configuration will apply. This will allow development teams to create configurations that have the same static template and Sling Resource Type, but require a different editable template based on the tenant. 
+
+By default, no restrictions are applied.
+
 ### Static Template
 
 This property is used as means to identify pages for conversion. This, along with the `sling.resoruceType` configuration property are used for matching. A page which has a matching `cq:template` property value will be listed in the search results.

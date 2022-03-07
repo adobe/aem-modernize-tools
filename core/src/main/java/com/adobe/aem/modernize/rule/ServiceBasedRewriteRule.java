@@ -36,7 +36,6 @@ public interface ServiceBasedRewriteRule extends RewriteRule {
    * @param resource Resource for the root of the search
    * @return list of paths that match rules or an empty set if none match
    */
-  @SuppressWarnings("unused")
   @NotNull
   Set<String> findMatches(@NotNull Resource resource);
 

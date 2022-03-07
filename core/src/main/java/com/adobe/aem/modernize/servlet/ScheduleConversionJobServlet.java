@@ -79,7 +79,6 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
 
   private static final Logger logger = LoggerFactory.getLogger(ScheduleConversionJobServlet.class);
 
-  private static final String SERVICE_NAME = "schedule-job";
   private static final String PARAM_DATA = "data";
   private static final int MAX_PROCESS_PATHS = 500;
 
@@ -103,14 +102,12 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       return;
     }
     ResourceResolver rr = request.getResourceResolver();
-    Session systemSession = null;
     try {
+      Session session = rr.adaptTo(Session.class);
       checkPermissions(rr, data);
-
-      systemSession = repository.loginService(SERVICE_NAME, null);
       List<String[]> buckets = createBuckets(data);
-      String tracking = createTrackingState(systemSession, data, rr.getUserID(), buckets);
-      if (scheduleJobs(systemSession, data.getType(), tracking)) {
+      String tracking = createTrackingState(session, data, rr.getUserID(), buckets);
+      if (scheduleJobs(session, data.getType(), tracking)) {
         responseData.setSuccess(true);
         responseData.setMessage("Successfully scheduled conversion job.");
         responseData.setJob(tracking);
@@ -127,10 +124,6 @@ public class ScheduleConversionJobServlet extends SlingAllMethodsServlet {
       logger.error("Repository error when creating job.", e);
       responseData.setMessage("Unable to schedule job(s), check logs for details");
       writeResponse(response, SC_INTERNAL_SERVER_ERROR, responseData);
-    } finally {
-      if (systemSession != null) {
-        systemSession.logout();
-      }
     }
   }
 

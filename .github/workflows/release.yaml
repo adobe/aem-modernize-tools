@@ -1,5 +1,7 @@
 name: Tag & Release
 
+concurrency: ci-modernize-tools-metadata
+
 on:
   workflow_dispatch:
     inputs:

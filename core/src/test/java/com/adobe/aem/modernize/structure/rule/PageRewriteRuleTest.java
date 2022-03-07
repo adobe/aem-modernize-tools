@@ -48,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(AemContextExtension.class)
 public class PageRewriteRuleTest {
 
+  private static final String[] ALLOWED_PATHS = { "/content/foo", "/content/test" };
   private static final String STATIC_TEMPLATE = "/apps/aem-modernize/templates/homepage";
   private static final String SLING_RESOURCE_TYPE = "aem-modernize/components/homepage";
   private static final String EDITABLE_TEMPLATE = "/conf/aem-modernize/settings/wcm/templates/aem-modernize-home-page";
@@ -57,10 +58,17 @@ public class PageRewriteRuleTest {
       "title",
       "container",
       "container_12345",
-      "another/nested:bar"
+      "another/nested:foo"
   };
   private static final String[] REMOVE = { "toBeRemoved" };
-  private static final String[] RENAME = { "par=container/container", "rightpar=container_12345", "ignored=", "alsoignored" };
+  private static final String[] RENAME = {
+      "bar=another/nested/foo",
+      "par=container/container", 
+      "rightpar=container_12345", 
+      "toBeNested=another/nested", 
+      "parentNotExisting=container/container/container/container",
+      "ignored=",
+      "alsoignored" };
   private static final String[] IGNORED = { "doNotTouch" };
 
   public final AemContext context = new AemContext(ResourceResolverType.JCR_OAK);
@@ -68,6 +76,7 @@ public class PageRewriteRuleTest {
   @BeforeEach
   public void beforeEach() throws Exception {
     context.load().json("/structure/page-content.json", "/content/test");
+    context.load().json("/structure/page-content.json", "/content/notallowed");
     context.load().json("/structure/conf-template.json", "/conf/aem-modernize/settings/wcm/templates/aem-modernize-home-page");
   }
 
@@ -158,6 +167,15 @@ public class PageRewriteRuleTest {
     props.put("service.pid", PageRewriteRule.class.getName() + "~customrule");
     context.registerInjectActivateService(rule, props);
     assertEquals(PageRewriteRule.class.getName() + "~customrule", rule.getId(), "ServicePID Rule ID");
+    
+    //Parses Allowed Paths
+    props.put("allowed.paths", ALLOWED_PATHS);
+    context.registerInjectActivateService(rule, props);
+    f = rule.getClass().getDeclaredField("allowedPaths");
+    f.setAccessible(true);
+    List<String> allowed = (List<String>) f.get(rule);
+    assertFalse(allowed.isEmpty(), "Allow list populated");
+
   }
 
   @Test
@@ -203,7 +221,7 @@ public class PageRewriteRuleTest {
     matches = rule.findMatches(page);
     assertEquals(0, matches.size(), "Matches length");
 
-    path = "/content/test/doesNotMatch";
+    path = "/content/test/doesNotMatchTemplate";
     page = rr.getResource(path);
     matches = rule.findMatches(page);
     assertEquals(0, matches.size(), "Matches length");
@@ -213,6 +231,7 @@ public class PageRewriteRuleTest {
   public void matches() throws Exception {
     final PageRewriteRule rule = new PageRewriteRule();
     Map<String, Object> props = new HashMap<>();
+    props.put("allowed.paths", ALLOWED_PATHS);
     props.put("static.template", STATIC_TEMPLATE);
     props.put("sling.resourceType", SLING_RESOURCE_TYPE);
     props.put("editable.template", EDITABLE_TEMPLATE);
@@ -220,22 +239,50 @@ public class PageRewriteRuleTest {
     context.registerInjectActivateService(rule, props);
 
     ResourceResolver rr = context.resourceResolver();
+
+    // Test not a page
+    Node node = rr.getResource("/content/test/notAPage").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "Not a page");
+
+    // Test no page content
+    node = rr.getResource("/content/test/noPageContent").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "No Page Content");
+
+
     // Test page root
-    Node node = rr.getResource("/content/test/matches").adaptTo(Node.class);
+    node = rr.getResource("/content/test/matches").adaptTo(Node.class);
     assertTrue(rule.matches(node), "cq:Page matches");
 
     // Page Content
     node = rr.getResource("/content/test/matches/jcr:content").adaptTo(Node.class);
     assertTrue(rule.matches(node), "cq:PageContent matches");
 
-    // Doesn't match
+    // Doesn't match - Template
     // Test page root
-    node = rr.getResource("/content/test/doesNotMatch").adaptTo(Node.class);
-    assertFalse(rule.matches(node), "cq:Page matches");
+    node = rr.getResource("/content/test/doesNotMatchTemplate").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "cq:Page does not match");
 
     // Page Content
-    node = rr.getResource("/content/test/doesNotMatch/jcr:content").adaptTo(Node.class);
-    assertFalse(rule.matches(node), "cq:PageContent matches");
+    node = rr.getResource("/content/test/doesNotMatchTemplate/jcr:content").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "cq:PageContent does not matches");
+
+    // Doesn't match - Sling Resource Type
+    // Test page root
+    node = rr.getResource("/content/test/doesNotMatchResourceType").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "cq:Page does not matches");
+
+    // Page Content
+    node = rr.getResource("/content/test/doesNotMatchResourceType/jcr:content").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "cq:PageContent does not matches");
+
+    // Doesn't match - Allowed Path
+    // Test page root
+    node = rr.getResource("/content/notallowed/matches").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "cq:Page does not matches");
+
+    // Page Content
+    node = rr.getResource("/content/notallowed/matches/jcr:content").adaptTo(Node.class);
+    assertFalse(rule.matches(node), "cq:PageContent does not matches");
 
   }
 
@@ -275,20 +322,21 @@ public class PageRewriteRuleTest {
     assertEquals("title", children.nextNode().getName(), "Root container node order");
     assertEquals("container", children.nextNode().getName(), "Root container node order");
     assertEquals("container_12345", children.nextNode().getName(), "Root container node order");
-    assertEquals("movedToEnd", children.nextNode().getName(), "Root container node order.");
     assertEquals("another", children.nextNode().getName(), "Root container node order.");
+    assertEquals("movedToEnd", children.nextNode().getName(), "Root container node order.");
 
     assertFalse(children.hasNext(), "Root container node order.");
 
     Node container = rootContainer.getNode("container");
     children = container.getNodes();
     assertEquals("header", children.nextNode().getName(), "Container node order");
+    assertEquals("teaser", children.nextNode().getName(), "Container node order");
     assertEquals("container", children.nextNode().getName(), "Container node order");
     assertFalse(children.hasNext(), "Container node order");
 
     container = rootContainer.getNode("another/nested");
     children = container.getNodes();
-    assertEquals("bar", children.nextNode().getName(), "Nested moves.");
+    assertEquals("foo", children.nextNode().getName(), "Nested moves.");
     assertFalse(children.hasNext(), "Nested expected children.");
   }
 
