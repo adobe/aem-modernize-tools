@@ -38,6 +38,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
         SLING_SERVLET_SELECTORS + "=listrules.policy"
     }
 )
+@Deprecated(since = "2.1.0")
 public class ListPolicyRulesServlet extends AbstractListRulesServlet {
 
   @Reference

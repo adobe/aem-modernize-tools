@@ -44,8 +44,6 @@ public interface PolicyImportRuleService extends RewriteRuleService {
    * Transformations are performed but not saved.
    * <p>
    * The rules can be either a fully qualified path to a rule or a Service PID depending on the implementation.
-   * <p>
-   * Implementations decide how to handle rule paths which are invalid for their context.
    *
    * @param source    The Resource Style from which to read design configurations
    * @param confRoot  The {@code /conf} root path into which the new policies will be created

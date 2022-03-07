@@ -41,8 +41,6 @@ public interface ComponentRewriteRuleService extends RewriteRuleService {
    * Transformations are performed but not saved.
    * <p>
    * The rules can be either a fully qualified path to a rule or a Service PID depending on the implementation.
-   * <p>
-   * Implementations decide how to handle rule paths which are invalid for their context.
    *
    * @param resource Parent node for applying rules
    * @param rules    the rules to apply

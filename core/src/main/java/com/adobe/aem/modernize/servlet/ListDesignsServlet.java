@@ -50,6 +50,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
         SLING_SERVLET_SELECTORS + "=listdesigns"
     }
 )
+@Deprecated(since = "2.1.0")
 public class ListDesignsServlet extends AbstractListConversionPathsServlet {
 
   protected static final String PARAM_INCLUDE_SUPER_TYPES = "includeSuperTypes";

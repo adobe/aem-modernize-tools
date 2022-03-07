@@ -54,6 +54,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
         SLING_SERVLET_SELECTORS + "=listcomponents"
     }
 )
+@Deprecated(since = "2.1.0")
 public class ListComponentsServlet extends AbstractListConversionPathsServlet {
 
   protected static final String PARAM_REPROCESS = "reprocess";

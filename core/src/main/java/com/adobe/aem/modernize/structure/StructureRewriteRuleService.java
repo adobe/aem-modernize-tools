@@ -40,14 +40,12 @@ public interface StructureRewriteRuleService extends RewriteRuleService {
    * Applies the indicated rules to the provided page.
    * <p>
    * Transformations are performed but not saved.
-   * <p>
-   * Implementations decide how to handle rule paths which are invalid for their context.
    *
    * @param page  page to process
    * @param rules the ids of the rules to apply
    * @throws RewriteException if any errors occur while updating the page.
    */
-  @Deprecated(since = "2.1")
+  @Deprecated(since = "2.1.0")
   void apply(@NotNull final Page page, @NotNull final Set<String> rules) throws RewriteException;
 
   /**
