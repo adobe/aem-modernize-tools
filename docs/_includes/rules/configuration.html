@@ -49,7 +49,30 @@ Each property of the pattern must be matched exactly for this rule to be applied
 * The primary node type
 * The `sling:resourceType` property's value.
 
-Patterns may also specify any other arbitrary properties, child nodes, or entire trees, to be matched. The rules for matching are universal - every property and node of the source node must match the expected rule's entire hierarchy, property for property, node for node - with one allowed exception: Optional children.
+Patterns may also specify any other arbitrary properties, child nodes, or entire trees to be matched. The rules for matching are universal - every property and node of the source node must match the expected rule's entire hierarchy, property for property, node for node - with one allowed exception: Optional children.
+
+#### "Like" Sling Resource Type Support (v2.1)
+
+With the release of v2.1, the `sling:resourceType` property allows configurations to use a "relative" path for matching. The patterns shown below will all match any component with the resource type `aem-modernize/components/text`:
+
+```xml
+<patterns jcr:primaryType="nt:unstructured">
+  <text jcr:primaryType="nt:unstructured"
+      sling:resourceType="aem-modernize/components/text"/>
+</patterns>
+
+<patterns jcr:primaryType="nt:unstructured">
+  <text jcr:primaryType="nt:unstructured"
+      sling:resourceType="components/text"/>
+</patterns>
+
+<patterns jcr:primaryType="nt:unstructured">
+  <text jcr:primaryType="nt:unstructured"
+      sling:resourceType="text"/>
+</patterns>
+```
+
+***Note:* that this does require more consideration in defining the patterns, as every node with any resource type that ends with `text` will have the rules applied. This may have negative, unintended effects**.  
 
 
 #### Rewrite Optional

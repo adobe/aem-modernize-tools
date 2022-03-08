@@ -30,7 +30,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.nodetype.NodeType;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;

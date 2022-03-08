@@ -399,5 +399,22 @@
         "sling:resourceType": "core/wcm/components/teaser/v1/teaser"
       }
     }
+  },
+  "likeNotMatch": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "components/not-simple"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
   }
 }

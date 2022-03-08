@@ -20,6 +20,7 @@ package com.adobe.aem.modernize.rule.impl;
  * #L%
  */
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,6 +81,20 @@ public class AbstractRewriteRuleServiceTest {
     context.load().json("/rewrite/test-simple-rules.json", "/apps/not-registered/rules");
     context.load().json("/rewrite/test-content.json", "/content/test/all/jcr:content");
   }
+
+
+  @Test
+  public void listResourceTypes() throws Exception {
+    Resource resource = context.resourceResolver().getResource("/content/test/all/jcr:content/simple");
+    Method method = AbstractRewriteRuleService.class.getDeclaredMethod("listResourceTypes", Resource.class);
+    method.setAccessible(true);
+    List<String> types = (List<String>) method.invoke(rewriteRuleService, resource);
+    assertEquals(3, types.size(), "Component types size");
+    assertEquals("aem-modernize/components/simple", types.get(0), "Full component resource type");
+    assertEquals("components/simple", types.get(1), "Partial component resource type");
+    assertEquals("simple", types.get(2), "Minimum component resource type");
+  }
+
 
   @Test
   public <R extends ResourceResolver> void testFindRulesQueryFails(
@@ -236,6 +251,10 @@ public class AbstractRewriteRuleServiceTest {
     paths.remove("/content/test/all/jcr:content/simpleTree");
     assertTrue(paths.contains("/content/test/all/jcr:content/aggregate"), "Rewrite final on replacement node rule.");
     paths.remove("/content/test/all/jcr:content/aggregate");
+    assertTrue(paths.contains("/content/test/all/jcr:content/modernizeSimpleLike"), "Simple Like rule");
+    paths.remove("/content/test/all/jcr:content/modernizeSimpleLike");
+    assertTrue(paths.contains("/content/test/all/jcr:content/customSimpleLike"), "Simple Like rule");
+    paths.remove("/content/test/all/jcr:content/customSimpleLike");
     assertTrue(paths.contains("/content/test/all/jcr:content/serviceTest"), "Service rule");
     paths.remove("/content/test/all/jcr:content/serviceTest");
     assertTrue(paths.isEmpty(), "Rule count");
@@ -326,6 +345,8 @@ public class AbstractRewriteRuleServiceTest {
     types.remove("aem-modernize/components/replacementRewriteFinal");
     assertTrue(types.contains("aem-modernize/components/rewriteProperties"), "rewriteProperties rule");
     types.remove("aem-modernize/components/rewriteProperties");
+    assertTrue(types.contains("components/simpleLike"), "simpleLike rule");
+    types.remove("components/simpleLike");
     assertTrue(types.isEmpty(), "Set result correct");
 
     ruleRoot = context.resourceResolver().getResource("/content/rules/aggregate");

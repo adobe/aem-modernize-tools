@@ -297,5 +297,23 @@
         }
       }
     }
+  },
+  "simpleLike": {
+    "jcr:title": "Simple Rule",
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "components/simpleLike"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "simple": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
   }
 }

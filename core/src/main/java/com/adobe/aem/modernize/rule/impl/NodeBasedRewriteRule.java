@@ -38,6 +38,7 @@ import javax.jcr.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
 import org.apache.jackrabbit.oak.commons.PathUtils;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
@@ -360,8 +361,13 @@ public class NodeBasedRewriteRule implements RewriteRule {
         return false;
       }
 
-      // property values on pattern and tree differ
-      if (!node.getProperty(name).getValue().equals(property.getValue())) {
+      // sling:resourceType is a special case - allow for multi-tenant component structures
+      if (JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY.equals(name)) {
+        if (!node.getProperty(name).getString().endsWith(property.getString())) {
+          return false;
+        }
+        // property values on pattern and tree differ
+      } else if (!node.getProperty(name).getValue().equals(property.getValue())) {
         return false;
       }
     }

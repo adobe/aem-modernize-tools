@@ -121,6 +121,10 @@ public class NodeBasedRewriteRuleTest {
     rule = new NodeBasedRewriteRule(rr.getResource(NEGATIVE_ROOT + "/missingChild").adaptTo(Node.class));
     assertFalse(rule.matches(content), "Missing child");
 
+    // Like operation check
+    rule = new NodeBasedRewriteRule(rr.getResource(NEGATIVE_ROOT + "/likeNotMatch").adaptTo(Node.class));
+    assertFalse(rule.matches(content), "Like Not Match");
+
     // Tree checks
     content = rr.getResource(CONTENT_ROOT + "/simpleTree").adaptTo(Node.class);
     rule = new NodeBasedRewriteRule(rr.getResource(NEGATIVE_ROOT + "/missingGrandChild").adaptTo(Node.class));
@@ -167,6 +171,17 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
+  public void testLikeMatches() throws Exception {
+    ResourceResolver rr = context.resourceResolver();
+    Node content = rr.getResource(CONTENT_ROOT + "/modernizeSimpleLike").adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/simpleLike").adaptTo(Node.class));
+    assertTrue(rule.matches(content), "Simple Like comparison");
+
+    content = rr.getResource(CONTENT_ROOT + "/customSimpleLike").adaptTo(Node.class);
+    assertTrue(rule.matches(content), "Other Simple Like comparison");
+  }
+
+  @Test
   public void testReplacementRemoved() throws Exception {
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + "/remove").adaptTo(Node.class);
@@ -204,7 +219,7 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
     content.getSession().save();
     Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
-    assertEquals("core/wcm/components/title/v2/title", updated.getProperty("sling:resourceType").getString(), "Property was upadated");
+    assertEquals("core/wcm/components/title/v2/title", updated.getProperty("sling:resourceType").getString(), "Property was updated");
   }
 
   @Test

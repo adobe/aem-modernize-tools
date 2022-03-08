@@ -20,6 +20,7 @@ package com.adobe.aem.modernize.rule.impl;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
   @Override
   public Set<String> listRules(@NotNull Resource resource) {
     ResourceResolver rr = resource.getResourceResolver();
-    List<String> types = Collections.singletonList(resource.getResourceType());
+    List<String> types = listResourceTypes(resource);
     logger.debug("Finding rules for resource types: [{}]", types);
     final Set<String> rules = new HashSet<>(searchRules(rr, types));
     for (ServiceBasedRewriteRule s : getServiceRules()) {
@@ -138,6 +139,18 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
       logger.error("Unable to create NodeBasedRewriteRule", e);
     }
     return null;
+  }
+
+  private List<String> listResourceTypes(Resource resource) {
+    String type = resource.getResourceType();
+    List<String> types = new ArrayList<>();
+    int pos;
+    do {
+      types.add(type);
+      pos = PathUtils.getNextSlash(type, 0);
+      type = type.substring(pos + 1);
+    } while (pos >= 0);
+    return types;
   }
 
   private Set<String> searchRules(ResourceResolver rr, List<String> resourceTypes) {
