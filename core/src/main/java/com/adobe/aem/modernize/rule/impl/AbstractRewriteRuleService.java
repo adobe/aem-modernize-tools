@@ -181,8 +181,8 @@ public abstract class AbstractRewriteRuleService<S extends ServiceBasedRewriteRu
     ResourceResolver qrr = null;
     try {
       while (more) {
+        predicates.set(Predicate.PARAM_GUESS_TOTAL, "true");
         Query query = qb.createQuery(predicates, rr.adaptTo(Session.class));
-        query.setGuessTotal(true);
         query.setHitsPerPage(limit);
         query.setStart(offset);
         SearchResult results = query.getResult();
