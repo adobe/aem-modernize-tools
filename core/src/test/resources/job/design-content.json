@@ -54,7 +54,7 @@
           "aem-modernize/components/title"
         ],
         "title": {
-          "cq:imported": "/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title/policy_987654321",
+          "cq:imported": "/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title/policy_123456789",
           "jcr:primaryType": "nt:unstructured",
           "defaultType": "small",
           "sling:resourceType": "aem-modernize/components/title"

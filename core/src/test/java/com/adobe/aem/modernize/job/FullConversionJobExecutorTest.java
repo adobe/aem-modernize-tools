@@ -322,7 +322,7 @@ public class FullConversionJobExecutorTest {
     policyMapping = rr.getResource("/conf/test/settings/wcm/templates/homepage/policies/jcr:content/root/par/core/wcm/components/title/v2/title");
     assertNotNull(policyMapping, "Mapping created");
     vm = policyMapping.getValueMap();
-    assertEquals("core/wcm/components/title/v2/title/policy_987654321", vm.get("cq:policy", String.class), "Mapping set");
+    assertEquals("core/wcm/components/title/v2/title/policy_123456789", vm.get("cq:policy", String.class), "Mapping set");
     assertEquals("wcm/core/components/policies/mappings", vm.get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class), "Mapping resource type");
 
     Resource policiesParent = rr.getResource("/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title");
@@ -449,14 +449,14 @@ public class FullConversionJobExecutorTest {
     Resource policyMapping = rr.getResource("/conf/test/settings/wcm/templates/homepage/policies/jcr:content/root/core/wcm/components/title/v2/title");
     assertNotNull(policyMapping, "Mapping created");
     vm = policyMapping.getValueMap();
-    assertEquals("core/wcm/components/title/v2/title/policy0", vm.get("cq:policy", String.class), "Mapping set");
+    assertEquals("core/wcm/components/title/v2/title/policy", vm.get("cq:policy", String.class), "Mapping set");
     assertEquals("wcm/core/components/policies/mappings", vm.get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class), "Mapping resource type");
 
 
     policyMapping = rr.getResource("/conf/test/settings/wcm/templates/homepage/policies/jcr:content/root/par/core/wcm/components/title/v2/title");
     assertNotNull(policyMapping, "Mapping created");
     vm = policyMapping.getValueMap();
-    assertEquals("core/wcm/components/title/v2/title/policy", vm.get("cq:policy", String.class), "Mapping set");
+    assertEquals("core/wcm/components/title/v2/title/policy_123456789", vm.get("cq:policy", String.class), "Mapping set");
     assertEquals("wcm/core/components/policies/mappings", vm.get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class), "Mapping resource type");
 
     Resource policiesParent = rr.getResource("/conf/test/settings/wcm/policies/core/wcm/components/title/v2/title");

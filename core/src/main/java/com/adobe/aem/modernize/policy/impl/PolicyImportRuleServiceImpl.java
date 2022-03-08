@@ -9,9 +9,9 @@ package com.adobe.aem.modernize.policy.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,18 +21,21 @@ package com.adobe.aem.modernize.policy.impl;
  */
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
+import org.apache.jackrabbit.commons.JcrUtils;
+import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.commons.osgi.Order;
-import org.apache.sling.commons.osgi.RankedServices;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.policy.PolicyImportRule;
@@ -40,6 +43,8 @@ import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.rule.impl.AbstractRewriteRuleService;
+import com.day.cq.commons.jcr.JcrUtil;
+import com.day.cq.wcm.api.NameConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
@@ -75,44 +80,12 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
 
   private static final Logger logger = LoggerFactory.getLogger(PolicyImportRuleService.class);
 
-  /**
-   * Keeps track of OSGi services implementing component rewrite rules
-   */
-  private final RankedServices<PolicyImportRule> rules = new RankedServices<>(Order.ASCENDING);
   private Config config;
-
-  @Override
-  public void apply(@NotNull Resource src, @NotNull String dest, @NotNull Set<String> rulePaths, boolean deep, boolean overwrite) throws RewriteException {
-    ResourceResolver rr = src.getResourceResolver();
-    List<RewriteRule> rules = create(rr, rulePaths);
-
-    try {
-      if (deep) {
-        importStyles(src, dest, rules, overwrite);
-      } else {
-        Node node = src.adaptTo(Node.class);
-        if (overwrite || !node.hasProperty(PN_IMPORTED)) {
-          for (RewriteRule rule : rules) {
-            if (rule.matches(node)) {
-              importStyle(rr, node, dest, rule, new HashSet<>());
-            }
-          }
-        }
-      }
-    } catch (RepositoryException e) {
-      throw new RewriteException("Repository exception while performing rewrite operation.", e);
-    }
-  }
 
   @NotNull
   @Override
   protected List<String> getSearchPaths() {
     return Arrays.asList(config.search_paths());
-  }
-
-  @Override
-  protected @NotNull List<PolicyImportRule> getServiceRules() {
-    return Collections.unmodifiableList(rules.getList());
   }
 
   @Override
@@ -126,15 +99,109 @@ public class PolicyImportRuleServiceImpl extends AbstractRewriteRuleService<Poli
     return null;
   }
 
+  @Override
+  @Deprecated(since = "2.1.0")
+  public void apply(@NotNull Resource src, @NotNull String dest, @NotNull Set<String> ruleIds, boolean deep, boolean overwrite) throws RewriteException {
+    ResourceResolver rr = src.getResourceResolver();
+
+    try {
+      if (deep) {
+        List<RewriteRule> rules = create(rr, ruleIds);
+        importStyles(src, dest, rules, overwrite);
+      } else {
+        apply(src, dest, ruleIds, overwrite);
+      }
+    } catch (RepositoryException e) {
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+    }
+  }
+
+  @Override
+  public boolean apply(@NotNull Resource src, @NotNull String dest, @NotNull Set<String> rulePaths, boolean overwrite) throws RewriteException {
+    ResourceResolver rr = src.getResourceResolver();
+    List<RewriteRule> rules = create(rr, rulePaths);
+    boolean applied = false;
+
+    try {
+      Node node = src.adaptTo(Node.class);
+      String prevDest = null;
+      if (node.hasProperty(PN_IMPORTED)) {
+        prevDest = node.getProperty(PN_IMPORTED).getString();
+      }
+      if (overwrite || StringUtils.isBlank(prevDest)) {
+        for (RewriteRule rule : rules) {
+          if (rule.matches(node)) {
+            Node result = rule.applyTo(node, new HashSet<>());
+            if (result != null) {
+              populateMetadata(result);
+              Node policy = createPolicy(rr, result, dest, prevDest);
+              node.setProperty(PN_IMPORTED, policy.getPath());
+            }
+            applied = true;
+            break;
+          }
+        }
+      }
+    } catch (RepositoryException e) {
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+    }
+    return applied;
+  }
+
+  private void populateMetadata(Node result) throws RepositoryException {
+    String origPath = result.getPath();
+    if (!result.hasProperty(NameConstants.PN_TITLE)) {
+      result.setProperty(NameConstants.PN_TITLE, String.format("Imported (%s)", origPath));
+    }
+    if (!result.hasProperty(NameConstants.PN_DESCRIPTION)) {
+      result.setProperty(NameConstants.PN_DESCRIPTION, String.format("Imported from: %s", origPath));
+    }
+  }
+
+  private Node createPolicy(ResourceResolver rr, Node source, String conf, String dest) throws RepositoryException {
+
+    Node parent;
+    String name;
+    Session session = source.getSession();
+    if (StringUtils.isBlank(dest)) {
+      String resourceType = source.getProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY).getString();
+      if (resourceType.startsWith("/")) {
+        for (String s : rr.getSearchPath()) {
+          if (resourceType.startsWith(s)) {
+            resourceType = resourceType.replaceFirst(s, "");
+            break;
+          }
+        }
+      }
+      dest = PathUtils.concat(conf, POLICY_REL_PATH, resourceType);
+      parent = JcrUtils.getOrCreateByPath(dest, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
+      name = JcrUtil.createValidChildName(parent, NN_POLICY);
+
+    } else {
+      name = PathUtils.getName(dest);
+      dest = PathUtils.getParentPath(dest);
+      parent = JcrUtils.getOrCreateByPath(dest, JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, session, false);
+      if (parent.hasNode(name)) {
+        parent.getNode(name).remove();
+      }
+    }
+
+    Node policy = JcrUtil.copy(source, parent, name, false);
+    policy.setProperty(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, POLICY_RESOURCE_TYPE);
+    source.remove();
+    return policy;
+  }
 
   @SuppressWarnings("unused")
   public void bindRule(PolicyImportRule rule, Map<String, Object> properties) {
     rules.bind(rule, properties);
+    ruleMap.put(rule.getId(), rule);
   }
 
   @SuppressWarnings("unused")
   public void unbindRule(PolicyImportRule rule, Map<String, Object> properties) {
     rules.unbind(rule, properties);
+    ruleMap.remove(rule.getId());
   }
 
   @Activate

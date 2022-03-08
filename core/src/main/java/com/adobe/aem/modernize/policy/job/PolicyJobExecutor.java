@@ -77,8 +77,11 @@ public class PolicyJobExecutor extends AbstractConversionJobExecutor {
       Resource r = rr.getResource(path);
       if (r != null) {
         try {
-          policyService.apply(r, target, rules, false, overwrite);
-          bucket.getSuccess().add(path);
+          if (policyService.apply(r, target, rules, overwrite)) {
+            bucket.getSuccess().add(path);
+          } else {
+            bucket.getNotFound().add(path);
+          }
         } catch (RewriteException e) {
           logger.error("Policy Import resulted in an error", e);
           bucket.getFailed().add(path);
@@ -88,7 +91,6 @@ public class PolicyJobExecutor extends AbstractConversionJobExecutor {
       }
       context.incrementProgressCount(1);
     }
-
   }
 
   @Override

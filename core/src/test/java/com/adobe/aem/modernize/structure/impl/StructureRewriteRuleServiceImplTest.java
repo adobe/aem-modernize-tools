@@ -25,11 +25,11 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.jcr.Node;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.structure.StructureRewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
-import com.day.cq.wcm.api.Page;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import mockit.Expectations;
@@ -53,7 +53,16 @@ public class StructureRewriteRuleServiceImplTest {
 
   @BeforeEach
   public void beforeEach() {
-
+    new Expectations() {{
+      matchedRewriteRule.getId();
+      result = "MatchedStructureRewriteRule";
+      notMatchedRewriteRule.getId();
+      result = "NotMatchedStructureRewriteRule";
+      matchedRewriteRule.getRanking();
+      result = 10;
+      notMatchedRewriteRule.getRanking();
+      result = 5;
+    }};
     context.load().json("/structure/page-content.json", "/content/test");
 
     context.registerService(StructureRewriteRule.class, matchedRewriteRule);
@@ -65,14 +74,6 @@ public class StructureRewriteRuleServiceImplTest {
   public void apply() throws Exception {
 
     new Expectations() {{
-      matchedRewriteRule.getId();
-      result = "MatchedStructureRewriteRule";
-      notMatchedRewriteRule.getId();
-      result = "NotMatchedStructureRewriteRule";
-      matchedRewriteRule.getRanking();
-      result = 10;
-      notMatchedRewriteRule.getRanking();
-      result = 5;
       notMatchedRewriteRule.matches(withInstanceOf(Node.class));
       result = false;
       matchedRewriteRule.matches(withInstanceOf(Node.class));
@@ -80,12 +81,11 @@ public class StructureRewriteRuleServiceImplTest {
       matchedRewriteRule.applyTo(withInstanceOf(Node.class), withInstanceOf(Set.class));
     }};
 
-    Page page = context.resourceResolver().getResource("/content/test/matches").adaptTo(Page.class);
+    Resource page = context.resourceResolver().getResource("/content/test/matches");
 
     Set<String> rules = new HashSet<>();
     rules.add("MatchedStructureRewriteRule");
     rules.add("NotMatchedStructureRewriteRule");
     service.apply(page, rules);
-
   }
 }

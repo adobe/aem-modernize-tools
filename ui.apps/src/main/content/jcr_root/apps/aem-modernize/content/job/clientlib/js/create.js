@@ -82,7 +82,7 @@
       return new Promise((resolve, reject) => {
         const params = {
           path: item.path,
-          reprocess: $("input[name='reprocess']").is(":checked")
+          reprocess: $("input[name='pageHandling'][value='RESTORE']").is(":checked")
         }
         const url = Granite.HTTP.externalize(path + ".pagedata.json");
         $.getJSON(url, params, (data) => {
@@ -157,41 +157,18 @@
         return new Promise((resolve, reject) => {
           const params = {
             path: item.path,
-            reprocess: $("input[name='reprocess']").is(":checked")
+            reprocess: $("input[name='pageHandling'][value='RESTORE']").is(":checked")
           }
-          const url = Granite.HTTP.externalize(path + ".listcomponents.json");
+          const url = Granite.HTTP.externalize(path + ".component.rules.json");
           $.getJSON(url, params, (data) => {
             item.componentPaths = data.paths;
+            item.componentRules = data.rules;
             resolve(item);
           }).fail((xhr, status, error) => {
-            item.error = error
-            reject(item)
+            item.error = error;
+            reject(item);
           });
-        }).then((item) => {
-          if (item.componentPaths && item.componentPaths.length > 0) {
-            const url = Granite.HTTP.externalize(path + ".listrules.component.json");
-            const params = {
-              path: item.componentPaths
-            }
-            return new Promise((resolve, reject) => {
-              $.ajax({
-                url: url,
-                method: "POST",
-                data: params,
-                success: (data) => {
-                  item.componentRules = data.rules;
-                  resolve(item);
-                }, error: (xhr, status, error) => {
-                  item.error = error;
-                  reject(item);
-                }
-              });
-            });
-          } else {
-            item.componentRules = [];
-            return new Promise((resolve) => resolve(item));
-          }
-        })
+        });
       } else {
         item.componentPaths = [];
         item.componentRules = [];
@@ -202,42 +179,23 @@
     #listDesignRules = (item) => {
 
       if (this.#$form.data("aemModernizeDesigns") === true && item.path) {
-        const include = this.#$form.find("input[name='includeSuperTypes']").is(":checked");
         const path = Granite.HTTP.getPath(window.location.href);
         return new Promise((resolve, reject) => {
-          const url = Granite.HTTP.externalize(path + ".listdesigns.json");
-          $.getJSON(url, {path: item.path, includeSuperTypes: include}, (data) => {
+          const params = {
+            path: item.path,
+            reprocess: $("input[name='pageHandling'][value='RESTORE']").is(":checked"),
+            includeSuperTypes: $("input[name='includeSuperTypes']").is(":checked")
+          }
+          const url = Granite.HTTP.externalize(path + ".policy.rules.json");
+          $.getJSON(url, params, (data) => {
             item.policyPaths = data.paths;
+            item.policyRules = data.rules;
             resolve(item);
           }).fail((xhr, status, error) => {
             item.error = error;
             reject(item)
           });
-        }).then((item) => {
-          if (item.policyPaths && item.policyPaths.length > 0) {
-            const url = Granite.HTTP.externalize(path + ".listrules.policy.json");
-            const params = {
-              path: item.policyPaths
-            }
-            return new Promise((resolve, reject) => {
-              $.ajax({
-                url: url,
-                method: "POST",
-                data: params,
-                success: (data) => {
-                  item.policyRules = data.rules;
-                  resolve(item);
-                }, error: (xhr, status, error) => {
-                  item.error = error;
-                  reject(item);
-                }
-              });
-            });
-          } else {
-            item.policyRules = [];
-            return new Promise((resolve) => resolve(item));
-          }
-        })
+        });
       } else {
         item.policyPaths = [];
         item.policyRules = [];
@@ -247,23 +205,19 @@
 
     #listStructureRules = (item) => {
       if (this.#$form.data("aemModernizeStructure") === true && item.path) {
-        const params = {
-          path: item.path + "/jcr:content",
-          reprocess: $("input[name='pageHandling'][value='RESTORE']").is(":checked")
-        }
-        const url = Granite.HTTP.externalize(Granite.HTTP.getPath(window.location.href) + ".listrules.template.json");
+        const path = Granite.HTTP.getPath(window.location.href);
+        const url = Granite.HTTP.externalize(path + ".template.rules.json");
         return new Promise((resolve, reject) => {
-          $.ajax({
-            url: url,
-            method: "POST",
-            data: params,
-            success: (data) => {
-              item.templateRules = data.rules;
-              resolve(item);
-            }, error: (xhr, status, error) => {
-              item.error = error;
-              reject(item);
-            }
+          const params = {
+            path: item.path,
+            reprocess: $("input[name='pageHandling'][value='RESTORE']").is(":checked")
+          }
+          $.getJSON(url, params, (data) => {
+            item.templateRules = data.rules;
+            resolve(item);
+          }).fail((xhr, status, error) => {
+            item.error = error;
+            reject(item);
           });
         });
       } else {

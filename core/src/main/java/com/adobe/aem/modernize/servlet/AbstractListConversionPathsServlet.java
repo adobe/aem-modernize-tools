@@ -43,6 +43,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import static javax.servlet.http.HttpServletResponse.*;
 
+@Deprecated(since = "2.1.0")
 public abstract class AbstractListConversionPathsServlet extends SlingSafeMethodsServlet {
 
   protected static final String PARAM_PATH = "path";

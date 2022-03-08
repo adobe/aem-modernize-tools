@@ -20,7 +20,6 @@ package com.adobe.aem.modernize.component.impl;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,6 +42,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Performs deep rewrites based on specified rules.
  */
+@Deprecated(since = "2.1.0")
 public class ComponentTreeRewriter {
 
   private static final Logger logger = LoggerFactory.getLogger(ComponentTreeRewriter.class);

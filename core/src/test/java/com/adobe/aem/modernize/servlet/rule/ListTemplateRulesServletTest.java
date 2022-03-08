@@ -21,6 +21,8 @@ package com.adobe.aem.modernize.servlet.rule;
  */
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,12 +39,16 @@ import com.adobe.aem.modernize.MockRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
 import com.adobe.aem.modernize.structure.StructureRewriteRuleService;
 import com.adobe.aem.modernize.structure.rule.PageRewriteRule;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.Revision;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import mockit.Expectations;
 import mockit.Injectable;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Tested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +58,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(AemContextExtension.class)
 public class ListTemplateRulesServletTest {
-  private final AemContext context = new AemContext(ResourceResolverType.JCR_OAK);
+  private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
   private static final String CONTENT_PATH = "/content/test";
 
@@ -107,7 +113,8 @@ public class ListTemplateRulesServletTest {
   }
 
   @Test
-  public void testTemplateRulesReprocessNoRevision() throws Exception {
+  public <P extends PageManager> void testTemplateRulesReprocessNoRevision() throws Exception {
+    
     MockSlingHttpServletRequest request = new MockSlingHttpServletRequest(context.resourceResolver(), context.bundleContext());
     MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
 
@@ -120,6 +127,14 @@ public class ListTemplateRulesServletTest {
     rules.add(new MockRule(PageRewriteRule.class.getName()));
     List<String[]> capture = new ArrayList<>();
 
+    new MockUp<P>() {
+      @Mock
+      public List<Revision> getRevisions(String path, Calendar cal) {
+        assertEquals(CONTENT_PATH, path, "Revision path.");
+        return Collections.emptyList();
+      } 
+    };
+    
     new Expectations() {{
       structureRuleService.listRules(withInstanceOf(ResourceResolver.class), withCapture(capture));
       result = rules;

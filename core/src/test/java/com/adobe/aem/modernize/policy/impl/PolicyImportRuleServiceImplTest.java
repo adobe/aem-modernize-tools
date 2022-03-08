@@ -32,6 +32,7 @@ import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 import com.adobe.aem.modernize.RewriteException;
@@ -39,6 +40,7 @@ import com.adobe.aem.modernize.policy.PolicyImportRule;
 import com.adobe.aem.modernize.policy.PolicyImportRuleService;
 import com.adobe.aem.modernize.policy.rule.impl.NodeBasedPolicyImportRule;
 import com.adobe.aem.modernize.rule.RewriteRule;
+import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.designer.Style;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -57,6 +59,7 @@ public class PolicyImportRuleServiceImplTest {
 
   private static final String CONF_PATH = "/conf/test";
   private static final String FOUND_SERVICE_ID = "com.adobe.aem.modernize.policy.PolicyImportRuleFound";
+  private static final String NOT_FOUND_SERVICE_ID = "com.adobe.aem.modernize.policy.PolicyImportRuleNotFound";
 
   public final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
 
@@ -72,6 +75,14 @@ public class PolicyImportRuleServiceImplTest {
 
   @BeforeEach
   public void beforeEach() {
+
+    new Expectations() {{
+      matchedImportRule.getId();
+      result = FOUND_SERVICE_ID;
+      notMatchedImportRule.getId();
+      result = NOT_FOUND_SERVICE_ID;
+    }};
+  
     for (String path : RULE_PATHS) {
       context.load().json("/policy/test-rules.json", path);
     }
@@ -126,15 +137,19 @@ public class PolicyImportRuleServiceImplTest {
       }
     };
 
-    new Expectations() {{
-      matchedImportRule.getId();
-      result = FOUND_SERVICE_ID;
-    }};
-
+    ResourceResolver rr = context.resourceResolver();
     Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/title");
-    policyImportRuleService.apply(source, CONF_PATH, rules, false, false);
+    assertTrue(policyImportRuleService.apply(source, CONF_PATH, rules, false), "Policy Applied");
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
+
+    ValueMap vm = source.getValueMap();
+    assertEquals("/conf/test/settings/wcm/policies/geometrixx/components/title/policy", vm.get(PolicyImportRuleService.PN_IMPORTED, String.class), "Imported property set.");
+    Resource policy = rr.getResource("/conf/test/settings/wcm/policies/geometrixx/components/title/policy");
+    vm = policy.getValueMap();
+    assertNotNull(policy, "Policy Created");
+    assertNotNull(vm.get(NameConstants.PN_TITLE, String.class), "Policy Name set");
+    assertNotNull(vm.get(NameConstants.PN_DESCRIPTION, String.class), "Policy description set");
   }
 
   @Test
@@ -176,15 +191,20 @@ public class PolicyImportRuleServiceImplTest {
       }
     };
 
-    new Expectations() {{
-      matchedImportRule.getId();
-      result = FOUND_SERVICE_ID;
-    }};
-
-    Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title");
-    policyImportRuleService.apply(source, CONF_PATH, rules, false, true);
+    ResourceResolver rr = context.resourceResolver();
+    Resource source = rr.getResource("/etc/designs/all/jcr:content/homepage/par/title");
+    assertTrue(policyImportRuleService.apply(source, CONF_PATH, rules, true), "Policy Applied");
     assertEquals(2, callCounts[0], "Correct number of matched called.");
     assertEquals(1, callCounts[1], "Correct number of apply called.");
+    ValueMap vm = source.getValueMap();
+    assertEquals("/conf/test/settings/wcm/policies/geometrixx/components/title/policy_1234", vm.get(PolicyImportRuleService.PN_IMPORTED, String.class), "Imported property set.");
+    Resource policy = rr.getResource("/conf/test/settings/wcm/policies/geometrixx/components/title/policy_1234");
+    assertNotNull(policy, "Policy Created");
+    vm = policy.getValueMap();
+    assertNotNull(vm.get(NameConstants.PN_TITLE, String.class), "Policy Name set");
+    assertNotNull(vm.get(NameConstants.PN_DESCRIPTION, String.class), "Policy description set");
+    
+
   }
 
   @Test
@@ -226,13 +246,9 @@ public class PolicyImportRuleServiceImplTest {
       }
     };
 
-    new Expectations() {{
-      matchedImportRule.getId();
-      result = FOUND_SERVICE_ID;
-    }};
-
-    Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage/par/title");
-    policyImportRuleService.apply(source, CONF_PATH, rules, false, false);
+    ResourceResolver rr = context.resourceResolver(); 
+    Resource source = rr.getResource("/etc/designs/all/jcr:content/homepage/par/title");
+    assertFalse(policyImportRuleService.apply(source, CONF_PATH, rules, false), "Policy Not Applied");
     assertEquals(0, callCounts[0], "Correct number of matched called.");
     assertEquals(0, callCounts[1], "Correct number of apply called.");
   }
@@ -259,10 +275,6 @@ public class PolicyImportRuleServiceImplTest {
       }
     };
 
-    new Expectations() {{
-      matchedImportRule.getId();
-      result = FOUND_SERVICE_ID;
-    }};
     Resource source = context.resourceResolver().getResource("/etc/designs/all/jcr:content/homepage");
     policyImportRuleService.apply(source, CONF_PATH, rules, true, false);
   }

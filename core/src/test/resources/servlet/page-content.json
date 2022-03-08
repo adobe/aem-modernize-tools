@@ -4,6 +4,8 @@
     "jcr:primaryType": "cq:PageContent",
     "jcr:title": "English",
     "sling:resourceType": "aem-modernize/components/homepage",
+    "cq:premodernizeVersion": 1,
+    "cq:designPath": "/etc/designs/test",
     "simple": {
       "jcr:primaryType": "nt:unstructured",
       "sling:resourceType": "aem-modernize/components/simple"
@@ -62,6 +64,22 @@
         "jcr:primaryType": "cq:PageContent",
         "jcr:title": "Circle",
         "sling:resourceType": "aem-modernize/components/contentpage"
+      }
+    }
+  },
+  "version": {
+    "jcr:content": {
+      "jcr:primaryType": "nt:frozenNode",
+      "jcr:frozenPrimaryType": "cq:PageContent",
+      "jcr:frozenUuid": "123",
+      "jcr:title": "English",
+      "cq:designPath": "/etc/designs/test",
+      "sling:resourceType": "aem-modernize/components/homepage",
+      "simple": {
+        "jcr:primaryType": "nt:frozenNode",
+        "jcr:frozenPrimaryType": "nt:unstructured",
+        "jcr:frozenUuid": "456",
+        "sling:resourceType": "aem-modernize/components/simple"
       }
     }
   }

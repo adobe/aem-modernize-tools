@@ -30,8 +30,6 @@ import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.commons.osgi.Order;
-import org.apache.sling.commons.osgi.RankedServices;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
@@ -67,51 +65,58 @@ public class StructureRewriteRuleServiceImpl extends AbstractRewriteRuleService<
 
   private final Logger logger = LoggerFactory.getLogger(StructureRewriteRuleServiceImpl.class);
 
-  /**
-   * Keeps track of OSGi services implementing structure rewrite rules
-   */
-  private final RankedServices<StructureRewriteRule> rules = new RankedServices<>(Order.ASCENDING);
-
-  @SuppressWarnings("unused")
-  public void bindRule(StructureRewriteRule rule, Map<String, Object> properties) {
-    rules.bind(rule, properties);
-  }
-
-  @SuppressWarnings("unused")
-  public void unbindRule(StructureRewriteRule rule, Map<String, Object> properties) {
-    rules.unbind(rule, properties);
-  }
-
-  @Override
-  public void apply(@NotNull Page page, @NotNull Set<String> rules) throws RewriteException {
-    Resource pageContent = page.getContentResource();
-    if (pageContent == null) {
-      logger.warn("Request to rewrite a page with no content: {}", page.getPath());
-      return;
-    }
-    ResourceResolver rr = pageContent.getResourceResolver();
-    List<RewriteRule> rewrites = create(rr, rules);
-
-    Node node = pageContent.adaptTo(Node.class);
-    try {
-      for (RewriteRule rule : rewrites) {
-        if (rule.matches(node)) {
-          rule.applyTo(node, new HashSet<>());
-        }
-      }
-    } catch (RepositoryException e) {
-      throw new RewriteException("Repository exception while performing rewrite operation.", e);
-    }
-  }
-
   @NotNull
   @Override
   protected List<String> getSearchPaths() {
     return Collections.emptyList();
   }
 
+  
   @Override
-  protected @NotNull List<StructureRewriteRule> getServiceRules() {
-    return Collections.unmodifiableList(rules.getList());
+  @Deprecated(since = "2.1.0")
+  public void apply(@NotNull Page page, @NotNull Set<String> rules) throws RewriteException {
+    apply(page.adaptTo(Resource.class), rules);
+  }
+
+  @Override
+  public boolean apply(@NotNull Resource resource, @NotNull Set<String> rules) throws RewriteException {
+    
+    Page page = resource.adaptTo(Page.class);
+    if (page == null) {
+      return false;
+    }
+    Resource pageContent = page.getContentResource();
+    if (pageContent == null) {
+      logger.warn("Request to rewrite a page with no content: {}", page.getPath());
+      return false;
+    }
+    ResourceResolver rr = pageContent.getResourceResolver();
+    List<RewriteRule> rewrites = create(rr, rules);
+
+    Node node = pageContent.adaptTo(Node.class);
+    boolean applied = false;
+    try {
+      for (RewriteRule rule : rewrites) {
+        if (rule.matches(node)) {
+          rule.applyTo(node, new HashSet<>());
+          applied = true;
+        }
+      }
+    } catch (RepositoryException e) {
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+    }
+    return applied;
+  }
+
+  @SuppressWarnings("unused")
+  public void bindRule(StructureRewriteRule rule, Map<String, Object> properties) {
+    rules.bind(rule, properties);
+    ruleMap.put(rule.getId(), rule);
+  }
+
+  @SuppressWarnings("unused")
+  public void unbindRule(StructureRewriteRule rule, Map<String, Object> properties) {
+    rules.unbind(rule, properties);
+    ruleMap.remove(rule.getId());
   }
 }

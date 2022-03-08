@@ -54,6 +54,7 @@ import static org.apache.sling.api.servlets.ServletResolverConstants.*;
         SLING_SERVLET_SELECTORS + "=listrules.template"
     }
 )
+@Deprecated(since = "2.1.0")
 public class ListTemplateRulesServlet extends AbstractListRulesServlet {
 
   private static final Logger logger = LoggerFactory.getLogger(ListTemplateRulesServlet.class);

@@ -22,6 +22,7 @@ package com.adobe.aem.modernize.rule;
 
 import lombok.Value;
 
+@Deprecated(since = "2.1.0")
 @Value
 public class RewriteRuleMapping {
   String resourcePath;

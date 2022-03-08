@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.oak.commons.PathUtils;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.event.jobs.Job;
@@ -43,8 +43,8 @@ import com.day.cq.wcm.api.WCMException;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import static com.adobe.aem.modernize.structure.job.PageStructureJobExecutor.*;
 import static com.adobe.aem.modernize.model.ConversionJob.PageHandling.*;
+import static com.adobe.aem.modernize.structure.job.PageStructureJobExecutor.*;
 
 @Component(
     service = { JobExecutor.class },
@@ -95,8 +95,11 @@ public class PageStructureJobExecutor extends AbstractConversionJobExecutor {
           page = RewriteUtils.copyPage(pm, page, sourceRoot, targetRoot);
         }
         Set<String> rules = getTemplateRules(bucket);
-        structureService.apply(page, rules);
-        bucket.getSuccess().add(path);
+        if (structureService.apply(page.adaptTo(Resource.class), rules)) {
+          bucket.getSuccess().add(path);
+        } else {
+          bucket.getNotFound().add(path);
+        }
       } catch (WCMException e) {
         logger.error("Error occurred while trying to manage page versions.", e);
         bucket.getFailed().add(path);

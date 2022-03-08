@@ -71,8 +71,11 @@ public class ComponentJobExecutor extends AbstractConversionJobExecutor {
         Resource r = rr.getResource(path);
         if (r != null) {
           try {
-            componentService.apply(r, rules, false);
-            bucket.getSuccess().add(path);
+            if (componentService.apply(r, rules)) {
+              bucket.getSuccess().add(path);
+            } else {
+              bucket.getNotFound().add(path);
+            }
           } catch (RewriteException e) {
             logger.error("Component conversion resulted in an error", e);
             bucket.getFailed().add(path);

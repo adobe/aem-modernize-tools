@@ -9,9 +9,9 @@ package com.adobe.aem.modernize.component.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ package com.adobe.aem.modernize.component.impl;
  */
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +31,6 @@ import javax.jcr.RepositoryException;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.commons.osgi.Order;
-import org.apache.sling.commons.osgi.RankedServices;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRule;
@@ -73,28 +70,7 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
 
   private static final Logger logger = LoggerFactory.getLogger(ComponentRewriteRuleServiceImpl.class);
 
-  /**
-   * Keeps track of OSGi services implementing component rewrite rules
-   */
-  private final RankedServices<ComponentRewriteRule> rules = new RankedServices<>(Order.ASCENDING);
   private Config config;
-
-  @Override
-  public void apply(@NotNull Resource resource, @NotNull Set<String> rules, boolean deep) throws RewriteException {
-    ResourceResolver rr = resource.getResourceResolver();
-
-    List<RewriteRule> rewrites = create(rr, rules);
-    Node node = resource.adaptTo(Node.class);
-    try {
-      if (deep) {
-        ComponentTreeRewriter.rewrite(node, rewrites);
-      } else {
-        applyTo(rewrites, node);
-      }
-    } catch (RepositoryException e) {
-      throw new RewriteException("Repository exception while performing rewrite operation.", e);
-    }
-  }
 
   @NotNull
   @Override
@@ -102,60 +78,100 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
     return Arrays.asList(config.search_paths());
   }
 
-  @NotNull
   @Override
-  protected List<ComponentRewriteRule> getServiceRules() {
-    return Collections.unmodifiableList(rules.getList());
+  @Deprecated(since = "2.1.0")
+  public void apply(@NotNull Resource resource, @NotNull Set<String> rules, boolean deep) throws RewriteException {
+    ResourceResolver rr = resource.getResourceResolver();
+
+    try {
+      if (deep) {
+        List<RewriteRule> rewrites = create(rr, rules);
+        Node node = resource.adaptTo(Node.class);
+        ComponentTreeRewriter.rewrite(node, rewrites);
+      } else {
+        apply(resource, rules);
+      }
+    } catch (RepositoryException e) {
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+    }
   }
 
-  private void applyTo(List<RewriteRule> rewrites, Node node) throws RepositoryException, RewriteException {
-    String nodeName = node.getName();
-    String prevName = null;
-    Node parent = node.getParent();
-    boolean isOrdered = parent.getPrimaryNodeType().hasOrderableChildNodes();
-    if (isOrdered) {
-      // Need to figure out where in the parent's order we are.
-      NodeIterator siblings = parent.getNodes();
-      while (siblings.hasNext()) {
-        Node sibling = siblings.nextNode();
-        // Stop when we find ourself in list. Prev will either be set, or not.
-        if (sibling.getName().equals(nodeName)) {
-          break;
-        }
-        prevName = sibling.getName();
+  @Override
+  public boolean apply(@NotNull Resource resource, @NotNull Set<String> rules) throws RewriteException {
+    ResourceResolver rr = resource.getResourceResolver();
+    List<RewriteRule> rewrites = create(rr, rules);
+    Node node = resource.adaptTo(Node.class);
+    boolean success = false;
+
+    try {
+      String nodeName = node.getName();
+      String prevName = null;
+      Node parent = node.getParent();
+      boolean isOrdered = parent.getPrimaryNodeType().hasOrderableChildNodes();
+      if (isOrdered) {
+        prevName = findPrevName(nodeName, parent);
       }
+      for (RewriteRule rule : rewrites) {
+        if (rule.matches(node)) {
+          node = rule.applyTo(node, new HashSet<>());
+          success = true;
+        }
+      }
+
+      // Only order if node wasn't removed.
+      if (node != null && isOrdered) {
+        orderParent(nodeName, prevName, parent);
+      }
+    } catch (RepositoryException e) {
+      throw new RewriteException("Repository exception while performing rewrite operation.", e);
     }
-    for (RewriteRule rule : rewrites) {
-      if (rule.matches(node)) {
-        node = rule.applyTo(node, new HashSet<>());
+    return success;
+  }
+
+  private String findPrevName(String nodeName, Node parent) throws RepositoryException {
+    String prevName = null;
+    // Need to figure out where in the parent's order we are.
+    NodeIterator siblings = parent.getNodes();
+    while (siblings.hasNext()) {
+      Node sibling = siblings.nextNode();
+      // Stop when we find ourself in list. Prev will either be set, or not.
+      if (sibling.getName().equals(nodeName)) {
         break;
       }
+      prevName = sibling.getName();
     }
-    if (node != null) {
-      // Previous not set - we should be first in the order - if previous and first item in list, we're the only child.
-      if (isOrdered && prevName == null) {
-        String nextName = parent.getNodes().nextNode().getName();
-        if (!nextName.equals(nodeName)) {
-          parent.orderBefore(nodeName, nextName);
-        }
-      } else {
-        NodeIterator siblings = parent.getNodes();
-        while (!siblings.nextNode().getName().equals(prevName)) {
-          // There has to be a better way to skip through a parent's children nodes.
-        }
-        parent.orderBefore(nodeName, siblings.nextNode().getName());
+    return prevName;
+  }
+
+  private void orderParent(String nodeName, String prevName, Node parent) throws RepositoryException {
+    // Previous not set - we should be first in the order - if previous and first item in list, we're the only child.
+    if (prevName == null) {
+      String nextName = parent.getNodes().nextNode().getName();
+      if (!nextName.equals(nodeName)) {
+        parent.orderBefore(nodeName, nextName);
       }
+    } else {
+      NodeIterator siblings = parent.getNodes();
+      String siblingName = siblings.nextNode().getName();
+      while (!siblingName.equals(prevName)) {
+        // There has to be a better way to skip through a parent's children nodes.
+        siblingName = siblings.nextNode().getName();
+      }
+      siblingName = siblings.nextNode().getName();
+      parent.orderBefore(nodeName, siblingName);
     }
   }
 
   @SuppressWarnings("unused")
   public void bindRule(ComponentRewriteRule rule, Map<String, Object> properties) {
     rules.bind(rule, properties);
+    ruleMap.put(rule.getId(), rule);
   }
 
   @SuppressWarnings("unused")
   public void unbindRule(ComponentRewriteRule rule, Map<String, Object> properties) {
     rules.unbind(rule, properties);
+    ruleMap.remove(rule.getId());
   }
 
   @Activate

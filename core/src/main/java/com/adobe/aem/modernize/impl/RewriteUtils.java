@@ -33,7 +33,6 @@ import javax.jcr.ValueFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.flat.TreeTraverser;
-import org.apache.jackrabbit.oak.commons.PathUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
 
 import com.adobe.aem.modernize.RewriteException;

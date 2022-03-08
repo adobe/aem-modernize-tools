@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -151,6 +152,16 @@ public class AbstractListRulesServletTest {
           rules.add(new MockRule(RULE_PATH + "/simple"));
           rules.add(new MockRule(RULE_PATH + "/copyChildren"));
           return rules;
+        }
+
+        @Override
+        public @NotNull Set<String> listRules(@NotNull Resource resource) {
+          return null;
+        }
+
+        @Override
+        public @Nullable RewriteRule getRule(@NotNull ResourceResolver resourceResolver, @NotNull String id) {
+          return null;
         }
       };
     }

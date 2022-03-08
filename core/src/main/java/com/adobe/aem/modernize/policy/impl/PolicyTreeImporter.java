@@ -43,6 +43,7 @@ import com.day.cq.wcm.api.NameConstants;
 import org.jetbrains.annotations.NotNull;
 import static com.adobe.aem.modernize.policy.PolicyImportRuleService.*;
 
+@Deprecated(since = "2.1.0")
 class PolicyTreeImporter {
 
   static final String POLICY_RESOURCE_TYPE = "wcm/core/components/policy/policy";
