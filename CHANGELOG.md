@@ -13,6 +13,9 @@
 ### 📁 Other pull requests
 
 - Additional Property Processing [\#158](https://github.com/adobe/aem-modernize-tools/pull/158) ([bstopp](https://github.com/bstopp))
+- Bump org.apache.sling.models.api from 1.3.8 to 1.4.0 [\#154](https://github.com/adobe/aem-modernize-tools/pull/154) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump slf4j.version from 1.7.33 to 1.7.36 [\#153](https://github.com/adobe/aem-modernize-tools/pull/153) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump maven-javadoc-plugin from 3.3.0 to 3.3.2 [\#152](https://github.com/adobe/aem-modernize-tools/pull/152) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [aem-modernize-tools-2.0.18](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.18) (2022-03-02)
 
