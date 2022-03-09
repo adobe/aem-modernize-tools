@@ -28,12 +28,14 @@ import javax.jcr.Property;
 import javax.jcr.Value;
 
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.jcr.resource.api.JcrResourceConstants;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.apache.sling.testing.mock.sling.junit5.SlingContext;
 import org.apache.sling.testing.mock.sling.junit5.SlingContextExtension;
 
 import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.rule.RewriteRule;
+import com.day.cq.commons.jcr.JcrConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -412,6 +414,11 @@ public class NodeBasedRewriteRuleTest {
     assertTrue(p.isMultiple(), "Value is multi");
     assertEquals(1, p.getValues().length, "Value length");
     assertEquals("separator-clear", p.getValues()[0].getString(), "Property value");
+    
+    assertFalse(updated.hasProperty(JcrConstants.JCR_TITLE), "Title Removed");
+    assertFalse(updated.hasProperty(JcrConstants.JCR_DESCRIPTION), "Description Removed");
+    assertFalse(updated.hasProperty("sourcedoesnotexist"), "sourcedoesnotexist Removed");
+    
   }
 
   @Test
