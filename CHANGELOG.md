@@ -6,14 +6,15 @@
 
 ### 🚀 Enhancements
 
+- Additional Property Processing [\#158](https://github.com/adobe/aem-modernize-tools/pull/158) ([bstopp](https://github.com/bstopp))
 - "Like" based Rule Patterns [\#157](https://github.com/adobe/aem-modernize-tools/pull/157) ([bstopp](https://github.com/bstopp))
 - New APIs for Improving usability [\#156](https://github.com/adobe/aem-modernize-tools/pull/156) ([bstopp](https://github.com/bstopp))
 - Add Template Path Processing Restrictions [\#155](https://github.com/adobe/aem-modernize-tools/pull/155) ([bstopp](https://github.com/bstopp))
 
 ### 📁 Other pull requests
 
+- Bump maven-dependency-plugin from 3.0.0 to 3.2.0 [\#161](https://github.com/adobe/aem-modernize-tools/pull/161) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump jackson-core from 2.13.1 to 2.13.2 [\#159](https://github.com/adobe/aem-modernize-tools/pull/159) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Additional Property Processing [\#158](https://github.com/adobe/aem-modernize-tools/pull/158) ([bstopp](https://github.com/bstopp))
 - Bump org.apache.sling.models.api from 1.3.8 to 1.4.0 [\#154](https://github.com/adobe/aem-modernize-tools/pull/154) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump slf4j.version from 1.7.33 to 1.7.36 [\#153](https://github.com/adobe/aem-modernize-tools/pull/153) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump maven-javadoc-plugin from 3.3.0 to 3.3.2 [\#152](https://github.com/adobe/aem-modernize-tools/pull/152) ([dependabot[bot]](https://github.com/apps/dependabot))
