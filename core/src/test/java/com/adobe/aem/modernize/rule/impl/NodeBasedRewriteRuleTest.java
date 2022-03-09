@@ -391,6 +391,71 @@ public class NodeBasedRewriteRuleTest {
   }
 
   @Test
+  public void testRewriteConsolidatePropertiesApplyTo() throws Exception {
+    final String nodePath = "/rewriteConsolidateProperties";
+    ResourceResolver rr = context.resourceResolver();
+    Node content = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + nodePath).adaptTo(Node.class));
+    rule.applyTo(content, new HashSet<>());
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+    Node updated = rr.getResource(CONTENT_ROOT + nodePath).adaptTo(Node.class);
+    assertFalse(updated.hasNode(NN_CQ_REWRITE_CONSOLIDATE_PROPERTIES), "Directive node removed");
+
+    Property p =  updated.getProperty("consolidated");
+    assertTrue(p.isMultiple(), "Value is multi");
+    assertEquals(2, p.getValues().length, "Value length");
+    assertEquals("Strategic Consulting", p.getValues()[0].getString(), "Property first value");
+    assertEquals("Description Value", p.getValues()[1].getString(), "Property second value");
+
+    p =  updated.getProperty("cq:styleIds");
+    assertTrue(p.isMultiple(), "Value is multi");
+    assertEquals(1, p.getValues().length, "Value length");
+    assertEquals("separator-clear", p.getValues()[0].getString(), "Property value");
+  }
+
+  @Test
+  public void testRewriteMapPropertiesApplyTo() throws Exception {
+    ResourceResolver rr = context.resourceResolver();
+    RewriteRule rule = new NodeBasedRewriteRule(rr.getResource(SIMPLE_ROOT + "/rewriteMapProperties").adaptTo(Node.class));
+
+    String nodeName = "/rewriteMapPropertiesOne";
+    Node content = rr.getResource(CONTENT_ROOT + nodeName).adaptTo(Node.class);
+    Set<String> finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+
+    Node updated = rr.getResource(CONTENT_ROOT + nodeName).adaptTo(Node.class);
+    assertFalse(updated.hasNode(NN_CQ_REWRITE_MAP_PROPERTIES), "Directive node removed");
+    assertEquals("First", updated.getProperty("rewrite-map").getString(), "Property Mapped");
+
+    nodeName = "/rewriteMapPropertiesTwo";
+    content = rr.getResource(CONTENT_ROOT + nodeName).adaptTo(Node.class);
+    finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+
+    updated = rr.getResource(CONTENT_ROOT + nodeName).adaptTo(Node.class);
+    assertFalse(updated.hasNode(NN_CQ_REWRITE_MAP_PROPERTIES), "Directive node removed");
+    assertEquals("Middle", updated.getProperty("rewrite-map").getString(), "Property Mapped");
+
+
+    nodeName = "/rewriteMapPropertiesThree";
+    content = rr.getResource(CONTENT_ROOT + nodeName).adaptTo(Node.class);
+    finalPaths = new HashSet<>();
+    rule.applyTo(content, finalPaths);
+    assertTrue(content.getSession().hasPendingChanges(), "Session has changes");
+    content.getSession().save();
+
+    updated = rr.getResource(CONTENT_ROOT + nodeName).adaptTo(Node.class);
+    assertFalse(updated.hasNode(NN_CQ_REWRITE_MAP_PROPERTIES), "Directive node removed");
+    assertEquals("Last", updated.getProperty("rewrite-map").getString(), "Property Mapped");
+  }
+
+
+  @Test
   public void testAggregateApplyTo() throws Exception {
     ResourceResolver rr = context.resourceResolver();
     Node content = rr.getResource(CONTENT_ROOT + "/aggregate/title").adaptTo(Node.class);

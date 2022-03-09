@@ -161,6 +161,21 @@
     "rewrite-no-capture-use": "prefix-token",
     "rewrite-boolean": true
   },
+  "rewriteMapPropertiesOne": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapProperties",
+    "rewrite-map": "One"
+  },
+  "rewriteMapPropertiesTwo": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapProperties",
+    "rewrite-map": "Two"
+  },
+  "rewriteMapPropertiesThree": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapProperties",
+    "rewrite-map": "Three"
+  },
   "simpleTree": {
     "jcr:primaryType": "nt:unstructured",
     "jcr:createdBy": "admin",
@@ -204,6 +219,12 @@
       "width": "340",
       "sling:resourceType": "foundation/components/image"
     }
+  },
+  "rewriteConsolidateProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "Strategic Consulting",
+    "jcr:description": "Description Value",
+    "sling:resourceType": "aem-modernize/components/simple"
   },
   "modernizeSimpleLike": {
     "jcr:primaryType": "nt:unstructured",
