@@ -1,5 +1,19 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.18...HEAD)
+
+### 🚀 Enhancements
+
+- "Like" based Rule Patterns [\#157](https://github.com/adobe/aem-modernize-tools/pull/157) ([bstopp](https://github.com/bstopp))
+- New APIs for Improving usability [\#156](https://github.com/adobe/aem-modernize-tools/pull/156) ([bstopp](https://github.com/bstopp))
+- Add Template Path Processing Restrictions [\#155](https://github.com/adobe/aem-modernize-tools/pull/155) ([bstopp](https://github.com/bstopp))
+
+### 📁 Other pull requests
+
+- Additional Property Processing [\#158](https://github.com/adobe/aem-modernize-tools/pull/158) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.0.18](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.0.18) (2022-03-02)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.16...aem-modernize-tools-2.0.18)
