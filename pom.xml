@@ -655,7 +655,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.models.api</artifactId>
-                        <version>1.3.8</version>
+                        <version>1.4.0</version>
                         <scope>provided</scope>
                     </dependency>
                     <!-- Servlet API -->
@@ -877,7 +877,7 @@ Bundle-DocURL:
                     <dependency>
                         <groupId>org.apache.sling</groupId>
                         <artifactId>org.apache.sling.models.api</artifactId>
-                        <version>1.3.8</version>
+                        <version>1.4.0</version>
                         <scope>provided</scope>
                     </dependency>
                     <!-- Servlet API -->
