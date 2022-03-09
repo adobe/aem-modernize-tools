@@ -247,10 +247,18 @@ public class AbstractRewriteRuleServiceTest {
     paths.remove("/content/test/all/jcr:content/rewriteFinalOnReplacement");
     assertTrue(paths.contains("/content/test/all/jcr:content/rewriteProperties"), "Rewrite properties rule");
     paths.remove("/content/test/all/jcr:content/rewriteProperties");
-    assertTrue(paths.contains("/content/test/all/jcr:content/simpleTree"), "Rewrite final on replacement node rule.");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteMapPropertiesOne"), "Rewrite Map Property.");
+    paths.remove("/content/test/all/jcr:content/rewriteMapPropertiesOne");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteMapPropertiesTwo"), "Rewrite Map Property.");
+    paths.remove("/content/test/all/jcr:content/rewriteMapPropertiesTwo");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteMapPropertiesThree"), "Rewrite Map Property.");
+    paths.remove("/content/test/all/jcr:content/rewriteMapPropertiesThree");
+    assertTrue(paths.contains("/content/test/all/jcr:content/simpleTree"), "Rewrite simple tree.");
     paths.remove("/content/test/all/jcr:content/simpleTree");
-    assertTrue(paths.contains("/content/test/all/jcr:content/aggregate"), "Rewrite final on replacement node rule.");
+    assertTrue(paths.contains("/content/test/all/jcr:content/aggregate"), "Aggregate rule");
     paths.remove("/content/test/all/jcr:content/aggregate");
+    assertTrue(paths.contains("/content/test/all/jcr:content/rewriteConsolidateProperties"), "Consolidate properties rule");
+    paths.remove("/content/test/all/jcr:content/rewriteConsolidateProperties");
     assertTrue(paths.contains("/content/test/all/jcr:content/modernizeSimpleLike"), "Simple Like rule");
     paths.remove("/content/test/all/jcr:content/modernizeSimpleLike");
     assertTrue(paths.contains("/content/test/all/jcr:content/customSimpleLike"), "Simple Like rule");
@@ -261,8 +269,7 @@ public class AbstractRewriteRuleServiceTest {
 
     assertEquals(1, closeCalled[0], "Query RR was closed");
   }
-
-
+  
   @Test
   public <R extends ResourceResolver> void testListRules(@Mocked Query query, @Mocked SearchResult searchResult) {
     final int[] closeCalled = { 0 };
@@ -345,8 +352,12 @@ public class AbstractRewriteRuleServiceTest {
     types.remove("aem-modernize/components/replacementRewriteFinal");
     assertTrue(types.contains("aem-modernize/components/rewriteProperties"), "rewriteProperties rule");
     types.remove("aem-modernize/components/rewriteProperties");
+    assertTrue(types.contains("aem-modernize/components/rewriteConsolidateProperties"), "rewriteConsolidateProperties rule");
+    types.remove("aem-modernize/components/rewriteConsolidateProperties");
     assertTrue(types.contains("components/simpleLike"), "simpleLike rule");
     types.remove("components/simpleLike");
+    assertTrue(types.contains("aem-modernize/components/rewriteMapProperties"), "rewriteMapProperties rule");
+    types.remove("aem-modernize/components/rewriteMapProperties");
     assertTrue(types.isEmpty(), "Set result correct");
 
     ruleRoot = context.resourceResolver().getResource("/content/rules/aggregate");

@@ -52,6 +52,8 @@ import org.slf4j.LoggerFactory;
 public class NodeBasedRewriteRule implements RewriteRule {
 
   public static final String NN_CQ_REWRITE_PROPERTIES = "cq:rewriteProperties";
+  public static final String NN_CQ_REWRITE_MAP_PROPERTIES = "cq:rewriteMapProperties";
+  public static final String NN_CQ_REWRITE_CONSOLIDATE_PROPERTIES = "cq:rewriteConsolidateProperties";
   public static final String NN_PATTERNS = "patterns";
   public static final String NN_AGGREGATE = "aggregate";
   public static final String NN_REPLACEMENT = "replacement";
@@ -70,8 +72,8 @@ public class NodeBasedRewriteRule implements RewriteRule {
   protected final Node rule;
   private final String id;
   private final String title;
-  private Integer ranking;
   private final boolean aggregate;
+  private Integer ranking;
 
   /**
    * Creates a new RewriteRule referencing the specified path.
@@ -185,19 +187,26 @@ public class NodeBasedRewriteRule implements RewriteRule {
     for (Node node : new TreeTraverser(updated)) {
 
       // Rewrite Properties is special case - store it for later when processing properties
-      Node rewritePropertiesNode = null;
+      RewritePropertyProcessors processors = new RewritePropertyProcessors();
+
       if (node.hasNode(NN_CQ_REWRITE_PROPERTIES)) {
-        rewritePropertiesNode = node.getNode(NN_CQ_REWRITE_PROPERTIES);
+        processors.setRewriteProperties(node.getNode(NN_CQ_REWRITE_PROPERTIES));
+      }
+
+      if (node.hasNode(NN_CQ_REWRITE_MAP_PROPERTIES)) {
+        processors.setRewriteMapProperties(node.getNode(NN_CQ_REWRITE_MAP_PROPERTIES));
+      }
+
+      if (node.hasNode(NN_CQ_REWRITE_CONSOLIDATE_PROPERTIES)) {
+        processors.setRewriteConsolidateProperties(node.getNode(NN_CQ_REWRITE_CONSOLIDATE_PROPERTIES));
       }
 
       // Store this node as being final, if the tree isn't already set
-      if (processProperties(source, node, rewritePropertiesNode, patternNodeNames, mappings) && !treeIsFinal) {
+      if (processProperties(source, node, processors, patternNodeNames, mappings) && !treeIsFinal) {
         finalPaths.add(node.getPath());
       }
 
-      if (rewritePropertiesNode != null) {
-        rewritePropertiesNode.remove();
-      }
+      processors.remove();
     }
 
     mappings.processCopies(source, updated);
@@ -426,6 +435,7 @@ public class NodeBasedRewriteRule implements RewriteRule {
       return null;
     }
 
+    Node parent = property.getParent();
     // array containing the expressions: ${<path>}
     Value[] values;
     if (property.isMultiple()) {
@@ -461,7 +471,6 @@ public class NodeBasedRewriteRule implements RewriteRule {
           // replace property by mapped value in the original tree
           Property originalProperty = original.getProperty(path);
           String name = property.getName();
-          Node parent = property.getParent();
           property.remove();
           Property newProperty = JcrUtil.copy(originalProperty, parent, name);
 
@@ -481,7 +490,6 @@ public class NodeBasedRewriteRule implements RewriteRule {
               // the property is multiple in the replacement,
               // recreate it so we can set the property to the default
               String name = property.getName();
-              Node parent = property.getParent();
               property.remove();
               parent.setProperty(name, defaultValue);
             } else {
@@ -499,13 +507,13 @@ public class NodeBasedRewriteRule implements RewriteRule {
       return null;
     }
 
-    return property;
+    return parent.getProperty(property.getName());
   }
 
   /*
     Process the properties for the rewritten node; returns indication if this node was considered "final"
    */
-  private boolean processProperties(Node originalContent, Node node, Node rewritePropertiesNode, Map<String, String> patternMappings, TreeStructure mapping) throws RepositoryException {
+  private boolean processProperties(Node originalContent, Node node, RewritePropertyProcessors processors, Map<String, String> patternMappings, TreeStructure mapping) throws RepositoryException {
     PropertyIterator propertyIterator = node.getProperties();
     boolean nodeIsFinal = false;
     while (propertyIterator.hasNext()) {
@@ -547,36 +555,14 @@ public class NodeBasedRewriteRule implements RewriteRule {
       }
       // set value from original tree in case this is a mapped property
       Property mappedProperty = mapProperty(originalContent, property, patternMappings);
-      if (mappedProperty != null && rewritePropertiesNode != null) {
-        if (rewritePropertiesNode.hasProperty("./" + mappedProperty.getName())) {
-          rewriteProperty(property, rewritePropertiesNode.getProperty("./" + mappedProperty.getName()));
-        }
+      if (mappedProperty != null) {
+        processors.rewrite(mappedProperty);
+        processors.map(mappedProperty);
       }
     }
+    processors.consolidate(node);
     return nodeIsFinal;
   }
-
-  /*
-   * Applies a string rewrite to a property.
-   */
-  protected void rewriteProperty(Property property, Property rewriteProperty) throws RepositoryException {
-    if (property.getType() == PropertyType.STRING &&
-        rewriteProperty.isMultiple() &&
-        rewriteProperty.getValues().length == 2) {
-
-      Value[] rewrite = rewriteProperty.getValues();
-
-      if (rewrite[0].getType() == PropertyType.STRING && rewrite[1].getType() == PropertyType.STRING) {
-        String pattern = rewrite[0].toString();
-        String replacement = rewrite[1].toString();
-
-        Pattern compiledPattern = Pattern.compile(pattern);
-        Matcher matcher = compiledPattern.matcher(property.getValue().toString());
-        property.setValue(matcher.replaceAll(replacement));
-      }
-    }
-  }
-
 
   @Override
   public boolean equals(Object o) {

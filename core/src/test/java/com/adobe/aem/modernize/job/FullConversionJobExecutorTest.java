@@ -81,13 +81,13 @@ public class FullConversionJobExecutorTest {
 
   private final FullConversionJobExecutor executor = new FullConversionJobExecutor();
 
-  private StructureRewriteRule pageRewriteRule = new PageRewriteRule();
+  private final StructureRewriteRule pageRewriteRule = new PageRewriteRule();
 
-  private StructureRewriteRuleService structureService = new StructureRewriteRuleServiceImpl();
+  private final StructureRewriteRuleService structureService = new StructureRewriteRuleServiceImpl();
 
-  private PolicyImportRuleService policyService = new PolicyImportRuleServiceImpl();
+  private final PolicyImportRuleService policyService = new PolicyImportRuleServiceImpl();
 
-  private ComponentRewriteRuleService componentService = new ComponentRewriteRuleServiceImpl();
+  private final ComponentRewriteRuleService componentService = new ComponentRewriteRuleServiceImpl();
 
   @Mocked
   private Job job;

@@ -216,6 +216,132 @@ Each property of this node will contain string array containing two values:
 
 In the example shown, the `foo` property originally contains the string value: *prefix-removed*. This is copied to the new property, then the rewrite rules are applied, and the value is updated and finalized to the string: *removed*.
 
+
+### Rewrite Map Properties
+
+While the `rewriteProperties` feature supports regex processing; this has limitations in that the value generated is based on or derived from the original. Using this feature, a `cq:rewriteMapProperties` node can be specified to convert a given property's value from one explicitly matched value to another. 
+
+This allows the `pattern` to exclude defining the original value of a property (and thus requiring more than one rule), but still provide a means to transform it to a new value.
+
+The `replacement` must copy the original value to the target node, for it to be processed. Each child of the `cq:rewriteMapProperties` node defines the source value and desired output. If the source property is not listed as a child node, it is not modified. If the source property is listed but the value is not found in the properties of the node, it is not modified.
+
+As an example, lets take this as a set of source content:
+
+```json
+{
+  "rewriteMapPropertiesOne": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapProperties",
+    "rewrite-map": "One"
+  },
+  "rewriteMapPropertiesTwo": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapProperties",
+    "rewrite-map": "Two"
+  },
+  "rewriteMapPropertiesThree": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewriteMapProperties",
+    "rewrite-map": "Three"
+  }
+}
+```
+
+Given this rule:
+
+```json
+{
+  "rewriteMapProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteMapProperties"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "rewrite-map": "${'./rewrite-map'}",
+        "sling:resourceType": "aem-modernize/components/rewritten",
+        "cq:rewriteMapProperties": {
+          "jcr:primaryType": "nt:unstructured",
+          "rewrite-map": {
+            "jcr:primaryType": "nt:unstructured",
+            "One": "First",
+            "Two": "Middle",
+            "Three": "Last"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+The following outputs would be generated:
+
+```json
+{
+  "rewriteMapPropertiesOne": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewritten",
+    "rewrite-map": "First"
+  },
+  "rewriteMapPropertiesTwo": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewritten",
+    "rewrite-map": "Second"
+  },
+  "rewriteMapPropertiesThree": {
+    "jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "aem-modernize/components/rewritten",
+    "rewrite-map": "Third"
+  }
+}
+```
+
+### Rewrite Consolidate Properties
+
+This feature allows conversions merge a number of properties into a single a multi-value String property. When the consolidation has been completed, the original copied properties are removed. To keep the original, copy the value into a temp property for the consolidation. Unknown, or non-existing properties are ignored.
+
+```json
+{
+  "rewriteConsolidateProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteConsolidateProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteConsolidateProperties"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteConsolidateProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "${'./jcr:title'}",
+        "jcr:description": "${'./jcr:description'}",
+        "sourcedoesnotexist": "${'/sourcedoesnotexist'}",
+        "cq:styleIds": "separator-clear",
+        "sling:resourceType": "aem-modernize/components/rewriteConsolidateProperties",
+        "cq:rewriteConsolidateProperties": {
+          "consolidated": [
+            "jcr:title",
+            "jcr:description",
+            "doesnnotexist",
+            "sourcedoesnotexist"
+          ],
+          "cq:styleIds": ["cq:styleIds"]
+        }
+      }
+    }
+  }
+}
+```
+
 ### Copying Children
 
 ```xml
@@ -273,6 +399,7 @@ The `cq:rewriteMapChildren` property is used to specify which original node shou
 ```
 
 A replacement node or it's children may specify an optional `cq:rewriteFinal` property. This is used to flag that the associated tree of content is a final transformation, and need not be scanned again.
+
 
 
 ### Aggregation of Rules

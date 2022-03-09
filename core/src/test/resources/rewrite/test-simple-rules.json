@@ -298,6 +298,36 @@
       }
     }
   },
+  "rewriteConsolidateProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteConsolidateProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteConsolidateProperties"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteConsolidateProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "jcr:title": "${'./jcr:title'}",
+        "jcr:description": "${'./jcr:description'}",
+        "sourcedoesnotexist": "${'/sourcedoesnotexist'}",
+        "cq:styleIds": "separator-clear",
+        "sling:resourceType": "aem-modernize/components/rewriteConsolidateProperties",
+        "cq:rewriteConsolidateProperties": {
+          "consolidated": [
+            "jcr:title",
+            "jcr:description",
+            "doesnnotexist",
+            "sourcedoesnotexist"
+          ],
+          "cq:styleIds": ["cq:styleIds"]
+        }
+      }
+    }
+  },
   "simpleLike": {
     "jcr:title": "Simple Rule",
     "jcr:primaryType": "nt:unstructured",
@@ -313,6 +343,32 @@
       "simple": {
         "jcr:primaryType": "nt:unstructured",
         "sling:resourceType": "core/wcm/components/title/v2/title"
+      }
+    }
+  },
+  "rewriteMapProperties": {
+    "jcr:primaryType": "nt:unstructured",
+    "patterns": {
+      "jcr:primaryType": "nt:unstructured",
+      "pattern": {
+        "jcr:primaryType": "nt:unstructured",
+        "sling:resourceType": "aem-modernize/components/rewriteMapProperties"
+      }
+    },
+    "replacement": {
+      "jcr:primaryType": "nt:unstructured",
+      "rewriteProperties": {
+        "jcr:primaryType": "nt:unstructured",
+        "rewrite-map": "${'./rewrite-map'}",
+        "cq:rewriteMapProperties": {
+          "jcr:primaryType": "nt:unstructured",
+          "rewrite-map": {
+            "jcr:primaryType": "nt:unstructured",
+            "One": "First",
+            "Two": "Middle",
+            "Three": "Last"
+          }
+        }
       }
     }
   }

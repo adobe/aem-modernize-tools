@@ -34,13 +34,11 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 
-import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.impl.ListPageVisitor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
@@ -57,10 +55,7 @@ public class ListChildrenServlet extends SlingSafeMethodsServlet {
 
   private static final String PARAM_PATH = "path";
   private static final String PARAM_DIRECT = "direct";
-
-  @Reference
-  private ComponentRewriteRuleService componentRewriteRuleService;
-
+  
   @Override
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
     RequestData data = getRequestData(request);
