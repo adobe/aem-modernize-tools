@@ -65,6 +65,7 @@ public interface PolicyImportRuleService extends RewriteRuleService {
    * @param source   The Resource Style from which to read design configurations
    * @param confRoot The {@code /conf} root path into which the new policies will be created
    * @param rules    the ids of the rules to apply
+   * @param overwrite {@code true} to overwrite existing modernization
    * @return {@code true} if one of the specified rules was successfully applied, false otherwise
    * @throws RewriteException if any errors occur when applying the rules
    */

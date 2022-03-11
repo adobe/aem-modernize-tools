@@ -71,6 +71,7 @@ public interface RewriteRuleService {
   /**
    * Returns the rule based on its unique identifier.
    * 
+   * @param resourceResolver the Resource Resolver to use to for rule lookup
    * @param id the id for the rule
    * @return the rule associated with the id or null if none exists 
    */
