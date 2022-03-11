@@ -13,6 +13,7 @@
 
 ### 📁 Other pull requests
 
+- Bump Risky OSGi Dependencies [\#162](https://github.com/adobe/aem-modernize-tools/pull/162) ([bstopp](https://github.com/bstopp))
 - Bump maven-dependency-plugin from 3.0.0 to 3.2.0 [\#161](https://github.com/adobe/aem-modernize-tools/pull/161) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump jackson-core from 2.13.1 to 2.13.2 [\#159](https://github.com/adobe/aem-modernize-tools/pull/159) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.apache.sling.models.api from 1.3.8 to 1.4.0 [\#154](https://github.com/adobe/aem-modernize-tools/pull/154) ([dependabot[bot]](https://github.com/apps/dependabot))
