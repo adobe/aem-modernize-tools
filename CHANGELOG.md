@@ -13,6 +13,7 @@
 
 ### 📁 Other pull requests
 
+- Fix snapshot deploys. [\#163](https://github.com/adobe/aem-modernize-tools/pull/163) ([bstopp](https://github.com/bstopp))
 - Bump Risky OSGi Dependencies [\#162](https://github.com/adobe/aem-modernize-tools/pull/162) ([bstopp](https://github.com/bstopp))
 - Bump maven-dependency-plugin from 3.0.0 to 3.2.0 [\#161](https://github.com/adobe/aem-modernize-tools/pull/161) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump jackson-core from 2.13.1 to 2.13.2 [\#159](https://github.com/adobe/aem-modernize-tools/pull/159) ([dependabot[bot]](https://github.com/apps/dependabot))
