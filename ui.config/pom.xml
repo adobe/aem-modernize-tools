@@ -49,6 +49,7 @@
                     </properties>
                     <packageType>container</packageType>
                     <showImportPackageReport>false</showImportPackageReport>
+                    <jcrRootSourceDirectory>${project.basedir}/src/${cfg.context}/content/jcr_root</jcrRootSourceDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -60,17 +61,19 @@
 
     <profiles>
         <profile>
-            <id>aemCloudService</id>
+            <id>aemaacs</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <cfg.context>cs</cfg.context>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.jackrabbit</groupId>
                         <artifactId>filevault-package-maven-plugin</artifactId>
                         <configuration>
-                            <jcrRootSourceDirectory>${project.basedir}/src/cs/content/jcr_root</jcrRootSourceDirectory>
                             <repositoryStructurePackages>
                                 <repositoryStructurePackage>
                                     <groupId>com.adobe.aem</groupId>
@@ -95,28 +98,23 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <cfg.context>aem65</cfg.context>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.jackrabbit</groupId>
                         <artifactId>filevault-package-maven-plugin</artifactId>
                         <configuration>
-                            <jcrRootSourceDirectory>${project.basedir}/src/aem65/content/jcr_root</jcrRootSourceDirectory>
-                            <classifier>aem65</classifier>
                             <repositoryStructurePackages>
                                 <repositoryStructurePackage>
                                     <groupId>com.adobe.aem</groupId>
                                     <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                                    <version>${project.version}</version>
                                     <classifier>aem65</classifier>
                                 </repositoryStructurePackage>
                             </repositoryStructurePackages>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.day.jcr.vault</groupId>
-                        <artifactId>content-package-maven-plugin</artifactId>
-                        <configuration>
-                            <packageFile>target/${project.artifactId}-${project.version}-aem65.zip</packageFile>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -132,73 +130,27 @@
             </dependencies>
         </profile>
         <profile>
-            <id>java8</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.jackrabbit</groupId>
-                        <artifactId>filevault-package-maven-plugin</artifactId>
-                        <configuration>
-                            <jcrRootSourceDirectory>${project.basedir}/src/cs/content/jcr_root</jcrRootSourceDirectory>
-                            <classifier>java8</classifier>
-                            <repositoryStructurePackages>
-                                <repositoryStructurePackage>
-                                    <groupId>com.adobe.aem</groupId>
-                                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
-                                    <classifier>java8</classifier>
-                                </repositoryStructurePackage>
-                            </repositoryStructurePackages>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.day.jcr.vault</groupId>
-                        <artifactId>content-package-maven-plugin</artifactId>
-                        <configuration>
-                            <packageFile>target/${project.artifactId}-${project.version}-java8.zip</packageFile>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>com.adobe.aem</groupId>
-                    <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>java8</classifier>
-                    <type>zip</type>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>java8aem65</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <cfg.context>aem65</cfg.context>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.jackrabbit</groupId>
                         <artifactId>filevault-package-maven-plugin</artifactId>
                         <configuration>
-                            <jcrRootSourceDirectory>${project.basedir}/src/aem65/content/jcr_root</jcrRootSourceDirectory>
-                            <classifier>java8aem65</classifier>
                             <repositoryStructurePackages>
                                 <repositoryStructurePackage>
                                     <groupId>com.adobe.aem</groupId>
                                     <artifactId>aem-modernize-tools.ui.apps.structure</artifactId>
+                                    <version>${project.version}</version>
                                     <classifier>java8aem65</classifier>
                                 </repositoryStructurePackage>
                             </repositoryStructurePackages>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.day.jcr.vault</groupId>
-                        <artifactId>content-package-maven-plugin</artifactId>
-                        <configuration>
-                            <packageFile>target/${project.artifactId}-${project.version}-java8aem65.zip</packageFile>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -25,7 +25,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 11
           cache: maven
           server-id: ossrh
@@ -35,28 +35,21 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging=true -P java8aem65,release
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Java 8 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging=true -P java8,release
+        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -P aemjava8aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging=true -P aem65,release
+        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -Paem65deps,aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEMaaCS Build & Deploy all to Central
-        run: mvn clean deploy -P aemCloudService,release,attach-javadoc,attach-source
+        run: mvn clean deploy -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}

@@ -24,7 +24,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 11
           cache: maven
 
@@ -54,7 +54,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 11
           cache: maven
 
@@ -115,7 +115,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        profile: [ java8, aem65, java8aem65 ]
+        profile: 
+          - 'aem65deps,aem65'
+          - 'aem65deps,java8aem65'
 
     steps:
       - name: Checkout code
@@ -127,7 +129,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 11
           cache: maven
 
@@ -161,7 +163,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 11
           cache: maven
           server-id: ossrh
@@ -179,28 +181,21 @@ jobs:
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
       - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging=true -Pjava8aem65,release
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Java 8 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging=true -Pjava8,release
+        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -Paem65deps,java8aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging=true -Paem65,release
+        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -Paem65deps,aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Java 11 AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging=true -PaemCloudService,release,attach-javadoc,attach-source
+        run: mvn clean deploy -DskipRemoteStaging=true -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}

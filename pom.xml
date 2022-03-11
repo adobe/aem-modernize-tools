@@ -95,8 +95,8 @@
         <vault.user>admin</vault.user>
         <vault.password>admin</vault.password>
 
-        <aemanalyser.version>1.3.0</aemanalyser.version>
-        <bnd.version>6.1.0</bnd.version>
+        <aemanalyser.version>1.4.0</aemanalyser.version>
+        <bnd.version>6.2.0</bnd.version>
         <slf4j.version>1.7.36</slf4j.version>
         <jmockit.version>1.49</jmockit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -130,6 +130,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -190,7 +198,7 @@
                     <version>2.5.3</version>
                     <configuration>
                         <useReleaseProfile>false</useReleaseProfile>
-                        <releaseProfiles>release</releaseProfiles>
+                        <releaseProfiles>aemaacsDeps,aemaacs,release</releaseProfiles>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
                     </configuration>
@@ -515,7 +523,7 @@ Bundle-DocURL:
             </build>
         </profile>
         <profile>
-            <id>aemCloudService</id>
+            <id>aemaacsDeps</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -534,23 +542,167 @@ Bundle-DocURL:
             </dependencyManagement>
         </profile>
         <profile>
-            <id>aem65</id>
+            <id>aem65deps</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <aem.version>6.5.0</aem.version>
             </properties>
+            <dependencyManagement>
+                <dependencies>
+                    <!-- OSGi Dependencies -->
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.annotation.versioning</artifactId>
+                        <version>1.1.2</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.annotation.bundle</artifactId>
+                        <version>2.0.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.service.metatype.annotations</artifactId>
+                        <version>1.4.1</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.service.component.annotations</artifactId>
+                        <version>1.4.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.service.component</artifactId>
+                        <version>1.4.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.service.cm</artifactId>
+                        <version>1.6.1</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.service.event</artifactId>
+                        <version>1.4.1</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.service.log</artifactId>
+                        <version>1.4.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.resource</artifactId>
+                        <version>1.0.1</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.framework</artifactId>
+                        <version>1.10.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.util.tracker</artifactId>
+                        <version>1.5.4</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.sling</groupId>
+                        <artifactId>org.apache.sling.servlets.annotations</artifactId>
+                        <version>1.2.6</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <!-- Logging Dependencies -->
+                    <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                        <version>${slf4j.version}</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <!-- Adobe AEM Dependencies -->
+                    <dependency>
+                        <groupId>com.adobe.aem</groupId>
+                        <artifactId>uber-jar</artifactId>
+                        <version>${aem.version}</version>
+                        <classifier>apis</classifier>
+                        <scope>provided</scope>
+                    </dependency>
+                    <!-- Apache Sling Dependencies -->
+                    <dependency>
+                        <groupId>org.apache.sling</groupId>
+                        <artifactId>org.apache.sling.models.api</artifactId>
+                        <version>1.4.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <!-- Servlet API -->
+                    <dependency>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>javax.servlet-api</artifactId>
+                        <version>3.1.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.servlet.jsp</groupId>
+                        <artifactId>jsp-api</artifactId>
+                        <version>2.1</version>
+                        <scope>provided</scope>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>javax.annotation</groupId>
+                        <artifactId>javax.annotation-api</artifactId>
+                        <version>1.3.2</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <!-- JCR -->
+                    <dependency>
+                        <groupId>javax.jcr</groupId>
+                        <artifactId>jcr</artifactId>
+                        <version>2.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                        <version>2.13.2</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                        <version>2.11.0</version>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+        </profile>
+        <profile>
+            <id>aem65</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
             <build>
                 <pluginManagement>
                     <plugins>
                         <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <classifier>aem65</classifier>
-                        </configuration>
-                    </plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <classifier>aem65</classifier>
+                            </configuration>
+                        </plugin>
                         <plugin>
                             <groupId>org.apache.jackrabbit</groupId>
                             <artifactId>filevault-package-maven-plugin</artifactId>
@@ -558,213 +710,25 @@ Bundle-DocURL:
                                 <classifier>aem65</classifier>
                             </configuration>
                         </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-            <dependencyManagement>
-                <dependencies>
-                    <!-- OSGi Dependencies -->
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.annotation.versioning</artifactId>
-                        <version>1.1.2</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.annotation.bundle</artifactId>
-                        <version>1.1.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.metatype.annotations</artifactId>
-                        <version>1.4.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.component.annotations</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.component</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.cm</artifactId>
-                        <version>1.6.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.event</artifactId>
-                        <version>1.4.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.log</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.resource</artifactId>
-                        <version>1.0.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.framework</artifactId>
-                        <version>1.10.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.util.tracker</artifactId>
-                        <version>1.5.4</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>org.apache.sling.servlets.annotations</artifactId>
-                        <version>1.2.6</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Logging Dependencies -->
-                    <dependency>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                        <version>${slf4j.version}</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Adobe AEM Dependencies -->
-                    <dependency>
-                        <groupId>com.adobe.aem</groupId>
-                        <artifactId>uber-jar</artifactId>
-                        <version>${aem.version}</version>
-                        <classifier>apis</classifier>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Apache Sling Dependencies -->
-                    <dependency>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>org.apache.sling.models.api</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Servlet API -->
-                    <dependency>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
-                        <version>3.1.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>javax.servlet.jsp</groupId>
-                        <artifactId>jsp-api</artifactId>
-                        <version>2.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>javax.annotation</groupId>
-                        <artifactId>javax.annotation-api</artifactId>
-                        <version>1.3.2</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- JCR -->
-                    <dependency>
-                        <groupId>javax.jcr</groupId>
-                        <artifactId>jcr</artifactId>
-                        <version>2.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-core</artifactId>
-                        <version>2.13.2</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>commons-io</groupId>
-                        <artifactId>commons-io</artifactId>
-                        <version>2.11.0</version>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-        </profile>
-        <profile>
-            <id>java8</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <aem.version>2021.11.6013.20211105T162756Z-211000</aem.version>
-            </properties>
-            <build>
-                <pluginManagement>
-                    <plugins>
                         <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jar-plugin</artifactId>
+                            <groupId>com.day.jcr.vault</groupId>
+                            <artifactId>content-package-maven-plugin</artifactId>
                             <configuration>
-                                <classifier>java8</classifier>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <configuration>
-                                <source>8</source>
-                                <target>8</target>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.jackrabbit</groupId>
-                            <artifactId>filevault-package-maven-plugin</artifactId>
-                            <configuration>
-                                <classifier>java8</classifier>
+                                <packageFile>target/${project.artifactId}-${project.version}-aem65.zip</packageFile>
                             </configuration>
                         </plugin>
                     </plugins>
                 </pluginManagement>
             </build>
-            <dependencyManagement>
-                <dependencies>
-                    <dependency>
-                      <groupId>com.adobe.aem</groupId>
-                      <artifactId>aem-sdk-api</artifactId>
-                      <version>${aem.version}</version>
-                      <scope>provided</scope>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
         </profile>
         <profile>
             <id>java8aem65</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <aem.version>6.5.0</aem.version>
-            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jar-plugin</artifactId>
-                            <configuration>
-                                <classifier>java8aem65</classifier>
-                            </configuration>
-                        </plugin>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
@@ -774,154 +738,29 @@ Bundle-DocURL:
                             </configuration>
                         </plugin>
                         <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <classifier>java8aem65</classifier>
+                            </configuration>
+                        </plugin>
+                        <plugin>
                             <groupId>org.apache.jackrabbit</groupId>
                             <artifactId>filevault-package-maven-plugin</artifactId>
                             <configuration>
                                 <classifier>java8aem65</classifier>
                             </configuration>
                         </plugin>
+                        <plugin>
+                            <groupId>com.day.jcr.vault</groupId>
+                            <artifactId>content-package-maven-plugin</artifactId>
+                            <configuration>
+                                <packageFile>target/${project.artifactId}-${project.version}-java8aem65.zip</packageFile>
+                            </configuration>
+                        </plugin>
                     </plugins>
                 </pluginManagement>
             </build>
-            <dependencyManagement>
-                <dependencies>
-                    <!-- OSGi Dependencies -->
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.annotation.versioning</artifactId>
-                        <version>1.1.2</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.annotation.bundle</artifactId>
-                        <version>1.1.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.metatype.annotations</artifactId>
-                        <version>1.4.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.component.annotations</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.component</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.cm</artifactId>
-                        <version>1.6.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.event</artifactId>
-                        <version>1.4.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.service.log</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.resource</artifactId>
-                        <version>1.0.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.framework</artifactId>
-                        <version>1.10.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.util.tracker</artifactId>
-                        <version>1.5.4</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>org.apache.sling.servlets.annotations</artifactId>
-                        <version>1.2.6</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Logging Dependencies -->
-                    <dependency>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                        <version>${slf4j.version}</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Adobe AEM Dependencies -->
-                    <dependency>
-                        <groupId>com.adobe.aem</groupId>
-                        <artifactId>uber-jar</artifactId>
-                        <version>${aem.version}</version>
-                        <classifier>apis</classifier>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Apache Sling Dependencies -->
-                    <dependency>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>org.apache.sling.models.api</artifactId>
-                        <version>1.4.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- Servlet API -->
-                    <dependency>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>javax.servlet-api</artifactId>
-                        <version>3.1.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>javax.servlet.jsp</groupId>
-                        <artifactId>jsp-api</artifactId>
-                        <version>2.1</version>
-                        <scope>provided</scope>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>javax.annotation</groupId>
-                        <artifactId>javax.annotation-api</artifactId>
-                        <version>1.3.2</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <!-- JCR -->
-                    <dependency>
-                        <groupId>javax.jcr</groupId>
-                        <artifactId>jcr</artifactId>
-                        <version>2.0</version>
-                        <scope>provided</scope>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-core</artifactId>
-                        <version>2.13.2</version>
-                        <scope>provided</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>commons-io</groupId>
-                        <artifactId>commons-io</artifactId>
-                        <version>2.11.0</version>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-
         </profile>
         <profile>
             <id>autoInstallPackage</id>
@@ -952,9 +791,6 @@ Bundle-DocURL:
                                     <goals>
                                         <goal>install</goal>
                                     </goals>
-                                    <configuration>
-                                        <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
-                                    </configuration>
                                 </execution>
                             </executions>
                         </plugin>
@@ -1004,7 +840,7 @@ Bundle-DocURL:
         <profile>
             <id>attach-javadoc</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
@@ -1026,7 +862,7 @@ Bundle-DocURL:
         <profile>
             <id>attach-source</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>

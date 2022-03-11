@@ -44,12 +44,12 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 11
           cache: maven
 
       - name: Build JavaDocs
-        run: mvn clean process-resources -Pgenerate-site-docs,aemCloudService -pl .,core -Dproject.version=${{ needs.version.outputs.version }}
+        run: mvn clean process-resources -Pgenerate-site-docs,aemaacsDeps,aemaacs -pl .,core -Dproject.version=${{ needs.version.outputs.version }}
 
       - name: Commit Docs
         run: |
