@@ -35,7 +35,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Java 8 AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -P aemjava8aem65,release
+        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -Paem65deps,java8aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
