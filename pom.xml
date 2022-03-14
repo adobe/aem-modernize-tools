@@ -525,7 +525,7 @@ Bundle-DocURL:
         <profile>
             <id>aemaacsDeps</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
                 <aem.version>2021.11.6013.20211105T162756Z-211000</aem.version>

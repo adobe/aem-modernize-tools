@@ -177,7 +177,7 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
         <profile>
             <id>aemaacsDeps</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>
