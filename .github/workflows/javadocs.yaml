@@ -18,6 +18,11 @@ jobs:
       version: ${{ steps.store-version.outputs.version }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: 'main'
+              
       - name: Get Latest Tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
