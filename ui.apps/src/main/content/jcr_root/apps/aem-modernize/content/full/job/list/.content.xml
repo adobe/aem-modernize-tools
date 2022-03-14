@@ -26,7 +26,7 @@
           jcr:title="AEM Modernize Tools | Full (All-in-One) Conversion Jobs"
           sling:resourceType="granite/ui/components/shell/collectionpage"
           cq:defaultView="html"
-          consoleId="aem-modernize-full-job-list"
+          consoleId="cq-modernize-job-full-list"
           modeGroup="aem-modernize-job-collection"
           currentView="${state[&quot;shell.collectionpage.layoutId&quot;].string}"
           targetCollection=".aem-modernize-job-collection">
@@ -42,7 +42,9 @@
               sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
               href="/mnt/overlay/aem-modernize/content/full/job/create.html"
               text="Create"
-              variant="primary"/>
+              variant="primary"
+              trackingElement="create job"
+              trackingFeature="aem:modernize:job:full:create"/>
     </secondary>
   </actions>
   <title jcr:primaryType="nt:unstructured"

@@ -26,7 +26,7 @@
           jcr:title="AEM Modernize Tools | Page Structure Conversion Job Detail"
           sling:resourceType="granite/ui/components/shell/collectionpage"
           cq:defaultView="html"
-          consoleId="aem-modernize-job-view-detail"
+          consoleId="cq-modernize-job-structure-detail"
           modeGroup="aem-modernize-job-collection"
           targetCollection=".aem-modernize-job-bucket-collection">
   <head jcr:primaryType="nt:unstructured">
