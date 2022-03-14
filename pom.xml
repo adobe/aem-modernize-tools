@@ -198,7 +198,7 @@
                     <version>2.5.3</version>
                     <configuration>
                         <useReleaseProfile>false</useReleaseProfile>
-                        <releaseProfiles>aemaacsDeps,aemaacs,release</releaseProfiles>
+                        <releaseProfiles>release</releaseProfiles>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
                     </configuration>
