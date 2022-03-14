@@ -134,17 +134,6 @@
                             </dependencies>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.sling</groupId>
-                        <artifactId>htl-maven-plugin</artifactId>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.adobe.aem</groupId>
-                                <artifactId>aem-modernize-tools.core</artifactId>
-                                <version>${project.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
                 </plugins>
             </build>
             <dependencies>
