@@ -13,6 +13,7 @@
 
 ### 📁 Other pull requests
 
+- Fix Release Build Errors [\#165](https://github.com/adobe/aem-modernize-tools/pull/165) ([bstopp](https://github.com/bstopp))
 - Add metadata for usage [\#164](https://github.com/adobe/aem-modernize-tools/pull/164) ([bstopp](https://github.com/bstopp))
 - Fix snapshot deploys. [\#163](https://github.com/adobe/aem-modernize-tools/pull/163) ([bstopp](https://github.com/bstopp))
 - Bump Risky OSGi Dependencies [\#162](https://github.com/adobe/aem-modernize-tools/pull/162) ([bstopp](https://github.com/bstopp))
