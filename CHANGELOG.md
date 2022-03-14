@@ -6,6 +6,7 @@
 
 ### 🐛 Bug fixes
 
+- Fix Docs Workflow to correctly checkout tag. [\#171](https://github.com/adobe/aem-modernize-tools/pull/171) ([bstopp](https://github.com/bstopp))
 - Fix Docs workflow. [\#170](https://github.com/adobe/aem-modernize-tools/pull/170) ([bstopp](https://github.com/bstopp))
 
 ## [aem-modernize-tools-2.1.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.1.0) (2022-03-14)
