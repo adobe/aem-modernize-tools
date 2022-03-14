@@ -22,9 +22,9 @@ Add the following to the `<dependencies>` section of the _all project's pom.xml_
 <dependency>
     <groupId>com.adobe.aem</groupId>
     <artifactId>aem-modernize-tools.all</artifactId>
-    <version>2.0.19-SNAPSHOT</version>
+    <version>2.1.1-SNAPSHOT</version>
     <type>zip</type>
-    <!-- <classifier>java8</classifier> optional, see below -->
+    <!-- <classifier>aem65</classifier> optional, see below -->
 </dependency>
 {% endhighlight %}
 
@@ -35,10 +35,6 @@ The AEM Modernize Tools has multiple distributions; the following are available 
 * No classifier
   * AEM Version: Cloud Service
   * JDK Target: Java 11
-
-* `java8`
-  * AEM Version: Cloud Service
-  * JDK Target: Java 8
 
 * `aem65`
   * AEM Version: AEM 6.5.x
@@ -66,7 +62,7 @@ In the `filevault-package-maven-plugin` configuration of your all project’s po
           <groupId>com.adobe.aem</groupId>
           <artifactId>aem-modernize-tools.all</artifactId>
           <type>zip</type>
-          <!-- <classifier>java8</classifier> optional, see above -->
+          <!-- <classifier>aem65</classifier> optional, see above -->
           <target>/apps/my-app-packages/application/install</target>
         </embedded>
       <embedded>
