@@ -31,7 +31,8 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.previoustag.output.tag }}
+          fetch-depth: 0
+          ref: ${{ steps.previoustag.outputs.tag }}
 
       - name: Store Version
         id: store-version
