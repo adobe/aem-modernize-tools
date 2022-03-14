@@ -11,13 +11,18 @@ on:
 
 jobs:
   version:
-    if: github.repository == 'adobe/aem-modernize-tools'
+    if: (!github.event.workflow_run || github.event.workflow_run.conclusion == 'success') && github.repository == 'adobe/aem-modernize-tools'
     runs-on: ubuntu-latest
     
     outputs:
       version: ${{ steps.store-version.outputs.version }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: 'main'
+              
       - name: Get Latest Tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1

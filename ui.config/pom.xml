@@ -63,7 +63,7 @@
         <profile>
             <id>aemaacs</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
                 <cfg.context>cs</cfg.context>
