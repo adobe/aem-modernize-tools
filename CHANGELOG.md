@@ -9,22 +9,29 @@
 - Fix Docs Workflow to correctly checkout tag. [\#171](https://github.com/adobe/aem-modernize-tools/pull/171) ([bstopp](https://github.com/bstopp))
 - Fix Docs workflow. [\#170](https://github.com/adobe/aem-modernize-tools/pull/170) ([bstopp](https://github.com/bstopp))
 
+### 📖 Documentation
+
+- Add docs on security. [\#173](https://github.com/adobe/aem-modernize-tools/pull/173) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.1.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.1.0) (2022-03-14)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.18...aem-modernize-tools-2.1.0)
 
 ### 🚀 Enhancements
 
+- Add metadata for usage [\#164](https://github.com/adobe/aem-modernize-tools/pull/164) ([bstopp](https://github.com/bstopp))
 - Additional Property Processing [\#158](https://github.com/adobe/aem-modernize-tools/pull/158) ([bstopp](https://github.com/bstopp))
 - "Like" based Rule Patterns [\#157](https://github.com/adobe/aem-modernize-tools/pull/157) ([bstopp](https://github.com/bstopp))
 - New APIs for Improving usability [\#156](https://github.com/adobe/aem-modernize-tools/pull/156) ([bstopp](https://github.com/bstopp))
 - Add Template Path Processing Restrictions [\#155](https://github.com/adobe/aem-modernize-tools/pull/155) ([bstopp](https://github.com/bstopp))
 
+### 🐛 Bug fixes
+
+- Fix snapshot deploys. [\#163](https://github.com/adobe/aem-modernize-tools/pull/163) ([bstopp](https://github.com/bstopp))
+
 ### 📁 Other pull requests
 
 - Fix Release Build Errors [\#165](https://github.com/adobe/aem-modernize-tools/pull/165) ([bstopp](https://github.com/bstopp))
-- Add metadata for usage [\#164](https://github.com/adobe/aem-modernize-tools/pull/164) ([bstopp](https://github.com/bstopp))
-- Fix snapshot deploys. [\#163](https://github.com/adobe/aem-modernize-tools/pull/163) ([bstopp](https://github.com/bstopp))
 - Bump Risky OSGi Dependencies [\#162](https://github.com/adobe/aem-modernize-tools/pull/162) ([bstopp](https://github.com/bstopp))
 - Bump maven-dependency-plugin from 3.0.0 to 3.2.0 [\#161](https://github.com/adobe/aem-modernize-tools/pull/161) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump jackson-core from 2.13.1 to 2.13.2 [\#159](https://github.com/adobe/aem-modernize-tools/pull/159) ([dependabot[bot]](https://github.com/apps/dependabot))
