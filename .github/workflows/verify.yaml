@@ -31,7 +31,7 @@ jobs:
         run: mvn -U clean verify -P${{ matrix.profile }}
 
       - name: Upload CodeCov
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3
         with:
           file: core/target/site/jacoco/jacoco.xml
           flags: unittests
