@@ -95,7 +95,7 @@
         <vault.user>admin</vault.user>
         <vault.password>admin</vault.password>
 
-        <aemanalyser.version>1.4.0</aemanalyser.version>
+        <aemanalyser.version>1.4.8</aemanalyser.version>
         <bnd.version>6.2.0</bnd.version>
         <slf4j.version>1.7.36</slf4j.version>
         <jmockit.version>1.49</jmockit.version>
