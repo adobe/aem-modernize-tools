@@ -1,11 +1,7 @@
 package com.adobe.aem.modernize.servlet;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.jcr.RepositoryException;
 import javax.servlet.ServletException;
 
@@ -40,7 +36,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 public abstract class AbstractRulesServlet extends SlingSafeMethodsServlet {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractRulesServlet.class);
-  
+
   protected static final String PARAM_REPROCESS = "reprocess";
   private static final String PARAM_PATH = "path";
 
@@ -68,7 +64,7 @@ public abstract class AbstractRulesServlet extends SlingSafeMethodsServlet {
       writeResponse(response, SC_OK, data);
       return;
     }
-            
+
     Set<String> paths = new HashSet<>();
     Set<RuleInfo> infos = foundPaths.stream()
         .map(p -> {
@@ -103,7 +99,7 @@ public abstract class AbstractRulesServlet extends SlingSafeMethodsServlet {
     }
     return pageContent;
   }
-  
+
   @Nullable
   protected Resource getOriginalPageContent(@NotNull Page page) {
     String versionId = page.getProperties().get(ConversionJob.PN_PRE_MODERNIZE_VERSION, String.class);
@@ -137,7 +133,7 @@ public abstract class AbstractRulesServlet extends SlingSafeMethodsServlet {
           ValueMap vm = resource.adaptTo(ValueMap.class);
           if (vm != null &&
               StringUtils.isNotBlank(vm.get(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, String.class))) {
-            
+
             paths.add(resource.getPath());
           }
         }
@@ -172,10 +168,10 @@ public abstract class AbstractRulesServlet extends SlingSafeMethodsServlet {
 
   @NotNull
   protected abstract Set<String> listPaths(@NotNull Map<String, String[]> requestParameters, @NotNull Page page);
-  
+
   @NotNull
   protected abstract RewriteRuleService getRewriteRuleService();
-  
+
   @Getter
   @Setter
   @NoArgsConstructor

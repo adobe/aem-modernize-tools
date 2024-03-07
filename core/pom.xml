@@ -50,7 +50,7 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!-- <plugin>
                 <groupId>biz.aQute.bnd</groupId>
                 <artifactId>bnd-baseline-maven-plugin</artifactId>
                 <configuration>
@@ -64,7 +64,7 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -172,7 +172,7 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
             <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
         </dependency>
     </dependencies>
-    
+
     <profiles>
         <profile>
             <id>aemaacsDeps</id>
@@ -280,7 +280,7 @@ Bundle-SymbolicName: com.adobe.aem.aem-modernize-tools.core
                 </dependency>
             </dependencies>
         </profile>
-        
+
         <profile>
             <id>generate-site-docs</id>
             <activation>

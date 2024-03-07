@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  AEM Modernize Tools - UI apps
+  %%
+  Copyright (C) 2019 - 2021 Adobe Inc.
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0"
+          jcr:primaryType="nt:unstructured"
+          jcr:title="AEM Modernize Tools | Form Conversion Job Detail"
+          sling:resourceType="granite/ui/components/shell/collectionpage"
+          cq:defaultView="html"
+          consoleId="cq-modernize-job-form-detail"
+          modeGroup="aem-modernize-job-collection"
+          targetCollection=".aem-modernize-job-bucket-collection">
+  <head jcr:primaryType="nt:unstructured">
+    <clientlibs
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
+        categories="[granite.shared,coralui3,granite.ui.coral.foundation,granite.ui.coral.foundation.admin,aem.modernize.job.common]"/>
+  </head>
+  <title jcr:primaryType="nt:unstructured"
+         text="Form Conversion Job Details"
+         sling:resourceType="aem-modernize/components/job/title"/>
+  <rails jcr:primaryType="nt:unstructured">
+    <navigation jcr:primaryType="nt:unstructured"
+                jcr:title="Job (Bucket) List"
+                sling:resourceType="granite/ui/components/coral/foundation/panel/railpanel"
+                granite:class="cq-rail-navigation"
+                granite:id="aem-modernization-job-navigation"
+                active="{Boolean}true">
+      <items jcr:primaryType="nt:unstructured">
+        <navpanel jcr:primaryType="nt:unstructured"
+                  sling:resourceType="aem-modernize/components/job/view/navpanel"
+                  viewUrl="/mnt/overlay/aem-modernize/content/form/job/view.html"
+                  id="aem-modernize-job-view-navigation-panel"
+                  orientation="vertical"
+                  size="L">
+        </navpanel>
+      </items>
+    </navigation>
+  </rails>
+  <actions jcr:primaryType="nt:unstructured">
+    <secondary jcr:primaryType="nt:unstructured">
+      <return jcr:primaryType="nt:unstructured"
+              sling:resourceType="granite/ui/components/coral/foundation/anchorbutton"
+              href="${granite:url('/mnt/overlay/aem-modernize/content/form/job/list.html')}"
+              text="Return to List"
+              variant="quiet"/>
+    </secondary>
+  </actions>
+  <views jcr:primaryType="nt:unstructured">
+    <list jcr:primaryType="nt:unstructured"
+          jcr:title="List View"
+          sling:resourceType="granite/ui/components/coral/foundation/table"
+          granite:rel="aem-modernize-job-bucket-collection"
+          draggable="{Boolean}false"
+          icon="viewList"
+          layoutId="list"
+          modeGroup="aem-modernize-job-bucket-collection"
+          selectionMode="none"
+          selectionCount="single"
+          path="${requestPathInfo.suffix}"
+          bucket="${empty param.bucket ? &quot;0&quot; : param.bucket}"
+          src="${requestPathInfo.resourcePath}{.offset,limit}.html${requestPathInfo.suffix}?${querystring}"
+          itemResourceType="aem-modernize/components/job/bucket/item"
+          sortMode="local"
+          limit="{Long}50">
+      <datasource jcr:primaryType="nt:unstructured"
+                  limit="${empty requestPathInfo.selectors[1] ? &quot;51&quot; : requestPathInfo.selectors[1]}"
+                  offset="${requestPathInfo.selectors[0]}"
+                  sling:resourceType="aem-modernize/components/job/bucket/datasource"/>
+      <columns jcr:primaryType="nt:unstructured">
+        <path jcr:primaryType="nt:unstructured"
+              jcr:title="Path"
+              sortType="alphanumeric"
+              sortable="{Boolean}true"/>
+        <status jcr:primaryType="nt:unstructured"
+                jcr:title="Status"
+                sortType="alphanumeric"
+                sortable="{Boolean}true"/>
+        <icon jcr:primaryType="nt:unstructured"
+              alignment="center"
+              fixedWidth="{Boolean}true"
+              sortable="{Boolean}false"/>
+
+      </columns>
+    </list>
+  </views>
+</jcr:root>
