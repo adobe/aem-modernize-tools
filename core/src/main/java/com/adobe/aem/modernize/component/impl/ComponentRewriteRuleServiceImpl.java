@@ -105,7 +105,6 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
 
     try {
       String nodeName = node.getName();
-      String nodePath = node.getPath();
       String prevName = null;
       Node parent = node.getParent();
       boolean isOrdered = parent.getPrimaryNodeType().hasOrderableChildNodes();
@@ -119,8 +118,8 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
         }
       }
 
-      // Only order if node wasn't removed or modified
-      if (node != null && nodePath.equals(node.getPath()) && isOrdered) {
+      // Only order if node wasn't removed
+      if (node != null && isOrdered) {
         orderParent(nodeName, prevName, parent);
       }
     } catch (RepositoryException e) {
