@@ -1,0 +1,25 @@
+{
+  "jcr:primaryType":"dam:Asset",
+  "jcr:createdBy":"admin",
+  "jcr:created":"Wed Mar 13 2024 12:02:23 GMT+0530",
+  "jcr:content":{
+    "jcr:primaryType":"dam:AssetContent",
+    "type":"guide",
+    "guide":"1",
+    "cq:conf":"",
+    "jcr:lastModified":"Wed Mar 13 2024 12:04:00 GMT+0530",
+    "sling:resourceType":"fd/fm/af/render",
+    "metadata":{
+      "jcr:primaryType":"nt:unstructured",
+      "author":"admin",
+      "xmp:CreatorTool":"AEM Forms AF Wizard",
+      "jcr:language":"en",
+      "allowedRenderFormat":"HTML",
+      "fd:version":"1.1",
+      "title":"testFormConversion",
+      "themeRef":"/content/dam/formsanddocuments-themes/reference-themes/canvas-3-0",
+      "formmodel":"none",
+      "dorType":"none"
+    }
+  }
+}

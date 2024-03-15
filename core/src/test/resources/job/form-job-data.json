@@ -1,0 +1,44 @@
+{
+  "noReprocess": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "testformconversionjob",
+    "type": "FORM",
+    "pageHandling": "COPY",
+    "sourceRoot": "/content/forms/af/sourcefolder",
+    "targetRoot": "/content/forms/af/targetfolder",
+    "componentRules": [
+      "/var/aem-modernize/rules/textInput",
+      "/var/aem-modernize/rules/formTitle",
+      "/var/aem-modernize/rules/numberInput",
+      "/var/aem-modernize/rules/emailInput"
+    ],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/content/forms/af/sourcefolder/initialform",
+          "/content/forms/af/not-found-form"
+        ]
+      }
+    }
+  },
+  "reprocess": {
+    "jcr:primaryType": "nt:unstructured",
+    "jcr:title": "testformconversionjob",
+    "type": "FORM",
+    "pageHandling": "RESTORE",
+    "componentRules": [
+      "/var/aem-modernize/rules/textInput",
+      "/var/aem-modernize/rules/formTitle",
+      "/var/aem-modernize/rules/numberInput",
+      "/var/aem-modernize/rules/emailInput"
+    ],
+    "buckets": {
+      "bucket0": {
+        "paths": [
+          "/content/forms/af/sourcefolder/initialform",
+          "/content/forms/af/not-found-form"
+        ]
+      }
+    }
+  }
+}

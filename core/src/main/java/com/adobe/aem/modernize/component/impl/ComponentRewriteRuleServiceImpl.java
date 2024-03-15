@@ -118,7 +118,7 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
         }
       }
 
-      // Only order if node wasn't removed.
+      // Only order if node wasn't removed
       if (node != null && isOrdered) {
         orderParent(nodeName, prevName, parent);
       }
