@@ -1,9 +1,11 @@
 package com.adobe.aem.modernize.job;
 
+import com.adobe.aem.modernize.RewriteException;
 import com.adobe.aem.modernize.component.ComponentRewriteRuleService;
 import com.adobe.aem.modernize.component.impl.ComponentRewriteRuleServiceImpl;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
+import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.wcm.api.*;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -115,6 +117,46 @@ public class FormConversionJobExecutorTest {
 
         new Expectations() {{
             jobExecutionContext.initProgress(pathCount, -1);
+            jobExecutionContext.incrementProgressCount(1);
+            times = pathCount;
+        }};
+
+        ConversionJobBucket bucket = rr.getResource(path).adaptTo(ConversionJobBucket.class);
+        executor.doProcess(job, jobExecutionContext, bucket);
+        List<String> failed = bucket.getFailed();
+        assertEquals(1, failed.size(), "Failed list size");
+        assertTrue(failed.contains("/content/forms/af/sourcefolder/initialform"), "Failed item");
+
+        List<String> notFound = bucket.getNotFound();
+        assertEquals(1, notFound.size(), "Not found list size");
+        assertTrue(notFound.contains("/content/forms/af/not-found-form"), "Not found item");
+    }
+
+    @Test
+    public <P extends PageManager> void testWhenFormCopyFails() {
+        final String path = ConversionJob.JOB_DATA_LOCATION + "/form/noReprocess/buckets/bucket0";
+        ResourceResolver rr = context.resourceResolver();
+
+        new MockUp<P>() {
+            @Mock
+            public Revision createRevision(Page page, String label, String desc) {
+                assertNotNull(page);
+                assertNotNull(label);
+                assertNotNull(desc);
+                return revision;
+            }
+
+            @Mock
+            public Page copy(Page page, String dest, String before, boolean shallow,
+                             boolean resolve, boolean commit) throws RewriteException {
+                throw new RewriteException("Exception");
+            }
+        };
+
+        new Expectations() {{
+            jobExecutionContext.initProgress(pathCount, -1);
+            revision.getId();
+            result = version;
             jobExecutionContext.incrementProgressCount(1);
             times = pathCount;
         }};
