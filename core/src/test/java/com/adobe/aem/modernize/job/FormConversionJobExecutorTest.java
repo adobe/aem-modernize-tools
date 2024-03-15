@@ -77,6 +77,26 @@ public class FormConversionJobExecutorTest {
     }
 
     @Test
+    public void testSourceRootMissing() throws RepositoryException {
+        final String path = ConversionJob.JOB_DATA_LOCATION + "/form/noReprocess/buckets/bucket0";
+        new Expectations() {{
+            jobExecutionContext.initProgress(pathCount, -1);
+        }};
+        ResourceResolver rr = context.resourceResolver();
+        Node n = rr.getResource(ConversionJob.JOB_DATA_LOCATION + "/form/noReprocess").adaptTo(Node.class);
+        n.setProperty("sourceRoot", "");
+        ConversionJobBucket bucket = rr.getResource(path).adaptTo(ConversionJobBucket.class);
+        executor.doProcess(job, jobExecutionContext, bucket);
+        List<String> failed = bucket.getFailed();
+        assertEquals(1, failed.size(), "Failed list size");
+        assertTrue(failed.contains("/content/forms/af/sourcefolder/initialform"), "Failed item");
+
+        List<String> notFound = bucket.getNotFound();
+        assertEquals(1, notFound.size(), "Not found list size");
+        assertTrue(notFound.contains("/content/forms/af/not-found-form"), "Not found item");
+    }
+
+    @Test
     public <P extends PageManager> void createVersionManagementFails() {
         final String path = ConversionJob.JOB_DATA_LOCATION + "/form/noReprocess/buckets/bucket0";
         ResourceResolver rr = context.resourceResolver();

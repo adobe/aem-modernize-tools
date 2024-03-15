@@ -26,7 +26,6 @@ import com.adobe.aem.modernize.impl.RewriteUtils;
 import com.adobe.aem.modernize.model.ConversionJob;
 import com.adobe.aem.modernize.model.ConversionJobBucket;
 import com.day.cq.commons.jcr.JcrUtil;
-import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
@@ -43,7 +42,6 @@ import org.osgi.service.component.annotations.Reference;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -116,7 +114,6 @@ public class FormConversionJobExecutor extends AbstractConversionJobExecutor {
                     context.log("No component rules found, skipping skipping component conversion.");
                 } else {
                     componentService.apply(page.getContentResource(), componentRules, true);
-                    fixChildrenOrder(page);
                 }
 
                 bucket.getSuccess().add(path);
@@ -137,18 +134,6 @@ public class FormConversionJobExecutor extends AbstractConversionJobExecutor {
     @Override
     protected ResourceResolverFactory getResourceResolverFactory() {
         return resourceResolverFactory;
-    }
-
-    private void fixChildrenOrder(Page page) throws RewriteException {
-        Iterator<Page> children = page.listChildren();
-        if (children.hasNext()) {
-            Node node = page.adaptTo(Node.class);
-            try {
-                node.orderBefore(NameConstants.NN_CONTENT, children.next().getName());
-            } catch (RepositoryException e) {
-                throw new RewriteException("Unable to re-order page's JCR Content Node.", e);
-            }
-        }
     }
 
     private String getFormsAssetPathFromPagePath(String pagePath) {
