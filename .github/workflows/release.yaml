@@ -38,7 +38,7 @@ jobs:
 
       - name: Store Version
         id: store-version
-        run: echo "version=$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aem-modernize-tools-//g')" >> $GITHUB_OUTPUT
+        run: echo "version=$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aem-modernize-tools-//g')" >> "$GITHUB_OUTPUT"
 
   github-release:
     needs: tag
