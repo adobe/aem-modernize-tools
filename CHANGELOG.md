@@ -15,6 +15,9 @@
 
 ### 📁 Other pull requests
 
+- Bump org.apache.maven.plugins:maven-dependency-plugin from 3.2.0 to 3.6.1 [\#218](https://github.com/adobe/aem-modernize-tools/pull/218) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump com.adobe.aem:aemanalyser-maven-plugin from 1.4.0 to 1.5.12 [\#217](https://github.com/adobe/aem-modernize-tools/pull/217) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.apache.maven.plugins:maven-compiler-plugin from 3.10.0 to 3.13.0 [\#216](https://github.com/adobe/aem-modernize-tools/pull/216) ([dependabot[bot]](https://github.com/apps/dependabot))
 - chore: Update deps. [\#215](https://github.com/adobe/aem-modernize-tools/pull/215) ([bstopp](https://github.com/bstopp))
 - ci: Use GITHUB\_OUTPUT envvar instead of set-output command [\#208](https://github.com/adobe/aem-modernize-tools/pull/208) ([arunsathiya](https://github.com/arunsathiya))
 - Bump codecov/codecov-action from 2.1.0 to 3.1.1 [\#195](https://github.com/adobe/aem-modernize-tools/pull/195) ([dependabot[bot]](https://github.com/apps/dependabot))
