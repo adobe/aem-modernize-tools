@@ -105,3 +105,5 @@ reports/
 
 ui.content
 /docs/_site/
+
+.DS_Store

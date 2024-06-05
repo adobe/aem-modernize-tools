@@ -195,7 +195,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
@@ -206,12 +206,12 @@
                         <dependency>
                             <groupId>org.apache.maven.shared</groupId>
                             <artifactId>maven-invoker</artifactId>
-                            <version>2.2</version> <!-- Freeze until 3.0.0 of Maven Release Plugin is GA -->
+                            <version>3.3.0</version>
                         </dependency>
                         <dependency>
                             <groupId>org.apache.maven.release</groupId>
                             <artifactId>maven-release-oddeven-policy</artifactId>
-                            <version>2.5.3</version>
+                            <version>3.0.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -351,7 +351,7 @@ Bundle-DocURL:
                         <dependency>
                             <groupId>biz.netcentric.aem</groupId>
                             <artifactId>aem-nodetypes</artifactId>
-                            <version>6.5.7.0</version>
+                            <version>2023.10.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -528,7 +528,7 @@ Bundle-DocURL:
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <aem.version>2021.11.6013.20211105T162756Z-211000</aem.version>
+                <aem.version>2024.5.16544.20240530T165853Z-240500</aem.version>
             </properties>
             <dependencyManagement>
                 <dependencies>
@@ -956,13 +956,13 @@ Bundle-DocURL:
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>23.0.0</version>
+                <version>24.1.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.22</version>
+                <version>1.18.32</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -976,13 +976,13 @@ Bundle-DocURL:
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>5.8.2</version>
+                <version>5.10.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.8.2</version>
+                <version>5.10.2</version>
                 <scope>test</scope>
             </dependency>
 
@@ -995,25 +995,25 @@ Bundle-DocURL:
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.sling-mock.junit5</artifactId>
-                <version>3.2.2</version>
+                <version>3.5.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.jcr-mock</artifactId>
-                <version>1.5.4</version>
+                <version>1.6.14</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.testing.sling-mock-oak</artifactId>
-                <version>3.1.2-1.40.0</version>
+                <version>4.0.0-1.62.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>io.wcm</groupId>
                 <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-                <version>4.1.8</version>
+                <version>5.5.2</version>
                 <scope>test</scope>
             </dependency>
 
