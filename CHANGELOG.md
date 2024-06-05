@@ -15,6 +15,9 @@
 
 ### 📁 Other pull requests
 
+- Bump actions/setup-java from 3 to 4 [\#223](https://github.com/adobe/aem-modernize-tools/pull/223) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump codecov/codecov-action from 3.1.1 to 4.4.1 [\#222](https://github.com/adobe/aem-modernize-tools/pull/222) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump actions/checkout from 3 to 4 [\#221](https://github.com/adobe/aem-modernize-tools/pull/221) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump softprops/action-gh-release from 1 to 2 [\#219](https://github.com/adobe/aem-modernize-tools/pull/219) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump org.apache.maven.plugins:maven-dependency-plugin from 3.2.0 to 3.6.1 [\#218](https://github.com/adobe/aem-modernize-tools/pull/218) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump com.adobe.aem:aemanalyser-maven-plugin from 1.4.0 to 1.5.12 [\#217](https://github.com/adobe/aem-modernize-tools/pull/217) ([dependabot[bot]](https://github.com/apps/dependabot))
