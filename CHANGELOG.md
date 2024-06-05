@@ -15,6 +15,7 @@
 
 ### 📁 Other pull requests
 
+- chore: Update deps. [\#215](https://github.com/adobe/aem-modernize-tools/pull/215) ([bstopp](https://github.com/bstopp))
 - ci: Use GITHUB\_OUTPUT envvar instead of set-output command [\#208](https://github.com/adobe/aem-modernize-tools/pull/208) ([arunsathiya](https://github.com/arunsathiya))
 
 ## [aem-modernize-tools-2.1.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.1.0) (2022-03-14)
