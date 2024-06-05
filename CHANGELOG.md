@@ -18,6 +18,7 @@
 - chore: Update deps. [\#215](https://github.com/adobe/aem-modernize-tools/pull/215) ([bstopp](https://github.com/bstopp))
 - ci: Use GITHUB\_OUTPUT envvar instead of set-output command [\#208](https://github.com/adobe/aem-modernize-tools/pull/208) ([arunsathiya](https://github.com/arunsathiya))
 - Bump codecov/codecov-action from 2.1.0 to 3.1.1 [\#195](https://github.com/adobe/aem-modernize-tools/pull/195) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump javax.servlet-api from 3.1.0 to 4.0.1 [\#169](https://github.com/adobe/aem-modernize-tools/pull/169) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [aem-modernize-tools-2.1.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.1.0) (2022-03-14)
 
