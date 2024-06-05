@@ -13,6 +13,10 @@
 
 - Add docs on security. [\#173](https://github.com/adobe/aem-modernize-tools/pull/173) ([bstopp](https://github.com/bstopp))
 
+### 📁 Other pull requests
+
+- ci: Use GITHUB\_OUTPUT envvar instead of set-output command [\#208](https://github.com/adobe/aem-modernize-tools/pull/208) ([arunsathiya](https://github.com/arunsathiya))
+
 ## [aem-modernize-tools-2.1.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.1.0) (2022-03-14)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.0.18...aem-modernize-tools-2.1.0)
