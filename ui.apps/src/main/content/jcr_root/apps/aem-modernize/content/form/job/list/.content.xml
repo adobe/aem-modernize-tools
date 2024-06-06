@@ -23,7 +23,7 @@
           xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
           xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
           jcr:primaryType="nt:unstructured"
-          jcr:title="AEM Modernize Tools | Form Conversion Jobs"
+          jcr:title="AEM Modernize Tools | Adaptive Form Conversion Jobs"
           sling:resourceType="granite/ui/components/shell/collectionpage"
           cq:defaultView="html"
           consoleId="cq-modernize-job-form-list"
@@ -48,7 +48,7 @@
     </secondary>
   </actions>
   <title jcr:primaryType="nt:unstructured"
-         text="Form Conversion Jobs"
+         text="Adaptive Form Conversion Jobs"
          sling:resourceType="granite/ui/components/coral/foundation/text"/>
   <views jcr:primaryType="nt:unstructured">
     <card jcr:primaryType="nt:unstructured"

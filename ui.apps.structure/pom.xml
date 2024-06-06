@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.adobe.aem</groupId>
         <artifactId>aem-modernize-tools</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,7 +36,7 @@
                         <filter><root>/apps</root></filter>
                         <filter><root>/apps/aem-modernize</root></filter>
                         <filter><root>/apps/aem-modernize/content</root></filter>
-                        
+
                         <filter><root>/apps/aem-modernize-packages</root></filter>
 
                         <filter><root>/apps/cq</root></filter>

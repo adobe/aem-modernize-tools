@@ -22,7 +22,7 @@
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
           jcr:mixinTypes="[rep:AccessControllable]"
           jcr:primaryType="nt:unstructured"
-          jcr:title="Forms Conversion"
+          jcr:title="Adaptive Forms Conversion"
           href="/mnt/overlay/aem-modernize/content/form/job/list.html"
           icon="form"
           id="aem-modernize-tools-forms"/>

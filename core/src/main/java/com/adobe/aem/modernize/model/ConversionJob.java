@@ -24,7 +24,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.adobe.aem.modernize.job.FormConversionJobExecutor;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.JobManager;
@@ -34,6 +33,7 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 import com.adobe.aem.modernize.component.job.ComponentJobExecutor;
+import com.adobe.aem.modernize.form.job.FormConversionJobExecutor;
 import com.adobe.aem.modernize.job.FullConversionJobExecutor;
 import com.adobe.aem.modernize.policy.job.PolicyJobExecutor;
 import com.adobe.aem.modernize.structure.job.PageStructureJobExecutor;
