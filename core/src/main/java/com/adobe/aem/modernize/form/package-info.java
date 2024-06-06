@@ -1,11 +1,11 @@
-@org.osgi.annotation.versioning.Version("2.1.0")
-package com.adobe.aem.modernize.component;
+@org.osgi.annotation.versioning.Version("2.2.0")
+package com.adobe.aem.modernize.form;
 
 /*-
  * #%L
  * AEM Modernize Tools - Core
  * %%
- * Copyright (C) 2019 - 2021 Adobe Inc.
+ * Copyright (C) 2019 - 2024 Adobe Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

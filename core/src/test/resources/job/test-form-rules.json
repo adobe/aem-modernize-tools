@@ -1,0 +1,80 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "textInput": {
+    "jcr:primaryType":"nt:unstructured",
+    "patterns":{
+      "jcr:primaryType":"nt:unstructured",
+      "textInput":{
+        "jcr:primaryType":"nt:unstructured",
+        "sling:resourceType":"fd/af/components/guidetextbox"
+      }
+    },
+    "replacement":{
+      "jcr:primaryType":"nt:unstructured",
+      "textInput":{
+        "jcr:primaryType":"nt:unstructured",
+        "jcr:title":"${'./jcr:title'}",
+        "sling:resourceType":"aem-modernize/components/form/textinput",
+        "fieldType":"text-input",
+        "required":"${./mandatory}"
+      }
+    }
+  },
+  "formTitle": {
+    "jcr:primaryType":"nt:unstructured",
+    "patterns":{
+      "jcr:primaryType":"nt:unstructured",
+      "formTitle":{
+        "jcr:primaryType":"nt:unstructured",
+        "sling:resourceType":"fd/af/components/afFormTitle"
+      }
+    },
+    "replacement":{
+      "jcr:primaryType":"nt:unstructured",
+      "formTitle":{
+        "jcr:primaryType":"nt:unstructured",
+        "jcr:title":"${'./jcr:title'}",
+        "sling:resourceType":"aem-modernize/components/form/title",
+        "fieldType":"plain-text"
+      }
+    }
+  },
+  "numberInput": {
+    "jcr:primaryType":"nt:unstructured",
+    "patterns":{
+      "jcr:primaryType":"nt:unstructured",
+      "numberInput":{
+        "jcr:primaryType":"nt:unstructured",
+        "sling:resourceType":"fd/af/components/guidenumericbox"
+      }
+    },
+    "replacement":{
+      "jcr:primaryType":"nt:unstructured",
+      "numberInput":{
+        "jcr:primaryType":"nt:unstructured",
+        "jcr:title":"${'./jcr:title'}",
+        "sling:resourceType":"aem-modernize/components/form/numberinput",
+        "fieldType":"number-input"
+      }
+    }
+  },
+  "emailInput": {
+    "jcr:primaryType":"nt:unstructured",
+    "patterns":{
+      "jcr:primaryType":"nt:unstructured",
+      "emailInput":{
+        "jcr:primaryType":"nt:unstructured",
+        "sling:resourceType":"fd/af/components/guideemail"
+      }
+    },
+    "replacement":{
+      "jcr:primaryType":"nt:unstructured",
+      "emailInput":{
+        "jcr:primaryType":"nt:unstructured",
+        "jcr:title":"${'./jcr:title'}",
+        "sling:resourceType":"aem-modernize/components/form/emailinput",
+        "fieldType":"email"
+      }
+    }
+  }
+}
