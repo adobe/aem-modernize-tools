@@ -1,6 +1,7 @@
 com.adobe.aem.modernize
 com.adobe.aem.modernize.component
 com.adobe.aem.modernize.component.rule
+com.adobe.aem.modernize.form
 com.adobe.aem.modernize.policy
 com.adobe.aem.modernize.rule
 com.adobe.aem.modernize.structure

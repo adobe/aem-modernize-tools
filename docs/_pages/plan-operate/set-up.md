@@ -22,7 +22,7 @@ Add the following to the `<dependencies>` section of the _all project's pom.xml_
 <dependency>
     <groupId>com.adobe.aem</groupId>
     <artifactId>aem-modernize-tools.all</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0</version>
     <type>zip</type>
     <!-- <classifier>aem65</classifier> optional, see below -->
 </dependency>
