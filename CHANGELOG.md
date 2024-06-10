@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aem-modernize-tools/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.2.0...HEAD)
+
+### 📖 Documentation
+
+- docs: Update configuration.html [\#230](https://github.com/adobe/aem-modernize-tools/pull/230) ([bstopp](https://github.com/bstopp))
+
 ## [aem-modernize-tools-2.2.0](https://github.com/adobe/aem-modernize-tools/tree/aem-modernize-tools-2.2.0) (2024-06-06)
 
 [Full Changelog](https://github.com/adobe/aem-modernize-tools/compare/aem-modernize-tools-2.1.0...aem-modernize-tools-2.2.0)
