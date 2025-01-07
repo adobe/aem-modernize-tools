@@ -204,7 +204,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
 
     do {
       child = siblings.nextNode();
-      if (isColumnNode(child)) {
+      if (isStartNode(child)) {
         child.remove();
         break;
       }
@@ -228,7 +228,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
         addResponsive(node, c, newline, offset);
         order.add(node.getName());
         child = siblings.nextNode();
-        if (isColumnNode(child)) {
+        if (isBreakNode(child) || isEndNode(child)) {
           child.remove();
           siblings.nextNode();
         }
@@ -240,9 +240,13 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     // Move remaining non column content to the end, preserve the order.
     while (siblings.hasNext()) {
       child = siblings.nextNode();
-      if (isColumnNode(child)) {
-        child.remove();
-        continue;
+      if (isStartNode(child)) {
+          // Recursively process the newly found column control
+          processResponsiveGrid(root);
+          continue;
+      } else if (isBreakNode(child) || isEndNode(child)) {
+          child.remove();
+          continue;
       }
       order.add(child.getName());
     }
@@ -305,7 +309,7 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
       columnContents.add(nodeNames);
       while (siblings.hasNext()) {
         Node node = siblings.nextNode();
-        if (StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString())) {
+        if (isBreakNode(node) || isEndNode(node)) {
           // Node is now the next column break;
           break;
         }
@@ -316,12 +320,30 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     return columnContents;
   }
 
-  private boolean isColumnNode(Node node) throws RepositoryException {
-    if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
-      return false;
+  // Check if the node is a column control node.
+    private boolean isStartNode(Node node) throws RepositoryException {
+        if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
+            return false;
+        }
+        return StringUtils.equals(columnControlResourceType,
+            node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString());
     }
-    return StringUtils.equals(columnControlResourceType, node.getProperty(SLING_RESOURCE_TYPE_PROPERTY).getString());
-  }
+    // Check if the node is a break node of controlType 'break'
+    private boolean isBreakNode(Node node) throws RepositoryException {
+        if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
+            return false;
+        }
+        return node.hasProperty("controlType")
+            && StringUtils.equals("break", node.getProperty("controlType").getString());
+    }
+    // Check if the node is an end node of controlType 'end'
+    private boolean isEndNode(Node node) throws RepositoryException {
+        if (!node.hasProperty(SLING_RESOURCE_TYPE_PROPERTY)) {
+            return false;
+        }
+        return node.hasProperty("controlType")
+            && StringUtils.equals("end", node.getProperty("controlType").getString());
+    }
 
   private void addResponsive(Node node, int index, boolean isNewline, boolean isOffset) throws RepositoryException {
     Node responsive = node.addNode(NN_RESPONSIVE_CONFIG, NT_UNSTRUCTURED);
@@ -416,8 +438,8 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
       columnControlResourceType = PROP_RESOURCE_TYPE_DEFAULT;
     }
 
-//    String type = config.grid_type();
-    isResponsive = false; // !StringUtils.equals(PROP_CONTAINER_TYPE, type);
+   String type = config.grid_type();
+    isResponsive = !StringUtils.equals(PROP_CONTAINER_TYPE, type);
 
     containerResourceType = config.container_resourceType();
     if (!isResponsive) {
@@ -475,15 +497,15 @@ public class ColumnControlRewriteRule implements ComponentRewriteRule {
     )
     String column_control_resourceType() default PROP_RESOURCE_TYPE_DEFAULT;
 
-//    @AttributeDefinition(
-//        name = "Conversion Type",
-//        description = "Type of structure to convert to: RESPONSIVE will arrange column contents in parent responsive grid. CONTAINER will replace each column with a container.",
-//        options = {
-//            @Option(label = "Responsive", value = PROP_RESPONSIVE_TYPE),
-//            @Option(label = "Container", value = PROP_CONTAINER_TYPE),
-//        }
-//    )
-//    String grid_type() default PROP_RESPONSIVE_TYPE;
+   @AttributeDefinition(
+       name = "Conversion Type",
+       description = "Type of structure to convert to: RESPONSIVE will arrange column contents in parent responsive grid. CONTAINER will replace each column with a container.",
+       options = {
+           @Option(label = "Responsive", value = PROP_RESPONSIVE_TYPE),
+           @Option(label = "Container", value = PROP_CONTAINER_TYPE),
+       }
+   )
+   String grid_type() default PROP_RESPONSIVE_TYPE;
 
     @AttributeDefinition(
         name = "Container ResourceType",
