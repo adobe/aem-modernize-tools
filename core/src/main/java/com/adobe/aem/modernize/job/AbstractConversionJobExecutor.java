@@ -246,5 +246,10 @@ public abstract class AbstractConversionJobExecutor implements JobExecutor {
 
   protected abstract void doProcess(@NotNull Job job, @NotNull JobExecutionContext context, @NotNull ConversionJobBucket bucket);
 
+  abstract void processPathsWithRules(
+          @NotNull JobExecutionContext context,
+          @NotNull ConversionJobBucket bucket,
+          @NotNull Set<String> rules);
+
   protected abstract ResourceResolverFactory getResourceResolverFactory();
 }

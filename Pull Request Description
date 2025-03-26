@@ -1,0 +1,53 @@
+ Related Issue
+No specific issue - This PR is a proactive code quality improvement.
+
+ Motivation and Context
+The AEM Modernize Tools code contained several instances of complex conditional logic, code duplication, and large classes with multiple responsibilities. This refactoring applies well-established design patterns to improve code maintainability, readability, and extensibility without changing functionality.
+
+ How Has This Been Tested?
+- All existing tests have been maintained and updated to reflect the refactored code
+- Added new tests for the extracted helper classes
+- Verified that the refactored code produces the same output as the original code for representative test cases
+- Ran all existing integration tests to ensure backward compatibility
+
+ Types of changes
+-  New feature (non-breaking change which adds functionality)
+  - Added helper classes to improve code organization
+  - Implemented design patterns to reduce complexity
+  - Enhanced error handling with better context messages
+
+Key Changes
+
+1. Extract Class Refactoring:
+   - Created `ColumnLayoutHelper` to separate column management logic from rule application
+   - Improved separation of concerns in `ColumnControlRewriteRule`
+
+2. Replace Conditional with Polymorphism:
+   - Added `NodeOrderInfo` class hierarchy to handle different node ordering scenarios
+   - Replaced complex conditional logic with polymorphic behavior
+
+3. Decompose Conditional:
+   - Extracted `hasMatchingResourceType` method to simplify matching logic
+   - Enhanced readability and testability of complex conditions
+
+4. Improved Error Handling:
+   - Added more specific error messages with contextual information
+   - Enhanced error recovery during batch operations
+
+Checklist:
+-  I have signed the Adobe Open Source CLA
+-  My code follows the code style of this project
+-  My change requires a change to the documentation
+-  I have updated the documentation accordingly
+-  I have read the CONTRIBUTING document
+-  I have added tests to cover my changes
+-  All new and existing tests passed
+
+ Benefits
+
+This refactoring provides several key benefits:
+- Reduced complexity through better separation of concerns
+- Improved maintainability with smaller, focused classes
+- Enhanced testability with clearer responsibility boundaries
+- Better error handling with more specific error messages
+- Maintained full backward compatibility with existing API

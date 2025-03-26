@@ -52,18 +52,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
-    service = { ComponentRewriteRuleService.class },
-    reference = {
-        @Reference(
-            name = "rule",
-            service = ComponentRewriteRule.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            policyOption = ReferencePolicyOption.GREEDY,
-            bind = "bindRule",
-            unbind = "unbindRule"
-        )
-    }
+        service = { ComponentRewriteRuleService.class },
+        reference = {
+                @Reference(
+                        name = "rule",
+                        service = ComponentRewriteRule.class,
+                        cardinality = ReferenceCardinality.MULTIPLE,
+                        policy = ReferencePolicy.DYNAMIC,
+                        policyOption = ReferencePolicyOption.GREEDY,
+                        bind = "bindRule",
+                        unbind = "unbindRule"
+                )
+        }
 )
 @Designate(ocd = ComponentRewriteRuleServiceImpl.Config.class)
 public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<ComponentRewriteRule> implements ComponentRewriteRuleService {
@@ -87,12 +87,16 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
       if (deep) {
         List<RewriteRule> rewrites = create(rr, rules);
         Node node = resource.adaptTo(Node.class);
-        ComponentTreeRewriter.rewrite(node, rewrites);
+        if (node == null) {
+          throw new RewriteException("Failed to adapt resource to Node: " + resource.getPath());
+        }
+        // Use the correct method name from ComponentTreeRewriter
+        ComponentTreeRewriter.process(node, rewrites);
       } else {
         apply(resource, rules);
       }
     } catch (RepositoryException e) {
-      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+      throw new RewriteException("Repository exception while performing rewrite operation on " + resource.getPath(), e);
     }
   }
 
@@ -103,14 +107,15 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
     Node node = resource.adaptTo(Node.class);
     boolean success = false;
 
+    if (node == null) {
+      throw new RewriteException("Failed to adapt resource to Node: " + resource.getPath());
+    }
+
     try {
-      String nodeName = node.getName();
-      String prevName = null;
-      Node parent = node.getParent();
-      boolean isOrdered = parent.getPrimaryNodeType().hasOrderableChildNodes();
-      if (isOrdered) {
-        prevName = findPrevName(nodeName, parent);
-      }
+      // Obtain ordering information
+      NodeOrderInfo orderInfo = NodeOrderInfo.create(node);
+
+      // Apply rules
       for (RewriteRule rule : rewrites) {
         if (rule.matches(node)) {
           node = rule.applyTo(node, new HashSet<>());
@@ -118,48 +123,16 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
         }
       }
 
-      // Only order if node wasn't removed
-      if (node != null && isOrdered) {
-        orderParent(nodeName, prevName, parent);
+      // Apply node ordering if needed
+      if (node != null && orderInfo.isOrdered()) {
+        orderInfo.applyOrdering(node);
       }
+
     } catch (RepositoryException e) {
-      throw new RewriteException("Repository exception while performing rewrite operation.", e);
+      throw new RewriteException("Repository exception while performing rewrite operation on " + resource.getPath(), e);
     }
+
     return success;
-  }
-
-  private String findPrevName(String nodeName, Node parent) throws RepositoryException {
-    String prevName = null;
-    // Need to figure out where in the parent's order we are.
-    NodeIterator siblings = parent.getNodes();
-    while (siblings.hasNext()) {
-      Node sibling = siblings.nextNode();
-      // Stop when we find ourself in list. Prev will either be set, or not.
-      if (sibling.getName().equals(nodeName)) {
-        break;
-      }
-      prevName = sibling.getName();
-    }
-    return prevName;
-  }
-
-  private void orderParent(String nodeName, String prevName, Node parent) throws RepositoryException {
-    // Previous not set - we should be first in the order - if previous and first item in list, we're the only child.
-    if (prevName == null) {
-      String nextName = parent.getNodes().nextNode().getName();
-      if (!nextName.equals(nodeName)) {
-        parent.orderBefore(nodeName, nextName);
-      }
-    } else {
-      NodeIterator siblings = parent.getNodes();
-      String siblingName = siblings.nextNode().getName();
-      while (!siblingName.equals(prevName)) {
-        // There has to be a better way to skip through a parent's children nodes.
-        siblingName = siblings.nextNode().getName();
-      }
-      siblingName = siblings.nextNode().getName();
-      parent.orderBefore(nodeName, siblingName);
-    }
   }
 
   @SuppressWarnings("unused")
@@ -182,16 +155,154 @@ public class ComponentRewriteRuleServiceImpl extends AbstractRewriteRuleService<
   }
 
   @ObjectClassDefinition(
-      name = "AEM Modernize Tools - Component Rewrite Rule Service",
-      description = "Manages operations for performing component-level rewrites for Modernization tasks."
+          name = "AEM Modernize Tools - Component Rewrite Rule Service",
+          description = "Manages operations for performing component-level rewrites for Modernization tasks."
   )
   @interface Config {
     @AttributeDefinition(
-        name = "Component Rule Paths",
-        description = "List of paths to find node-based Component Rewrite Rules",
-        cardinality = Integer.MAX_VALUE
+            name = "Component Rule Paths",
+            description = "List of paths to find node-based Component Rewrite Rules",
+            cardinality = Integer.MAX_VALUE
     )
     String[] search_paths();
   }
 
+  /**
+   * Helper class to encapsulate node ordering information and behavior.
+   * This uses the polymorphism pattern to handle different ordering scenarios.
+   */
+  private static abstract class NodeOrderInfo {
+
+    /**
+     * Factory method to create the appropriate NodeOrderInfo implementation
+     */
+    public static NodeOrderInfo create(Node node) throws RepositoryException {
+      String nodeName = node.getName();
+      Node parent = node.getParent();
+      boolean isOrdered = parent.getPrimaryNodeType().hasOrderableChildNodes();
+
+      if (!isOrdered) {
+        return new NonOrderableNodeInfo();
+      }
+
+      String previousNodeName = findPreviousNodeName(nodeName, parent);
+      if (previousNodeName == null) {
+        return new FirstNodeOrderInfo(nodeName, parent);
+      } else {
+        return new MiddleNodeOrderInfo(nodeName, previousNodeName, parent);
+      }
+    }
+
+    /**
+     * Find the name of the node that comes before the specified node
+     */
+    private static String findPreviousNodeName(String nodeName, Node parent) throws RepositoryException {
+      String prevName = null;
+      NodeIterator siblings = parent.getNodes();
+
+      while (siblings.hasNext()) {
+        Node sibling = siblings.nextNode();
+        if (sibling.getName().equals(nodeName)) {
+          break;
+        }
+        prevName = sibling.getName();
+      }
+
+      return prevName;
+    }
+
+    /**
+     * Apply ordering to the node
+     */
+    public abstract void applyOrdering(Node node) throws RepositoryException;
+
+    /**
+     * Check if the node has orderable parent
+     */
+    public abstract boolean isOrdered();
+  }
+
+  /**
+   * Implementation for nodes that don't have orderable parents
+   */
+  private static class NonOrderableNodeInfo extends NodeOrderInfo {
+    @Override
+    public void applyOrdering(Node node) {
+      // Do nothing - parent doesn't support ordering
+    }
+
+    @Override
+    public boolean isOrdered() {
+      return false;
+    }
+  }
+
+  /**
+   * Implementation for nodes that should be the first among siblings
+   */
+  private static class FirstNodeOrderInfo extends NodeOrderInfo {
+    private final String nodeName;
+    private final Node parent;
+
+    public FirstNodeOrderInfo(String nodeName, Node parent) {
+      this.nodeName = nodeName;
+      this.parent = parent;
+    }
+
+    @Override
+    public void applyOrdering(Node node) throws RepositoryException {
+      NodeIterator siblings = parent.getNodes();
+      if (siblings.hasNext()) {
+        String firstNodeName = siblings.nextNode().getName();
+        if (!firstNodeName.equals(nodeName)) {
+          parent.orderBefore(nodeName, firstNodeName);
+        }
+      }
+    }
+
+    @Override
+    public boolean isOrdered() {
+      return true;
+    }
+  }
+
+  /**
+   * Implementation for nodes that should be placed after a specific sibling
+   */
+  private static class MiddleNodeOrderInfo extends NodeOrderInfo {
+    private final String nodeName;
+    private final String previousNodeName;
+    private final Node parent;
+
+    public MiddleNodeOrderInfo(String nodeName, String previousNodeName, Node parent) {
+      this.nodeName = nodeName;
+      this.previousNodeName = previousNodeName;
+      this.parent = parent;
+    }
+
+    @Override
+    public void applyOrdering(Node node) throws RepositoryException {
+      NodeIterator siblings = parent.getNodes();
+      String siblingName = siblings.nextNode().getName();
+
+      // Find the previous node in the iterator
+      while (!siblingName.equals(previousNodeName) && siblings.hasNext()) {
+        siblingName = siblings.nextNode().getName();
+      }
+
+      // Get the next node's name (the one that should come after our previous)
+      if (siblings.hasNext()) {
+        siblingName = siblings.nextNode().getName();
+        parent.orderBefore(nodeName, siblingName);
+      } else {
+        // If we reached the end, our node should be last
+        parent.orderBefore(nodeName, null);
+      }
+    }
+
+    @Override
+    public boolean isOrdered() {
+      return true;
+    }
+  }
 }

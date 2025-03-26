@@ -26,7 +26,6 @@ import java.util.Set;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 
@@ -45,7 +44,7 @@ import static com.adobe.aem.modernize.component.job.ComponentJobExecutor.*;
         JobExecutor.PROPERTY_TOPICS + "=" + JOB_TOPIC
     }
 )
-public class ComponentJobExecutor extends AbstractConversionJobExecutor {
+public abstract class ComponentJobExecutor extends AbstractConversionJobExecutor {
 
   public static final String JOB_TOPIC = "com/adobe/aem/modernize/job/topic/convert/component";
 
@@ -55,34 +54,48 @@ public class ComponentJobExecutor extends AbstractConversionJobExecutor {
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
 
-  @Override
-  protected void doProcess(@NotNull Job job, @NotNull JobExecutionContext context, @NotNull ConversionJobBucket bucket) {
+  void processPathsWithRules(
+          @NotNull JobExecutionContext context,
+          @NotNull ConversionJobBucket bucket,
+          @NotNull Set<String> rules) {
 
-    Resource resource = bucket.getResource();
-    final List<String> paths = bucket.getPaths();
-    context.initProgress(paths.size(), -1);
+    Resource rootResource = bucket.getResource();
+    ResourceResolver resolver = rootResource.getResourceResolver();
+    List<String> paths = bucket.getPaths();
 
-    final Set<String> rules = getComponentRules(bucket);
-    if (rules.isEmpty()) {
-      context.log("No component rules found, skipping skipping component conversion.");
-    } else {
-      ResourceResolver rr = resource.getResourceResolver();
-      for (String path : paths) {
-        Resource r = rr.getResource(path);
-        if (r != null) {
-          try {
-            if (componentService.apply(r, rules)) {
-              bucket.getSuccess().add(path);
-            } else {
-              bucket.getNotFound().add(path);
-            }
-          } catch (RewriteException e) {
-            logger.error("Component conversion resulted in an error", e);
-            bucket.getFailed().add(path);
-          }
+    for (String path : paths) {
+      try {
+        Resource resource = resolver.getResource(path);
+
+        if (resource == null) {
+          context.log("Resource not found: " + path);
+          bucket.getNotFound().add(path);
+          continue;
+        }
+
+        // Apply rules to the resource
+        boolean applied = componentService.apply(resource, rules);
+
+        if (applied) {
+          context.log("Successfully converted: " + path);
+          bucket.getSuccess().add(path);
         } else {
+          context.log("No matching rules applied to: " + path);
           bucket.getNotFound().add(path);
         }
+
+      } catch (RewriteException e) {
+        String errorMessage = "Component conversion error for " + path + ": " + e.getMessage();
+        logger.error(errorMessage, e);
+        context.log(errorMessage);
+        bucket.getFailed().add(path);
+      } catch (Exception e) {
+        // Catch any unexpected exceptions to prevent job failure
+        String errorMessage = "Unexpected error processing " + path + ": " + e.getMessage();
+        logger.error(errorMessage, e);
+        context.log(errorMessage);
+        bucket.getFailed().add(path);
+      } finally {
         context.incrementProgressCount(1);
       }
     }
@@ -92,5 +105,7 @@ public class ComponentJobExecutor extends AbstractConversionJobExecutor {
   protected ResourceResolverFactory getResourceResolverFactory() {
     return resourceResolverFactory;
   }
+
+  protected abstract void logCompletionSummary(JobExecutionContext context, ConversionJobBucket bucket);
 
 }

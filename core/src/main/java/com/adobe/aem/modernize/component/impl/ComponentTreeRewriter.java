@@ -61,7 +61,8 @@ public class ComponentTreeRewriter {
    * @throws RepositoryException if there is a problem with the repository
    */
   @Nullable
-  static Node rewrite(@NotNull Node root, @NotNull List<RewriteRule> rules) throws RewriteException, RepositoryException {
+  public static Node process(@NotNull Node root, @NotNull List<RewriteRule> rules)
+          throws RewriteException, RepositoryException {
     String rootPath = root.getPath();
     logger.debug("Rewriting content tree rooted at: {}", rootPath);
     long tick = System.currentTimeMillis();

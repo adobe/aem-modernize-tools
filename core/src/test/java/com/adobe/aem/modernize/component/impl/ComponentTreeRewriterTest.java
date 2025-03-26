@@ -69,7 +69,7 @@ public class ComponentTreeRewriterTest {
 
     context.load().json("/rewrite/test-ordered.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
-    ComponentTreeRewriter.rewrite(root, rules);
+    ComponentTreeRewriter.process(root, rules);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");
@@ -99,7 +99,7 @@ public class ComponentTreeRewriterTest {
 
     context.load().json("/rewrite/test-final.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/final").adaptTo(Node.class);
-    ComponentTreeRewriter.rewrite(root, rules);
+    ComponentTreeRewriter.process(root, rules);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");
@@ -118,7 +118,7 @@ public class ComponentTreeRewriterTest {
 
     context.load().json("/rewrite/test-ordered.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
-    ComponentTreeRewriter.rewrite(root, rules);
+    ComponentTreeRewriter.process(root, rules);
 
     Session session = root.getSession();
     assertTrue(session.hasPendingChanges(), "Updates were made");
