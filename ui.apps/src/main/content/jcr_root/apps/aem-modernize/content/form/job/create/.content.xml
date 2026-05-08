@@ -132,7 +132,7 @@
                                           multiple="{Boolean}false"
                                           name="sourceRoot"
                                           rootPath="/content/forms/af"
-                                          filter="hierarchyNotFile"
+                                          filter="folder"
                                           disabled="{Boolean}true">
                               </sourceRoot>
                               <targetRoot jcr:primaryType="nt:unstructured"
@@ -141,8 +141,8 @@
                                           required="{Boolean}false"
                                           multiple="{Boolean}false"
                                           name="targetRoot"
-                                          rootPath="/content/forms/af"
-                                          filter="hierarchyNotFile"
+                                          rootPath="/content/dam/formsanddocuments"
+                                          filter="folder"
                                           disabled="{Boolean}true"/>
                             </items>
                           </formConfig>
