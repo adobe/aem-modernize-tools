@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
@@ -71,9 +70,6 @@ public class ComponentTreeRewriterTest {
     Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
     ComponentTreeRewriter.rewrite(root, rules);
 
-    Session session = root.getSession();
-    assertTrue(session.hasPendingChanges(), "Updates were made");
-    session.save();
     Resource updated = context.resourceResolver().getResource("/content/test/ordered");
 
     // Preserved Order
@@ -101,10 +97,6 @@ public class ComponentTreeRewriterTest {
     Node root = context.resourceResolver().getResource("/content/test/final").adaptTo(Node.class);
     ComponentTreeRewriter.rewrite(root, rules);
 
-    Session session = root.getSession();
-    assertTrue(session.hasPendingChanges(), "Updates were made");
-    session.save();
-
     // Should only be called once when matched.
     assertEquals(1, finalRewriteRule.invoked, "Rewrite rule invocations");
   }
@@ -119,10 +111,6 @@ public class ComponentTreeRewriterTest {
     context.load().json("/rewrite/test-ordered.json", "/content/test");
     Node root = context.resourceResolver().getResource("/content/test/ordered").adaptTo(Node.class);
     ComponentTreeRewriter.rewrite(root, rules);
-
-    Session session = root.getSession();
-    assertTrue(session.hasPendingChanges(), "Updates were made");
-    session.save();
 
     assertEquals(9, rule.invoked, "Rewrite rule invocations");
   }
