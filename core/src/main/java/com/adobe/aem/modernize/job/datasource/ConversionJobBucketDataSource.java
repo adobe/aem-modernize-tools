@@ -21,6 +21,8 @@ package com.adobe.aem.modernize.job.datasource;
  */
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +101,7 @@ public class ConversionJobBucketDataSource extends SlingSafeMethodsServlet {
   }
 
   private DataSource buildDataSource(final ResourceResolver rr, final ConversionJobBucket bucket, int offset, int limit) {
+    Map<String, List<String>> warningsByPath = parseWarnings(bucket);
     List<Resource> entries = bucket.getPaths().stream().skip(offset).limit(limit).map(p -> {
       Map<String, Object> vm = new HashMap<>();
       vm.put("path", p);
@@ -118,10 +121,31 @@ public class ConversionJobBucketDataSource extends SlingSafeMethodsServlet {
         vm.put("status", "Unknown");
         vm.put("statusClass", "unknown");
         vm.put("icon", "helpCircle");
-
+      }
+      List<String> warns = warningsByPath.getOrDefault(p, Collections.emptyList());
+      if (!warns.isEmpty()) {
+        vm.put("warnings", true);
+        vm.put("warningList", warns.toArray(new String[0]));
       }
       return new ValueMapResource(rr, p, ITEM_RESOURCE_TYPE, new ValueMapDecorator(vm));
     }).collect(Collectors.toList());
     return new SimpleDataSource(entries.iterator());
+  }
+
+  private Map<String, List<String>> parseWarnings(ConversionJobBucket bucket) {
+    String[] raw = bucket.getResource().getValueMap().get("warnings", new String[0]);
+    if (raw.length == 0) {
+      return Collections.emptyMap();
+    }
+    Map<String, List<String>> result = new HashMap<>();
+    for (String entry : raw) {
+      int sep = entry.indexOf("||");
+      if (sep > 0) {
+        String path = entry.substring(0, sep);
+        String msg = entry.substring(sep + 2);
+        result.computeIfAbsent(path, k -> new ArrayList<>()).add(msg);
+      }
+    }
+    return result;
   }
 }

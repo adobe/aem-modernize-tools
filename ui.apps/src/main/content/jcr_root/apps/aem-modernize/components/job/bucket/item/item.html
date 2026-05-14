@@ -18,7 +18,14 @@
   #L%
   -->
 <tr is="coral-table-row" title="${properties.path}" class="foundation-collection-item">
-  <td is="coral-table-cell">${properties.path}</td>
+  <td is="coral-table-cell">
+    <div>${properties.path}</div>
+    <sly data-sly-test="${properties.warnings}">
+      <sly data-sly-list.warning="${properties.warningList}">
+        <div style="font-size:11px;color:#d7373f;margin-top:2px;">&#x26A0; ${warning}</div>
+      </sly>
+    </sly>
+  </td>
   <td is="coral-table-cell" value="${properties.status}">${properties.status}</td>
   <td is="coral-table-cell">
     <div class="mediumIcon ${properties.statusClass}">
